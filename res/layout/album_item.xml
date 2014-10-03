@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:scaleType="centerCrop"
+    android:background="@drawable/image6">
+    <ImageButton
+
+        android:id="@+id/ib_album_image"
+        android:layout_width="fill_parent"
+        android:layout_height="170dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/album_frame" />
+
+    <TextView
+        android:id="@+id/tv_album_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:gravity="center"
+        android:text="@string/album_title" />
+
+    <TextView
+        android:id="@+id/tv_album_date"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="4dp"
+        android:gravity="center"
+        android:text="@string/album_date"
+        android:textSize="12dp" />
+
+</FrameLayout>

@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/dialogue_background"
+    tools:context="com.familybox.wazapps.familybox.DialogFragmentApproveInvite">
+
+    <ImageButton
+        android:id="@+id/ib_exit_approve_invite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+
+        android:background="@android:color/transparent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:src="@drawable/x_button" />
+
+    <TextView
+        android:id="@+id/tv_approve_invite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/approve_invite_alright"
+        android:textSize="25dp" />
+
+    <TextView
+        android:id="@+id/tv_approve_invite_explain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_approve_invite"
+        android:textAlignment="gravity"
+        android:paddingTop="15dp"
+        android:layout_margin="8dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:lineSpacingExtra="4dp"
+        android:gravity="center_horizontal"
+        android:text="@string/approve_invite_explain"
+        android:textColor="@color/gray_dialog_text_color"
+        android:textSize="18dp" />
+
+
+
+        <ImageView
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:layout_below="@id/tv_approve_invite_explain"
+            android:id="@+id/iv_approve_invite_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/approve_invite_accept"/>
+
+
+
+
+
+</RelativeLayout>

@@ -1,0 +1,76 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/dialogue_background"
+    tools:context="com.familybox.wazapps.familybox.DialogFragmentMembersQuery">
+
+    <ImageButton
+        android:id="@+id/ib_exit_member_query"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+
+        android:background="@android:color/transparent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:src="@drawable/x_button" />
+
+    <TextView
+        android:id="@+id/tv_member_query_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="@string/family_member_1"
+        android:textSize="25dp" />
+    <ImageView
+        android:id="@+id/iv_member_query_pic"
+        android:src="@drawable/profile_pic_example1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/tv_member_query_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tv_member_query_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_member_query_pic"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/member_query_text"
+        android:textColor="@color/gray_dialog_text_color"
+        android:textSize="18dp" />
+
+<TextView
+    android:id="@+id/s_member_query_relation"
+    android:layout_width="wrap_content"
+    android:background="@drawable/picker"
+    android:text="@string/member_query_relation"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="25dp"
+    android:textSize="12dp"
+    android:layout_below="@id/tv_member_query_question"
+    android:layout_height="wrap_content">
+
+    </TextView>
+
+
+        <ImageView
+            android:layout_below="@id/s_member_query_relation"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:id="@+id/iv_member_query_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/approve_invite_accept"/>
+
+
+
+</RelativeLayout>

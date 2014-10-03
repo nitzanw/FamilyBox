@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/dialogue_background"
+    tools:context="com.familybox.wazapps.familybox.DialogFragmentEmptyNetwork2">
+
+    <ImageButton
+        android:id="@+id/ib_exit_empty_network_2_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+
+        android:background="@android:color/transparent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:src="@drawable/x_button" />
+
+    <TextView
+        android:id="@+id/tv_empty_network_2_join_existing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/empty_network_2_join_existing"
+        android:textSize="25dp" />
+
+    <TextView
+        android:id="@+id/tv_empty_network_2_ask_family_member"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_empty_network_2_join_existing"
+        android:textAlignment="gravity"
+        android:layout_margin="8dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:lineSpacingExtra="4dp"
+        android:gravity="center_horizontal"
+        android:text="@string/empty_network_2_ask_a_family_member"
+        android:textColor="@color/gray_dialog_text_color"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/tv_empty_network_2_enter_name"
+        android:text="@string/empty_network_2_enter_name"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="38dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:textSize="16dp"
+        android:layout_below="@id/tv_empty_network_2_ask_family_member"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_empty_network_insert_name"
+        android:layout_below="@+id/tv_empty_network_2_enter_name"
+
+       />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_below="@id/et_empty_network_insert_name">
+        <ImageView
+            android:id="@+id/iv_empty_network_1_no"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:src="@drawable/selector_cancel"/>
+        <ImageView
+            android:id="@+id/iv_empty_network_1_yes"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:src="@drawable/selector_send"/>
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>
