@@ -15,15 +15,15 @@ public class LoginActivity extends FragmentActivity implements LoginCallback{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getActionBar().hide();
 		setContentView(R.layout.activity_login_screen);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.fragment_container, new LoginFragment(), TAG_LOGIN_SCR);
+		ft.add(R.id.fragment_container, new LoginFragment(), TAG_LOGIN_SCR);		
 		ft.commit();		
 	}
 
 	@Override
 	public void emailLogin() {		
-		Log.d("ROFL", "LOLZ LOLZ LOLZ");
 		EmailLoginDialogueFragment frag = new EmailLoginDialogueFragment();
 		frag.show(getSupportFragmentManager(), TAG_EMAIL_FRAG);
 	}
@@ -36,8 +36,10 @@ public class LoginActivity extends FragmentActivity implements LoginCallback{
 
 	@Override
 	public void signup() {
-		// TODO Auto-generated method stub
-		
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.add(R.id.fragment_container, new SignupFragment(), TAG_LOGIN_SCR);
+		ft.addToBackStack(null);
+		ft.commit();	
 	}
 }
 
