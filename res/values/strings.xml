@@ -63,6 +63,10 @@
     <string name="news_feed_item_update">Updated a new album \'home pics\' (32 photos) </string>
     <string name="news_feed_item_date_1">Today</string>
     <string name="news_feed_item_date_2">19:04</string>
+    
+    <string name="email_login_title">Log in</string>
+    <string name="email_login_address">Email Address</string>
+    <string name="email_login_pw">Password</string>
 
 
 
