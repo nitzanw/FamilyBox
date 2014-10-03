@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/dialogue_background" >
+
+    <ImageButton
+        android:id="@+id/ib_exit_signup_birthday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:background="@android:color/transparent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:src="@drawable/x_button" />
+
+    <DatePicker
+        android:id="@+id/datePicker_signup_birthday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="75dp" />
+
+    <Button
+        android:id="@+id/button_signup_birthday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/datePicker_signup_birthday"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/selector_send" />
+
+</RelativeLayout>

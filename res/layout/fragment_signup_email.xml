@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/button_signup_upload_image"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:gravity="center"
@@ -62,19 +63,25 @@
         android:textColor="@color/gray_signup_input_fields"
         android:textSize="13sp" />
 
-    <DatePicker
-        android:id="@+id/dp_signup_birthday"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/et_signup_birthday"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/et_signup_address"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" />
+        android:layout_below="@id/et_signup_address"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/signup_birthday"
+        android:inputType="textPersonName"
+        android:paddingBottom="13dp"
+        android:textColor="@color/gray_signup_input_fields"
+        android:textSize="13sp" />
 
     <EditText
         android:id="@+id/et_signup_middle_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dp_signup_birthday"
+        android:layout_below="@id/et_signup_birthday"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginTop="10dp"
