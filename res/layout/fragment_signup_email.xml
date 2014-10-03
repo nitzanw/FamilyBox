@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_signup" >
+
+    <Button
+        android:id="@+id/button_signup_upload_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/profile_pic_elipse_signup"
+        android:text="@string/signup_upload_image"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:id="@+id/ll_signup_first_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_signup_upload_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/et_signup_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/signup_firstname"
+            android:inputType="textPersonName"
+            android:paddingBottom="13dp"
+            android:textColor="@color/gray_signup_input_fields"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/et_signup_last"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/signup_lastname"
+            android:inputType="textPersonName"
+            android:paddingBottom="13dp"
+            android:textColor="@color/gray_signup_input_fields"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_signup_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_signup_first_row"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/signup_address"
+        android:inputType="textPostalAddress"
+        android:paddingBottom="13dp"
+        android:textColor="@color/gray_signup_input_fields"
+        android:textSize="13sp" />
+
+    <DatePicker
+        android:id="@+id/dp_signup_birthday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_signup_address"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:id="@+id/et_signup_middle_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dp_signup_birthday"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/signup_middle_name"
+        android:inputType="textPersonName"
+        android:paddingBottom="13dp"
+        android:textColor="@color/gray_signup_input_fields"
+        android:textSize="13sp" />
+
+    <EditText
+        android:id="@+id/et_signup_previous_last"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_signup_middle_name"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/signup_previous_last"
+        android:inputType="textPersonName"
+        android:paddingBottom="13dp"
+        android:textColor="@color/gray_signup_input_fields"
+        android:textSize="13sp" />
+
+    <EditText
+        android:id="@+id/et_signup_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_signup_previous_last"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/signup_phone_number"
+        android:inputType="phone"
+        android:paddingBottom="13dp"
+        android:textColor="@color/gray_signup_input_fields"
+        android:textSize="13sp" />
+
+    <Button
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/button_signup"
+        android:layout_marginBottom="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_signup" >
+    </Button>
+
+   
+
+</RelativeLayout>

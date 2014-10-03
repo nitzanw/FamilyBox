@@ -14,12 +14,10 @@
     <string name="profile_status">Status: Travelling in Italy</string>
     <string name="profile_details">Details</string>
     <string name="profile_details_address">Address</string>
-
     <string name="profile_details_pre_family">Previous Family Name</string>
     <string name="profile_details_pre_family_data">Levi</string>
     <string name="profile_details_quotes">Quotes</string>
     <string name="profile_details_quotes_data">Something Something Something</string>
-
     <string name="profile_details_address_data">K. Yovel Jerusalem, Israel</string>
     <string name="profile_details_birthday">Birthday</string>
     <string name="profile_details_birthday_data">19 October 1987</string>
@@ -28,41 +26,33 @@
     <string name="father_name">Arie Zohar</string>
     <string name="title_activity_photo_albums">PhotoAlbumsActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="album_title">Thailand</string>
     <string name="album_date">March 2011</string>
-
     <string name="image_description">Image description - bla bla 2011 - North Island mountain view taken from bla bla:)</string>
-
     <string name="empty_network_1_hi_user">Hi Gal,</string>
     <string name="empty_network_1_alone_in_network">it seems that you\'re alone in the family network</string>
     <string name="empty_network_1_do_you_know">Do you know any family member that has already joined \'FamilyBox\' application?</string>
-
     <string name="empty_network_2_join_existing">Join an existing network</string>
     <string name="empty_network_2_ask_a_family_member">ask a family member that has already joined \'FamilyBox\' for an invitation to his/her existing family network </string>
     <string name="empty_network_2_enter_name">Enter facebook name or email address</string>
-
     <string name="approve_invite_alright">Alright!</string>
     <string name="approve_invite_explain">An invitation request was sent, when accepted - you will be added to the family network and join your family</string>
-
     <string name="personal_welcome_title">Gal, Welcome!</string>
     <string name="personal_welcome_profile_pic">Are you happy with this profile picture? if not, click the \'change\' button</string>
-
     <string name="family_query_title">Your family name is Zohar</string>
     <string name="family_query_members_query">Are these your family members?</string>
     <string name="family_member_1">Arie Zohar</string>
     <string name="family_member_2">Mati Zohar</string>
     <string name="family_member_3">Tal Zohar</string>
-
     <string name="member_query_text">What is your family relation with him?</string>
     <string name="member_query_relation">he is my father</string>
-
     <string name="news_feed_empty">Nothing to show</string>
     <string name="news_feed_empty_explain">Nobody is in your family tree network =(</string>
     <string name="news_feed_empty_click_here">Click here to expand your family tree</string>
     <string name="news_feed_item_update">Updated a new album \'home pics\' (32 photos) </string>
     <string name="news_feed_item_date_1">Today</string>
     <string name="news_feed_item_date_2">19:04</string>
+<<<<<<< Updated upstream
     
     <string name="email_login_title">Log in</string>
     <string name="email_login_address">Email Address</string>
@@ -76,3 +66,16 @@
 
 
 </resources>
+=======
+    <string name="signup_upload_image">Add a \nprofile picture</string>
+    <string name="signup_firstname">First name</string>
+    <string name="signup_lastname">Last name</string>
+    <string name="signup_address">Address</string>
+    <string name="signup_previous_last">Previous family Name (optional)</string>
+    <string name="signup_birthday">Birthday</string>
+    <string name="signup_phone_number">Phone number (optional)</string>
+        <string name="signup_middle_name">Middle name (optional)</string>
+    
+
+</resources>
+>>>>>>> Stashed changes
