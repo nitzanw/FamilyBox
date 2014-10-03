@@ -52,21 +52,9 @@
     <string name="news_feed_item_update">Updated a new album \'home pics\' (32 photos) </string>
     <string name="news_feed_item_date_1">Today</string>
     <string name="news_feed_item_date_2">19:04</string>
-<<<<<<< Updated upstream
-    
     <string name="email_login_title">Log in</string>
     <string name="email_login_address">Email Address</string>
     <string name="email_login_pw">Password</string>
-
-
-
-
-
-
-
-
-</resources>
-=======
     <string name="signup_upload_image">Add a \nprofile picture</string>
     <string name="signup_firstname">First name</string>
     <string name="signup_lastname">Last name</string>
@@ -74,8 +62,6 @@
     <string name="signup_previous_last">Previous family Name (optional)</string>
     <string name="signup_birthday">Birthday</string>
     <string name="signup_phone_number">Phone number (optional)</string>
-        <string name="signup_middle_name">Middle name (optional)</string>
-    
+    <string name="signup_middle_name">Middle name (optional)</string>
 
 </resources>
->>>>>>> Stashed changes
