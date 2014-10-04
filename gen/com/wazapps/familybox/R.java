@@ -279,11 +279,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int tv_image_description=0x7f080055;
         public static final int tv_member_query_name=0x7f080049;
         public static final int tv_member_query_question=0x7f08004b;
-        public static final int tv_news_feed_item_acctual_update=0x7f080085;
-        public static final int tv_news_feed_item_date_1=0x7f080087;
-        public static final int tv_news_feed_item_date_2=0x7f080088;
+        public static final int tv_news_feed_item_date=0x7f080087;
+        public static final int tv_news_feed_item_time=0x7f080088;
+        public static final int tv_news_feed_item_update_msg=0x7f080085;
         public static final int tv_news_feed_item_username=0x7f080083;
-        public static final int tv_news_feed_item_username_you=0x7f080084;
+        public static final int tv_news_feed_item_username_you_tag=0x7f080084;
         public static final int tv_personal_welcome=0x7f08001d;
         public static final int tv_personal_welcome_profile_pic=0x7f08001e;
         public static final int tv_profile_address=0x7f08000b;

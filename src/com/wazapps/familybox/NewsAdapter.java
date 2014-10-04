@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 public class NewsAdapter extends BaseAdapter {
 	private Activity activity;
@@ -42,7 +43,16 @@ public class NewsAdapter extends BaseAdapter {
 			vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.news_feed_item, parent, false);	
 		}
-	
+		
+		NewsItem item = this.newsArr.get(position);
+		TextView userName, youTag, updateMessage, date, time;
+		userName = (TextView) v.findViewById(R.id.tv_news_feed_item_username);
+		youTag = (TextView) v.findViewById(R.id.tv_news_feed_item_username_you_tag);
+		updateMessage = (TextView) v.findViewById(R.id.tv_news_feed_item_update_msg);
+		date = (TextView) v.findViewById(R.id.tv_news_feed_item_date);
+		time = (TextView) v.findViewById(R.id.tv_news_feed_item_time);
+		
+		//TODO: extract information from json and stuff
 		return v;
 	}
 }
