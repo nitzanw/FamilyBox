@@ -42,6 +42,7 @@ public class NewsAdapter extends BaseAdapter {
 			vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.news_feed_item, parent, false);	
 		}
+	
 		return v;
 	}
 }
