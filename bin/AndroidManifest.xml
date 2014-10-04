@@ -34,7 +34,12 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.wazapps.familybox.PhotoAlbumsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/photo_albums"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
-
 
 </manifest>

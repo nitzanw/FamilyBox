@@ -29,6 +29,9 @@ public class EmailSignupFragment extends Fragment implements OnClickListener {
 		public void openBirthdayInputDialog();
 
 		public void openPhonePhotoBrowsing();
+
+		// TODO remove this to correct location
+		public void enterApp();
 	}
 
 	@Override
@@ -88,6 +91,7 @@ public class EmailSignupFragment extends Fragment implements OnClickListener {
 		EditText phoneNumView = (EditText) root
 				.findViewById(R.id.et_signup_phone);
 		Button signupButton = (Button) root.findViewById(R.id.button_signup);
+		signupButton.setOnClickListener(this);
 	}
 
 	public void setBirthday(String date) {
@@ -104,6 +108,8 @@ public class EmailSignupFragment extends Fragment implements OnClickListener {
 			imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 		} else if (v.getId() == R.id.riv_signup_upload_image) {
 			signupCallback.openPhonePhotoBrowsing();
+		} else if (v.getId() == R.id.button_signup) {
+			signupCallback.enterApp();
 		}
 
 	}
@@ -115,6 +121,8 @@ public class EmailSignupFragment extends Fragment implements OnClickListener {
 
 	public void setBitmap(Bitmap myBitmap) {
 		this.uploadImage.setImageBitmap(myBitmap);
+		this.uploadImage.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
 
 	}
 }
