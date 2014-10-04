@@ -5,7 +5,7 @@
     tools:context="com.familybox.wazapps.familybox.NewsFeedFragment">
 
     <ListView
-        android:id="@android:id/list"
+        android:id="@+id/news_posts_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"></ListView>
