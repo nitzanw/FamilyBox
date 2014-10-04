@@ -20,7 +20,7 @@
             android:ellipsize="end"
             android:maxLength="27"
             android:singleLine="true"
-            android:textColor="@android:color/black"
+            android:textColor="@color/gray_drawer_text"
             android:textSize="18sp" />
     </LinearLayout>
 

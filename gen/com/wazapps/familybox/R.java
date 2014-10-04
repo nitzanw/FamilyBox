@@ -35,6 +35,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
     public static final class color {
         public static final int black_overlay=0x7f040000;
         public static final int gray_dialog_text_color=0x7f040008;
+        public static final int gray_drawer_text=0x7f04000c;
         public static final int gray_index_letter_bg=0x7f040007;
         public static final int gray_news_feed_item=0x7f040009;
         public static final int gray_signup_input_fields=0x7f04000a;
@@ -42,7 +43,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int grey_light=0x7f040004;
         public static final int grey_photo_album_title_bg=0x7f040005;
         public static final int grey_subtitle=0x7f040003;
-        public static final int orange_drawer=0x7f04000c;
+        public static final int orange_drawer=0x7f04000d;
         public static final int orange_fb=0x7f040002;
         public static final int orange_photo_title_bg=0x7f040006;
         public static final int white_cream_ab=0x7f040001;
@@ -332,7 +333,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int shared_album_item=0x7f03001c;
     }
     public static final class menu {
-        public static final int menu_photo_album=0x7f080000;
+        public static final int menu_extra_actions=0x7f080000;
     }
     public static final class string {
         public static final int action_settings=0x7f060008;
@@ -361,6 +362,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int empty_network_2_ask_a_family_member=0x7f060020;
         public static final int empty_network_2_enter_name=0x7f060021;
         public static final int empty_network_2_join_existing=0x7f06001f;
+        public static final int events=0x7f06004d;
         public static final int expanded_action_menu=0x7f06004b;
         public static final int family_member_1=0x7f060028;
         public static final int family_member_2=0x7f060029;
@@ -374,6 +376,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int image_description=0x7f06001b;
         public static final int member_query_relation=0x7f06002c;
         public static final int member_query_text=0x7f06002b;
+        public static final int news_feed=0x7f06004c;
         public static final int news_feed_empty=0x7f06002d;
         public static final int news_feed_empty_click_here=0x7f06002f;
         public static final int news_feed_empty_explain=0x7f06002e;

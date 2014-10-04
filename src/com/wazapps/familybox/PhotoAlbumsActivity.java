@@ -1,5 +1,6 @@
 package com.wazapps.familybox;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
@@ -28,25 +29,37 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 
 	@Override
 	public void selectItem(int position) {
+		mPosition = position;
+		switch (position) {
+		case MY_PROFILE_POS:
 
-	}
+			break;
+		case FAMILY_TREE_POS:
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+			break;
+		case PHOTOS_POS:
+			FragmentTransaction ft = getSupportFragmentManager()
+					.beginTransaction();
+			ft.add(R.id.content_frame, new PhotoAlbumFragment(),
+					TAG_PHOTO_ALBUM);
+			ft.commit();
+			break;
+		case NOTES_POS:
 
-		getMenuInflater().inflate(R.menu.menu_photo_album, menu);
-		final MenuItem searchMenuItem = menu.findItem(R.id.action_extra);
-		return super.onCreateOptionsMenu(menu);
-	}
+			break;
+		case NEWS_POS:
+			Intent intent = new Intent(this, NewsfeedActivity.class);
+			startActivity(intent);
+			break;
+		case EXPAND_NETWORK_POS:
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action items related to the content
-		// view
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+			break;
 
-		menu.findItem(R.id.action_extra).setVisible(!drawerOpen);
-		return true;
+		default:
+			break;
+		}
+		mDrawerLayout.closeDrawer(mDrawerList);
+
 	}
 
 }
