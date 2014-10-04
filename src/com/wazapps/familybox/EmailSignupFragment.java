@@ -4,6 +4,8 @@ import com.wazapps.familybox.util.RoundedImageView;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.DocumentsContract.Root;
 import android.support.v4.app.Fragment;
@@ -21,9 +23,12 @@ public class EmailSignupFragment extends Fragment implements OnClickListener {
 	private View root;
 	private signupCallbackListener signupCallback = null;
 	private EditText birthdayView;
+	private RoundedImageView uploadImage;
 
 	public interface signupCallbackListener {
 		public void openBirthdayInputDialog();
+
+		public void openPhonePhotoBrowsing();
 	}
 
 	@Override
@@ -50,8 +55,9 @@ public class EmailSignupFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initViews() {
-		RoundedImageView uploadImage = (RoundedImageView) root
+		this.uploadImage = (RoundedImageView) root
 				.findViewById(R.id.riv_signup_upload_image);
+		this.uploadImage.setOnClickListener(this);
 		EditText firstNameView = (EditText) root
 				.findViewById(R.id.et_signup_name);
 		EditText lastNameView = (EditText) root
@@ -96,7 +102,19 @@ public class EmailSignupFragment extends Fragment implements OnClickListener {
 			InputMethodManager imm = (InputMethodManager) getActivity()
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+		} else if (v.getId() == R.id.riv_signup_upload_image) {
+			signupCallback.openPhonePhotoBrowsing();
 		}
+
+	}
+
+	public void setDrawable(Drawable d) {
+		this.uploadImage.setBackground(d);
+		this.uploadImage.setImageDrawable(d);
+	}
+
+	public void setBitmap(Bitmap myBitmap) {
+		this.uploadImage.setImageBitmap(myBitmap);
 
 	}
 }
