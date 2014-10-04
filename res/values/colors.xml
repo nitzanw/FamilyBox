@@ -12,6 +12,7 @@
     <color name="gray_news_feed_item">#858585</color>
     <color name="gray_signup_input_fields">#c4c4c4</color>
     <color name="gray_tab_background">#dddddd</color>
+    <color name="gray_drawer_text">#5b5b5b</color>
     <color name="orange_drawer">#f7c87c</color>
 
 </resources>

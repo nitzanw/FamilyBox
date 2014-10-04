@@ -18,6 +18,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public abstract class ActivityWithDrawer extends FragmentActivity {
+	static final String TAG_PHOTO_ALBUM = "photoAlbum";
+	public static final String TAG_NEWS_FEED = "newsFeed";
+	public static final int MY_PROFILE_POS = 0;
+	public static final int FAMILY_TREE_POS = 1;
+	public static final int PHOTOS_POS = 2;
+	public static final int NOTES_POS = 3;
+	public static final int NEWS_POS = 4;
+	public static final int EXPAND_NETWORK_POS = 5;
+
 	private static final String DRAWER_POSITION = "drawerPos";
 	// Declare Variable
 	protected DrawerLayout mDrawerLayout;
@@ -45,7 +54,7 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 				getString(R.string.drawer_photos),
 				getString(R.string.drawer_notes),
 				getString(R.string.drawer_news),
-				getString(R.string.drawer_expand_network)};
+				getString(R.string.drawer_expand_network) };
 
 		// Generate icon
 		// icon = new int[] { R.drawable.big_search, R.drawable.profile_icon,
@@ -63,7 +72,7 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 				super.onDrawerClosed(view);
 				Fragment frag = getSupportFragmentManager().findFragmentById(
 						R.id.content_frame);
-				if (PhotoAlbumsActivity.TAG_PHOTO_ALBUM.equals(frag.getTag())) {
+				if (NewsfeedActivity.TAG_PHOTO_ALBUM.equals(frag.getTag())) {
 
 					getActionBar().setTitle(R.string.photo_albums);
 				}
@@ -133,16 +142,6 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	/* Called whenever we call invalidateOptionsMenu() */
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action items related to the content
-		// view
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		// menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
-		return super.onPrepareOptionsMenu(menu);
-	}
-
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putInt(DRAWER_POSITION, mPosition);
@@ -172,6 +171,24 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggles
 		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		getMenuInflater().inflate(R.menu.menu_extra_actions, menu);
+		final MenuItem searchMenuItem = menu.findItem(R.id.action_extra);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// If the nav drawer is open, hide action items related to the content
+		// view
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+
+		menu.findItem(R.id.action_extra).setVisible(!drawerOpen);
+		return true;
 	}
 
 	abstract public void selectItem(int position);

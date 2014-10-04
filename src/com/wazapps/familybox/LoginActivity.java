@@ -147,13 +147,13 @@ public class LoginActivity extends FragmentActivity implements LoginCallback,
 	@Override
 	public void loginAction() {
 		Intent loginIntent = new Intent(this, NewsfeedActivity.class);
-		startActivity(loginIntent);	
+		startActivity(loginIntent);
 		finish();
 	}
 
 	@Override
 	public void enterApp() {
-		Intent intent = new Intent(this, PhotoAlbumsActivity.class);
+		Intent intent = new Intent(this, NewsfeedActivity.class);
 		startActivity(intent);
 		this.finish();
 	}
