@@ -438,10 +438,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         /**  Application theme. 
          */
         public static final int AppTheme=0x7f070001;
-        public static final int ButtonBar=0x7f070005;
-        public static final int ButtonBarButton=0x7f070006;
+        public static final int ButtonBar=0x7f070004;
+        public static final int ButtonBarButton=0x7f070005;
         public static final int FullscreenActionBarStyle=0x7f070007;
-        public static final int FullscreenTheme=0x7f070004;
+        public static final int FullscreenTheme=0x7f070006;
         /**  general styles for the action bar 
          */
         public static final int MyActionBar=0x7f070002;
