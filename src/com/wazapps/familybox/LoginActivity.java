@@ -133,6 +133,6 @@ public class LoginActivity extends FragmentActivity implements LoginCallback,
 	public void loginAction() {
 		Intent loginIntent = new Intent(this, NewsfeedActivity.class);
 		startActivity(loginIntent);	
-		this.finish();
+		finish();
 	}
 }
