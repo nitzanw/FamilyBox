@@ -76,5 +76,6 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_menu">Menu</string>
+    <string name="expanded_action_menu">expanded action menu</string>
 
 </resources>
