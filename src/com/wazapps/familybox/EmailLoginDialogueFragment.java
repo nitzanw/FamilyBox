@@ -1,5 +1,6 @@
 package com.wazapps.familybox;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -20,8 +21,10 @@ public class EmailLoginDialogueFragment extends DialogFragment implements OnClic
 		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		
 		ImageButton exitButton = (ImageButton) root.findViewById(R.id.email_login_exit);
+		ImageButton signButton = (ImageButton) root.findViewById(R.id.email_login_log_button);
 		ImageButton cancelButton = (ImageButton) root.findViewById(R.id.email_login_cancel_button);
 		exitButton.setOnClickListener(this);
+		signButton.setOnClickListener(this);
 		cancelButton.setOnClickListener(this);
 		
 		return root;
@@ -33,6 +36,9 @@ public class EmailLoginDialogueFragment extends DialogFragment implements OnClic
 		case R.id.email_login_exit:
 			dismiss();
 			break;
+			
+		case R.id.email_login_log_button:
+			
 			
 		case R.id.email_login_cancel_button:
 			dismiss();
