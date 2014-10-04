@@ -72,9 +72,11 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 				super.onDrawerClosed(view);
 				Fragment frag = getSupportFragmentManager().findFragmentById(
 						R.id.content_frame);
-				if (NewsfeedActivity.TAG_PHOTO_ALBUM.equals(frag.getTag())) {
+				if (TAG_PHOTO_ALBUM.equals(frag.getTag())) {
 
 					getActionBar().setTitle(R.string.photo_albums);
+				} else if (TAG_NEWS_FEED.equals(frag.getTag())) {
+					getActionBar().setTitle(R.string.news_feed_title);
 				}
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()

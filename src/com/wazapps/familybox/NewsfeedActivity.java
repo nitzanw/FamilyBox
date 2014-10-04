@@ -14,6 +14,7 @@ public class NewsfeedActivity extends ActivityWithDrawer {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getActionBar().setTitle(R.string.news_feed_title);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.content_frame, new NewsFeedFragment(), TAG_NEWS_FEED);
 		ft.commit();

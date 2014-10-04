@@ -77,7 +77,8 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_menu">Menu</string>
     <string name="expanded_action_menu">expanded action menu</string>
-    <string name="news_feed">News</string>
+    <string name="news">News</string>
     <string name="events">Events</string>
+    <string name="news_feed_title">News feed</string>
 
 </resources>
