@@ -1,0 +1,292 @@
+{
+    "network_id": 1,
+    "members": [
+        {
+            "user_id": "F1U3",
+            "device_id": "F1U3",
+            "primary_family_id": "F1",
+            "first_name": "Gal",
+            "status": "traveling in usa",
+            "birth_date": "19.10.87",
+            "address": "mozkin, Jerusalem",
+            "gender": "M",
+            "email": "",
+            "facebook": "",
+            "profile_picture": "",
+            "previous_family_ids": [],
+            "favorite_pics": []
+        },
+        {
+            "user_id": "F2U2",
+            "device_id": "F2U2",
+            "primary_family_id": "F2",
+            "first_name": "Tal",
+            "status": "weekend :)",
+            "birth_date": "11.04.79",
+            "address": "Tzahal, Tel aviv",
+            "gender": "F",
+            "email": "",
+            "facebook": "",
+            "profile_picture": "",
+            "previous_family_ids": [
+                "F1"
+            ],
+            "favorite_pics": []
+        },
+        {
+            "user_id": "F1U2",
+            "device_id": "F1U2",
+            "primary_family_id": "F1",
+            "first_name": "Mati",
+            "status": "Seeing a movie",
+            "birth_date": "20.02.50",
+            "address": "Mozkin, Jerusalem",
+            "gender": "F",
+            "email": "",
+            "facebook": "",
+            "profile_picture": "",
+            "previous_family_ids": [
+                "F3"
+            ],
+            "favorite_pics": []
+        },
+        {
+            "user_id": "F1U1",
+            "device_id": "F1U1",
+            "primary_family_id": "F1",
+            "first_name": "Arie",
+            "status": "",
+            "birth_date": "11.01.48",
+            "address": "Mozkin, Jerusalem",
+            "gender": "M",
+            "email": "",
+            "facebook": "",
+            "profile_picture": "",
+            "previous_family_ids": [],
+            "favorite_pics": []
+        },
+        {
+            "user_id": "F2U1",
+            "device_id": "F2U1",
+            "primary_family_id": "F2",
+            "first_name": "Roey",
+            "status": "just bought a new tablet :)",
+            "birth_date": "09.07.78",
+            "address": "Tzahal, Tel Aviv",
+            "gender": "M",
+            "email": "",
+            "facebook": "",
+            "profile_picture": "",
+            "previous_family_ids": [],
+            "favorite_pics": []
+        },
+        {
+            "user_id": "F4U1",
+            "device_id": "F4U1",
+            "primary_family_id": "F4",
+            "first_name": "Oded",
+            "status": "Traveling in spain",
+            "birth_date": "04.05",
+            "address": "Even gvirol, Tel Aviv",
+            "gender": "M",
+            "email": "",
+            "facebook": "",
+            "profile_picture": "",
+            "previous_family_ids": [],
+            "favorite_pics": []
+        },
+        {
+            "user_id": "F4U2",
+            "device_id": "F4U2",
+            "primary_family_id": "F4",
+            "first_name": "Rina",
+            "status": "Traveling in spain",
+            "birth_date": "03.07",
+            "address": "Even gvirol, Tel Aviv",
+            "gender": "M",
+            "email": "",
+            "facebook": "",
+            "profile_picture": "",
+            "previous_family_ids": [
+                "F3"
+            ],
+            "favorite_pics": []
+        },
+        {
+            "user_id": "F3U1",
+            "device_id": "F3U1",
+            "primary_family_id": "F3",
+            "first_name": "Ezra",
+            "status": "",
+            "birth_date": "",
+            "address": "King George, Tel Aviv",
+            "gender": "M",
+            "email": "",
+            "facebook": "",
+            "profile_picture": "",
+            "previous_family_ids": [],
+            "favorite_pics": []
+        }
+    ],
+    "families": [
+        {
+            "family_id": "F1",
+            "family_name": "Zohar",
+            "father_id": "F1U1",
+            "mother_id": "F1U2"
+        },
+        {
+            "family_id": "F2",
+            "family_name": "Razon",
+            "father_id": "F2U1",
+            "mother_id": "F2U2"
+        },
+        {
+            "family_id": "F3",
+            "family_name": "Aluf",
+            "father_id": "F3U1",
+            "mother_id": ""
+        },
+        {
+            "family_id": "F4",
+            "family_name": "Senior",
+            "father_id": "F4U1",
+            "mother_id": "F4U2"
+        }
+    ],
+    "albums": [
+        {
+            "album_id": "F1A1",
+            "family_id": "F1",
+            "album_name": "Snow in Jerusalem",
+            "album_date": "December 2013",
+            "album_pics": [],
+            "shared_with": [
+                "F2"
+            ]
+        },
+        {
+            "album_id": "F1A2",
+            "family_id": "F1",
+            "album_name": "Eilat vacation",
+            "album_date": "September 2013",
+            "album_pics": [],
+            "shared_with": [
+                "F2"
+            ]
+        },
+        {
+            "album_id": "F1A3",
+            "family_id": "F1",
+            "album_name": "Trip to Tel-Aviv",
+            "album_date": "August 2013",
+            "album_pics": [],
+            "shared_with": []
+        },
+        {
+            "album_id": "F1A4",
+            "family_id": "F1",
+            "album_name": "Home pics",
+            "album_date": "August 2012",
+            "album_pics": [],
+            "shared_with": []
+        },
+        {
+            "album_id": "F1A5",
+            "family_id": "F1",
+            "album_name": "New Zealand",
+            "album_date": "January 2013",
+            "album_pics": [],
+            "shared_with": [
+                "F2,F4"
+            ]
+        },
+        {
+            "album_id": "F1A6",
+            "family_id": "F2",
+            "album_name": "Thailand",
+            "album_date": "March 2011",
+            "album_pics": [],
+            "shared_with": [
+                "F1"
+            ]
+        },
+        {
+            "album_id": "F2A1",
+            "family_id": "F2",
+            "album_name": "private stuff",
+            "album_date": "December 2012",
+            "album_pics": [],
+            "shared_with": []
+        },
+        {
+            "album_id": "F2A2",
+            "family_id": "F2",
+            "album_name": "Family pics",
+            "album_date": "January 2012",
+            "album_pics": [],
+            "shared_with": [
+                "F1"
+            ]
+        },
+        {
+            "album_id": "F2A3",
+            "family_id": "F2",
+            "album_name": "Thailand",
+            "album_date": "December 2011",
+            "album_pics": [],
+            "shared_with": [
+                "F1"
+            ]
+        },
+        {
+            "album_id": "F4A1",
+            "family_id": "F4",
+            "album_name": "Mati's birthday",
+            "album_date": "February 2009",
+            "album_pics": [],
+            "shared_with": [
+                "F1",
+                "F2"
+            ]
+        },
+        {
+            "album_id": "F4A2",
+            "family_id": "F4",
+            "album_name": "Day at the beach",
+            "album_date": "January 2009",
+            "album_pics": [],
+            "shared_with": []
+        }
+    ],
+    "pics": [],
+    "news_posts": [
+        {
+            "user_id": "F1U3",
+            "post_id": 1,
+            "action_type": "album_upload",
+            "extra_info": [
+                "F1A1"
+            ],
+            "date": "27.09.14 19:04"
+        },
+        {
+            "user_id": "F2U2",
+            "post_id": 2,
+            "action_type": "status_update",
+            "extra_info": [
+                "going to the mall"
+            ],
+            "date": "26.09.14 20:15"
+        },
+        {
+            "user_id": "F2U1",
+            "post_id" : 3,
+            "action_type": "album_upload",
+            "extra_info": [
+                "F2A3"
+            ],
+            "date": "20.08.14 18:19"
+        }
+    ]
+}
