@@ -11,4 +11,7 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
+    <attr name="spinnerDropDownItemStyle" format="reference" />
+    <attr name="dropdownListPreferredItemHeight" format="dimension" />
+
 </resources>

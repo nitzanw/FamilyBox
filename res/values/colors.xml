@@ -10,13 +10,8 @@
     <color name="gray_index_letter_bg">#e4e6e8</color>
     <color name="gray_dialog_text_color">#aaaaaa</color>
     <color name="gray_news_feed_item">#858585</color>
-     <color name="gray_signup_input_fields">#c4c4c4</color>
-    
-
-
-
-
-
-
+    <color name="gray_signup_input_fields">#c4c4c4</color>
+    <color name="gray_tab_background">#dddddd</color>
+    <color name="orange_drawer">#f7c87c</color>
 
 </resources>

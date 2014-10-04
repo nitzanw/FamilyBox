@@ -150,4 +150,11 @@ public class LoginActivity extends FragmentActivity implements LoginCallback,
 		startActivity(loginIntent);	
 		finish();
 	}
+
+	@Override
+	public void enterApp() {
+		Intent intent = new Intent(this, PhotoAlbumsActivity.class);
+		startActivity(intent);
+		this.finish();
+	}
 }
