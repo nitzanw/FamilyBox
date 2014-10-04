@@ -1,8 +1,10 @@
 package com.wazapps.familybox;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,8 +13,23 @@ import android.view.Window;
 import android.widget.ImageButton;
 
 public class EmailLoginDialogueFragment extends DialogFragment implements OnClickListener {
+	public interface LoginActionCallbackListener {
+		public void loginAction();
+	}
+	
+	private LoginActionCallbackListener loginCallback;
 	private View root;	
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			loginCallback = (LoginActionCallbackListener) getActivity();			
+		} catch(ClassCastException e) {
+			Log.e("loginCallbackErr", "Activity should implement LogActionCallbackListener interface");
+		}
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -38,7 +55,8 @@ public class EmailLoginDialogueFragment extends DialogFragment implements OnClic
 			break;
 			
 		case R.id.email_login_log_button:
-			
+			loginCallback.loginAction();
+			break;
 			
 		case R.id.email_login_cancel_button:
 			dismiss();
