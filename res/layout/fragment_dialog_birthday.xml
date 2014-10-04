@@ -32,6 +32,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/datePicker_signup_birthday"
         android:layout_marginBottom="30dp"
+        android:paddingBottom="20dp"
         android:background="@drawable/selector_send" />
 
 </RelativeLayout>

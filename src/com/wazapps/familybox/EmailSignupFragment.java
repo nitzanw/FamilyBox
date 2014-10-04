@@ -1,18 +1,21 @@
 package com.wazapps.familybox;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.provider.DocumentsContract.Root;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class EmailSignupFragment extends Fragment {
+public class EmailSignupFragment extends Fragment implements OnClickListener {
 	private View root;
 	private signupCallbackListener signupCallback = null;
 	private EditText birthdayView;
@@ -61,9 +64,14 @@ public class EmailSignupFragment extends Fragment {
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
 					signupCallback.openBirthdayInputDialog();
+					InputMethodManager imm = (InputMethodManager) getActivity()
+							.getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
 				}
 			}
 		});
+		this.birthdayView.setOnClickListener(this);
 
 		EditText middleNameView = (EditText) root
 				.findViewById(R.id.et_signup_middle_name);
@@ -76,6 +84,17 @@ public class EmailSignupFragment extends Fragment {
 
 	public void setBirthday(String date) {
 		birthdayView.setText(date);
+
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.et_signup_birthday) {
+			signupCallback.openBirthdayInputDialog();
+			InputMethodManager imm = (InputMethodManager) getActivity()
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+		}
 
 	}
 }
