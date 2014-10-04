@@ -24,13 +24,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 public class LoginActivity extends FragmentActivity implements LoginCallback,
-		birthdayCallbackListener, signupCallbackListener, LoginActionCallbackListener {
+		birthdayCallbackListener, signupCallbackListener,
+		LoginActionCallbackListener {
 	private static final String TAG_EMAIL_FRAG = "emailLogin";
 	private static final String TAG_LOGIN_SCR = "loginScreen";
 	private static final String TAG_SIGNBIRTHDAY = "birthdayDialog";
 	private static final String TAG_SGINUP_FRAG = "signupScreen";
 	private static final int SELECT_PICTURE = 0;
 	private static final int THUMBNAIL_SIZE = 10;
+	private File mTempFile;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,16 @@ public class LoginActivity extends FragmentActivity implements LoginCallback,
 
 	@Override
 	public void openPhonePhotoBrowsing() {
+		//
+		// mTempFile = getFileStreamPath("yourTempFile");
+		// mTempFile.getParentFile().mkdirs();
+		// Intent intent = new Intent(Intent.ACTION_PICK,
+		// android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		// intent.setType("image/*");
+		// intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTempFile));
+		// intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.name());
+		// startActivityForResult(intent, SELECT_PICTURE);
+
 		Intent intent = new Intent(Intent.ACTION_PICK,
 				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		intent.setType("image/*");
@@ -92,12 +104,15 @@ public class LoginActivity extends FragmentActivity implements LoginCallback,
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_PICTURE) {
-				// Uri selectedImageUri = data.getData();
 				Uri currImageURI = data.getData();
-				if (currImageURI == null) {
-					Log.d("image upload", "it's null...");
-				}
-				File file = new File(getRealPathFromURI(currImageURI));
+				File file = null;
+				// if (currImageURI == null
+				// || currImageURI.toString().length() == 0) {
+				// currImageURI = Uri.fromFile(mTempFile);
+				// file = mTempFile;
+				// }
+				// else if (file == null) {
+				file = new File(getRealPathFromURI(currImageURI));
 
 				if (file.exists()) {
 					EmailSignupFragment frag = (EmailSignupFragment) getSupportFragmentManager()
@@ -109,6 +124,7 @@ public class LoginActivity extends FragmentActivity implements LoginCallback,
 				}
 			}
 		}
+		// }
 	}
 
 	private String getRealPathFromURI(Uri contentURI) {
@@ -132,7 +148,7 @@ public class LoginActivity extends FragmentActivity implements LoginCallback,
 	@Override
 	public void loginAction() {
 		Intent loginIntent = new Intent(this, NewsfeedActivity.class);
-		startActivity(loginIntent);	
+		startActivity(loginIntent);
 		this.finish();
 	}
 }
