@@ -131,7 +131,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int button_login_facebook=0x7f070052;
         public static final int button_signup=0x7f070054;
         public static final int button_signup_birthday=0x7f070023;
-        public static final int button_signup_upload_image=0x7f070072;
         public static final int datePicker_signup_birthday=0x7f070022;
         public static final int dummy_button=0x7f070002;
         public static final int email_login_address=0x7f070026;
@@ -216,6 +215,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int ll_quotes=0x7f070011;
         public static final int ll_signup_first_row=0x7f070073;
         public static final int realtabcontent=0x7f070057;
+        public static final int riv_signup_upload_image=0x7f070072;
         public static final int s_member_query_relation=0x7f070047;
         public static final int sv_profile_details=0x7f070008;
         public static final int tv_album_date=0x7f07001a;

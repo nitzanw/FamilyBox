@@ -4,25 +4,23 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_signup" >
 
-    <Button
-        android:id="@+id/button_signup_upload_image"
+    <com.wazapps.familybox.util.RoundedImageView
+        android:id="@+id/riv_signup_upload_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:background="@drawable/profile_pic_elipse_signup"
-        android:text="@string/signup_upload_image"
-        android:textSize="14sp" />
+        android:background="@drawable/profile_pic_elipse_signup" />
 
     <LinearLayout
         android:id="@+id/ll_signup_first_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button_signup_upload_image"
+        android:layout_below="@id/riv_signup_upload_image"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:orientation="horizontal" >
 
@@ -120,15 +118,13 @@
         android:textSize="13sp" />
 
     <Button
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:id="@+id/button_signup"
-        android:layout_marginBottom="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/selector_signup" >
     </Button>
-
-   
 
 </RelativeLayout>

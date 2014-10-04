@@ -1,5 +1,7 @@
 package com.wazapps.familybox;
 
+import com.wazapps.familybox.util.RoundedImageView;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -48,8 +50,8 @@ public class EmailSignupFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initViews() {
-		Button uploadImage = (Button) root
-				.findViewById(R.id.button_signup_upload_image);
+		RoundedImageView uploadImage = (RoundedImageView) root
+				.findViewById(R.id.riv_signup_upload_image);
 		EditText firstNameView = (EditText) root
 				.findViewById(R.id.et_signup_name);
 		EditText lastNameView = (EditText) root
