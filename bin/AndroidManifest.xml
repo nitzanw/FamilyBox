@@ -40,6 +40,12 @@
             android:label="@string/photo_albums"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.wazapps.familybox.NewsfeedActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="News feed"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

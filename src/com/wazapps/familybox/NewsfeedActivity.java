@@ -16,12 +16,7 @@ public class NewsfeedActivity extends Activity {
 		setContentView(R.layout.activity_news_feed);
 		
 		ActionBar actionBar = getActionBar();
-		// Hide Actionbar Icon - remove this?
-        actionBar.setDisplayShowHomeEnabled(false);
- 
-        // Hide Actionbar Title - remove this?
-        actionBar.setDisplayShowTitleEnabled(false);
- 
+		
         // Create Actionbar Tabs
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         

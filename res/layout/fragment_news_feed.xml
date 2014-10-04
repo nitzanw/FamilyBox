@@ -5,7 +5,7 @@
     tools:context="com.familybox.wazapps.familybox.NewsFeedFragment">
 
     <ListView
-        android:id="@android:id/list"
+        android:id="@+id/news_posts_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"></ListView>
@@ -39,6 +39,7 @@
 
         <TextView
             android:layout_marginTop="50dp"
+            android:id="@+id/news_feed_empty_click"
             android:text="@string/news_feed_empty_click_here"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

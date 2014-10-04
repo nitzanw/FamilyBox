@@ -124,7 +124,6 @@ public class LoginActivity extends FragmentActivity implements LoginCallback,
 				}
 			}
 		}
-		// }
 	}
 
 	private String getRealPathFromURI(Uri contentURI) {
@@ -148,8 +147,8 @@ public class LoginActivity extends FragmentActivity implements LoginCallback,
 	@Override
 	public void loginAction() {
 		Intent loginIntent = new Intent(this, NewsfeedActivity.class);
-		startActivity(loginIntent);
-		this.finish();
+		startActivity(loginIntent);	
+		finish();
 	}
 
 	@Override
