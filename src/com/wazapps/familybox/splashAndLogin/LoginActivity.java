@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.newsfeed.NewsfeedActivity;
-import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.birthdayCallbackListener;
+import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.BirthdayChooserCallback;
 import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
 import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
 import com.wazapps.familybox.splashAndLogin.StartFragment.StartScreenCallback;
@@ -19,7 +19,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 
 public class LoginActivity extends FragmentActivity 
-implements StartScreenCallback, birthdayCallbackListener, 
+implements StartScreenCallback, BirthdayChooserCallback, 
 SignupScreenCallback, EmailLoginScreenCallback {
 	private static final String TAG_EMAIL_FRAG = "emailLogin";
 	private static final String TAG_LOGIN_SCR = "loginScreen";
@@ -39,6 +39,35 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		.replace(R.id.fragment_container, new StartFragment(), TAG_LOGIN_SCR)
 		.commit();
 	}
+	
+	/**
+	 * Launches the main activity, 
+	 * call this function when you want to pass to
+	 * the application's actual main screen
+	 */
+	private void enterApp() {
+		Intent intent = new Intent(this, NewsfeedActivity.class);
+		startActivity(intent);
+		this.finish();
+	}
+	
+	/**
+	 * Used to decode real path from uri. used by the photo chooser.
+	 */
+	private String getRealPathFromURI(Uri contentURI) {
+		final String[] imageColumns = { MediaStore.Images.Media._ID,
+				MediaStore.Images.Media.DATA };
+		Cursor cursor = getContentResolver().query(contentURI, imageColumns,
+				null, null, null);
+		if (cursor == null) { 
+			return contentURI.getPath();
+		} else {
+			cursor.moveToFirst();
+			int idx = cursor
+					.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+			return cursor.getString(idx);
+		}
+	}
 
 	@Override
 	public void openEmailLogin() {
@@ -48,7 +77,7 @@ SignupScreenCallback, EmailLoginScreenCallback {
 
 	@Override
 	public void openFacebookLogin() {
-		//TODO: change facebook login code
+		//TODO: add real facebook login authentication
 		enterApp();
 	}
 
@@ -62,19 +91,18 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	}
 
 	@Override
+	public void openBirthdayInputDialog() {
+		BirthdaySignupDialogFragment dialog = new BirthdaySignupDialogFragment();
+		dialog.show(getSupportFragmentManager(), TAG_SIGNBIRTHDAY);
+	}
+	
+	@Override
 	public void setDate(String date) {
 		EmailSignupFragment frag = (EmailSignupFragment) getSupportFragmentManager()
 				.findFragmentByTag(TAG_SGINUP_FRAG);
 		frag.setBirthday(date);
-
 	}
 
-	@Override
-	public void openBirthdayInputDialog() {
-		BirthdaySignupDialogFragment dialog = new BirthdaySignupDialogFragment();
-		dialog.show(getSupportFragmentManager(), TAG_SIGNBIRTHDAY);
-
-	}
 
 	@Override
 	public void openPhonePhotoBrowsing() {
@@ -83,7 +111,6 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		intent.setType("image/*");
 		startActivityForResult(Intent.createChooser(intent, "Select Picture"),
 				SELECT_PICTURE);
-
 	}
 
 	@Override
@@ -105,31 +132,15 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		}
 	}
 
-	private String getRealPathFromURI(Uri contentURI) {
-		final String[] imageColumns = { MediaStore.Images.Media._ID,
-				MediaStore.Images.Media.DATA };
-		Cursor cursor = getContentResolver().query(contentURI, imageColumns,
-				null, null, null);
-		if (cursor == null) { 
-			return contentURI.getPath();
-		} else {
-			cursor.moveToFirst();
-			int idx = cursor
-					.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-
-			return cursor.getString(idx);
-		}
-	}
-
 	@Override
 	public void emailLoginAction() {
+		//TODO: add a real email login authentication
 		enterApp();
 	}
-
+	
 	@Override
-	public void enterApp() {
-		Intent intent = new Intent(this, NewsfeedActivity.class);
-		startActivity(intent);
-		this.finish();
+	public void signUp() {
+		//TODO: change the function code upon adding real sign up
+		enterApp();
 	}
 }

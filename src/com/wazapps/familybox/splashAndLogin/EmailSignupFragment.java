@@ -1,8 +1,6 @@
 package com.wazapps.familybox.splashAndLogin;
 
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.R.id;
-import com.wazapps.familybox.R.layout;
 import com.wazapps.familybox.util.RoundedImageView;
 
 import android.app.Activity;
@@ -10,7 +8,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.DocumentsContract.Root;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,15 +23,14 @@ public class EmailSignupFragment extends Fragment
 implements OnClickListener, OnFocusChangeListener{
 	private View root;
 	private SignupScreenCallback signupCallback = null;
-	private EditText birthday, firstName, middleName, lastName, address,
-					 previousName, phoneNumber;
+	private EditText birthday, firstName, middleName, 
+	lastName, address, previousName, phoneNumber;
 	private RoundedImageView uploadImage;
 
 	public interface SignupScreenCallback {
 		public void openBirthdayInputDialog();
 		public void openPhonePhotoBrowsing();
-		// TODO remove this to correct location
-		public void enterApp();
+		public void signUp();
 	}
 
 	@Override
@@ -48,7 +44,6 @@ implements OnClickListener, OnFocusChangeListener{
 			Log.e(getTag(), "the activity does not implement " +
 					"SignupScreenCallback interface");
 		}
-
 	}
 
 	@Override
@@ -76,35 +71,35 @@ implements OnClickListener, OnFocusChangeListener{
 		signupButton.setOnClickListener(this);
 	}
 
+	/**
+	 * Sets a date in the birthday field. used by the wrapping activity 
+	 * to set a date via the BirthdaySignupDialogFragment
+	 */
 	public void setBirthday(String date) {
-		birthday.setText(date);
+		this.birthday.setText(date);
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.et_signup_birthday) {
-			signupCallback.openBirthdayInputDialog();
+		switch (v.getId()) {
+		case R.id.et_signup_birthday:
+			this.signupCallback.openBirthdayInputDialog();
 			InputMethodManager imm = (InputMethodManager) getActivity()
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-		} else if (v.getId() == R.id.riv_signup_upload_image) {
-			signupCallback.openPhonePhotoBrowsing();
-		} else if (v.getId() == R.id.button_signup) {
-			signupCallback.enterApp();
+			break;
+
+		case R.id.riv_signup_upload_image:
+			this.signupCallback.openPhonePhotoBrowsing();
+			break;
+
+		case R.id.button_signup:
+			this.signupCallback.signUp();
+			break;
+
+		default:
+			break;
 		}
-
-	}
-
-	public void setDrawable(Drawable d) {
-		this.uploadImage.setBackground(d);
-		this.uploadImage.setImageDrawable(d);
-	}
-
-	public void setBitmap(Bitmap myBitmap) {
-		this.uploadImage.setImageBitmap(myBitmap);
-		this.uploadImage.setBackgroundColor(getResources().getColor(
-				android.R.color.transparent));
-
 	}
 
 	@Override
@@ -116,14 +111,22 @@ implements OnClickListener, OnFocusChangeListener{
 				InputMethodManager imm = (InputMethodManager) getActivity()
 						.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
 			}
-			
 			break;
 
 		default:
 			break;
 		}
+	}
 
+	public void setDrawable(Drawable d) {
+		this.uploadImage.setBackground(d);
+		this.uploadImage.setImageDrawable(d);
+	}
+
+	public void setBitmap(Bitmap myBitmap) {
+		this.uploadImage.setImageBitmap(myBitmap);
+		this.uploadImage.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
 	}
 }

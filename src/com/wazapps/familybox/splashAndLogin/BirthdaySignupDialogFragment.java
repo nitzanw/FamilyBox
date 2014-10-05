@@ -1,8 +1,6 @@
 package com.wazapps.familybox.splashAndLogin;
 
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.R.id;
-import com.wazapps.familybox.R.layout;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,10 +18,10 @@ import android.widget.ImageButton;
 public class BirthdaySignupDialogFragment extends DialogFragment implements
 		OnClickListener {
 	private View root;
-	private birthdayCallbackListener birthdayCallback = null;
-	private DatePicker mDatePicker;
+	private BirthdayChooserCallback birthdayCallback = null;
+	private DatePicker picker;
 
-	public interface birthdayCallbackListener {
+	public interface BirthdayChooserCallback {
 		public void setDate(String date);
 	}
 
@@ -31,10 +29,12 @@ public class BirthdaySignupDialogFragment extends DialogFragment implements
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			birthdayCallback = (birthdayCallbackListener) getActivity();
-		} catch (ClassCastException e) {
+			birthdayCallback = (BirthdayChooserCallback) getActivity();
+		} 
+		
+		catch (ClassCastException e) {
 			Log.e(getTag(),
-					"the activity did not implement birthdayCallbackListener");
+					"the activity does not implement birthdayCallbackListener");
 		}
 	}
 
@@ -42,31 +42,38 @@ public class BirthdaySignupDialogFragment extends DialogFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-
-		root = inflater.inflate(R.layout.fragment_dialog_birthday, container,
-				false);
-		ImageButton exitBtn = (ImageButton) root
-				.findViewById(R.id.ib_exit_signup_birthday);
-		exitBtn.setOnClickListener(this);
-		mDatePicker = (DatePicker) root
-				.findViewById(R.id.datePicker_signup_birthday);
-		mDatePicker.setCalendarViewShown(false);
-		Button okBtn = (Button) root.findViewById(R.id.button_signup_birthday);
-		okBtn.setOnClickListener(this);
+		root = inflater.inflate(R.layout.fragment_dialog_birthday, container, false);
+		
+		ImageButton exitButton = (ImageButton) root.findViewById(R.id.ib_exit_signup_birthday);
+		exitButton.setOnClickListener(this);
+		
+		this.picker = (DatePicker) root.findViewById(R.id.datePicker_signup_birthday);
+		this.picker.setCalendarViewShown(false);
+		
+		Button okButton = (Button) root.findViewById(R.id.button_signup_birthday);
+		okButton.setOnClickListener(this);
+		
 		return root;
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.button_signup_birthday) {
-			int day = mDatePicker.getDayOfMonth();
-			int month = mDatePicker.getMonth();
-			int year = mDatePicker.getYear();
-			birthdayCallback.setDate(String.valueOf(month) + "/"
+		switch (v.getId()) {
+		case R.id.button_signup_birthday:
+			int day = picker.getDayOfMonth();
+			int month = picker.getMonth();
+			int year = picker.getYear();
+			this.birthdayCallback.setDate(String.valueOf(month + 1) + "/"
 					+ String.valueOf(day) + "/" + String.valueOf(year));
 			this.dismiss();
-		} else if (v.getId() == R.id.ib_exit_signup_birthday) {
+			break;
+			
+		case R.id.ib_exit_signup_birthday:
 			this.dismiss();
+			break;
+
+		default:
+			break;
 		}
 	}
 }
