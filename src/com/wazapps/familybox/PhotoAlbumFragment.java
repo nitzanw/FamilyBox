@@ -32,9 +32,9 @@ public class PhotoAlbumFragment extends TabsFragment {
 		if (savedInstanceState != null) {
 
 		}
+		
 		mActionBar = getActivity().getActionBar();
-		mActionBar.setTitle(getString(R.string.photo_albums).toUpperCase(
-				Locale.getDefault()));
+		
 		setHasOptionsMenu(true);
 
 	}

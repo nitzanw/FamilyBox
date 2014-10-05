@@ -376,13 +376,14 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int image_description=0x7f06001b;
         public static final int member_query_relation=0x7f06002c;
         public static final int member_query_text=0x7f06002b;
-        public static final int news_feed=0x7f06004c;
+        public static final int news=0x7f06004c;
         public static final int news_feed_empty=0x7f06002d;
         public static final int news_feed_empty_click_here=0x7f06002f;
         public static final int news_feed_empty_explain=0x7f06002e;
         public static final int news_feed_item_date_1=0x7f060031;
         public static final int news_feed_item_date_2=0x7f060032;
         public static final int news_feed_item_update=0x7f060030;
+        public static final int news_feed_title=0x7f06004e;
         public static final int personal_welcome_profile_pic=0x7f060025;
         public static final int personal_welcome_title=0x7f060024;
         public static final int photo_albums=0x7f060047;

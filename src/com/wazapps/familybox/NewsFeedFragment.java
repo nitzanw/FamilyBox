@@ -20,8 +20,7 @@ public class NewsFeedFragment extends TabsFragment {
 
 		}
 		mActionBar = getActivity().getActionBar();
-		mActionBar.setTitle(getString(R.string.photo_albums).toUpperCase(
-				Locale.getDefault()));
+
 		setHasOptionsMenu(true);
 
 	}
@@ -43,7 +42,7 @@ public class NewsFeedFragment extends TabsFragment {
 		// add tabs to the tabs storage
 		mTabHost.addTab(
 				mTabHost.newTabSpec(NEWS).setIndicator(
-						makeTabIndicator(R.string.news_feed)),
+						makeTabIndicator(R.string.news)),
 				NewsFragmentTab.class, this.getArguments());
 
 		mTabHost.addTab(

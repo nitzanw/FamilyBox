@@ -15,6 +15,7 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getActionBar().setTitle(R.string.photo_albums);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.content_frame, new PhotoAlbumFragment(), TAG_PHOTO_ALBUM);
 		ft.commit();
