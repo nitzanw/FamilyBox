@@ -2,7 +2,9 @@ package com.wazapps.familybox.photos;
 
 import com.wazapps.familybox.ActivityWithDrawer;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.TabsFragment;
 import com.wazapps.familybox.newsfeed.NewsfeedActivity;
+import com.wazapps.familybox.profiles.ProfileActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,40 +19,38 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 		getActionBar().setTitle(R.string.photo_albums);
 		overridePendingTransition(R.anim.enter, R.anim.exit); //TODO: handle transition animations in a better way
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.content_frame, new PhotoAlbumFragment(), TAG_PHOTO_ALBUM);
+		ft.add(R.id.content_frame, new PhotoAlbumsTabsFragment(), TAG_PHOTO_ALBUM);
 		ft.commit();
-	}
-
-	public void initDrawer() {
-		super.initDrawer();
-		// ActionBarDrawerToggle ties together the the proper interactions
-		// between the sliding drawer and the action bar app icon
 	}
 
 	@Override
 	public void selectItem(int position) {
-		mPosition = position;
+		this.mPosition = position;
 		switch (position) {
 		case MY_PROFILE_POS:
-
+			Intent intent1 = new Intent(this, ProfileActivity.class);
+			startActivity(intent1);
 			break;
+			
 		case FAMILY_TREE_POS:
 
 			break;
+			
 		case PHOTOS_POS:
-			//TODO: THIS IS BAD!!!!! makes horrible bugs and breaks the tab interface
-			//fix this
-			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-			ft.add(R.id.content_frame, new PhotoAlbumFragment(), TAG_PHOTO_ALBUM);
-			ft.commit();
+			TabsFragment frag = (TabsFragment) getSupportFragmentManager()
+			.findFragmentByTag(TAG_PHOTO_ALBUM);
+			frag.switchTab(0);
 			break;
+			
 		case NOTES_POS:
 
 			break;
+			
 		case NEWS_POS:
-			Intent intent = new Intent(this, NewsfeedActivity.class);
-			startActivity(intent);
+			Intent intent2 = new Intent(this, NewsfeedActivity.class);
+			startActivity(intent2);
 			break;
+			
 		case EXPAND_NETWORK_POS:
 
 			break;
@@ -58,8 +58,8 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 		default:
 			break;
 		}
-		mDrawerLayout.closeDrawer(mDrawerList);
-
+		
+		this.mDrawerLayout.closeDrawer(this.mDrawerList);
 	}
 
 }

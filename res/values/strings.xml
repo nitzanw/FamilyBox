@@ -80,6 +80,6 @@
     <string name="news">News</string>
     <string name="events">Events</string>
     <string name="news_feed_title">News feed</string>
-    <string name="my_profile_title">My Profile</string>
+    <string name="profile_title">Profile</string>
 
 </resources>

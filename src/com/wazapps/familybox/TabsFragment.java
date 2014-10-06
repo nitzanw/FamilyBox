@@ -10,10 +10,10 @@ import android.widget.LinearLayout.LayoutParams;
 
 public class TabsFragment extends Fragment {
 
-	protected FragmentTabHost mTabHost;
-	int mCurrentPosition = -1;
+	protected FragmentTabHost tabHost;
+	int currentPosition = -1;
 
-	protected ActionBar mActionBar;
+	protected ActionBar actionBar;
 
 	// making the tab view:
 	protected View makeTabIndicator(int text) {
@@ -24,27 +24,21 @@ public class TabsFragment extends Fragment {
 				0, getResources().getDimensionPixelSize(R.dimen.tab_lp));
 		Tabimage.setLayoutParams(LP);
 		Tabimage.setText(text);
-		Tabimage.setBackgroundColor(getResources().getColor(
-				R.color.gray_tab_background));
+		Tabimage.setBackgroundColor(getResources().getColor(R.color.gray_tab_background));
 		Tabimage.setGravity(Gravity.CENTER);
 		Tabimage.setTextSize(getResources().getDimension(R.dimen.tab_font_size));
-		Tabimage.setMaxHeight(getResources().getDimensionPixelSize(
-				R.dimen.tab_height));
-		Tabimage.setMinHeight(getResources().getDimensionPixelSize(
-				R.dimen.tab_height));
+		Tabimage.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.tab_height));
+		Tabimage.setMinHeight(getResources().getDimensionPixelSize(R.dimen.tab_height));
 		Tabimage.setPadding(
 				getResources().getDimensionPixelSize(R.dimen.tab_left), 0,
 				getResources().getDimensionPixelSize(R.dimen.tab_right), 0);
-
 		Tabimage.setTextColor(getResources().getColor(android.R.color.black));
-
 		Tabimage.setBackgroundResource(R.drawable.tab_indicator);
 		return Tabimage;
-
 	}
 
 	public void switchTab(int tab) {
-		mTabHost.setCurrentTab(tab);
+		tabHost.setCurrentTab(tab);
 	}
 
 }

@@ -46,7 +46,6 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 	}
 
 	public void initDrawer() {
-
 		// Generate title
 		title = new String[] { getString(R.string.drawer_my_profile),
 				getString(R.string.drawer_family_tree),
@@ -77,7 +76,7 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 				else if (TAG_NEWS_FEED.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.news_feed_title);
 				else if (TAG_MY_PROFILE.equals(frag.getTag()))
-					getActionBar().setTitle(R.string.my_profile_title);
+					getActionBar().setTitle(R.string.profile_title);
 				// creates call to onPrepareOptionsMenu()
 				invalidateOptionsMenu(); 
 			}
