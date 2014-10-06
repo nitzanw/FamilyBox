@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 public class ProfileFragment extends Fragment {
 	private View root;
 	
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-//		root = inflater.inflate(, container, false);
-	
+		root = inflater.inflate(R.layout.fragment_profile, container, false);
 		return root;
 	}
 
