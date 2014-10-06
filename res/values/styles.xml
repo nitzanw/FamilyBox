@@ -21,7 +21,7 @@
     <!-- general styles for the action bar -->
     <style name="MyActionBar" parent="android:style/Widget.Holo.Light.ActionBar">
         <item name="android:titleTextStyle">@style/TitleTextStyle</item>
-        <item name="android:background">@color/white_cream_ab</item>
+        <item name="android:background">@color/white_cream_ab</item>"
         <item name="android:homeAsUpIndicator">@drawable/action_bar_fc_icon_with_arrow</item>
     </style>
 

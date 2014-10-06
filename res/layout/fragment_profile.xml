@@ -11,14 +11,12 @@
         android:background="@drawable/profile_area_background"
         android:gravity="center_horizontal"
 
-
         android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="23dp">
-
 
             <ImageView
                 android:id="@+id/iv_profile_pic"
@@ -38,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/user_name"
-            android:textSize="25dp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tv_profile_status"
@@ -75,8 +73,7 @@
                     android:layout_marginTop="7dp"
                     android:gravity="center"
                     android:text="@string/profile_details"
-                    android:textSize="25dp" />
-
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tv_profile_address"
@@ -86,7 +83,7 @@
                     android:layout_marginTop="3dp"
                     android:text="@string/profile_details_address"
                     android:textColor="@color/grey_subtitle"
-                    android:textSize="20dp" />
+                    android:textSize="15sp" />
 
 
                 <TextView
@@ -96,7 +93,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="5dp"
                     android:text="@string/profile_details_address_data"
-                    android:textSize="15dp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/tv_profile_birthday"
@@ -106,7 +103,7 @@
                     android:layout_marginTop="15dp"
                     android:text="@string/profile_details_birthday"
                     android:textColor="@color/grey_subtitle"
-                    android:textSize="20dp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_profile_birthday_data"
@@ -115,7 +112,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="5dp"
                     android:text="@string/profile_details_birthday_data"
-                    android:textSize="15dp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/tv_profile_curr_family_name"
@@ -125,7 +122,7 @@
                     android:layout_marginTop="15dp"
                     android:text="@string/profile_details_pre_family"
                     android:textColor="@color/grey_subtitle"
-                    android:textSize="20dp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_profile_curr_family_name_data"
@@ -134,7 +131,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="5dp"
                     android:text="@string/profile_details_pre_family_data"
-                    android:textSize="15dp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/tv_profile_quotes"
@@ -144,7 +141,7 @@
                     android:layout_marginTop="15dp"
                     android:text="@string/profile_details_quotes"
                     android:textColor="@color/grey_subtitle"
-                    android:textSize="20dp" />
+                    android:textSize="15sp" />
 
                 <LinearLayout
                     android:id="@+id/ll_quotes"
@@ -159,7 +156,7 @@
                         android:layout_height="wrap_content"
 
                         android:text="@string/profile_details_quotes_data"
-                        android:textSize="15dp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
@@ -179,7 +176,7 @@
         android:gravity="center_horizontal"
         android:paddingTop="5dp"
         android:text="@string/profile_close_family_title"
-        android:textSize="25dp" />
+        android:textSize="20sp" />
 
         <HorizontalScrollView
         android:id="@+id/hsv_profile_close_family"
@@ -202,6 +199,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:textColor="@color/grey_subtitle"
+        android:textSize="13sp"
         android:text="@string/father" />
 
         <ImageView
