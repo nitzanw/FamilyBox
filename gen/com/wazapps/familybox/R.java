@@ -384,6 +384,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int image_description=0x7f07001b;
         public static final int member_query_relation=0x7f07002c;
         public static final int member_query_text=0x7f07002b;
+        public static final int my_profile_title=0x7f07004f;
         public static final int news=0x7f07004c;
         public static final int news_feed_empty=0x7f07002d;
         public static final int news_feed_empty_click_here=0x7f07002f;

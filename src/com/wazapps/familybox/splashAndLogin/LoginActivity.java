@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 public class LoginActivity extends FragmentActivity 
 implements StartScreenCallback, BirthdayChooserCallback, 
@@ -30,14 +31,17 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().hide();
 		setContentView(R.layout.activity_login_screen);
-
+		// Hide the status bar.
+		getActionBar().hide();
+		
 		getSupportFragmentManager()
 		.beginTransaction()
-		.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
 		.replace(R.id.fragment_container, new StartFragment(), TAG_LOGIN_SCR)
 		.commit();
+
+		//TODO: handle transition animations in a better way
+		overridePendingTransition(R.anim.enter, R.anim.exit); //TODO: handle transition animation in a better way 
 	}
 	
 	/**

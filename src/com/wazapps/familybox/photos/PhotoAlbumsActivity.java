@@ -2,26 +2,20 @@ package com.wazapps.familybox.photos;
 
 import com.wazapps.familybox.ActivityWithDrawer;
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.R.id;
-import com.wazapps.familybox.R.string;
 import com.wazapps.familybox.newsfeed.NewsfeedActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 
 public class PhotoAlbumsActivity extends ActivityWithDrawer {
-
 	static final String TAG_PHOTO_ALBUM = "photoAlbum";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActionBar().setTitle(R.string.photo_albums);
+		overridePendingTransition(R.anim.enter, R.anim.exit); //TODO: handle transition animations in a better way
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.content_frame, new PhotoAlbumFragment(), TAG_PHOTO_ALBUM);
 		ft.commit();
@@ -31,7 +25,6 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 		super.initDrawer();
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
-
 	}
 
 	@Override
@@ -45,10 +38,10 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 
 			break;
 		case PHOTOS_POS:
-			FragmentTransaction ft = getSupportFragmentManager()
-					.beginTransaction();
-			ft.add(R.id.content_frame, new PhotoAlbumFragment(),
-					TAG_PHOTO_ALBUM);
+			//TODO: THIS IS BAD!!!!! makes horrible bugs and breaks the tab interface
+			//fix this
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			ft.add(R.id.content_frame, new PhotoAlbumFragment(), TAG_PHOTO_ALBUM);
 			ft.commit();
 			break;
 		case NOTES_POS:

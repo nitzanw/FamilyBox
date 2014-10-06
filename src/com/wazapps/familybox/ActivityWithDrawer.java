@@ -20,6 +20,7 @@ import android.widget.ListView;
 public abstract class ActivityWithDrawer extends FragmentActivity {
 	static final String TAG_PHOTO_ALBUM = "photoAlbum";
 	public static final String TAG_NEWS_FEED = "newsFeed";
+	public static final String TAG_MY_PROFILE = "myProfile";
 	public static final int MY_PROFILE_POS = 0;
 	public static final int FAMILY_TREE_POS = 1;
 	public static final int PHOTOS_POS = 2;
@@ -40,10 +41,8 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.drawer_main);
 		initDrawer();
-
 	}
 
 	public void initDrawer() {
@@ -56,6 +55,7 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 				getString(R.string.drawer_news),
 				getString(R.string.drawer_expand_network) };
 
+		//TODO: add icons
 		// Generate icon
 		// icon = new int[] { R.drawable.big_search, R.drawable.profile_icon,
 		// R.drawable.favorite_grey, R.drawable.system_icon };
@@ -70,24 +70,24 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
-				Fragment frag = getSupportFragmentManager().findFragmentById(
-						R.id.content_frame);
-				if (TAG_PHOTO_ALBUM.equals(frag.getTag())) {
-
+				Fragment frag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+				
+				if (TAG_PHOTO_ALBUM.equals(frag.getTag())) 
 					getActionBar().setTitle(R.string.photo_albums);
-				} else if (TAG_NEWS_FEED.equals(frag.getTag())) {
+				else if (TAG_NEWS_FEED.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.news_feed_title);
-				}
-				invalidateOptionsMenu(); // creates call to
-											// onPrepareOptionsMenu()
+				else if (TAG_MY_PROFILE.equals(frag.getTag()))
+					getActionBar().setTitle(R.string.my_profile_title);
+				// creates call to onPrepareOptionsMenu()
+				invalidateOptionsMenu(); 
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				getActionBar().setTitle(R.string.drawer_menu);
-				invalidateOptionsMenu(); // creates call to
-											// onPrepareOptionsMenu()
+				getActionBar().setTitle(R.string.drawer_menu); //TODO: maybe remove
+				// creates call to onPrepareOptionsMenu()
+				invalidateOptionsMenu();  
 			}
 		};
 
@@ -100,8 +100,8 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 		// Locate ListView in drawer_main.xml
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-		// Set a custom shadow that overlays the main content when the drawer
-		// opens
+		// Set a custom shadow that overlays the main 
+		//content when the drawer opens
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
 
@@ -118,7 +118,6 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 		getActionBar().setIcon(android.R.color.transparent);
 
 		mDrawerLayout.setOnKeyListener(new OnKeyListener() {
-
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_BACK
@@ -162,8 +161,7 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 	private class DrawerItemClickListener implements
 			ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			selectItem(position);
 		}
 	}
@@ -177,7 +175,6 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		getMenuInflater().inflate(R.menu.menu_extra_actions, menu);
 		final MenuItem searchMenuItem = menu.findItem(R.id.action_extra);
 		return super.onCreateOptionsMenu(menu);
@@ -185,14 +182,12 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action items related to the content
-		// view
+		// If the nav drawer is open, hide action 
+		// items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-
 		menu.findItem(R.id.action_extra).setVisible(!drawerOpen);
 		return true;
 	}
 
 	abstract public void selectItem(int position);
-
 }

@@ -23,7 +23,7 @@ public class EmailSignupFragment extends Fragment
 implements OnClickListener, OnFocusChangeListener{
 	private View root;
 	private SignupScreenCallback signupCallback = null;
-	private EditText birthday, firstName, middleName, 
+	private EditText birthday, firstName, middleName,  //TODO: use these fields
 	lastName, address, previousName, phoneNumber;
 	private RoundedImageView uploadImage;
 

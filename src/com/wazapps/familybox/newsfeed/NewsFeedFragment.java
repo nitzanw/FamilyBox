@@ -1,12 +1,7 @@
 package com.wazapps.familybox.newsfeed;
 
-import java.util.Locale;
-
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.TabsFragment;
-import com.wazapps.familybox.R.id;
-import com.wazapps.familybox.R.layout;
-import com.wazapps.familybox.R.string;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
@@ -26,9 +21,7 @@ public class NewsFeedFragment extends TabsFragment {
 
 		}
 		mActionBar = getActivity().getActionBar();
-
 		setHasOptionsMenu(true);
-
 	}
 
 	@Override
@@ -41,18 +34,19 @@ public class NewsFeedFragment extends TabsFragment {
 
 		ViewGroup rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_photo_album_store_tabs, null);
-		mTabHost = (FragmentTabHost) rootView
+		this.mTabHost = (FragmentTabHost) rootView
 				.findViewById(android.R.id.tabhost);
-		mTabHost.setup(getActivity(), getChildFragmentManager(),
+		this.mTabHost.setup(getActivity(), getChildFragmentManager(),
 				R.id.realtabcontent);
+		
 		// add tabs to the tabs storage
-		mTabHost.addTab(
-				mTabHost.newTabSpec(NEWS).setIndicator(
+		this.mTabHost.addTab(
+				this.mTabHost.newTabSpec(NEWS).setIndicator(
 						makeTabIndicator(R.string.news)),
 				NewsFragmentTab.class, this.getArguments());
 
-		mTabHost.addTab(
-				mTabHost.newTabSpec(EVENTS).setIndicator(makeTabIndicator(
+		this.mTabHost.addTab(
+				this.mTabHost.newTabSpec(EVENTS).setIndicator(makeTabIndicator(
 
 				R.string.events)), EventsFragmentTab.class, this.getArguments());
 

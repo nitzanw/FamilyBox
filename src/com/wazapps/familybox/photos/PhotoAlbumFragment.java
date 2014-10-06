@@ -1,51 +1,26 @@
 package com.wazapps.familybox.photos;
 
-import java.util.Locale;
-
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.TabsFragment;
-import com.wazapps.familybox.R.id;
-import com.wazapps.familybox.R.layout;
-import com.wazapps.familybox.R.string;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
 
 public class PhotoAlbumFragment extends TabsFragment {
-
 	private static final String MY_FAMILY = "myFamily";
 	private static final String SHARED_ALBUM = "sharedAlbum";
 	private static final String FAVORITES = "favorites";
 
-
-
-
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (savedInstanceState != null) {
-
-		}
-		
+		if (savedInstanceState != null) {}
 		mActionBar = getActivity().getActionBar();
-		
 		setHasOptionsMenu(true);
-
 	}
-
-
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
