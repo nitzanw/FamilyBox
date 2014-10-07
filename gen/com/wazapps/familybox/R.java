@@ -336,11 +336,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int fragment_photo_album_store_tabs=0x7f030016;
         public static final int fragment_photo_albums=0x7f030017;
         public static final int fragment_profile=0x7f030018;
-        public static final int fragment_shared_album=0x7f030019;
-        public static final int fragment_signup_email=0x7f03001a;
-        public static final int image_item=0x7f03001b;
-        public static final int news_feed_item=0x7f03001c;
-        public static final int shared_album_item=0x7f03001d;
+        public static final int fragment_profile2=0x7f030019;
+        public static final int fragment_shared_album=0x7f03001a;
+        public static final int fragment_signup_email=0x7f03001b;
+        public static final int image_item=0x7f03001c;
+        public static final int news_feed_item=0x7f03001d;
+        public static final int shared_album_item=0x7f03001e;
     }
     public static final class menu {
         public static final int menu_extra_actions=0x7f090000;
