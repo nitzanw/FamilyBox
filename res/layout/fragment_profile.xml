@@ -53,114 +53,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/background_light"
-		
         android:layout_below="@+id/ll_profile_upper">
-
-        <ScrollView
-            android:id="@+id/sv_profile_details"
+        
+        <ListView 
+            android:id="@+id/profile_details"
             android:layout_width="fill_parent"
-            android:layout_height="400dp">
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:background="@drawable/seperator"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_profile_details"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:gravity="center"
-                    android:text="@string/profile_details"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_profile_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="3dp"
-                    android:text="@string/profile_details_address"
-                    android:textColor="@color/grey_subtitle"
-                    android:textSize="15sp" />
-
-
-                <TextView
-                    android:id="@+id/tv_profile_address_data"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/profile_details_address_data"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/tv_profile_birthday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/profile_details_birthday"
-                    android:textColor="@color/grey_subtitle"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/tv_profile_birthday_data"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/profile_details_birthday_data"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/tv_profile_curr_family_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/profile_details_pre_family"
-                    android:textColor="@color/grey_subtitle"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/tv_profile_curr_family_name_data"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/profile_details_pre_family_data"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/tv_profile_quotes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/profile_details_quotes"
-                    android:textColor="@color/grey_subtitle"
-                    android:textSize="15sp" />
-
-                <LinearLayout
-                    android:id="@+id/ll_quotes"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/tv_profile_quotes_data"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:text="@string/profile_details_quotes_data"
-                        android:textSize="15sp" />
-                </LinearLayout>
-            </LinearLayout>
-        </ScrollView>
+            android:layout_height="300dp">
+        </ListView>
 
         <LinearLayout
         android:layout_width="fill_parent"
@@ -180,7 +79,7 @@
         android:textSize="20sp" />
 
         <com.wazapps.familybox.util.HorizontialListView
-  		android:id="@+id/familyMembersList"
+  		android:id="@+id/family_members_list"
   		android:layout_width="fill_parent"
   		android:layout_height="120dp"
   		android:background="@android:color/background_light"/>

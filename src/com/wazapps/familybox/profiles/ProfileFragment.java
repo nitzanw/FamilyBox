@@ -17,12 +17,11 @@ public class ProfileFragment extends Fragment {
 	private ProfileFamilyListAdapter familyAdapter;
 	private ArrayList<FamilyMemberListDetails> familyListData;
 	
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		root = inflater.inflate(R.layout.fragment_profile, container, false);
-		this.familyList = (HorizontialListView) root.findViewById(R.id.familyMembersList);
+		this.familyList = (HorizontialListView) root.findViewById(R.id.family_members_list);
 		this.familyListData = new ArrayList<FamilyMemberListDetails>();
 		this.familyAdapter = new ProfileFamilyListAdapter(this.getActivity(), 
 				this.familyListData);
@@ -38,5 +37,8 @@ public class ProfileFragment extends Fragment {
 		this.familyListData.add(new FamilyMemberListDetails("F1U3", "", "Tal" , "Sister"));
 		this.familyAdapter.notifyDataSetChanged();
 	}
-
+	
+	private void getProfileDetails() {
+		
+	}
 }
