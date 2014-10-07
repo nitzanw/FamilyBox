@@ -179,48 +179,11 @@
         android:text="@string/profile_close_family_title"
         android:textSize="20sp" />
 
-        <HorizontalScrollView
-        android:id="@+id/hsv_profile_close_family"
-        android:layout_width="fill_parent"
-        android:layout_height="112dp">
-
-        <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-        android:id="@+id/tv_close_family_role"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/grey_subtitle"
-        android:textSize="13sp"
-        android:text="@string/father" />
-
-        <ImageView
-        android:id="@+id/iv_profile_family_member"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-3dp"
-        android:src="@drawable/family_member_profile_pic_elipse_lines" />
-
-        <TextView
-        android:id="@+id/tv_close_family_member_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="-3dp"
-        android:text="@string/father_name" />
-        </LinearLayout>
-        </LinearLayout>
-        </HorizontalScrollView>
+        <com.wazapps.familybox.util.HorizontialListView
+  		android:id="@+id/familyMembersList"
+  		android:layout_width="fill_parent"
+  		android:layout_height="120dp"
+  		android:background="@android:color/background_light"/>
         </LinearLayout>
     </FrameLayout> 
 
