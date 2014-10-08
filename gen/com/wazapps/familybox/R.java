@@ -98,7 +98,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int familybox_tab_unselected_focused_holo=0x7f02001d;
         public static final int familybox_tab_unselected_holo=0x7f02001e;
         public static final int familybox_tab_unselected_pressed_holo=0x7f02001f;
-        public static final int fb_logo=0x7f020020;
+        public static final int fb_icon=0x7f020020;
         public static final int full_bg=0x7f020021;
         public static final int heart_icon=0x7f020022;
         public static final int ic_launcher=0x7f020023;
