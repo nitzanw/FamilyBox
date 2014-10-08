@@ -170,7 +170,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int yes_button_unpressed=0x7f020065;
     }
     public static final class id {
-        public static final int action_extra=0x7f0a0083;
+        public static final int action_extra=0x7f0a0085;
         public static final int button_login_email=0x7f0a0048;
         public static final int button_login_facebook=0x7f0a0047;
         public static final int button_signup=0x7f0a0049;
@@ -259,6 +259,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int ll_letter_z_list=0x7f0a006f;
         public static final int ll_news_feed_empty=0x7f0a004c;
         public static final int ll_news_feed_item_date=0x7f0a007d;
+        public static final int ll_profile_details_header_container=0x7f0a0082;
         public static final int ll_profile_upper=0x7f0a004f;
         public static final int ll_signup_first_row=0x7f0a0071;
         public static final int news_feed_empty_click=0x7f0a004d;
@@ -299,9 +300,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int tv_personal_welcome_profile_pic=0x7f0a000a;
         public static final int tv_profile_detail_data=0x7f0a0081;
         public static final int tv_profile_detail_header=0x7f0a0080;
+        public static final int tv_profile_details_header=0x7f0a0083;
         public static final int tv_profile_status=0x7f0a0052;
         public static final int tv_profile_username=0x7f0a0051;
-        public static final int tv_shared_family_item=0x7f0a0082;
+        public static final int tv_shared_family_item=0x7f0a0084;
     }
     public static final class layout {
         public static final int activity_fullscreen=0x7f030000;
@@ -330,12 +332,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int fragment_photo_album_store_tabs=0x7f030017;
         public static final int fragment_photo_albums=0x7f030018;
         public static final int fragment_profile=0x7f030019;
-        public static final int fragment_profile2=0x7f03001a;
-        public static final int fragment_shared_album=0x7f03001b;
-        public static final int fragment_signup_email=0x7f03001c;
-        public static final int image_item=0x7f03001d;
-        public static final int news_feed_item=0x7f03001e;
-        public static final int profile_details_item=0x7f03001f;
+        public static final int fragment_shared_album=0x7f03001a;
+        public static final int fragment_signup_email=0x7f03001b;
+        public static final int image_item=0x7f03001c;
+        public static final int news_feed_item=0x7f03001d;
+        public static final int profile_details_item=0x7f03001e;
+        public static final int profile_details_list_header=0x7f03001f;
         public static final int shared_album_item=0x7f030020;
     }
     public static final class menu {

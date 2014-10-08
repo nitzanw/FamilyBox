@@ -49,7 +49,8 @@
             android:text="@string/profile_status" />
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/background_light"
@@ -58,7 +59,10 @@
         <ListView 
             android:id="@+id/profile_details"
             android:layout_width="fill_parent"
-            android:layout_height="300dp">
+            android:layout_height="150dp"
+            android:divider="@null"
+			android:dividerHeight="0dp"
+            android:background="@drawable/seperator">
         </ListView>
 
         <LinearLayout
@@ -84,6 +88,6 @@
   		android:layout_height="120dp"
   		android:background="@android:color/background_light"/>
         </LinearLayout>
-    </FrameLayout> 
+    </LinearLayout> 
 
 </RelativeLayout>
