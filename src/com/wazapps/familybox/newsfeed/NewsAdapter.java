@@ -43,9 +43,9 @@ public class NewsAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
 		if (v == null) {			
-			LayoutInflater vi;
-			vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.news_feed_item, parent, false);	
+			LayoutInflater li;
+			li = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			v = li.inflate(R.layout.news_feed_item, parent, false);	
 		}
 		
 		NewsItem item = this.newsArr.get(position);

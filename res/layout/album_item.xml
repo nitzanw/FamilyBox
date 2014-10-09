@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+    android:id="@+id/fl_album_item"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:scaleType="centerCrop"
-    android:background="@drawable/image6">
-    <ImageButton
+    android:background="@drawable/image6"
+    android:scaleType="centerCrop" >
 
+    <ImageButton
         android:id="@+id/ib_album_image"
         android:layout_width="fill_parent"
         android:layout_height="170dp"

@@ -26,7 +26,6 @@ public class TabsFragment extends Fragment {
 		Tabimage.setText(text);
 		Tabimage.setBackgroundColor(getResources().getColor(R.color.gray_tab_background));
 		Tabimage.setGravity(Gravity.CENTER);
-		Tabimage.setTextSize(getResources().getDimension(R.dimen.tab_font_size));
 		Tabimage.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.tab_height));
 		Tabimage.setMinHeight(getResources().getDimensionPixelSize(R.dimen.tab_height));
 		Tabimage.setPadding(

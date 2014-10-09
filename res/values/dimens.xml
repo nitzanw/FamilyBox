@@ -7,6 +7,6 @@
     <dimen name="tab_top">10dp</dimen>
     <dimen name="tab_lp">1dp</dimen>
     <dimen name="tabs_font_size">10dp</dimen>
-    <dimen name="tab_font_size">7sp</dimen>
+    <dimen name="tab_font_size">5sp</dimen>
 
 </resources>
