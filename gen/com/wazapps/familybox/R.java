@@ -163,11 +163,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int splash_grdiant_bg=0x7f02005e;
         public static final int stub=0x7f02005f;
         public static final int tab_indicator=0x7f020060;
-        public static final int tree_icon=0x7f020061;
-        public static final int welcome_elipse=0x7f020062;
-        public static final int x_button=0x7f020063;
-        public static final int yes_button_pressed=0x7f020064;
-        public static final int yes_button_unpressed=0x7f020065;
+        public static final int theme_scrollbar_handle=0x7f020061;
+        public static final int tree_icon=0x7f020062;
+        public static final int welcome_elipse=0x7f020063;
+        public static final int x_button=0x7f020064;
+        public static final int yes_button_pressed=0x7f020065;
+        public static final int yes_button_unpressed=0x7f020066;
     }
     public static final class id {
         public static final int action_extra=0x7f0a008b;
