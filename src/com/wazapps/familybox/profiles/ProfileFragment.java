@@ -42,9 +42,9 @@ public class ProfileFragment extends Fragment {
 		this.profileDetailsList = (ListView) root.findViewById(R.id.profile_details);		
 		//set profile details list header
 		//TODO: THIS DOESNT WORK. find a way to add a header to listview
-		LayoutInflater lf = getActivity().getLayoutInflater();
-		ViewGroup headerView = (ViewGroup) lf.inflate(R.layout.profile_details_item, this.profileDetailsList, false);
-		this.profileDetailsList.addHeaderView(headerView, null, false);
+//		LayoutInflater lf = getActivity().getLayoutInflater();
+//		ViewGroup headerView = (ViewGroup) lf.inflate(R.layout.profile_details_item, this.profileDetailsList, false);
+//		this.profileDetailsList.addHeaderView(headerView, null, false);
 		
 		this.profileDetailsData = new ArrayList<ProfileDetails>();
 		this.profileDetailsAdapter = new ProfileDetailsAdapter(this.getActivity(),

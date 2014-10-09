@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.wazapps.familybox.ActivityWithDrawer;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.familyTree.FamilyTreeActivity;
 import com.wazapps.familybox.newsfeed.NewsfeedActivity;
 import com.wazapps.familybox.photos.PhotoAlbumsActivity;
 
@@ -27,11 +28,11 @@ public class ProfileActivity extends ActivityWithDrawer {
 		mPosition = position;
 		switch (position) {
 		case MY_PROFILE_POS:			
-			
 			break;
 
 		case FAMILY_TREE_POS:
-
+			Intent familyTreeIntent = new Intent(this, FamilyTreeActivity.class);
+			startActivity(familyTreeIntent);
 			break;
 			
 		case PHOTOS_POS:

@@ -13,7 +13,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/fb_logo"
+        android:icon="@drawable/fb_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -52,6 +52,11 @@
         <activity
             android:name="com.wazapps.familybox.photos.PhotoAlbumScreenActivity"
             android:configChanges="keyboardHidden|screenSize"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.wazapps.familybox.familyTree.FamilyTreeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" >
         </activity>
     </application>

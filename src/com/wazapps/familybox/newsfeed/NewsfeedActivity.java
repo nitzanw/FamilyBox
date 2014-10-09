@@ -3,6 +3,7 @@ package com.wazapps.familybox.newsfeed;
 import com.wazapps.familybox.ActivityWithDrawer;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.TabsFragment;
+import com.wazapps.familybox.familyTree.FamilyTreeActivity;
 import com.wazapps.familybox.photos.PhotoAlbumsActivity;
 import com.wazapps.familybox.profiles.ProfileActivity;
 
@@ -32,8 +33,10 @@ public class NewsfeedActivity extends ActivityWithDrawer {
 			break;
 
 		case FAMILY_TREE_POS:
-
+			Intent familyTreeIntent = new Intent(this, FamilyTreeActivity.class);
+			startActivity(familyTreeIntent);
 			break;
+			
 		case PHOTOS_POS:
 			Intent photosIntent = new Intent(this, PhotoAlbumsActivity.class);
 			startActivity(photosIntent);
