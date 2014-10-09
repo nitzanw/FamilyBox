@@ -81,5 +81,6 @@
     <string name="events">Events</string>
     <string name="news_feed_title">News feed</string>
     <string name="profile_title">Profile</string>
+    <string name="family_tree_title">Family Tree</string>
 
 </resources>

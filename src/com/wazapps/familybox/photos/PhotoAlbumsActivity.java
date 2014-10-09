@@ -3,6 +3,7 @@ package com.wazapps.familybox.photos;
 import com.wazapps.familybox.ActivityWithDrawer;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.TabsFragment;
+import com.wazapps.familybox.familyTree.FamilyTreeActivity;
 import com.wazapps.familybox.newsfeed.NewsfeedActivity;
 import com.wazapps.familybox.profiles.ProfileActivity;
 
@@ -28,12 +29,13 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 		this.mPosition = position;
 		switch (position) {
 		case MY_PROFILE_POS:
-			Intent intent1 = new Intent(this, ProfileActivity.class);
-			startActivity(intent1);
+			Intent profileIntent = new Intent(this, ProfileActivity.class);
+			startActivity(profileIntent);
 			break;
 			
 		case FAMILY_TREE_POS:
-
+			Intent familyTreeIntent = new Intent(this, FamilyTreeActivity.class);
+			startActivity(familyTreeIntent);
 			break;
 			
 		case PHOTOS_POS:
@@ -47,8 +49,8 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 			break;
 			
 		case NEWS_POS:
-			Intent intent2 = new Intent(this, NewsfeedActivity.class);
-			startActivity(intent2);
+			Intent newsIntent = new Intent(this, NewsfeedActivity.class);
+			startActivity(newsIntent);
 			break;
 			
 		case EXPAND_NETWORK_POS:
