@@ -1,30 +1,31 @@
 package com.wazapps.familybox.photos;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.support.v4.app.FragmentActivity;
+
 import com.wazapps.familybox.R;
 
-public class PhotoGridAdapter extends BaseAdapter{
+public class PhotoGridAdapter extends BaseAdapter {
 
-	
 	private static final int PHOTO_POS = R.string.photo_albums;
 	// Declare Variables
 	FragmentActivity activity;
 	LayoutInflater inflater;
-	ArrayList<PhotoItem> photoItemsList;
+	PhotoItem[] photoItemsList;
 
-	public PhotoGridAdapter(FragmentActivity activity, ArrayList<PhotoItem> photoUrls) {
+	public PhotoGridAdapter(FragmentActivity activity, PhotoItem[] photoUrls) {
 		this.activity = activity;
-		this.photoItemsList = photoUrls;
+		this.photoItemsList = Arrays.copyOf(photoUrls, photoUrls.length,
+				PhotoItem[].class);
 		inflater = (LayoutInflater) activity
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -32,12 +33,12 @@ public class PhotoGridAdapter extends BaseAdapter{
 
 	@Override
 	public int getCount() {
-		return photoItemsList.size();
+		return photoItemsList.length;
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return photoItemsList.get(position);
+		return photoItemsList[position];
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class PhotoGridAdapter extends BaseAdapter{
 
 		}
 		ImageView image = (ImageView) vi.findViewById(R.id.iv_photo_in_album);
-		
+
 		image.setTag(PHOTO_POS, position);
 		// Set the results into ImageView and textview
 
@@ -65,9 +66,11 @@ public class PhotoGridAdapter extends BaseAdapter{
 				int photoPos = (Integer) v.getTag(PHOTO_POS);
 				Bundle args = new Bundle();
 				args.putInt(PhotoDialogFragment.PHOTO_FIRST_POS, photoPos);
-				args.putParcelableArrayList(PhotoDialogFragment.PHOTO_ALBUM_DATA, photoItemsList);
+				args.putParcelableArray(PhotoDialogFragment.PHOTO_ALBUM_DATA,
+						photoItemsList);
 				photoDialog.setArguments(args);
-				photoDialog.show(activity.getSupportFragmentManager(), PhotoDialogFragment.PHOTO_DIALOG_FRAG);
+				photoDialog.show(activity.getSupportFragmentManager(),
+						PhotoDialogFragment.PHOTO_DIALOG_FRAG);
 
 			}
 

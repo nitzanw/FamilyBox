@@ -1,12 +1,10 @@
 package com.wazapps.familybox.photos;
 
-import java.util.ArrayList;
-
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.util.LogUtils;
+import com.wazapps.familybox.util.OnSwipeTouchListener;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +23,7 @@ public class PhotoDialogFragment extends DialogFragment implements
 	protected static final String PHOTO_FIRST_POS = "first photo position";
 	private View root;
 	private int mainPhotoIndex;
-	private ArrayList<Parcelable> photoList;
+	private PhotoItem[] photoList;
 	private TextView mImageCaption;
 	private FrameLayout mImage;
 	private boolean captionFrameOn = true;
@@ -39,6 +37,27 @@ public class PhotoDialogFragment extends DialogFragment implements
 				false);
 		mImage = (FrameLayout) root.findViewById(R.id.fl_image_layout);
 		mImage.setOnClickListener(this);
+		mImage.setOnTouchListener(new OnSwipeTouchListener() {
+			public boolean onSwipeTop() {
+
+				return false;
+			}
+
+			public boolean onSwipeRight() {
+				navigateLeft();
+				return true;
+			}
+
+			public boolean onSwipeLeft() {
+				navigateRight();
+				return true;
+			}
+
+			public boolean onSwipeBottom() {
+
+				return false;
+			}
+		});
 		root.findViewById(R.id.ib_right_arrow).setOnClickListener(this);
 		root.findViewById(R.id.ib_left_arrow).setOnClickListener(this);
 		root.findViewById(R.id.iv_favorite_icon).setOnClickListener(this);
@@ -56,41 +75,26 @@ public class PhotoDialogFragment extends DialogFragment implements
 		Bundle args = getArguments();
 		if (args != null) {
 			mainPhotoIndex = args.getInt(PHOTO_FIRST_POS);
-			photoList = args.getParcelableArrayList(PHOTO_ALBUM_DATA);
+			photoList = (PhotoItem[]) args.getParcelableArray(PHOTO_ALBUM_DATA);
+			// TODO load image
+			// mImage.setBackground(((PhotoItem)photoList.get(firstPhotoIndex)).getUrl());
+			mImageCaption.setText(((PhotoItem) photoList[mainPhotoIndex])
+					.getCaption());
 		} else {
 			LogUtils.logWarning(getDialog().getClass().getName(),
 					"the argument did not pass properlly!");
 		}
-		// TODO load image
-		// mImage.setBackground(((PhotoItem)photoList.get(firstPhotoIndex)).getUrl());
-		mImageCaption.setText(((PhotoItem) photoList.get(mainPhotoIndex))
-				.getCaption());
 
 	}
 
 	@Override
 	public void onClick(View v) {
 		if (R.id.ib_right_arrow == v.getId()) {
-			// increase the index by one to go right, if there are no more
-			// items, go back to the beginning of the list
-			mainPhotoIndex++;
-			if (mainPhotoIndex > photoList.size() - 1) {
-				mainPhotoIndex = 0;
-			}
-			// mImage.setBackground(((PhotoItem)photoList.get(mainPhotoIndex)).getUrl());
-			mImageCaption.setText(((PhotoItem) photoList.get(mainPhotoIndex))
-					.getCaption());
+			navigateRight();
 		} else if (R.id.ib_left_arrow == v.getId()) {
-			// decrease the index by one to go left, if there are no more items,
-			// go back to the end of the list
-			mainPhotoIndex--;
-			if (mainPhotoIndex < 0) {
-				mainPhotoIndex = photoList.size() - 1;
-			}
-			// mImage.setBackground(((PhotoItem)photoList.get(mainPhotoIndex)).getUrl());
-			mImageCaption.setText(((PhotoItem) photoList.get(mainPhotoIndex))
-					.getCaption());
+			navigateLeft();
 		} else if (R.id.fl_image_layout == v.getId()) {
+			LogUtils.logDebug(getTag(), "clicked");
 			// toggle the visibility of the orange frame
 			if (captionFrameOn) {
 				mImageFrame.setVisibility(View.INVISIBLE);
@@ -105,5 +109,29 @@ public class PhotoDialogFragment extends DialogFragment implements
 		} else if (R.id.iv_share_icon == v.getId()) {
 
 		}
+	}
+
+	private void navigateRight() {
+		// increase the index by one to go right, if there are no more
+		// items, go back to the beginning of the list
+		mainPhotoIndex++;
+		if (mainPhotoIndex > photoList.length - 1) {
+			mainPhotoIndex = 0;
+		}
+		// mImage.setBackground(((PhotoItem)photoList.get(mainPhotoIndex)).getUrl());
+		mImageCaption.setText(((PhotoItem) photoList[mainPhotoIndex])
+				.getCaption());
+	}
+
+	private void navigateLeft() {
+		// decrease the index by one to go left, if there are no more items,
+		// go back to the end of the list
+		mainPhotoIndex--;
+		if (mainPhotoIndex < 0) {
+			mainPhotoIndex = photoList.length - 1;
+		}
+		// mImage.setBackground(((PhotoItem)photoList.get(mainPhotoIndex)).getUrl());
+		mImageCaption.setText(((PhotoItem) photoList[mainPhotoIndex])
+				.getCaption());
 	}
 }

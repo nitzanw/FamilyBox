@@ -1,7 +1,6 @@
 package com.wazapps.familybox.photos;
 
-import java.util.ArrayList;
-
+import java.util.Arrays;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,30 +8,34 @@ import android.os.Parcelable;
 //a class that hold all photo albums data
 public class AlbumItem implements Parcelable {
 
-	private ArrayList<PhotoItem> photosUrls;
+	private PhotoItem[] photoList;
 	private String albumName;
 	private String albumDate;
 
-	public AlbumItem(ArrayList<PhotoItem> photosUrls, String albumName,
-			String albumDate) {
-		this.photosUrls = photosUrls;
+	public AlbumItem(PhotoItem[] photoList, String albumName, String albumDate) {
+		this.photoList = photoList;
 		this.albumName = albumName;
 		this.albumDate = albumDate;
 	}
 
 	public AlbumItem(Parcel source) {
-		this.photosUrls = new ArrayList<PhotoItem>();
-	    source.readList(this.photosUrls, getClass().getClassLoader());
+		Parcelable[] parcelableArray = source
+				.readParcelableArray(PhotoItem.class.getClassLoader());
+		this.photoList = null;
+		if (parcelableArray != null) {
+			this.photoList = Arrays.copyOf(parcelableArray,
+					parcelableArray.length, PhotoItem[].class);
+		}
 		this.albumName = source.readString();
 		this.albumDate = source.readString();
 	}
 
-	public ArrayList<PhotoItem> getPhotosUrls() {
-		return photosUrls;
+	public PhotoItem[] getPhotosList() {
+		return photoList;
 	}
 
-	public void setPhotosUrls(ArrayList<PhotoItem> photosUrls) {
-		this.photosUrls = photosUrls;
+	public void setPhotosUrls(PhotoItem[] photosUrls) {
+		this.photoList = photosUrls;
 	}
 
 	public String getAlbumName() {
@@ -58,12 +61,10 @@ public class AlbumItem implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeTypedList(photosUrls);
+		dest.writeParcelableArray(photoList, flags);
 		dest.writeString(albumName);
 		dest.writeString(albumDate);
 	}
-	
-
 
 	public static final Parcelable.Creator<AlbumItem> CREATOR = new Parcelable.Creator<AlbumItem>() {
 

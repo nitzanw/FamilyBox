@@ -1,13 +1,13 @@
 package com.wazapps.familybox.photos;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.wazapps.familybox.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +19,17 @@ import android.widget.TextView;
 
 public class AlbumGridAdapter extends BaseAdapter {
 
-	
 	private static final int ALBUM_ITEM_POS = R.string.photos_tab_my_family;
 	// Declare Variables
 	Activity activity;
 	LayoutInflater inflater;
-	ArrayList<AlbumItem> albumList;
+	AlbumItem[] albumList;
 
-	public AlbumGridAdapter(Activity activity, ArrayList<AlbumItem> albumList) {
+	public AlbumGridAdapter(Activity activity, AlbumItem[] albumList) {
 		this.activity = activity;
-		this.albumList = albumList;
+		this.albumList = Arrays.copyOf(albumList, albumList.length,
+				AlbumItem[].class);
+		
 		inflater = (LayoutInflater) activity
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -36,12 +37,12 @@ public class AlbumGridAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return albumList.size();
+		return albumList.length;
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return albumList.get(position);
+		return albumList[position];
 	}
 
 	@Override
@@ -61,12 +62,12 @@ public class AlbumGridAdapter extends BaseAdapter {
 		imageAlbum.setBackground(activity.getResources().getDrawable(
 				R.drawable.image6));
 		TextView titleAlbum = (TextView) vi.findViewById(R.id.tv_album_title);
-		titleAlbum.setText(albumList.get(position).getAlbumName());
+		titleAlbum.setText(albumList[position].getAlbumName());
 		TextView dateAlbum = (TextView) vi.findViewById(R.id.tv_album_date);
-		dateAlbum.setText(albumList.get(position).getAlbumDate());
+		dateAlbum.setText(albumList[position].getAlbumDate());
 		ImageButton albumFrame = (ImageButton) vi
 				.findViewById(R.id.ib_album_image);
-		albumFrame.setTag(ALBUM_ITEM_POS, albumList.get(position));
+		albumFrame.setTag(ALBUM_ITEM_POS, albumList[position]);
 		// Set the results into ImageView and textview
 
 		// Listen for GridView Item Click
@@ -77,8 +78,8 @@ public class AlbumGridAdapter extends BaseAdapter {
 				Intent i = new Intent(activity, PhotoAlbumScreenActivity.class);
 				Bundle args = new Bundle();
 				AlbumItem item = (AlbumItem) v.getTag(ALBUM_ITEM_POS);
-				args.putParcelable(PhotoAlbumScreenActivity.ALBUM_ITEM, item);
-				i.putExtra(PhotoAlbumScreenActivity.ALBUM_ITEM, args);
+				args.putParcelable(PhotoAlbumScreenFragment.ALBUM_ITEM, item);
+				i.putExtra(PhotoAlbumScreenFragment.ALBUM_ITEM, args);
 				activity.startActivity(i);
 
 			}
