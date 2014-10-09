@@ -3,7 +3,7 @@ package com.wazapps.familybox.familyTree;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class FamiliesListItem implements Parcelable {
+public class FamiliesListItem implements Parcelable, Comparable<FamiliesListItem> {
 	private String familyId, familyName;
 	
 	public static final Parcelable.Creator<FamiliesListItem> CREATOR = 
@@ -45,5 +45,10 @@ public class FamiliesListItem implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(this.familyId);
 		dest.writeString(this.familyName);
+	}
+
+	@Override
+	public int compareTo(FamiliesListItem another) {
+		return this.getFamilyName().compareTo(another.getFamilyName());
 	}
 }
