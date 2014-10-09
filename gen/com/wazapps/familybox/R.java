@@ -199,6 +199,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int family_members_list_item=0x7f0a0016;
         public static final int family_tree_fragment_container=0x7f0a0000;
         public static final int fl_album_item=0x7f0a0008;
+        public static final int fl_image_layout=0x7f0a0044;
         public static final int fragment_container=0x7f0a0004;
         public static final int fragment_families_list=0x7f0a0042;
         public static final int fullscreen_content=0x7f0a0001;
@@ -216,7 +217,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int ib_exit_signup_birthday=0x7f0a001a;
         public static final int ib_left_arrow=0x7f0a0046;
         public static final int ib_right_arrow=0x7f0a0045;
-        public static final int iv_actual_image=0x7f0a0044;
         public static final int iv_approve_invite_accept=0x7f0a0032;
         public static final int iv_empty_network_1_no=0x7f0a0010;
         public static final int iv_empty_network_1_yes=0x7f0a0011;

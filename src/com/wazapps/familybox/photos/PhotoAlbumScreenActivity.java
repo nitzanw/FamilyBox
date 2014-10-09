@@ -33,7 +33,7 @@ public class PhotoAlbumScreenActivity extends FragmentActivity {
 		ArrayList<PhotoItem> tempData = new ArrayList<PhotoItem>();
 		for (int i = 0; i < 18; i++) {
 			tempData.add(new PhotoItem("11.2.201" + i, "www.bla.com",
-					"This is me and my friend Dan"));
+					"This is me and my friend Dan " + i));
 		}
 		mAdpter = new PhotoGridAdapter(this, tempData);
 		mGridView.setAdapter(mAdpter);

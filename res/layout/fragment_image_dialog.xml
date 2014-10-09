@@ -5,23 +5,23 @@
     android:layout_gravity="center_horizontal" >
 
     <FrameLayout
-        android:id="@+id/iv_actual_image"
+        android:id="@+id/fl_image_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/example_image_1" >
 
         <ImageButton
             android:id="@+id/ib_right_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="center_vertical|right"
             android:background="@android:color/transparent"
             android:src="@drawable/arrow_icon_right" />
 
         <ImageButton
             android:id="@+id/ib_left_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="center_vertical|left"
             android:background="@android:color/transparent"
             android:src="@drawable/arrow_icon_left" />
@@ -31,8 +31,7 @@
         android:id="@+id/rl_image_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:layout_alignBottom="@+id/iv_actual_image"
+        android:layout_alignBottom="@+id/fl_image_layout"
         android:background="@drawable/image_frame" >
 
         <ImageView
@@ -64,9 +63,8 @@
             android:layout_marginRight="5dp"
             android:gravity="center"
             android:maxLength="105"
-            android:text="hghjgjhgghjgjhnvvjhfdhfdsjdgjagsgadgsjagfjdgfjlagljfgaljewdgfljgfjldgljvdljgvljjhludsgvljdjvdjvjdvjh"
+            android:text="This is me and my friend Dan 00"
             android:textAlignment="gravity" />
-
     </RelativeLayout>
 
 </RelativeLayout>
