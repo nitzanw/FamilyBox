@@ -78,8 +78,8 @@ public class AlbumGridAdapter extends BaseAdapter {
 				Intent i = new Intent(activity, PhotoAlbumScreenActivity.class);
 				Bundle args = new Bundle();
 				AlbumItem item = (AlbumItem) v.getTag(ALBUM_ITEM_POS);
-				args.putParcelable(PhotoAlbumScreenFragment.ALBUM_ITEM, item);
-				i.putExtra(PhotoAlbumScreenFragment.ALBUM_ITEM, args);
+				args.putParcelable(PhotoGridFragment.ALBUM_ITEM, item);
+				i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
 				activity.startActivity(i);
 
 			}

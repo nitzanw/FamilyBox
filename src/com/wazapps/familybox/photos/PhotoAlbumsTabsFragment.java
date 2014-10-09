@@ -48,8 +48,8 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 					"December 201" + i);
 		}
 		Bundle args = new Bundle();
-		args.putParcelableArray(PhotoAlbumScreenFragment.ALBUM_ITEM_LIST, albumList);
-		args.putParcelable(PhotoAlbumScreenFragment.ALBUM_ITEM, albumList[0]);
+		args.putParcelableArray(PhotoGridFragment.ALBUM_ITEM_LIST, albumList);
+		args.putParcelable(PhotoGridFragment.ALBUM_ITEM, albumList[0]);
 		ViewGroup rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_photo_album_store_tabs, null);
 		this.tabHost = (FragmentTabHost) rootView
@@ -61,17 +61,17 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		this.tabHost.addTab(
 				this.tabHost.newTabSpec(MY_FAMILY).setIndicator(
 						makeTabIndicator(R.string.photos_tab_my_family)),
-				MyFamilyAlbumFragment.class, args);
+				AlbumGridFragment.class, args);
 
 		this.tabHost.addTab(
 				this.tabHost.newTabSpec(SHARED_ALBUM).setIndicator(
 						makeTabIndicator(R.string.photos_tab_shared_album)),
-				SharedAlbumFragment.class, this.getArguments());
+				SharedAlbumFragment.class, args);
 
 		this.tabHost.addTab(
 				tabHost.newTabSpec(FAVORITES).setIndicator(
 						makeTabIndicator(R.string.photos_tab_favorites)),
-				PhotoAlbumScreenFragment.class, args);
+				PhotoGridFragment.class, args);
 
 		return this.tabHost;
 	}

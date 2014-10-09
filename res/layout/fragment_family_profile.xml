@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/tv_family_profile_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_background"
+        android:gravity="center"
+        android:text="Family Name"
+        android:textSize="23sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_family_profile_title"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/parents"
+        android:textSize="20sp" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_family_profile_title"
+        android:layout_centerHorizontal="true" >
+
+        <RelativeLayout
+            android:id="@+id/fl_family_profile_tree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:id="@+id/ll_family_profile_parents"
+                android:layout_width="match_parent"
+                android:layout_height="310dp"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="68dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical" >
+
+                    <com.wazapps.familybox.util.RoundedImageView
+                        android:id="@+id/riv_family_profile_parent_1"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
+                        android:background="@drawable/parent_profile_pic_elipse"
+                        android:cropToPadding="true"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/tv_family_profile_parent_name_1"
+                        android:layout_width="52dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="9dp"
+                        android:gravity="center_horizontal"
+                        android:lines="2"
+                        android:maxLength="16"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:text="Parent name"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_family_profile_parents_connectors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:id="@+id/iv_family_profile_horizontal_connector"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/parents_profile_pics_horizontal_connector" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/vertical_connector" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="68dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical" >
+
+                    <com.wazapps.familybox.util.RoundedImageView
+                        android:id="@+id/riv_family_profile_parent_2"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
+                        android:background="@drawable/parent_profile_pic_elipse"
+                        android:cropToPadding="true"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/tv_family_profile_parent_name_2"
+                        android:layout_width="52dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="9dp"
+                        android:gravity="center_horizontal"
+                        android:lines="2"
+                        android:maxLength="16"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:text="Parent name"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.wazapps.familybox.util.HorizontialListView
+                android:layout_width="match_parent"
+                android:layout_height="67dp"
+                android:layout_alignBottom="@id/ll_family_profile_parents"
+                android:layout_marginBottom="50dp"
+                android:background="@color/orange_drawer" >
+            </com.wazapps.familybox.util.HorizontialListView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ll_family_profile_photo_albums"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_gravity="bottom" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="10dp"
+                android:text="@string/children"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="10dp"
+                android:text="@string/photo_albums"
+                android:textSize="19sp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="30dp"
+                android:src="@drawable/separator_line" />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <com.wazapps.familybox.util.HorizontialListView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/albums_area_background" >
+    </com.wazapps.familybox.util.HorizontialListView>
+
+</RelativeLayout>

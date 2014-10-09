@@ -82,5 +82,7 @@
     <string name="news_feed_title">News feed</string>
     <string name="profile_title">Profile</string>
     <string name="family_tree_title">Family Tree</string>
+    <string name="parents">Parents</string>
+    <string name="children">Children</string>
 
 </resources>
