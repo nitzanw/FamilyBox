@@ -38,33 +38,12 @@
             android:orientation="horizontal" >
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/ll_family_profile_parent_left"
+                android:layout_width="65dp"
+                android:layout_height="90dp"
                 android:layout_marginBottom="68dp"
                 android:gravity="center_horizontal"
-                android:orientation="vertical" >
-
-                <com.wazapps.familybox.util.RoundedImageView
-                    android:id="@+id/riv_family_profile_parent_1"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:background="@drawable/parent_profile_pic_elipse"
-                    android:cropToPadding="true"
-                    android:scaleType="centerCrop" />
-
-                <TextView
-                    android:id="@+id/tv_family_profile_parent_name_1"
-                    android:layout_width="52dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="9dp"
-                    android:gravity="center_horizontal"
-                    android:lines="2"
-                    android:maxLength="16"
-                    android:maxLines="2"
-                    android:minLines="2"
-                    android:text="Parent name"
-                    android:textSize="11sp" />
-            </LinearLayout>
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:id="@+id/ll_family_profile_parents_connectors"
@@ -86,46 +65,26 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/ll_family_profile_parent_right"
+                android:layout_width="65dp"
+                android:layout_height="90dp"
                 android:layout_marginBottom="68dp"
                 android:gravity="center_horizontal"
-                android:orientation="vertical" >
-
-                <com.wazapps.familybox.util.RoundedImageView
-                    android:id="@+id/riv_family_profile_parent_2"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
-                    android:background="@drawable/parent_profile_pic_elipse"
-                    android:cropToPadding="true"
-                    android:scaleType="centerCrop" />
-
-                <TextView
-                    android:id="@+id/tv_family_profile_parent_name_2"
-                    android:layout_width="52dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="9dp"
-                    android:gravity="center_horizontal"
-                    android:lines="2"
-                    android:maxLength="16"
-                    android:maxLines="2"
-                    android:minLines="2"
-                    android:text="Parent name"
-                    android:textSize="11sp" />
-            </LinearLayout>
+                android:orientation="vertical" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/ll_family_profile_parents"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             android:orientation="vertical" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_marginBottom="7dp"
                 android:layout_marginLeft="10dp"
                 android:text="@string/children"
                 android:textSize="20sp" />
@@ -133,8 +92,7 @@
             <com.wazapps.familybox.util.HorizontialListView
                 android:id="@+id/hlv_family_profile_children"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:background="@color/orange_drawer" >
+                android:layout_height="85dp" >
             </com.wazapps.familybox.util.HorizontialListView>
         </LinearLayout>
     </RelativeLayout>
@@ -148,8 +106,9 @@
 
         <TextView
             android:id="@+id/tv_family_profile_albums_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
             android:drawableTop="@drawable/separator_line"
             android:paddingLeft="10dp"
             android:text="@string/photo_albums"
@@ -157,7 +116,7 @@
 
         <com.wazapps.familybox.util.HorizontialListView
             android:id="@+id/hlv_family_profile_albums"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="85dp"
             android:layout_alignParentBottom="true"
             android:layout_below="@id/tv_family_profile_albums_title"

@@ -7,18 +7,21 @@ import android.os.Parcelable;
 
 //a class that hold all photo albums data
 public class AlbumItem implements Parcelable {
-
+	private String id;
 	private PhotoItem[] photoList;
 	private String albumName;
 	private String albumDate;
 
-	public AlbumItem(PhotoItem[] photoList, String albumName, String albumDate) {
+	public AlbumItem(String id, PhotoItem[] photoList, String albumName,
+			String albumDate) {
+		this.id = id;
 		this.photoList = photoList;
 		this.albumName = albumName;
 		this.albumDate = albumDate;
 	}
 
 	public AlbumItem(Parcel source) {
+		this.id = source.readString();
 		Parcelable[] parcelableArray = source
 				.readParcelableArray(PhotoItem.class.getClassLoader());
 		this.photoList = null;
@@ -61,6 +64,7 @@ public class AlbumItem implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(id);
 		dest.writeParcelableArray(photoList, flags);
 		dest.writeString(albumName);
 		dest.writeString(albumDate);
@@ -77,4 +81,13 @@ public class AlbumItem implements Parcelable {
 		}
 	};
 
+	public String getId() {
+
+		return id;
+	}
+
+	public void setId(String id) {
+
+		this.id = id;
+	}
 }

@@ -44,7 +44,7 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 
 		for (int i = 0; i < 6; i++) {
 
-			albumList[i] = new AlbumItem(tempData, albumName + i,
+			albumList[i] = new AlbumItem(String.valueOf(i),tempData, albumName + i,
 					"December 201" + i);
 		}
 		Bundle args = new Bundle();

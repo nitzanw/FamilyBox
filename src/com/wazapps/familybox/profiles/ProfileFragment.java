@@ -20,7 +20,7 @@ public class ProfileFragment extends Fragment {
 	private ListView profileDetailsList;
 	private ProfileFamilyListAdapter familyListAdapter;
 	private ProfileDetailsAdapter profileDetailsAdapter; 
-	private ArrayList<FamilyMemberListDetails> familyListData;
+	private ArrayList<FamilyMemberDetails> familyListData;
 	private ArrayList<ProfileDetails> profileDetailsData; 
 	
 	@Override
@@ -61,15 +61,15 @@ public class ProfileFragment extends Fragment {
 	
 	private void setUpFamilyList() {
 		this.familyList = (HorizontialListView) root.findViewById(R.id.family_members_list);
-		this.familyListData = new ArrayList<FamilyMemberListDetails>();
+		this.familyListData = new ArrayList<FamilyMemberDetails>();
 		this.familyListAdapter = new ProfileFamilyListAdapter(this.getActivity(), 
 				this.familyListData);
 		this.familyList.setAdapter(this.familyListAdapter);
 		
 		//TODO: set up real data
-		this.familyListData.add(new FamilyMemberListDetails("F1U1", "", "Arie", "Father"));
-		this.familyListData.add(new FamilyMemberListDetails("F1U2", "", "Mati", "Mother"));
-		this.familyListData.add(new FamilyMemberListDetails("F1U3", "", "Tal" , "Sister"));
+		this.familyListData.add(new FamilyMemberDetails("F1U1", "", "Arie", "Father"));
+		this.familyListData.add(new FamilyMemberDetails("F1U2", "", "Mati", "Mother"));
+		this.familyListData.add(new FamilyMemberDetails("F1U3", "", "Tal" , "Sister"));
 		this.familyListAdapter.notifyDataSetChanged();
 	}
 }
