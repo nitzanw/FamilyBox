@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class FamilyMemberDetails implements Parcelable {
-	private String userId, imageURI, name, role;
+	private String userId, imageURI, firstName, lastName, role;
 
 	public static final Parcelable.Creator<FamilyMemberDetails> CREATOR = new Parcelable.Creator<FamilyMemberDetails>() {
 
@@ -17,23 +17,20 @@ public class FamilyMemberDetails implements Parcelable {
 		}
 	};
 
-	protected FamilyMemberDetails clone() {
-		return new FamilyMemberDetails(this.userId, this.imageURI, this.name,
-				this.role);
-	};
-
-	public FamilyMemberDetails(String userId, String imageURI, String name,
-			String role) {
+	public FamilyMemberDetails(String userId, String imageURI,
+			String firstName, String lastName, String role) {
 		this.userId = userId;
 		this.imageURI = imageURI;
-		this.name = name;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.role = role;
 	}
 
 	public FamilyMemberDetails(Parcel details) {
 		this.userId = details.readString();
 		this.imageURI = details.readString();
-		this.name = details.readString();
+		this.firstName = details.readString();
+		this.lastName = details.readString();
 		this.role = details.readString();
 	}
 
@@ -46,7 +43,7 @@ public class FamilyMemberDetails implements Parcelable {
 	}
 
 	public String getName() {
-		return this.name;
+		return this.firstName;
 	}
 
 	public String getRole() {
@@ -62,7 +59,13 @@ public class FamilyMemberDetails implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(this.userId);
 		dest.writeString(this.imageURI);
-		dest.writeString(this.name);
+		dest.writeString(this.firstName);
+		dest.writeString(this.lastName);
 		dest.writeString(this.role);
+	}
+
+	public String getLastName() {
+
+		return lastName;
 	}
 }

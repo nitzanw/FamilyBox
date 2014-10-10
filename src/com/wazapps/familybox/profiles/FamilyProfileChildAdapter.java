@@ -30,7 +30,7 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		
+
 		return childrenList.length;
 	}
 
@@ -43,8 +43,6 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return Long.valueOf(childrenList[position].getUserId());
 	}
-
-
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -63,16 +61,18 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 
 		return v;
 	}
+
 	private void initChildView(int position, View v) {
 		((RoundedImageView) v.findViewById(R.id.riv_family_profile_child))
 				.setImageDrawable(activity.getResources().getDrawable(
 						R.drawable.profile_pic_example));// TODO
 															// setSomthing(memberList[position].getURI()
-		
-				
-		TextView name = (TextView) v.findViewById(R.id.tv_family_profile_child_name);
-		name.setText(childrenList[position].getName());
-		String temp = (String) name.getText();
+
+		TextView name = (TextView) v
+				.findViewById(R.id.tv_family_profile_child_name);
+		name.setText(childrenList[position].getName() + " "
+				+ childrenList[position].getLastName());
+
 		ImageView connector1 = (ImageView) v
 				.findViewById(R.id.iv_family_profile_children_connector_1);
 		ImageView connector2 = (ImageView) v
@@ -81,16 +81,16 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 		// remove the connectors according to the position in the list
 		if (position == 0) {
 			connector1.setVisibility(View.GONE);
-		}else{
+		} else {
 			connector1.setVisibility(View.VISIBLE);
 		}
 		if (position == childrenList.length - 1) {
 			connector2.setVisibility(View.GONE);
-		}else{
+		} else {
 			connector2.setVisibility(View.VISIBLE);
 
 		}
-		
+
 	}
 
 }

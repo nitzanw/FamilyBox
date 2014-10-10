@@ -425,6 +425,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int empty_network_2_join_existing=0x7f070020;
         public static final int events=0x7f07004f;
         public static final int expanded_action_menu=0x7f07004d;
+        public static final int family=0x7f07005a;
         public static final int family_member_1=0x7f070029;
         public static final int family_member_2=0x7f07002a;
         public static final int family_member_3=0x7f07002b;
@@ -440,6 +441,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int member_query_relation=0x7f07002d;
         public static final int member_query_text=0x7f07002c;
         public static final int mother_name=0x7f070017;
+        public static final int name=0x7f070059;
         public static final int news=0x7f07004e;
         public static final int news_feed_empty=0x7f07002e;
         public static final int news_feed_empty_click_here=0x7f070030;

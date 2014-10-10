@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class FamilyProfileFragment extends Fragment {
 
@@ -27,11 +28,15 @@ public class FamilyProfileFragment extends Fragment {
 
 	private FamilyProfileAlbumAdapter mAlbumsAdapter;
 
+	private TextView mFamilyTitle;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		root = inflater.inflate(R.layout.fragment_family_profile, container,
 				false);
+		mFamilyTitle = (TextView) root
+				.findViewById(R.id.tv_family_profile_title);
 		mParentLayoutRight = (LinearLayout) root
 				.findViewById(R.id.ll_family_profile_parent_right);
 		mParentLayoutLeft = (LinearLayout) root
@@ -47,19 +52,26 @@ public class FamilyProfileFragment extends Fragment {
 
 	private void initViews() {
 		FamilyMemberDetails dad = new FamilyMemberDetails("0", "",
-				getString(R.string.father_name), getString(R.string.parent));
+				getString(R.string.father_name), "Zohar",
+				getString(R.string.parent));
 		FamilyMemberDetails mom = new FamilyMemberDetails("1", "",
-				getString(R.string.mother_name), getString(R.string.parent));
+				getString(R.string.mother_name), "Zohar",
+				getString(R.string.parent));
 		FamilyMemberDetails child1 = new FamilyMemberDetails("2", "",
-				getString(R.string.user_name) + " 1", getString(R.string.child));
+				getString(R.string.name) + " 1", "Zohar",
+				getString(R.string.child));
 		FamilyMemberDetails child2 = new FamilyMemberDetails("3", "",
-				getString(R.string.user_name) + " 2", getString(R.string.child));
+				getString(R.string.name) + " 2", "Zohar",
+				getString(R.string.child));
 		FamilyMemberDetails child3 = new FamilyMemberDetails("4", "",
-				getString(R.string.user_name) + " 3", getString(R.string.child));
+				getString(R.string.name) + " 3", "Zohar",
+				getString(R.string.child));
 		FamilyMemberDetails child4 = new FamilyMemberDetails("5", "",
-				getString(R.string.user_name) + " 4", getString(R.string.child));
+				getString(R.string.name) + " 4", "Zohar",
+				getString(R.string.child));
 		FamilyMemberDetails child5 = new FamilyMemberDetails("6", "",
-				getString(R.string.user_name) + " 5", getString(R.string.child));
+				getString(R.string.name) + " 5", "Zohar",
+				getString(R.string.child));
 
 		final FamilyMemberDetails[] parentsList = { dad, mom };
 		final FamilyMemberDetails[] childrenList = { child1, child2, child3,
@@ -92,9 +104,17 @@ public class FamilyProfileFragment extends Fragment {
 				(ViewGroup) getView()));
 		mParentLayoutLeft.addView(mParentAdapter.getView(1, null,
 				(ViewGroup) getView()));
-		
+
 		mAlbumsAdapter = new FamilyProfileAlbumAdapter(getActivity(), albumList);
 		mPhotoAlbumList.setAdapter(mAlbumsAdapter);
+
+		// maybe the family parents does not have the same family name - hyphen them!
+		String familyName = parentsList[0].getLastName();
+		if (!parentsList[0].getLastName().equals(parentsList[1].getLastName())) {
+			familyName += " - " + parentsList[1].getLastName();
+		}
+		familyName += " " + getString(R.string.family);
+		mFamilyTitle.setText(familyName);
 
 	}
 }

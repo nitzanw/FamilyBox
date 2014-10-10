@@ -70,7 +70,7 @@ public class FamilyProfileParentAdapter extends BaseAdapter {
 				.setImageDrawable(activity.getResources().getDrawable(
 						R.drawable.profile_pic_example2));
 		((TextView) v.findViewById(R.id.tv_family_profile_parent_name))
-				.setText(parentList[position].getName());
+				.setText(parentList[position].getName() + " " + parentList[position].getLastName());
 	}
 
 	
