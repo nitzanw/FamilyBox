@@ -39,6 +39,8 @@ public class FamiliesListFragment extends Fragment {
 		familiesListData.add(new FamiliesListItem("f1u1", "Alran"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Ander"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Arbel"));
+		familiesListData.add(new FamiliesListItem("f1u1", "אדיר"));
+		familiesListData.add(new FamiliesListItem("f1u1", "בינדר"));
 		
 		familiesListData.add(new FamiliesListItem("f1u1", "Ben-lulu"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Barak"));
