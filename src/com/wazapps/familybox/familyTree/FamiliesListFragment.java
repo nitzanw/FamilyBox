@@ -104,7 +104,7 @@ public class FamiliesListFragment extends Fragment {
             @Override
             public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
                 super.onRowItemClick(parent, view, section, row, id);
-//                Toast.makeText(DemoActivity.this, "Section " + section + " Row " + row, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Section " + section + " Row " + row, Toast.LENGTH_SHORT).show();
             }
         });
 		return list;

@@ -22,11 +22,12 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 	public static final String TAG_NEWS_FEED = "newsFeed";
 	public static final String TAG_MY_PROFILE = "myProfile";
 	public static final int MY_PROFILE_POS = 0;
-	public static final int FAMILY_TREE_POS = 1;
-	public static final int PHOTOS_POS = 2;
-	public static final int NOTES_POS = 3;
-	public static final int NEWS_POS = 4;
-	public static final int EXPAND_NETWORK_POS = 5;
+	public static final int MY_FAMILY_PROFILE_POS = 1;
+	public static final int FAMILY_TREE_POS = 2;
+	public static final int PHOTOS_POS = 3;
+	public static final int NOTES_POS = 4;
+	public static final int NEWS_POS = 5;
+	public static final int EXPAND_NETWORK_POS = 6;
 
 	private static final String DRAWER_POSITION = "drawerPos";
 	// Declare Variable
@@ -48,13 +49,14 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 	public void initDrawer() {
 		// Generate title
 		title = new String[] { getString(R.string.drawer_my_profile),
+				getString(R.string.drawer_family_profile),
 				getString(R.string.drawer_family_tree),
 				getString(R.string.drawer_photos),
 				getString(R.string.drawer_notes),
 				getString(R.string.drawer_news),
 				getString(R.string.drawer_expand_network) };
 
-		//TODO: add icons
+		// TODO: add icons
 		// Generate icon
 		// icon = new int[] { R.drawable.big_search, R.drawable.profile_icon,
 		// R.drawable.favorite_grey, R.drawable.system_icon };
@@ -69,24 +71,26 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
-				Fragment frag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-				
-				if (TAG_PHOTO_ALBUM.equals(frag.getTag())) 
+				Fragment frag = getSupportFragmentManager().findFragmentById(
+						R.id.content_frame);
+
+				if (TAG_PHOTO_ALBUM.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.photo_albums);
 				else if (TAG_NEWS_FEED.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.news_feed_title);
 				else if (TAG_MY_PROFILE.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.profile_title);
 				// creates call to onPrepareOptionsMenu()
-				invalidateOptionsMenu(); 
+				invalidateOptionsMenu();
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				getActionBar().setTitle(R.string.drawer_menu); //TODO: maybe remove
+				getActionBar().setTitle(R.string.drawer_menu); // TODO: maybe
+																// remove
 				// creates call to onPrepareOptionsMenu()
-				invalidateOptionsMenu();  
+				invalidateOptionsMenu();
 			}
 		};
 
@@ -99,8 +103,8 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 		// Locate ListView in drawer_main.xml
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-		// Set a custom shadow that overlays the main 
-		//content when the drawer opens
+		// Set a custom shadow that overlays the main
+		// content when the drawer opens
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
 
@@ -160,7 +164,8 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 	private class DrawerItemClickListener implements
 			ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
 			selectItem(position);
 		}
 	}
@@ -181,7 +186,7 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action 
+		// If the nav drawer is open, hide action
 		// items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 		menu.findItem(R.id.action_extra).setVisible(!drawerOpen);

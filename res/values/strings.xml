@@ -64,6 +64,7 @@
     <string name="signup_phone_number">Phone number (optional)</string>
     <string name="signup_middle_name">Middle name (optional)</string>
     <string name="drawer_my_profile">My profile</string>
+    <string name="drawer_family_profile">My family profile</string>
     <string name="drawer_family_tree">Family tree</string>
     <string name="drawer_photos">Photos</string>
     <string name="drawer_news">News</string>
@@ -81,6 +82,7 @@
     <string name="events">Events</string>
     <string name="news_feed_title">News feed</string>
     <string name="profile_title">Profile</string>
+    <string name="family_profile_title">Family profile</string>
     <string name="family_tree_title">Family Tree</string>
     <string name="parents">Parents</string>
     <string name="children">Children</string>
