@@ -5,6 +5,8 @@ import com.wazapps.familybox.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -19,6 +21,7 @@ public class SplashActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
 		overridePendingTransition(R.anim.enter, R.anim.exit); //TODO: handle transition animation in a better way
+		
 		// Start timer and launch main activity
 		IntentLauncher appLaunch = new IntentLauncher();
 		appLaunch.start();

@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -36,6 +38,7 @@ public class FamiliesListAdapter extends SectionAdapter {
 		for (int i = 0; i < this.familiesList.size(); i++) {
 			String familyLetter = this.familiesList.get(i).getFamilyName().substring(0,1);
 			//TODO: if we want to support other languages we should change the comparison method 
+			//right now we're using 'toLowerCase' and we can use 'toLowerCase(locale)'
 			if (!(this.currLetter.equals(familyLetter.toLowerCase()))) {
 				this.currLetter = familyLetter.toLowerCase();
 				this.numberOfSections++;
@@ -91,10 +94,11 @@ public class FamiliesListAdapter extends SectionAdapter {
     @Override
     public View getRowView(int section, int row, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = (TextView) this.activity.getLayoutInflater().inflate(this.activity.getResources().getLayout(android.R.layout.simple_list_item_1), null);
+            convertView = (LinearLayout) this.activity.getLayoutInflater().inflate(this.activity.getResources().getLayout(R.layout.families_list_item), null);
         }
         FamiliesListItem currItem = (FamiliesListItem)getRowItem(section, row);
-        ((TextView) convertView).setText(currItem.getFamilyName());
+        TextView familyName = (TextView) convertView.findViewById(R.id.tv_families_list_item_name);
+        familyName.setText(currItem.getFamilyName());
         return convertView;
     }
 
@@ -111,11 +115,18 @@ public class FamiliesListAdapter extends SectionAdapter {
     @Override
     public View getSectionHeaderView(int section, View convertView, ViewGroup parent) {
     	if (convertView == null) {
-    		convertView = (TextView) this.activity.getLayoutInflater().inflate(this.activity.getResources().getLayout(android.R.layout.simple_list_item_1), null);
+    		convertView = (LinearLayout) this.activity.getLayoutInflater().inflate(this.activity.getResources().getLayout(R.layout.families_list_header_item), null);
     	}
-    	 ((TextView) convertView).setText("Letter " + this.sectionLetters.get(section).toUpperCase());
-    	 convertView.setBackgroundColor(this.activity.getResources().getColor(R.color.orange_drawer));
-    	 return convertView;
+    	
+    	ImageView currHeader = (ImageView) convertView.findViewById(R.id.iv_families_list_header_image);
+    	return convertView;
+//    	
+//    	if (convertView == null) {
+//    		convertView = (TextView) this.activity.getLayoutInflater().inflate(this.activity.getResources().getLayout(android.R.layout.simple_list_item_1), null);
+//    	}
+//    	 ((TextView) convertView).setText("Letter " + this.sectionLetters.get(section).toUpperCase());
+//    	 convertView.setBackgroundColor(this.activity.getResources().getColor(R.color.orange_drawer));
+//    	 return convertView;
     }
 
     @Override

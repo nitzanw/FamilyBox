@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.photos.AlbumItem;
+import com.wazapps.familybox.photos.PhotoAlbumScreenActivity;
+import com.wazapps.familybox.photos.PhotoGridFragment;
 import com.wazapps.familybox.photos.PhotoItem;
 import com.wazapps.familybox.util.HorizontialListView;
 import com.wazapps.familybox.util.LogUtils;
@@ -17,23 +19,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class FamilyProfileFragment extends Fragment implements OnClickListener {
 
-	private static final String CHILD_TYPE = "child";
-
 	private static final int ITEM_TYPE = R.string.type;
-
 	private static final int ITEM_POS = R.string.position;
+	private static final int MEMBER_TYPE = R.string.family;
 
+	private static final String CHILD_TYPE = "child";
 	private static final String PARENT_TYPE = "parent";
+	private static final String ALBUM_TYPE = "album";
+
+	private static final String MEMBER_ITEM_TYPE = "family member item";
+	private static final String ALBUM_ITEM_TYPE = "album item";
 
 	private View root;
 
 	// private HorizontialListView mChildernList;
-	private HorizontialListView mPhotoAlbumList;
+	// private HorizontialListView mPhotoAlbumList;
 	private FamilyProfileParentAdapter mParentAdapter;
 	private LinearLayout mParentLayoutRight;
 	private LinearLayout mParentLayoutLeft;
@@ -50,6 +56,10 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 
 	private FamilyMemberDetails[] childrenList;
 
+	private LinearLayout mPhotoAlbumsHolder;
+
+	private AlbumItem[] albumList;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -65,16 +75,45 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 				.findViewById(R.id.ll_family_profile_children_holder);
 		// mChildernList = (HorizontialListView) root
 		// .findViewById(R.id.hlv_family_profile_children);
-		mPhotoAlbumList = (HorizontialListView) root
-				.findViewById(R.id.hlv_family_profile_albums);
+		mPhotoAlbumsHolder = (LinearLayout) root
+				.findViewById(R.id.ll_family_profile_album_holder);
+
 		initViews();
 
 		return root;
 	}
 
 	private void initViews() {
+		// TODO add some real data!
 		initParentAndChildrenLists();
 
+		initAlbumList();
+
+		// init the children level:
+		mChildrenAdapter = new FamilyProfileChildAdapter(getActivity(),
+				childrenList);
+		initChildrenLevelView();
+
+		mParentAdapter = new FamilyProfileParentAdapter(getActivity(),
+				parentsList);
+		initParent(mParentLayoutRight, 0);
+		initParent(mParentLayoutLeft, 1);
+
+		mAlbumsAdapter = new FamilyProfileAlbumAdapter(getActivity(), albumList);
+		initAlbumView();
+
+		// maybe the family parents does not have the same family name - hyphen
+		// them!
+		String familyName = parentsList[0].getLastName();
+		if (!parentsList[0].getLastName().equals(parentsList[1].getLastName())) {
+			familyName += " - " + parentsList[1].getLastName();
+		}
+		familyName += " " + getString(R.string.family);
+		mFamilyTitle.setText(familyName);
+
+	}
+
+	private void initAlbumList() {
 		AlbumItem[] albumList = { null, null, null, null, null, null };
 		String albumName = "Temp Album Name ";
 		PhotoItem[] tempData = { null, null, null, null, null, null, null,
@@ -91,40 +130,36 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 			albumList[i] = new AlbumItem(String.valueOf(i), tempData, albumName
 					+ i, "December 201" + i);
 		}
+		this.albumList = albumList;
+	}
 
-		// init the children level:
-		mChildrenAdapter = new FamilyProfileChildAdapter(getActivity(),
-				childrenList);
+	private void initChildrenLevelView() {
 		for (int i = 0; i < childrenList.length; i++) {
 			View v = mChildrenAdapter.getView(i, null, (ViewGroup) getView());
-			v.setTag(ITEM_TYPE, CHILD_TYPE);
+			v.setTag(ITEM_TYPE, MEMBER_ITEM_TYPE);
+			v.setTag(MEMBER_TYPE, CHILD_TYPE);
 			v.setTag(ITEM_POS, i);
 			v.setOnClickListener(this);
 			mChildrenHolder.addView(v);
 		}
+	}
 
-		mParentAdapter = new FamilyProfileParentAdapter(getActivity(),
-				parentsList);
-		initParent(mParentLayoutRight, 0);
-		initParent(mParentLayoutLeft, 1);
-
-		mAlbumsAdapter = new FamilyProfileAlbumAdapter(getActivity(), albumList);
-		mPhotoAlbumList.setAdapter(mAlbumsAdapter);
-
-		// maybe the family parents does not have the same family name - hyphen
-		// them!
-		String familyName = parentsList[0].getLastName();
-		if (!parentsList[0].getLastName().equals(parentsList[1].getLastName())) {
-			familyName += " - " + parentsList[1].getLastName();
+	private void initAlbumView() {
+		for (int i = 0; i < albumList.length; i++) {
+			View v = mAlbumsAdapter.getView(i, null, (ViewGroup) getView());
+			ImageButton album = ((ImageButton) v
+					.findViewById(R.id.ib_album_image));
+			album.setTag(ITEM_TYPE, ALBUM_ITEM_TYPE);
+			album.setTag(ITEM_POS, i);
+			album.setOnClickListener(this);
+			mPhotoAlbumsHolder.addView(v);
 		}
-		familyName += " " + getString(R.string.family);
-		mFamilyTitle.setText(familyName);
-
 	}
 
 	private void initParent(LinearLayout base, int position) {
 		View v = mParentAdapter.getView(position, null, (ViewGroup) getView());
-		v.setTag(ITEM_TYPE, PARENT_TYPE);
+		v.setTag(ITEM_TYPE, MEMBER_ITEM_TYPE);
+		v.setTag(MEMBER_TYPE, PARENT_TYPE);
 		v.setTag(ITEM_POS, position);
 		v.setOnClickListener(this);
 		base.addView(v);
@@ -173,20 +208,29 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-
-		Intent profileIntent = new Intent(getActivity(),
-				ProfileScreenActivity.class);
-		Bundle args = new Bundle();
-		int pos = (Integer) v.getTag(ITEM_POS);
-		ArrayList<FamilyMemberDetails> familyMembers = createFamilyList(pos,
-				(String) v.getTag(ITEM_TYPE));
-		args.putParcelable(ProfileFragment.MEMBER_ITEM,
-				getMemberItem((String) v.getTag(ITEM_TYPE), pos));
-		args.putParcelableArrayList(
-				ProfileScreenActivity.FAMILY_MEMBER_ARRAY_LIST, familyMembers);
-		profileIntent.putExtra(ProfileFragment.PROFILE_DATA, args);
-		getActivity().startActivity(profileIntent);
-
+		if (MEMBER_ITEM_TYPE.equals(v.getTag(ITEM_TYPE))) {
+			Intent profileIntent = new Intent(getActivity(),
+					ProfileScreenActivity.class);
+			Bundle args = new Bundle();
+			int pos = (Integer) v.getTag(ITEM_POS);
+			ArrayList<FamilyMemberDetails> familyMembers = createFamilyList(
+					pos, (String) v.getTag(MEMBER_TYPE));
+			args.putParcelable(ProfileFragment.MEMBER_ITEM,
+					getMemberItem((String) v.getTag(MEMBER_TYPE), pos));
+			args.putParcelableArrayList(
+					ProfileScreenActivity.FAMILY_MEMBER_ARRAY_LIST,
+					familyMembers);
+			profileIntent.putExtra(ProfileFragment.PROFILE_DATA, args);
+			getActivity().startActivity(profileIntent);
+		} else if (ALBUM_ITEM_TYPE.equals(v.getTag(ITEM_TYPE))) {
+			int pos = (Integer) v.getTag(ITEM_POS);
+			Intent albumIntent = new Intent(getActivity(),
+					PhotoAlbumScreenActivity.class);
+			Bundle args = new Bundle();
+			args.putParcelable(PhotoGridFragment.ALBUM_ITEM, albumList[pos]);
+			albumIntent.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
+			getActivity().startActivity(albumIntent);
+		}
 	}
 
 	private FamilyMemberDetails getMemberItem(String type, int pos) {
