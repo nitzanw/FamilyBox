@@ -84,5 +84,6 @@
     <string name="family_tree_title">Family Tree</string>
     <string name="parents">Parents</string>
     <string name="children">Children</string>
+    <string name="family_name">Family Name</string>
 
 </resources>
