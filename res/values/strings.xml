@@ -23,8 +23,8 @@
     <string name="profile_details_birthday_data">19 October 1987</string>
     <string name="profile_close_family_title">Close Family</string>
     <string name="father">Father</string>
-    <string name="father_name">Arie Zohar</string>
-    <string name="mother_name">Mati Zohar</string>
+    <string name="father_name">Arie</string>
+    <string name="mother_name">Mati</string>
     <string name="title_activity_photo_albums">PhotoAlbumsActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="album_title">Thailand</string>
@@ -92,5 +92,7 @@
     <string name="role">role</string>
     <string name="name">Gal</string>
     <string name="family">Family</string>
+    <string name="position">position</string>
+    <string name="type">type</string>
 
 </resources>

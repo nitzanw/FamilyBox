@@ -3,7 +3,11 @@ package com.wazapps.familybox.profiles;
 import java.util.ArrayList;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.photos.AlbumGridAdapter;
+import com.wazapps.familybox.photos.AlbumItem;
+import com.wazapps.familybox.photos.PhotoGridFragment;
 import com.wazapps.familybox.util.HorizontialListView;
+import com.wazapps.familybox.util.LogUtils;
 
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
@@ -13,23 +17,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ProfileFragment extends Fragment {
+	public static final String PROFILE_FRAG = "profile fragment";
+	public static final String MEMBER_ITEM = "member item";
+	protected static final String FAMILY_MEMBER_LIST = "family member list";
+	protected static final String PROFILE_DATA = "profile data";
 	private View root;
-	private HorizontialListView familyList;
-	private ListView profileDetailsList;
+	private HorizontialListView mFamilyList;
+	private ListView mProfileDetailsList;
 	private ProfileFamilyListAdapter familyListAdapter;
 	private ProfileDetailsAdapter profileDetailsAdapter;
-	private ArrayList<FamilyMemberDetails> familyListData;
-	private ArrayList<ProfileDetails> profileDetailsData;
+	private TextView mUserName;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		root = inflater.inflate(R.layout.fragment_profile, container, false);
-		setUpProfileDetails();
-		setUpFamilyList();
 
+		mFamilyList = (HorizontialListView) root
+				.findViewById(R.id.family_members_list);
+		mProfileDetailsList = (ListView) root
+				.findViewById(R.id.profile_details);
+
+		mUserName = (TextView) root.findViewById(R.id.tv_profile_username);
 		// Clear the listView's top highlight scrolling effect
 		// TODO: maybe handle it in a better way (that will give prettier
 		// results)
@@ -40,49 +52,32 @@ public class ProfileFragment extends Fragment {
 		return root;
 	}
 
-	private void setUpProfileDetails() {
-		this.profileDetailsList = (ListView) root
-				.findViewById(R.id.profile_details);
-		// set profile details list header
-		// TODO: THIS DOESNT WORK. find a way to add a header to listview
-		// LayoutInflater lf = getActivity().getLayoutInflater();
-		// ViewGroup headerView = (ViewGroup)
-		// lf.inflate(R.layout.profile_details_item, this.profileDetailsList,
-		// false);
-		// this.profileDetailsList.addHeaderView(headerView, null, false);
+	@Override
+	public void onResume() {
+		super.onResume();
 
-		this.profileDetailsData = new ArrayList<ProfileDetails>();
-		this.profileDetailsAdapter = new ProfileDetailsAdapter(
-				this.getActivity(), this.profileDetailsData);
-		this.profileDetailsList.setAdapter(this.profileDetailsAdapter);
+		Bundle args = getArguments();
+		if (args != null) {
+			// get the data for the profile
+			FamilyMemberDetails[] familyMemberList = (FamilyMemberDetails[]) args
+					.getParcelableArray(FAMILY_MEMBER_LIST);
+			FamilyMemberDetails selectedMember = (FamilyMemberDetails) args
+					.getParcelable(MEMBER_ITEM);
 
-		// TODO: set up real data
-		this.profileDetailsData.add(new ProfileDetails("Address",
-				"K. yovel, mozkin st."));
-		this.profileDetailsData
-				.add(new ProfileDetails("Birthday", "19.10.1987"));
-		this.profileDetailsData.add(new ProfileDetails("Previous Family Names",
-				"No previous family names"));
-		this.profileDetailsData.add(new ProfileDetails("Quotes",
-				"For every every there exists exists"));
-		this.profileDetailsAdapter.notifyDataSetChanged();
+			// init the detail adapter
+			profileDetailsAdapter = new ProfileDetailsAdapter(getActivity(),
+					selectedMember.getDetails());
+			mProfileDetailsList.setAdapter(profileDetailsAdapter);
+
+			familyListAdapter = new ProfileFamilyListAdapter(
+					this.getActivity(), familyMemberList);
+			mFamilyList.setAdapter(familyListAdapter);
+
+			mUserName.setText(selectedMember.getName() + " "
+					+ selectedMember.getLastName());
+		} else {
+			LogUtils.logWarning(getTag(), "the args did not pass!!");
+		}
 	}
 
-	private void setUpFamilyList() {
-		this.familyList = (HorizontialListView) root
-				.findViewById(R.id.family_members_list);
-		this.familyListData = new ArrayList<FamilyMemberDetails>();
-		this.familyListAdapter = new ProfileFamilyListAdapter(
-				this.getActivity(), this.familyListData);
-		this.familyList.setAdapter(this.familyListAdapter);
-
-		// TODO: set up real data
-		this.familyListData.add(new FamilyMemberDetails("F1U1", "", "Arie",
-				"Zohar", "Father"));
-		this.familyListData.add(new FamilyMemberDetails("F1U2", "", "Mati",
-				"Zohar", "Mother"));
-		this.familyListData.add(new FamilyMemberDetails("F1U3", "", "Tal",
-				"Razon", "Sister"));
-		this.familyListAdapter.notifyDataSetChanged();
-	}
 }

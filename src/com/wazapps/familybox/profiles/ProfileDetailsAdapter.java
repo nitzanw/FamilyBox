@@ -1,12 +1,11 @@
 package com.wazapps.familybox.profiles;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.wazapps.familybox.R;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,22 +14,22 @@ import android.widget.TextView;
 
 public class ProfileDetailsAdapter extends BaseAdapter {
 	private Activity activity;
-	private ArrayList<ProfileDetails> profileDetails; 
+	private ProfileDetails[] profileDetails; 
 	
 	public ProfileDetailsAdapter(Activity activity, 
-			ArrayList<ProfileDetails> profileDetails) {
+			ProfileDetails[] profileDetails) {
 		this.activity = activity;
-		this.profileDetails = profileDetails;
+		this.profileDetails = Arrays.copyOf(profileDetails, profileDetails.length, ProfileDetails[].class);
 	}
 	
 	@Override
 	public int getCount() {
-		return this.profileDetails.size();
+		return this.profileDetails.length;
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return this.profileDetails.get(position);
+		return this.profileDetails[position];
 	}
 
 	@Override
@@ -50,7 +49,7 @@ public class ProfileDetailsAdapter extends BaseAdapter {
 		
 		TextView detailsTitle = (TextView) v.findViewById(R.id.tv_profile_detail_header);
 		TextView detailsContents = (TextView) v.findViewById(R.id.tv_profile_detail_data);
-		ProfileDetails details = this.profileDetails.get(position);
+		ProfileDetails details = this.profileDetails[position];
 		String title = details.getDetailTitle();
 		String data = details.getDetailContents();
 		

@@ -3,27 +3,32 @@ package com.wazapps.familybox.profiles;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.util.RoundedImageView;
-
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.RoundedImageView;
+
 public class FamilyProfileChildAdapter extends BaseAdapter {
+	private static final int CHILD_POS = R.string.child;
 	private FragmentActivity activity;
 	private LayoutInflater linearInflater;
 	private FamilyMemberDetails[] childrenList;
 
 	public FamilyProfileChildAdapter(FragmentActivity activity,
-			FamilyMemberDetails[] memberList) {
+			FamilyMemberDetails[] childrenList) {
 		this.activity = activity;
-		this.childrenList = Arrays.copyOf(memberList, memberList.length,
+		this.childrenList = Arrays.copyOf(childrenList, childrenList.length,
 				FamilyMemberDetails[].class);
 
 	}
@@ -63,10 +68,12 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 	}
 
 	private void initChildView(int position, View v) {
-		((RoundedImageView) v.findViewById(R.id.riv_family_profile_child))
-				.setImageDrawable(activity.getResources().getDrawable(
-						R.drawable.profile_pic_example));// TODO
-															// setSomthing(memberList[position].getURI()
+		RoundedImageView image = (RoundedImageView) v
+				.findViewById(R.id.riv_family_profile_child);
+
+		image.setImageDrawable(activity.getResources().getDrawable(
+				R.drawable.profile_pic_example));// TODO
+		// setSomthing(memberList[position].getURI()
 
 		TextView name = (TextView) v
 				.findViewById(R.id.tv_family_profile_child_name);
@@ -90,7 +97,6 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 			connector2.setVisibility(View.VISIBLE);
 
 		}
-
+		v.setTag(CHILD_POS, position);
 	}
-
 }
