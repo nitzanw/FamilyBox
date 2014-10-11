@@ -8,5 +8,5 @@
         android:id="@+id/iv_families_list_header_image"
         android:layout_height="wrap_content"
 	    android:layout_width="wrap_content"
-	    android:src="@drawable/letter_a"/>
+	    android:src="@drawable/letter_none"/>
 </LinearLayout>

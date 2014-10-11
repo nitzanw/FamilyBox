@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 public class FamiliesListFragment extends Fragment {
 	private View root;
-	private ArrayList<FamilyMemberDetails> familiesList;
+	ArrayList<FamiliesListItem> familiesListData;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,21 +26,20 @@ public class FamiliesListFragment extends Fragment {
 		root = inflater.inflate(R.layout.fragment_profile, container, false);
 		HeaderListView familiesList = new HeaderListView(root.getContext());
 		familiesList.setBackgroundColor(getResources().getColor(R.color.white_cream_ab));
-		ArrayList<FamiliesListItem> familiesListData = new ArrayList<FamiliesListItem>();
-		testFunc(familiesListData);
+		this.familiesListData = new ArrayList<FamiliesListItem>();
+		testFunc();
+		
 		FamiliesListAdapter familiesListAdapater = new FamiliesListAdapter(getActivity(), familiesListData);
 		familiesList.setAdapter(familiesListAdapater);
 		return familiesList;
 	}
 	
-	private void testFunc(ArrayList<FamiliesListItem> familiesListData) {
+	private void testFunc() {
 		familiesListData.add(new FamiliesListItem("f1u1", "Aluf"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Alon"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Alran"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Ander"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Arbel"));
-		familiesListData.add(new FamiliesListItem("f1u1", "����"));
-		familiesListData.add(new FamiliesListItem("f1u1", "�����"));
 		
 		familiesListData.add(new FamiliesListItem("f1u1", "Ben-lulu"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Barak"));
@@ -63,8 +62,8 @@ public class FamiliesListFragment extends Fragment {
 		familiesListData.add(new FamiliesListItem("f1u1", "Ginat"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Galili"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Gal"));
-		familiesListData.add(new FamiliesListItem("f1u1", "GoldStone"));
-		familiesListData.add(new FamiliesListItem("f1u1", "GoldStein"));
+		familiesListData.add(new FamiliesListItem("f1u1", "Goldstone"));
+		familiesListData.add(new FamiliesListItem("f1u1", "Goldstein"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Goldberg"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Gabay"));
 		
