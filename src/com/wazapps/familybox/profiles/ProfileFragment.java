@@ -19,57 +19,70 @@ public class ProfileFragment extends Fragment {
 	private HorizontialListView familyList;
 	private ListView profileDetailsList;
 	private ProfileFamilyListAdapter familyListAdapter;
-	private ProfileDetailsAdapter profileDetailsAdapter; 
-	private ArrayList<FamilyMemberListDetails> familyListData;
-	private ArrayList<ProfileDetails> profileDetailsData; 
-	
+	private ProfileDetailsAdapter profileDetailsAdapter;
+	private ArrayList<FamilyMemberDetails> familyListData;
+	private ArrayList<ProfileDetails> profileDetailsData;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		root = inflater.inflate(R.layout.fragment_profile, container, false);
 		setUpProfileDetails();
 		setUpFamilyList();
-		
-		//Clear the listView's top highlight scrolling effect
-		//TODO: maybe handle it in a better way (that will give prettier results)
-		int glowDrawableId = root.getResources().getIdentifier("overscroll_glow", "drawable", "android");
+
+		// Clear the listView's top highlight scrolling effect
+		// TODO: maybe handle it in a better way (that will give prettier
+		// results)
+		int glowDrawableId = root.getResources().getIdentifier(
+				"overscroll_glow", "drawable", "android");
 		Drawable androidGlow = root.getResources().getDrawable(glowDrawableId);
 		androidGlow.setColorFilter(R.color.orange_fb, Mode.CLEAR);
 		return root;
 	}
-	
+
 	private void setUpProfileDetails() {
-		this.profileDetailsList = (ListView) root.findViewById(R.id.profile_details);		
-		//set profile details list header
-		//TODO: THIS DOESNT WORK. find a way to add a header to listview
-//		LayoutInflater lf = getActivity().getLayoutInflater();
-//		ViewGroup headerView = (ViewGroup) lf.inflate(R.layout.profile_details_item, this.profileDetailsList, false);
-//		this.profileDetailsList.addHeaderView(headerView, null, false);
-		
+		this.profileDetailsList = (ListView) root
+				.findViewById(R.id.profile_details);
+		// set profile details list header
+		// TODO: THIS DOESNT WORK. find a way to add a header to listview
+		// LayoutInflater lf = getActivity().getLayoutInflater();
+		// ViewGroup headerView = (ViewGroup)
+		// lf.inflate(R.layout.profile_details_item, this.profileDetailsList,
+		// false);
+		// this.profileDetailsList.addHeaderView(headerView, null, false);
+
 		this.profileDetailsData = new ArrayList<ProfileDetails>();
-		this.profileDetailsAdapter = new ProfileDetailsAdapter(this.getActivity(),
-				this.profileDetailsData);
+		this.profileDetailsAdapter = new ProfileDetailsAdapter(
+				this.getActivity(), this.profileDetailsData);
 		this.profileDetailsList.setAdapter(this.profileDetailsAdapter);
-		
-		//TODO: set up real data
-		this.profileDetailsData.add(new ProfileDetails("Address", "K. yovel, mozkin st."));
-		this.profileDetailsData.add(new ProfileDetails("Birthday","19.10.1987"));
-		this.profileDetailsData.add(new ProfileDetails("Previous Family Names", "No previous family names"));
-		this.profileDetailsData.add(new ProfileDetails("Quotes", "For every every there exists exists"));
+
+		// TODO: set up real data
+		this.profileDetailsData.add(new ProfileDetails("Address",
+				"K. yovel, mozkin st."));
+		this.profileDetailsData
+				.add(new ProfileDetails("Birthday", "19.10.1987"));
+		this.profileDetailsData.add(new ProfileDetails("Previous Family Names",
+				"No previous family names"));
+		this.profileDetailsData.add(new ProfileDetails("Quotes",
+				"For every every there exists exists"));
 		this.profileDetailsAdapter.notifyDataSetChanged();
 	}
-	
+
 	private void setUpFamilyList() {
-		this.familyList = (HorizontialListView) root.findViewById(R.id.family_members_list);
-		this.familyListData = new ArrayList<FamilyMemberListDetails>();
-		this.familyListAdapter = new ProfileFamilyListAdapter(this.getActivity(), 
-				this.familyListData);
+		this.familyList = (HorizontialListView) root
+				.findViewById(R.id.family_members_list);
+		this.familyListData = new ArrayList<FamilyMemberDetails>();
+		this.familyListAdapter = new ProfileFamilyListAdapter(
+				this.getActivity(), this.familyListData);
 		this.familyList.setAdapter(this.familyListAdapter);
-		
-		//TODO: set up real data
-		this.familyListData.add(new FamilyMemberListDetails("F1U1", "", "Arie", "Father"));
-		this.familyListData.add(new FamilyMemberListDetails("F1U2", "", "Mati", "Mother"));
-		this.familyListData.add(new FamilyMemberListDetails("F1U3", "", "Tal" , "Sister"));
+
+		// TODO: set up real data
+		this.familyListData.add(new FamilyMemberDetails("F1U1", "", "Arie",
+				"Zohar", "Father"));
+		this.familyListData.add(new FamilyMemberDetails("F1U2", "", "Mati",
+				"Zohar", "Mother"));
+		this.familyListData.add(new FamilyMemberDetails("F1U3", "", "Tal",
+				"Razon", "Sister"));
 		this.familyListAdapter.notifyDataSetChanged();
 	}
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <com.wazapps.familybox.util.RoundedImageView
+        android:id="@+id/riv_family_profile_parent"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:background="@drawable/parent_profile_pic_elipse"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tv_family_profile_parent_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:gravity="center_horizontal"
+        android:lines="2"
+        android:maxLength="16"
+        android:maxLines="2"
+        android:minLines="2"
+        android:text="Parent name"
+        android:textSize="11sp" />
+
+</LinearLayout>

@@ -3,7 +3,7 @@ package com.wazapps.familybox.familyTree;
 import java.util.ArrayList;
 
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.profiles.FamilyMemberListDetails;
+import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.util.HeaderListView;
 import com.wazapps.familybox.util.SectionAdapter;
 
@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 public class FamiliesListFragment extends Fragment {
 	private View root;
-	private ArrayList<FamilyMemberListDetails> familiesList;
+	private ArrayList<FamilyMemberDetails> familiesList;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,8 +39,8 @@ public class FamiliesListFragment extends Fragment {
 		familiesListData.add(new FamiliesListItem("f1u1", "Alran"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Ander"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Arbel"));
-		familiesListData.add(new FamiliesListItem("f1u1", "àãéø"));
-		familiesListData.add(new FamiliesListItem("f1u1", "áéðãø"));
+		familiesListData.add(new FamiliesListItem("f1u1", "ï¿½ï¿½ï¿½ï¿½"));
+		familiesListData.add(new FamiliesListItem("f1u1", "ï¿½ï¿½ï¿½ï¿½ï¿½"));
 		
 		familiesListData.add(new FamiliesListItem("f1u1", "Ben-lulu"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Barak"));

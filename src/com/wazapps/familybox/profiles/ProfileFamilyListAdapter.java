@@ -16,10 +16,10 @@ import android.widget.TextView;
 
 public class ProfileFamilyListAdapter extends BaseAdapter {
 	private Activity activity;
-	private ArrayList<FamilyMemberListDetails> familyMembersList; 
+	private ArrayList<FamilyMemberDetails> familyMembersList; 
 	
 	public ProfileFamilyListAdapter(Activity activity, 
-			ArrayList<FamilyMemberListDetails> familyMembersList) {
+			ArrayList<FamilyMemberDetails> familyMembersList) {
 		this.activity = activity;
 		this.familyMembersList = familyMembersList;
 	}
@@ -68,7 +68,7 @@ public class ProfileFamilyListAdapter extends BaseAdapter {
 		}
 		
 		//TODO: add profile picture image handling
-		FamilyMemberListDetails member = this.familyMembersList.get(position);
+		FamilyMemberDetails member = this.familyMembersList.get(position);
 		TextView name = (TextView) v.findViewById(R.id.tv_close_family_member_name);
 		TextView role = (TextView) v.findViewById(R.id.tv_close_family_role);
 		
