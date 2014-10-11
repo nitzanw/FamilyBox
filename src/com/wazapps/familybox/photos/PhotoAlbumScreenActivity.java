@@ -12,7 +12,7 @@ public class PhotoAlbumScreenActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_photo_album_screen);
+		setContentView(R.layout.activity_container);
 		// get the activity arguments
 		Bundle args = getIntent().getBundleExtra(
 				PhotoGridFragment.ALBUM_ITEM);

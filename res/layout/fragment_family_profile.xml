@@ -89,11 +89,20 @@
                 android:text="@string/children"
                 android:textSize="20sp" />
 
-            <com.wazapps.familybox.util.HorizontialListView
-                android:id="@+id/hlv_family_profile_children"
+            <HorizontalScrollView
+                android:id="@+id/hsv_family_profile_children"
                 android:layout_width="match_parent"
-                android:layout_height="85dp" >
-            </com.wazapps.familybox.util.HorizontialListView>
+                android:layout_height="87dp"
+                android:overScrollMode="never"
+                android:scrollbars="none" >
+
+                <LinearLayout
+                    android:id="@+id/ll_family_profile_children_holder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
     </RelativeLayout>
 
@@ -114,14 +123,23 @@
             android:text="@string/photo_albums"
             android:textSize="19sp" />
 
-        <com.wazapps.familybox.util.HorizontialListView
-            android:id="@+id/hlv_family_profile_albums"
+        <HorizontalScrollView
+            android:id="@+id/hsv_family_profile_albums"
             android:layout_width="wrap_content"
             android:layout_height="85dp"
             android:layout_alignParentBottom="true"
             android:layout_below="@id/tv_family_profile_albums_title"
-            android:background="@drawable/albums_area_background" >
-        </com.wazapps.familybox.util.HorizontialListView>
+            android:background="@drawable/albums_area_background"
+            android:overScrollMode="never"
+            android:scrollbars="none" >
+
+            <LinearLayout
+                android:id="@+id/ll_family_profile_album_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </HorizontalScrollView>
     </RelativeLayout>
 
 </RelativeLayout>
