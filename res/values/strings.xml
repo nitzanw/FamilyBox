@@ -48,7 +48,9 @@
     <string name="member_query_text">What is your family relation with him?</string>
     <string name="member_query_relation">he is my father</string>
     <string name="news_feed_empty">Nothing to show</string>
+    <string name="families_list_empty">Nothing to show</string>
     <string name="news_feed_empty_explain">Nobody is in your family tree network =(</string>
+    <string name="families_list_empty_explain">Nobody is in your family tree network =(</string>
     <string name="news_feed_empty_click_here">Click here to expand your family tree</string>
     <string name="news_feed_item_update">Updated a new album \'home pics\' (32 photos) </string>
     <string name="news_feed_item_date_1">Today</string>

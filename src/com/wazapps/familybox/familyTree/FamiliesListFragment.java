@@ -23,15 +23,20 @@ public class FamiliesListFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		root = inflater.inflate(R.layout.fragment_profile, container, false);
+		root = inflater.inflate(R.layout.fragment_families_list, container, false);
 		HeaderListView familiesList = new HeaderListView(root.getContext());
 		familiesList.setBackgroundColor(getResources().getColor(R.color.white_cream_ab));
 		this.familiesListData = new ArrayList<FamiliesListItem>();
-		testFunc();
+		testFunc(); //TODO: replace with actual data pulling
 		
 		FamiliesListAdapter familiesListAdapater = new FamiliesListAdapter(getActivity(), familiesListData);
 		familiesList.setAdapter(familiesListAdapater);
-		return familiesList;
+		
+		if (this.familiesListData.isEmpty()) {
+			return root;
+		} else {
+			return familiesList;
+		}
 	}
 	
 	private void testFunc() {
