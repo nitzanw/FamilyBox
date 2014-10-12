@@ -52,7 +52,7 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 				getString(R.string.drawer_family_profile),
 				getString(R.string.drawer_family_tree),
 				getString(R.string.drawer_photos),
-				getString(R.string.drawer_notes),
+//				getString(R.string.drawer_notes),
 				getString(R.string.drawer_news),
 				getString(R.string.drawer_expand_network) };
 

@@ -77,7 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/ll_family_profile_parents"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="18dp"
             android:orientation="vertical" >
 
             <TextView
