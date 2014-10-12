@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,6 +16,11 @@ import android.widget.TextView;
 
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.photos.AlbumGridScreenActivity;
+import com.wazapps.familybox.photos.AlbumItem;
+import com.wazapps.familybox.photos.PhotoGridFragment;
+import com.wazapps.familybox.photos.PhotoItem;
+import com.wazapps.familybox.profiles.FamilyProfileActivity;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.SectionAdapter;
 
@@ -122,7 +129,12 @@ public class FamiliesListAdapter extends SectionAdapter {
     @Override
     public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
         super.onRowItemClick(parent, view, section, row, id);
-        //TODO: add here code for onClick
+        Intent familyAlbumsIntent = new Intent(activity, AlbumGridScreenActivity.class);
+        AlbumItem[] albumList = { null, null, null, null, null, null };
+        Bundle args = new Bundle();
+        args.putParcelableArray("test1", albumList);
+        familyAlbumsIntent.putExtra("test2", args);
+        activity.startActivity(familyAlbumsIntent);
     }
     
     /**

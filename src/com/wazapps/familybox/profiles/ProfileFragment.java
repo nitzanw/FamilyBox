@@ -1,11 +1,6 @@
 package com.wazapps.familybox.profiles;
 
-import java.util.ArrayList;
-
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.photos.AlbumGridAdapter;
-import com.wazapps.familybox.photos.AlbumItem;
-import com.wazapps.familybox.photos.PhotoGridFragment;
 import com.wazapps.familybox.util.HorizontialListView;
 import com.wazapps.familybox.util.LogUtils;
 
@@ -43,8 +38,6 @@ public class ProfileFragment extends Fragment {
 
 		mUserName = (TextView) root.findViewById(R.id.tv_profile_username);
 		// Clear the listView's top highlight scrolling effect
-		// TODO: maybe handle it in a better way (that will give prettier
-		// results)
 		int glowDrawableId = root.getResources().getIdentifier(
 				"overscroll_glow", "drawable", "android");
 		Drawable androidGlow = root.getResources().getDrawable(glowDrawableId);
@@ -68,14 +61,14 @@ public class ProfileFragment extends Fragment {
 			profileDetailsAdapter = new ProfileDetailsAdapter(getActivity(),
 					selectedMember.getDetails());
 			mProfileDetailsList.setAdapter(profileDetailsAdapter);
-
-			familyListAdapter = new ProfileFamilyListAdapter(
+			familyListAdapter = new ProfileFamilyListAdapter (
 					this.getActivity(), familyMemberList);
 			mFamilyList.setAdapter(familyListAdapter);
-
 			mUserName.setText(selectedMember.getName() + " "
 					+ selectedMember.getLastName());
-		} else {
+		} 
+		
+		else {
 			LogUtils.logWarning(getTag(), "the args did not pass!!");
 		}
 	}

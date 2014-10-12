@@ -7,13 +7,10 @@ import com.wazapps.familybox.photos.AlbumItem;
 import com.wazapps.familybox.photos.PhotoAlbumScreenActivity;
 import com.wazapps.familybox.photos.PhotoGridFragment;
 import com.wazapps.familybox.photos.PhotoItem;
-import com.wazapps.familybox.util.HorizontialListView;
 import com.wazapps.familybox.util.LogUtils;
-import com.wazapps.familybox.util.RoundedImageView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,27 +34,15 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private static final String ALBUM_ITEM_TYPE = "album item";
 
 	private View root;
-
-	// private HorizontialListView mChildernList;
-	// private HorizontialListView mPhotoAlbumList;
 	private FamilyProfileParentAdapter mParentAdapter;
 	private LinearLayout mParentLayoutRight;
 	private LinearLayout mParentLayoutLeft;
-
 	private FamilyProfileChildAdapter mChildrenAdapter;
-
 	private FamilyProfileAlbumAdapter mAlbumsAdapter;
-
 	private TextView mFamilyTitle;
-
 	private LinearLayout mChildrenHolder;
-
-	private FamilyMemberDetails[] parentsList;
-
-	private FamilyMemberDetails[] childrenList;
-
+	private FamilyMemberDetails[] parentsList, childrenList;
 	private LinearLayout mPhotoAlbumsHolder;
-
 	private AlbumItem[] albumList;
 
 	@Override
@@ -73,64 +58,47 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 				.findViewById(R.id.ll_family_profile_parent_left);
 		mChildrenHolder = (LinearLayout) root
 				.findViewById(R.id.ll_family_profile_children_holder);
-		// mChildernList = (HorizontialListView) root
-		// .findViewById(R.id.hlv_family_profile_children);
 		mPhotoAlbumsHolder = (LinearLayout) root
 				.findViewById(R.id.ll_family_profile_album_holder);
 
 		initViews();
-
 		return root;
 	}
 
 	private void initViews() {
 		// TODO add some real data!
 		initParentAndChildrenLists();
-
 		initAlbumList();
 
-		// init the children level:
+		// init the children list view
 		mChildrenAdapter = new FamilyProfileChildAdapter(getActivity(),
 				childrenList);
 		initChildrenLevelView();
 
+		//init the parents list view
 		mParentAdapter = new FamilyProfileParentAdapter(getActivity(),
 				parentsList);
 		initParent(mParentLayoutRight, 0);
 		initParent(mParentLayoutLeft, 1);
 
+		//init the albums list view
 		mAlbumsAdapter = new FamilyProfileAlbumAdapter(getActivity(), albumList);
 		initAlbumView();
 
-		// maybe the family parents does not have the same family name - hyphen
-		// them!
-		String familyName = parentsList[0].getLastName();
-		if (!parentsList[0].getLastName().equals(parentsList[1].getLastName())) {
-			familyName += " - " + parentsList[1].getLastName();
-		}
-		familyName += " " + getString(R.string.family);
-		mFamilyTitle.setText(familyName);
-
-	}
-
-	private void initAlbumList() {
-		AlbumItem[] albumList = { null, null, null, null, null, null };
-		String albumName = "Temp Album Name ";
-		PhotoItem[] tempData = { null, null, null, null, null, null, null,
-				null, null, null, null, null, null, null, null, null, null,
-				null };
-
-		for (int i = 0; i < 18; i++) {
-			tempData[i] = new PhotoItem("11.2.201" + i, "www.bla.com",
-					"This is me and my friend Dan " + i);
-		}
-
-		for (int i = 0; i < 6; i++) {
-
-			albumList[i] = new AlbumItem(String.valueOf(i), tempData, albumName
-					+ i, "December 201" + i);
-		}
-		this.albumList = albumList;
+		//TODO: move it to a fitting place, why is this code here?
+		//TODO: also, why not handle the same way with children?
+		//TODO: this code is wrong. it handles only a single parent and doesnt make
+		//sure which of the parents changed his name. might change the family name
+		//of the incorrect family member. removing this for now.
+		
+		// maybe the family parents does not have the same family name 
+		//- hyphen them!
+//		String familyName = parentsList[0].getLastName();
+//		if (!parentsList[0].getLastName().equals(parentsList[1].getLastName())) {
+//			familyName += " - " + parentsList[1].getLastName();
+//		}
+//		familyName += " " + getString(R.string.family);
+//		mFamilyTitle.setText(familyName);
 	}
 
 	private void initChildrenLevelView() {
@@ -163,10 +131,9 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		v.setTag(ITEM_POS, position);
 		v.setOnClickListener(this);
 		base.addView(v);
-
 	}
 
-	// TODO remove thus and add some real data
+	// TODO remove this and add some real data
 	private void initParentAndChildrenLists() {
 		ProfileDetails[] profileDetailsData = { null, null, null, null };
 		profileDetailsData[0] = (new ProfileDetails("Address",
@@ -205,6 +172,25 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		parentsList = localParentsList;
 		childrenList = localChildrenList;
 	}
+	
+	private void initAlbumList() {
+		AlbumItem[] albumList = { null, null, null, null, null, null };
+		String albumName = "Temp Album Name ";
+		PhotoItem[] tempData = { null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null,
+				null };
+
+		for (int i = 0; i < 18; i++) {
+			tempData[i] = new PhotoItem("11.2.201" + i, "www.bla.com",
+					"This is me and my friend Dan " + i);
+		}
+
+		for (int i = 0; i < 6; i++) {
+			albumList[i] = new AlbumItem(String.valueOf(i), tempData, albumName
+					+ i, "December 201" + i);
+		}
+		this.albumList = albumList;
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -222,7 +208,9 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 					familyMembers);
 			profileIntent.putExtra(ProfileFragment.PROFILE_DATA, args);
 			getActivity().startActivity(profileIntent);
-		} else if (ALBUM_ITEM_TYPE.equals(v.getTag(ITEM_TYPE))) {
+		} 
+		
+		else if (ALBUM_ITEM_TYPE.equals(v.getTag(ITEM_TYPE))) {
 			int pos = (Integer) v.getTag(ITEM_POS);
 			Intent albumIntent = new Intent(getActivity(),
 					PhotoAlbumScreenActivity.class);

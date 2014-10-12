@@ -11,6 +11,7 @@ import com.wazapps.familybox.R;
 import com.wazapps.familybox.util.LogUtils;
 
 public class AlbumGridFragment extends Fragment {
+	public static final String ALBUM_GRID_FRAGMENT = "album grid fragment";
 	private View root;
 	private GridView mGridview;
 	AlbumGridAdapter mAdapter;
@@ -36,7 +37,6 @@ public class AlbumGridFragment extends Fragment {
 		if (args != null) {
 			AlbumItem[] albumList = (AlbumItem[]) args
 					.getParcelableArray(PhotoGridFragment.ALBUM_ITEM_LIST);
-
 			mAdapter = new AlbumGridAdapter(getActivity(), albumList);
 			mGridview.setAdapter(mAdapter);
 		} else {
