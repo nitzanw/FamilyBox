@@ -3,10 +3,11 @@ package com.wazapps.familybox.photos;
 import com.wazapps.familybox.ActivityWithDrawer;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.TabsFragment;
+import com.wazapps.familybox.familyProfiles.FamilyProfileActivity;
 import com.wazapps.familybox.familyTree.FamilyTreeActivity;
 import com.wazapps.familybox.newsfeed.NewsfeedActivity;
-import com.wazapps.familybox.profiles.FamilyProfileActivity;
 import com.wazapps.familybox.profiles.ProfileActivity;
+
 
 import android.content.Intent;
 import android.os.Bundle;

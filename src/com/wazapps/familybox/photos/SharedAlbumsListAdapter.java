@@ -16,14 +16,15 @@ import android.widget.TextView;
 
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.familyProfiles.FamilyProfileActivity;
 import com.wazapps.familybox.familyTree.FamiliesListItem;
 import com.wazapps.familybox.photos.AlbumGridScreenActivity;
 import com.wazapps.familybox.photos.AlbumItem;
 import com.wazapps.familybox.photos.PhotoGridFragment;
 import com.wazapps.familybox.photos.PhotoItem;
-import com.wazapps.familybox.profiles.FamilyProfileActivity;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.SectionAdapter;
+
 
 public class SharedAlbumsListAdapter extends SectionAdapter {
 	private enum LetterTypes {

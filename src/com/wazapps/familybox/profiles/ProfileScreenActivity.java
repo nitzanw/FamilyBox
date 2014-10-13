@@ -12,7 +12,7 @@ import android.view.MenuItem;
 
 public class ProfileScreenActivity extends FragmentActivity {
 
-	protected static final String FAMILY_MEMBER_ARRAY_LIST = "family member array list";
+	public static final String FAMILY_MEMBER_ARRAY_LIST = "family member array list";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

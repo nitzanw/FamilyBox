@@ -1,9 +1,10 @@
-package com.wazapps.familybox.profiles;
+package com.wazapps.familybox.familyProfiles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 

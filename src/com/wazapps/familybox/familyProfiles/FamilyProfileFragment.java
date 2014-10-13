@@ -1,4 +1,4 @@
-package com.wazapps.familybox.profiles;
+package com.wazapps.familybox.familyProfiles;
 
 import java.util.ArrayList;
 
@@ -7,6 +7,10 @@ import com.wazapps.familybox.photos.AlbumItem;
 import com.wazapps.familybox.photos.PhotoAlbumScreenActivity;
 import com.wazapps.familybox.photos.PhotoGridFragment;
 import com.wazapps.familybox.photos.PhotoItem;
+import com.wazapps.familybox.profiles.FamilyMemberDetails;
+import com.wazapps.familybox.profiles.ProfileDetails;
+import com.wazapps.familybox.profiles.ProfileFragment;
+import com.wazapps.familybox.profiles.ProfileScreenActivity;
 import com.wazapps.familybox.util.LogUtils;
 
 import android.content.Intent;

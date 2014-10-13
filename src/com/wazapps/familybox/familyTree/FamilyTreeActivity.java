@@ -6,11 +6,12 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.wazapps.familybox.ActivityWithDrawer;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.familyProfiles.FamilyProfileActivity;
 import com.wazapps.familybox.newsfeed.NewsfeedActivity;
 import com.wazapps.familybox.photos.PhotoAlbumsActivity;
-import com.wazapps.familybox.profiles.FamilyProfileActivity;
 import com.wazapps.familybox.profiles.ProfileActivity;
 import com.wazapps.familybox.profiles.ProfileFragment;
+
 
 public class FamilyTreeActivity extends ActivityWithDrawer {
 	static final String TAG_FAMILY_TREE = "Family Tree";

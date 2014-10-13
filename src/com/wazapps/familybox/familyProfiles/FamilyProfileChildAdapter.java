@@ -1,4 +1,4 @@
-package com.wazapps.familybox.profiles;
+package com.wazapps.familybox.familyProfiles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.util.RoundedImageView;
 
 public class FamilyProfileChildAdapter extends BaseAdapter {

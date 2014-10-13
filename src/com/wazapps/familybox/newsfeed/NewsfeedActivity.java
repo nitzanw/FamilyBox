@@ -3,10 +3,11 @@ package com.wazapps.familybox.newsfeed;
 import com.wazapps.familybox.ActivityWithDrawer;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.TabsFragment;
+import com.wazapps.familybox.familyProfiles.FamilyProfileActivity;
 import com.wazapps.familybox.familyTree.FamilyTreeActivity;
 import com.wazapps.familybox.photos.PhotoAlbumsActivity;
-import com.wazapps.familybox.profiles.FamilyProfileActivity;
 import com.wazapps.familybox.profiles.ProfileActivity;
+
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;

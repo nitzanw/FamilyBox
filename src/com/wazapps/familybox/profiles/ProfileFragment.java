@@ -18,7 +18,7 @@ public class ProfileFragment extends Fragment {
 	public static final String PROFILE_FRAG = "profile fragment";
 	public static final String MEMBER_ITEM = "member item";
 	protected static final String FAMILY_MEMBER_LIST = "family member list";
-	protected static final String PROFILE_DATA = "profile data";
+	public static final String PROFILE_DATA = "profile data";
 	private View root;
 	private HorizontialListView mFamilyList;
 	private ListView mProfileDetailsList;
