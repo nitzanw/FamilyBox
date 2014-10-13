@@ -1,4 +1,4 @@
-package com.wazapps.familybox.profiles;
+package com.wazapps.familybox.familyProfiles;
 
 import java.util.Arrays;
 

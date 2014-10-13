@@ -81,9 +81,7 @@ public class AlbumGridAdapter extends BaseAdapter {
 				args.putParcelable(PhotoGridFragment.ALBUM_ITEM, item);
 				i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
 				activity.startActivity(i);
-
 			}
-
 		});
 
 		return vi;

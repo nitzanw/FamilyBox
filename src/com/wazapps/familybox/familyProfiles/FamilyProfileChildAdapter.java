@@ -1,22 +1,18 @@
-package com.wazapps.familybox.profiles;
+package com.wazapps.familybox.familyProfiles;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.util.RoundedImageView;
 
 public class FamilyProfileChildAdapter extends BaseAdapter {
@@ -30,12 +26,10 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 		this.activity = activity;
 		this.childrenList = Arrays.copyOf(childrenList, childrenList.length,
 				FamilyMemberDetails[].class);
-
 	}
 
 	@Override
 	public int getCount() {
-
 		return childrenList.length;
 	}
 
@@ -55,6 +49,7 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 
 		linearInflater = (LayoutInflater) activity
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
 		// recycling the view:
 		if (v == null) {
 			v = linearInflater.inflate(R.layout.family_profile_child_item,
@@ -89,12 +84,37 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 		} else {
 			connector1.setVisibility(View.VISIBLE);
 		}
+		
 		if (position == childrenList.length - 1) {
 			connector2.setVisibility(View.GONE);
 		} else {
 			connector2.setVisibility(View.VISIBLE);
-
 		}
+		
+		//add padding to first element according to 
+		//the number of children in the list
+		if (position == 0) {
+			switch (childrenList.length) {
+			case 1:
+				v.setPadding(300, 0, 0, 0);
+				break;
+				
+			case 2:
+				v.setPadding(175, 0, 0, 0);
+				break;
+				
+
+			default:
+				v.setPadding(51, 0, 0, 0);
+				break;
+			}
+		}
+		
+		//add padding to last element (in case it is not the only element in list)
+		if (position == childrenList.length - 1 && (childrenList.length > 1)) {
+			v.setPadding(0, 0, 45, 0);				
+		}
+		
 		v.setTag(CHILD_POS, position);
 	}
 }

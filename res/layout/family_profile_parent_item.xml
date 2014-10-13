@@ -24,7 +24,7 @@
         android:maxLength="16"
         android:maxLines="2"
         android:minLines="2"
-        android:text="Parent name"
-        android:textSize="11sp" />
+        android:text="@string/family_parent_name"
+        android:textSize="12sp" />
 
 </LinearLayout>

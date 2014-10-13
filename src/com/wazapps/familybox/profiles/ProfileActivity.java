@@ -6,11 +6,13 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.wazapps.familybox.ActivityWithDrawer;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.familyProfiles.FamilyProfileActivity;
 import com.wazapps.familybox.familyTree.FamilyTreeActivity;
 import com.wazapps.familybox.newsfeed.NewsfeedActivity;
 import com.wazapps.familybox.photos.AlbumItem;
 import com.wazapps.familybox.photos.PhotoAlbumsActivity;
 import com.wazapps.familybox.photos.PhotoItem;
+
 
 public class ProfileActivity extends ActivityWithDrawer {
 	static final String TAG_PROFILE = "Profile";

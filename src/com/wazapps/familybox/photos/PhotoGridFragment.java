@@ -38,9 +38,17 @@ public class PhotoGridFragment extends Fragment {
 			PhotoItem[] photoList = albumItem.getPhotosList();
 			mAdpter = new PhotoGridAdapter(getActivity(), photoList);
 			mGridview.setAdapter(mAdpter);
-			getActivity().getActionBar().setTitle(albumItem.getAlbumName());
+			handleActionbarTitle();
 		} else {
-			LogUtils.logWarning(getTag(), "the are no valid argument!");
+			LogUtils.logWarning(getTag(), "these are no valid arguments!");
+		}
+	}
+	
+	private void handleActionbarTitle() {
+		if (getActivity() instanceof PhotoAlbumsActivity) {
+			getActivity().getActionBar().setTitle("Photo Albums");
+		} else {
+			getActivity().getActionBar().setTitle(albumItem.getAlbumName());
 		}
 	}
 }

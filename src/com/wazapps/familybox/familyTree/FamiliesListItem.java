@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class FamiliesListItem implements Parcelable, Comparable<FamiliesListItem> {
+	public static String FAMILY_NAME = "family name";
 	private String familyId, familyName;
 	
 	public static final Parcelable.Creator<FamiliesListItem> CREATOR = 

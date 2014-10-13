@@ -60,7 +60,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.wazapps.familybox.profiles.FamilyProfileActivity"
+            android:name="com.wazapps.familybox.familyProfiles.FamilyProfileActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" >
         </activity>
@@ -71,6 +71,11 @@
         </activity>
         <activity
             android:name="com.wazapps.familybox.photos.AlbumGridScreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.wazapps.familybox.familyProfiles.FamilyProfileScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" >
         </activity>

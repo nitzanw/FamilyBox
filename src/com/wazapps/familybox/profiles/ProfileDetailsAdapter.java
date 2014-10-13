@@ -60,10 +60,7 @@ public class ProfileDetailsAdapter extends BaseAdapter {
 		//to improve the listView's visuals
 		if (position == this.getCount() - 1) {
 			detailsContents.setPadding(0, 0, 0, 50);
-		}
-		
-		return v;
-		
+		}	
+		return v;		
 	}
-
 }
