@@ -66,28 +66,36 @@
         </ListView>
 
         <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:background="@android:color/background_light"
-        android:orientation="vertical">
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_gravity="center_horizontal|bottom"
+        	android:background="@android:color/background_light"
+        	android:orientation="vertical">
 
-        <TextView
-        android:id="@+id/tv_close_family_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/seperator"
-        android:gravity="center_horizontal"
-        android:paddingTop="5dp"
-        android:text="@string/profile_close_family_title"
-        android:textSize="20sp" />
-
-        <com.wazapps.familybox.util.HorizontialListView
-  		android:id="@+id/family_members_list"
-  		android:layout_width="fill_parent"
-  		android:layout_height="120dp"
-  		android:background="@android:color/background_light"/>
+	        <TextView
+		        android:id="@+id/tv_close_family_title"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:background="@drawable/seperator"
+		        android:gravity="center_horizontal"
+		        android:paddingTop="5dp"
+		        android:text="@string/profile_close_family_title"
+		        android:textSize="20sp" />
+        
+			<HorizontalScrollView
+				android:id="@+id/hsv_family_members_list"
+				android:layout_width="fill_parent"
+				android:layout_height="120dp"
+				android:overScrollMode="never"
+				android:scrollbars="none"
+				android:background="@android:color/background_light">
+				<LinearLayout
+					android:id="@+id/ll_family_members_list_holder"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal" >
+				</LinearLayout>    
+			</HorizontalScrollView>
         </LinearLayout>
     </LinearLayout> 
-
 </RelativeLayout>

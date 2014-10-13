@@ -1,31 +1,29 @@
 package com.wazapps.familybox.profiles;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.wazapps.familybox.R;
 
-import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ProfileFamilyListAdapter extends BaseAdapter {
-	private Activity activity;
+	private FragmentActivity activity;
 	private FamilyMemberDetails[] familyMembersList;
-
-	public ProfileFamilyListAdapter(Activity activity,
+	private LayoutInflater linearInflater;
+	
+	public ProfileFamilyListAdapter(FragmentActivity activity, 
 			FamilyMemberDetails[] familyMembersList) {
 		this.activity = activity;
 		this.familyMembersList = Arrays.copyOf(familyMembersList,
 				familyMembersList.length, FamilyMemberDetails[].class);
 	}
-
+	
 	@Override
 	public int getCount() {
 		return this.familyMembersList.length;
@@ -45,29 +43,32 @@ public class ProfileFamilyListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
 
+		linearInflater = (LayoutInflater) activity
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		// recycling the view:
 		if (v == null) {
-			LayoutInflater vi;
-			vi = (LayoutInflater) activity
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.family_members_list_item, parent, false);
+			v = linearInflater.inflate(R.layout.family_members_list_item,
+					parent, false);
 		}
-
-		// center lock the horizontal list items
-		LinearLayout familyItem = (LinearLayout) v
-				.findViewById(R.id.family_members_list_item);
+		
+		initMemberView(position, v);
+		return v;
+	}
+	
+	private void initMemberView(int position, View v) {
 		switch (this.getCount()) {
 		case 1:
-			familyItem.setPadding(0, 0, 260, 0);
+			v.setPadding(0, 0, 260, 0);
 			break;
 
 		case 2:
 			if (position == 1)
-				familyItem.setPadding(0, 0, 240, 0);
+				v.setPadding(0, 0, 240, 0);
 			break;
 
 		case 3:
 			if (position == 2)
-				familyItem.setPadding(0, 0, 45, 0);
+				v.setPadding(0, 0, 45, 0);
 		default:
 			break;
 		}
@@ -80,7 +81,6 @@ public class ProfileFamilyListAdapter extends BaseAdapter {
 
 		name.setText(member.getName());
 		role.setText(member.getRole());
-
-		return v;
 	}
+
 }

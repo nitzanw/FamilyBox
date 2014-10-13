@@ -9,7 +9,6 @@ import android.view.MenuItem;
 public class FamilyProfileScreenActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_container);
 		FamilyProfileFragment familyProfileFrag = new FamilyProfileFragment();

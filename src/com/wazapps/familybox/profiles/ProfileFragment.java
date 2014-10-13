@@ -1,9 +1,12 @@
 package com.wazapps.familybox.profiles;
 
+import java.util.ArrayList;
+
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.util.HorizontialListView;
 import com.wazapps.familybox.util.LogUtils;
 
+import android.view.View.OnClickListener;
+import android.content.Intent;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,32 +14,42 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements OnClickListener {
 	public static final String PROFILE_FRAG = "profile fragment";
 	public static final String MEMBER_ITEM = "member item";
-	protected static final String FAMILY_MEMBER_LIST = "family member list";
+	public static final String FAMILY_MEMBER_LIST = "family member list";
 	public static final String PROFILE_DATA = "profile data";
+	private static final String MEMBER_ITEM_TYPE = "family member item";
+	
+	private static final int ITEM_TYPE = R.string.type;
+	private static final int ITEM_POS = R.string.position;
+	
 	private View root;
-	private HorizontialListView mFamilyList;
+	private LinearLayout mFamilyListHolder;
 	private ListView mProfileDetailsList;
-	private ProfileFamilyListAdapter familyListAdapter;
-	private ProfileDetailsAdapter profileDetailsAdapter;
+	private ProfileFamilyListAdapter mFamilyListAdapter;
+	private ProfileDetailsAdapter mProfileDetailsAdapter;
+	private FamilyMemberDetails[] mFamilyMembersList;
+	private FamilyMemberDetails mCurrentUserDetails;
 	private TextView mUserName;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		root = inflater.inflate(R.layout.fragment_profile, container, false);
-
-		mFamilyList = (HorizontialListView) root
-				.findViewById(R.id.family_members_list);
+		
+		mFamilyListHolder = (LinearLayout) root
+				.findViewById(R.id.ll_family_members_list_holder);
+		
 		mProfileDetailsList = (ListView) root
 				.findViewById(R.id.profile_details);
-
+		
 		mUserName = (TextView) root.findViewById(R.id.tv_profile_username);
+		
 		// Clear the listView's top highlight scrolling effect
 		int glowDrawableId = root.getResources().getIdentifier(
 				"overscroll_glow", "drawable", "android");
@@ -48,29 +61,67 @@ public class ProfileFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		mFamilyListHolder.removeAllViews(); //to avoid data accumulation bug
 		Bundle args = getArguments();
 		if (args != null) {
 			// get the data for the profile
-			FamilyMemberDetails[] familyMemberList = (FamilyMemberDetails[]) args
+			mFamilyMembersList = (FamilyMemberDetails[]) args
 					.getParcelableArray(FAMILY_MEMBER_LIST);
-			FamilyMemberDetails selectedMember = (FamilyMemberDetails) args
+			mCurrentUserDetails = (FamilyMemberDetails) args
 					.getParcelable(MEMBER_ITEM);
-
-			// init the detail adapter
-			profileDetailsAdapter = new ProfileDetailsAdapter(getActivity(),
-					selectedMember.getDetails());
-			mProfileDetailsList.setAdapter(profileDetailsAdapter);
-			familyListAdapter = new ProfileFamilyListAdapter (
-					this.getActivity(), familyMemberList);
-			mFamilyList.setAdapter(familyListAdapter);
-			mUserName.setText(selectedMember.getName() + " "
-					+ selectedMember.getLastName());
+			initProfileDetailsViews();
+			initFamilyListView();	
 		} 
 		
 		else {
-			LogUtils.logWarning(getTag(), "the args did not pass!!");
+			LogUtils.logWarning(getTag(), "profile arguments did not pass");
+		}
+	}
+	
+	private void initProfileDetailsViews() {
+		mUserName.setText(mCurrentUserDetails.getName() + " "
+				+ mCurrentUserDetails.getLastName());
+		mProfileDetailsAdapter = new ProfileDetailsAdapter(getActivity(),
+				mCurrentUserDetails.getDetails());
+		mProfileDetailsList.setAdapter(mProfileDetailsAdapter);
+	}
+	
+	private void initFamilyListView() {
+		mFamilyListAdapter = new ProfileFamilyListAdapter 
+				(this.getActivity(), mFamilyMembersList);
+		for (int i = 0; i < mFamilyListAdapter.getCount(); i++) {
+			View v = mFamilyListAdapter.getView(i, null, (ViewGroup) getView());
+			v.setTag(ITEM_TYPE, MEMBER_ITEM_TYPE);
+			v.setTag(ITEM_POS, i);
+			v.setOnClickListener(this);
+			mFamilyListHolder.addView(v);
 		}
 	}
 
+	@Override
+	public void onClick(View v) {
+		Intent profileIntent = new Intent(getActivity(), ProfileScreenActivity.class);
+		Bundle args = new Bundle();
+		int pos = (Integer) v.getTag(ITEM_POS); //get the current item position in family list
+		ArrayList<FamilyMemberDetails> familyMembers = createFamilyList(pos);
+		FamilyMemberDetails clickedUserDetails = mFamilyMembersList[pos];
+		args.putParcelable(ProfileFragment.MEMBER_ITEM, clickedUserDetails);
+		args.putParcelableArrayList(ProfileScreenActivity.FAMILY_MEMBER_ARRAY_LIST, familyMembers);
+		profileIntent.putExtra(ProfileFragment.PROFILE_DATA, args);
+		getActivity().startActivity(profileIntent);
+	}
+	
+	/**
+	 * This will be removed
+	 */
+	private ArrayList<FamilyMemberDetails> createFamilyList(int pos) {
+		//TODO: add real data
+		ArrayList<FamilyMemberDetails> familyMembers = new ArrayList<FamilyMemberDetails>();
+		for (int i = 0; i < mFamilyMembersList.length; i++) {
+			if (i != pos) {
+				familyMembers.add(mFamilyMembersList[i]);
+			}
+		}
+		return familyMembers;
+	}
 }

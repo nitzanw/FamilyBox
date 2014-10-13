@@ -36,7 +36,6 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-
 		return childrenList.length;
 	}
 
