@@ -74,7 +74,7 @@
     <string name="drawer_notes">Notes</string>
     <string name="drawer_expand_network">Expand network</string>
     <string name="photos_tab_my_family">My family</string>
-    <string name="photos_tab_shared_album">Shared album</string>
+    <string name="photos_tab_shared_album">Shared Albums</string>
     <string name="photos_tab_favorites">Favorites</string>
     <string name="photo_albums">Photo albums</string>
     <string name="drawer_open">Open navigation drawer</string>

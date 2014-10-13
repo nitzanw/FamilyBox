@@ -21,6 +21,7 @@ import com.wazapps.familybox.photos.AlbumItem;
 import com.wazapps.familybox.photos.PhotoGridFragment;
 import com.wazapps.familybox.photos.PhotoItem;
 import com.wazapps.familybox.profiles.FamilyProfileActivity;
+import com.wazapps.familybox.profiles.FamilyProfileScreenActivity;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.SectionAdapter;
 
@@ -129,12 +130,8 @@ public class FamiliesListAdapter extends SectionAdapter {
     @Override
     public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
         super.onRowItemClick(parent, view, section, row, id);
-        Intent familyAlbumsIntent = new Intent(activity, AlbumGridScreenActivity.class);
-        AlbumItem[] albumList = { null, null, null, null, null, null };
-        Bundle args = new Bundle();
-        args.putParcelableArray("test1", albumList);
-        familyAlbumsIntent.putExtra("test2", args);
-        activity.startActivity(familyAlbumsIntent);
+        Intent familyProfile = new Intent(activity, FamilyProfileScreenActivity.class);
+        activity.startActivity(familyProfile);
     }
     
     /**

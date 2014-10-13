@@ -26,6 +26,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private static final int ITEM_POS = R.string.position;
 	private static final int MEMBER_TYPE = R.string.family;
 
+	public static final String TAG_FAMILY_PROFILE_FRAGMENT = "family profile fragment";
 	private static final String CHILD_TYPE = "child";
 	private static final String PARENT_TYPE = "parent";
 	private static final String ALBUM_TYPE = "album";
@@ -86,19 +87,14 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		initAlbumView();
 
 		//TODO: move it to a fitting place, why is this code here?
-		//TODO: also, why not handle the same way with children?
-		//TODO: this code is wrong. it handles only a single parent and doesnt make
-		//sure which of the parents changed his name. might change the family name
-		//of the incorrect family member. removing this for now.
-		
 		// maybe the family parents does not have the same family name 
 		//- hyphen them!
-//		String familyName = parentsList[0].getLastName();
-//		if (!parentsList[0].getLastName().equals(parentsList[1].getLastName())) {
-//			familyName += " - " + parentsList[1].getLastName();
-//		}
-//		familyName += " " + getString(R.string.family);
-//		mFamilyTitle.setText(familyName);
+		String familyName = parentsList[0].getLastName();
+		if (!parentsList[0].getLastName().equals(parentsList[1].getLastName())) {
+			familyName += " - " + parentsList[1].getLastName();
+		}
+		familyName += " " + getString(R.string.family);
+		mFamilyTitle.setText(familyName);
 	}
 
 	private void initChildrenLevelView() {

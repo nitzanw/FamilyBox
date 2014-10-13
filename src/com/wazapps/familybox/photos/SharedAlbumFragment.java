@@ -24,9 +24,9 @@ public class SharedAlbumFragment extends Fragment {
 		HeaderListView familiesList = new HeaderListView(root.getContext());
 		familiesList.setBackgroundColor(getResources().getColor(R.color.white_cream_ab));
 		this.familiesListData = new ArrayList<FamiliesListItem>();
-		testFunc();
-		FamiliesListAdapter familiesListAdapater = new FamiliesListAdapter(getActivity(), familiesListData);
-		familiesList.setAdapter(familiesListAdapater);
+		makeTempData();
+		SharedAlbumsListAdapter sharedAlbumsAdapter = new SharedAlbumsListAdapter(getActivity(), familiesListData);
+		familiesList.setAdapter(sharedAlbumsAdapter);
 		
 		if (this.familiesListData.isEmpty()) {
 			return root;
@@ -35,7 +35,10 @@ public class SharedAlbumFragment extends Fragment {
 		}
 	}
 	
-	private void testFunc() {
+	/**
+	 * Adding temporary data for test purposes
+	 */
+	private void makeTempData() {
 		familiesListData.add(new FamiliesListItem("f1u1", "Aluf"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Alon"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Alran"));
