@@ -26,6 +26,7 @@
         android:id="@+id/rl_family_profile_tree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/white_cream_ab"
         android:layout_below="@id/tv_family_profile_title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp" >

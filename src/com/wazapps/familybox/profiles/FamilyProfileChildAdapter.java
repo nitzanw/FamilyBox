@@ -57,13 +57,11 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		// recycling the view:
 		if (v == null) {
-
 			v = linearInflater.inflate(R.layout.family_profile_child_item,
 					parent, false);
 		}
 
 		initChildView(position, v);
-
 		return v;
 	}
 

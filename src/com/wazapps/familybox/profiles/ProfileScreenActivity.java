@@ -21,7 +21,6 @@ public class ProfileScreenActivity extends FragmentActivity {
 		setContentView(R.layout.activity_container);
 		// get the activity arguments
 		Bundle args = getIntent().getBundleExtra(ProfileFragment.PROFILE_DATA);
-		// String[] arr = list.toArray(new String[list.size()]);
 		ArrayList<FamilyMemberDetails> arrList = args
 				.getParcelableArrayList(FAMILY_MEMBER_ARRAY_LIST);
 		FamilyMemberDetails[] list = arrList

@@ -30,6 +30,7 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		if (container == null) {
 			return null;
 		}
+		
 		// TODO get real data!
 		AlbumItem[] albumList = { null, null, null, null, null, null };
 		String albumName = "Temp Album Name ";
@@ -43,10 +44,10 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		}
 
 		for (int i = 0; i < 6; i++) {
-
 			albumList[i] = new AlbumItem(String.valueOf(i),tempData, albumName + i,
 					"December 201" + i);
 		}
+		
 		Bundle args = new Bundle();
 		args.putParcelableArray(PhotoGridFragment.ALBUM_ITEM_LIST, albumList);
 		args.putParcelable(PhotoGridFragment.ALBUM_ITEM, albumList[0]);

@@ -13,7 +13,7 @@ import com.wazapps.familybox.util.LogUtils;
 public class PhotoGridFragment extends Fragment {
 	public static final String PHOTO_ALBUM_SCREEN_FRAG = "photo album screen fragment";
 	public static final String ALBUM_ITEM = "album item";
-	protected static final String ALBUM_ITEM_LIST = "album items list";
+	public static final String ALBUM_ITEM_LIST = "album items list";
 	private View root;
 	private GridView mGridview;
 	private AlbumItem albumItem;

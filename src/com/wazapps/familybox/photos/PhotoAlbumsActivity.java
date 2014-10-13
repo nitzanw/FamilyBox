@@ -19,10 +19,7 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActionBar().setTitle(R.string.photo_albums);
-		overridePendingTransition(R.anim.enter, R.anim.exit); // TODO: handle
-																// transition
-																// animations in
-																// a better way
+		overridePendingTransition(R.anim.enter, R.anim.exit); 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.content_frame, new PhotoAlbumsTabsFragment(),
 				TAG_PHOTO_ALBUM);
@@ -51,10 +48,6 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 			TabsFragment frag = (TabsFragment) getSupportFragmentManager()
 					.findFragmentByTag(TAG_PHOTO_ALBUM);
 			frag.switchTab(0);
-			break;
-
-		case NOTES_POS:
-
 			break;
 
 		case NEWS_POS:

@@ -14,8 +14,8 @@ public class PhotoAlbumScreenActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_container);
 		// get the activity arguments
-		Bundle args = getIntent().getBundleExtra(
-				PhotoGridFragment.ALBUM_ITEM);
+		Bundle args = getIntent().getBundleExtra
+				(PhotoGridFragment.ALBUM_ITEM);
 		
 		// create a new PhotoAlbumScreenFragment and give it the arguments
 		PhotoGridFragment photoAlbumFrag = new PhotoGridFragment();

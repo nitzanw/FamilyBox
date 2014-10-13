@@ -49,11 +49,6 @@ public class NewsfeedActivity extends ActivityWithDrawer {
 			Intent photosIntent = new Intent(this, PhotoAlbumsActivity.class);
 			startActivity(photosIntent);
 			break;
-
-		case NOTES_POS:
-
-			break;
-
 		case NEWS_POS:
 			TabsFragment frag = (TabsFragment) getSupportFragmentManager()
 					.findFragmentByTag(TAG_NEWS_FEED);

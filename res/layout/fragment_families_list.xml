@@ -1,7 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/fragment_families_list" >  
-</LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>    
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:id="@+id/fragment_families_list">
+	<LinearLayout
+    	android:id="@+id/ll_families_list_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/tree_icon" />
+        <TextView
+            android:layout_marginTop="12dp"
+            android:textSize="25sp"
+            android:text="@string/families_list_empty"
+            android:textColor="@color/gray_dialog_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textAlignment="gravity"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/gray_dialog_text_color"
+            android:text="@string/families_list_empty_explain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</FrameLayout>
