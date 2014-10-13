@@ -115,10 +115,6 @@ public class ProfileActivity extends ActivityWithDrawer {
 			startActivity(photoIntent);
 			break;
 
-		case NOTES_POS:
-
-			break;
-
 		case NEWS_POS:
 			Intent newsIntent = new Intent(this, NewsfeedActivity.class);
 			startActivity(newsIntent);

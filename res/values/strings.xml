@@ -66,6 +66,8 @@
     <string name="signup_birthday">Birthday</string>
     <string name="signup_phone_number">Phone number (optional)</string>
     <string name="signup_middle_name">Middle name (optional)</string>
+    <string name="signup_enter_password">Enter password</string>
+    <string name="signup_confirm_password">Confirm password</string>
     <string name="drawer_my_profile">My profile</string>
     <string name="drawer_family_profile">My family profile</string>
     <string name="drawer_family_tree">Family tree</string>

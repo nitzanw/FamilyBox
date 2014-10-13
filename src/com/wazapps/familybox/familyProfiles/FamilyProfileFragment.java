@@ -34,6 +34,8 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private static final String FAMILY_MEMBER_PARENT_TYPE = "parent";
 	private static final String FAMILY_MEMBER_ITEM_TYPE = "family member item";
 	private static final String ALBUM_ITEM_TYPE = "album item";
+	public static final String FAMILY_PROFILE_DATA = "family profile data";
+	public static final String FAMILY_PROFILE_FRAG = "family profile fragment";
 
 	private View root;
 	private FamilyProfileParentAdapter mParentAdapter;

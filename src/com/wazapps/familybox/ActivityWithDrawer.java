@@ -25,9 +25,9 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 	public static final int MY_FAMILY_PROFILE_POS = 1;
 	public static final int FAMILY_TREE_POS = 2;
 	public static final int PHOTOS_POS = 3;
-	public static final int NOTES_POS = 4;
-	public static final int NEWS_POS = 5;
-	public static final int EXPAND_NETWORK_POS = 6;
+//	public static final int NOTES_POS = 4;
+	public static final int NEWS_POS = 4;
+	public static final int EXPAND_NETWORK_POS = 5;
 
 	private static final String DRAWER_POSITION = "drawerPos";
 	// Declare Variable
@@ -52,7 +52,7 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 				getString(R.string.drawer_family_profile),
 				getString(R.string.drawer_family_tree),
 				getString(R.string.drawer_photos),
-				getString(R.string.drawer_notes),
+//				getString(R.string.drawer_notes),
 				getString(R.string.drawer_news),
 				getString(R.string.drawer_expand_network) };
 

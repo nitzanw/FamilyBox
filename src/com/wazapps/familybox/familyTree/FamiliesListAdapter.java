@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.familyProfiles.FamilyProfileActivity;
 import com.wazapps.familybox.familyProfiles.FamilyProfileScreenActivity;
 import com.wazapps.familybox.photos.AlbumGridScreenActivity;
 import com.wazapps.familybox.photos.AlbumItem;
@@ -130,8 +131,12 @@ public class FamiliesListAdapter extends SectionAdapter {
     @Override
     public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
         super.onRowItemClick(parent, view, section, row, id);
-        Intent familyProfile = new Intent(activity, FamilyProfileScreenActivity.class);
-        activity.startActivity(familyProfile);
+        Intent familyAlbumsIntent = new Intent(activity, FamilyProfileActivity.class);
+        AlbumItem[] albumList = { null, null, null, null, null, null };
+        Bundle args = new Bundle();
+        args.putParcelableArray("test1", albumList);
+        familyAlbumsIntent.putExtra("test2", args);
+        activity.startActivity(familyAlbumsIntent);
     }
     
     /**
