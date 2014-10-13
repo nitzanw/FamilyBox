@@ -42,7 +42,7 @@
                 android:layout_marginTop="9dp"
                 android:gravity="center_horizontal"
                 android:maxLength="24"
-                android:text="Child name"
+                android:text="@string/family_child_name"
                 android:textSize="12sp" />
         </RelativeLayout>
 

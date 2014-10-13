@@ -413,7 +413,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int app_name=0x7f070000;
         public static final int approve_invite_alright=0x7f070023;
         public static final int approve_invite_explain=0x7f070024;
-        public static final int child=0x7f07005a;
+        public static final int child=0x7f07005c;
         public static final int children=0x7f070058;
         public static final int drawer_close=0x7f07004d;
         public static final int drawer_expand_network=0x7f070047;
@@ -440,11 +440,13 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int expanded_action_menu=0x7f07004f;
         public static final int families_list_empty=0x7f07002f;
         public static final int families_list_empty_explain=0x7f070031;
-        public static final int family=0x7f07005d;
+        public static final int family=0x7f07005f;
+        public static final int family_child_name=0x7f07005b;
         public static final int family_member_1=0x7f070029;
         public static final int family_member_2=0x7f07002a;
         public static final int family_member_3=0x7f07002b;
         public static final int family_name=0x7f070059;
+        public static final int family_parent_name=0x7f07005a;
         public static final int family_profile_title=0x7f070054;
         public static final int family_query_members_query=0x7f070028;
         public static final int family_query_title=0x7f070027;
@@ -457,7 +459,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int member_query_relation=0x7f07002d;
         public static final int member_query_text=0x7f07002c;
         public static final int mother_name=0x7f070017;
-        public static final int name=0x7f07005c;
+        public static final int name=0x7f07005e;
         public static final int news=0x7f070050;
         public static final int news_feed_empty=0x7f07002e;
         public static final int news_feed_empty_click_here=0x7f070032;
@@ -474,7 +476,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int photos_tab_favorites=0x7f07004a;
         public static final int photos_tab_my_family=0x7f070048;
         public static final int photos_tab_shared_album=0x7f070049;
-        public static final int position=0x7f07005e;
+        public static final int position=0x7f070060;
         public static final int profile_close_family_title=0x7f070014;
         public static final int profile_details=0x7f07000b;
         public static final int profile_details_address=0x7f07000c;
@@ -487,7 +489,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int profile_details_quotes_data=0x7f070010;
         public static final int profile_status=0x7f07000a;
         public static final int profile_title=0x7f070053;
-        public static final int role=0x7f07005b;
+        public static final int role=0x7f07005d;
         public static final int signup_address=0x7f07003c;
         public static final int signup_birthday=0x7f07003e;
         public static final int signup_firstname=0x7f07003a;
@@ -501,7 +503,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int title_activity_photo_albums=0x7f070018;
         public static final int title_activity_profile=0x7f070006;
         public static final int title_activity_splash=0x7f070001;
-        public static final int type=0x7f07005f;
+        public static final int type=0x7f070061;
         public static final int user_name=0x7f070009;
     }
     public static final class style {

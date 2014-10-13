@@ -17,7 +17,7 @@
     <string name="profile_details_pre_family">Previous Family Name</string>
     <string name="profile_details_pre_family_data">Levi</string>
     <string name="profile_details_quotes">Quotes</string>
-    <string name="profile_details_quotes_data">Something Something Something</string>
+    <string name="profile_details_quotes_data">Something</string>
     <string name="profile_details_address_data">K. Yovel Jerusalem, Israel</string>
     <string name="profile_details_birthday">Birthday</string>
     <string name="profile_details_birthday_data">19 October 1987</string>
@@ -29,7 +29,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="album_title">Thailand</string>
     <string name="album_date">March 2011</string>
-    <string name="image_description">Image description - bla bla 2011 - North Island mountain view taken from bla bla:)</string>
+    <string name="image_description">Image description - bla 2011 - North Island mountain view taken from bla bla:)</string>
     <string name="empty_network_1_hi_user">Hi Gal,</string>
     <string name="empty_network_1_alone_in_network">it seems that you\'re alone in the family network</string>
     <string name="empty_network_1_do_you_know">Do you know any family member that has already joined \'FamilyBox\' application?</string>
@@ -91,6 +91,8 @@
     <string name="parent">Parent</string>
     <string name="children">Children</string>
     <string name="family_name">Family Name</string>
+    <string name="family_parent_name">Parent Name</string>
+    <string name="family_child_name">Child Name</string>
     <string name="child">Child</string>
     <string name="role">role</string>
     <string name="name">Gal</string>
