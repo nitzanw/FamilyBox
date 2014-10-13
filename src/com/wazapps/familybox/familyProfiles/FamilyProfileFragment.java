@@ -173,8 +173,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 				getString(R.string.child), profileDetailsData);
 
 		FamilyMemberDetails[] localParentsList = { dad, mom };
-		FamilyMemberDetails[] localChildrenList = { child1, child2, child3,
-				child4, child5 };
+		FamilyMemberDetails[] localChildrenList = {child1, child2, child3, child4, child5};
 		mParentsList = localParentsList;
 		mChildrenList = localChildrenList;
 	}

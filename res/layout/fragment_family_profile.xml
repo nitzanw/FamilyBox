@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/title_background"
         android:gravity="center"
-        android:text="Family Name"
+        android:text="@string/family_name"
         android:textSize="23sp" />
 
     <RelativeLayout

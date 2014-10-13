@@ -43,7 +43,7 @@
                 android:gravity="center_horizontal"
                 android:maxLength="24"
                 android:text="Child name"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
         </RelativeLayout>
 
         <ImageView
