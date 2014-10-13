@@ -31,7 +31,6 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 		this.activity = activity;
 		this.childrenList = Arrays.copyOf(childrenList, childrenList.length,
 				FamilyMemberDetails[].class);
-
 	}
 
 	@Override

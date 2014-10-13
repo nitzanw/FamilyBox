@@ -37,13 +37,12 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 
 	private View root;
 	private FamilyProfileParentAdapter mParentAdapter;
-	private LinearLayout mParentLayoutRight, mParentLayoutLeft;
+	private LinearLayout mParentLayoutRight, mParentLayoutLeft, 
+							mPhotoAlbumsHolder, mChildrenHolder;
 	private FamilyProfileChildAdapter mChildrenAdapter;
 	private FamilyProfileAlbumAdapter mAlbumsAdapter;
 	private TextView mFamilyTitle;
-	private LinearLayout mChildrenHolder;
-	private FamilyMemberDetails[] parentsList, childrenList;
-	private LinearLayout mPhotoAlbumsHolder;
+	private FamilyMemberDetails[] mParentsList, mChildrenList;
 	private AlbumItem[] albumList;
 
 	@Override
@@ -53,19 +52,19 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 				false);
 		mFamilyTitle = (TextView) root
 				.findViewById(R.id.tv_family_profile_title);
-		
+
 		mParentLayoutRight = (LinearLayout) root
 				.findViewById(R.id.ll_family_profile_parent_right);
-		
+
 		mParentLayoutLeft = (LinearLayout) root
 				.findViewById(R.id.ll_family_profile_parent_left);
-		
+
 		mChildrenHolder = (LinearLayout) root
 				.findViewById(R.id.ll_family_profile_children_holder);
-		
+
 		mPhotoAlbumsHolder = (LinearLayout) root
 				.findViewById(R.id.ll_family_profile_album_holder);
-		
+
 		// TODO add some real data!
 		initParentAndChildrenListData();
 		initAlbumListData();
@@ -75,11 +74,11 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 
 	private void initViews() {
 		// init the children list view
-		mChildrenAdapter = new FamilyProfileChildAdapter(getActivity(), childrenList);
+		mChildrenAdapter = new FamilyProfileChildAdapter(getActivity(), mChildrenList);
 		initChildrenLevelView();
 
 		//init the parents list view
-		mParentAdapter = new FamilyProfileParentAdapter(getActivity(), parentsList);
+		mParentAdapter = new FamilyProfileParentAdapter(getActivity(), mParentsList);
 		initParentView(mParentLayoutRight, 0);
 		initParentView(mParentLayoutLeft, 1);
 
@@ -90,9 +89,9 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		//init the family name title view
 		// maybe the family parents does not have the same family name 
 		//- hyphen them!
-		String familyName = parentsList[0].getLastName();
-		if (!parentsList[0].getLastName().equals(parentsList[1].getLastName())) {
-			familyName += " - " + parentsList[1].getLastName();
+		String familyName = mParentsList[0].getLastName();
+		if (!mParentsList[0].getLastName().equals(mParentsList[1].getLastName())) {
+			familyName += " - " + mParentsList[1].getLastName();
 		}
 		familyName += " " + getString(R.string.family);
 		mFamilyTitle.setText(familyName);
@@ -102,7 +101,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	 * Initialize the children list view
 	 */
 	private void initChildrenLevelView() {
-		for (int i = 0; i < childrenList.length; i++) {
+		for (int i = 0; i < mChildrenList.length; i++) {
 			View v = mChildrenAdapter.getView(i, null, (ViewGroup) getView());
 			v.setTag(ITEM_TYPE, FAMILY_MEMBER_ITEM_TYPE);
 			v.setTag(FAMILY_MEMBER_TYPE, FAMILY_MEMBER_CHILD_TYPE);
@@ -176,10 +175,10 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		FamilyMemberDetails[] localParentsList = { dad, mom };
 		FamilyMemberDetails[] localChildrenList = { child1, child2, child3,
 				child4, child5 };
-		parentsList = localParentsList;
-		childrenList = localChildrenList;
+		mParentsList = localParentsList;
+		mChildrenList = localChildrenList;
 	}
-	
+
 	private void initAlbumListData() {
 		AlbumItem[] albumList = { null, null, null, null, null, null };
 		String albumName = "Temp Album Name ";
@@ -211,16 +210,16 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 			//TODO: get real data and remove these
 			ArrayList<FamilyMemberDetails> familyMembers = 
 					createFamilyList(pos, (String) v.getTag(FAMILY_MEMBER_TYPE));
-			
+
 			FamilyMemberDetails clickedUserDetails = 
 					getMemberItem((String) v.getTag(FAMILY_MEMBER_TYPE), pos);
-			
+
 			args.putParcelable(ProfileFragment.MEMBER_ITEM, clickedUserDetails);			
 			args.putParcelableArrayList(ProfileScreenActivity.FAMILY_MEMBER_ARRAY_LIST, familyMembers);
 			profileIntent.putExtra(ProfileFragment.PROFILE_DATA, args);
 			getActivity().startActivity(profileIntent);
 		} 
-		
+
 		//if the currently clicked item is a photo album
 		else if (ALBUM_ITEM_TYPE.equals(v.getTag(ITEM_TYPE))) {
 			Intent albumIntent = new Intent(getActivity(),
@@ -228,7 +227,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 			Bundle args = new Bundle();
 			int pos = (Integer) v.getTag(ITEM_POS);
 			AlbumItem clickedAlbumDetails = albumList[pos];
-			
+
 			args.putParcelable(PhotoGridFragment.ALBUM_ITEM, clickedAlbumDetails);
 			albumIntent.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
 			getActivity().startActivity(albumIntent);
@@ -241,13 +240,13 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private FamilyMemberDetails getMemberItem(String type, int pos) {
 		//TODO: get real data and remove this function
 		if (FAMILY_MEMBER_PARENT_TYPE.equals(type)) {
-			return parentsList[pos];
+			return mParentsList[pos];
 		} 
-		
+
 		else if (FAMILY_MEMBER_CHILD_TYPE.equals(type)) {
-			return childrenList[pos];
+			return mChildrenList[pos];
 		} 
-		
+
 		else {
 			LogUtils.logWarning(getTag(), "bad family member type entered");
 			return null;
@@ -264,33 +263,33 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		//TODO: add real data and remove this function
 		ArrayList<FamilyMemberDetails> familyMembers = new ArrayList<FamilyMemberDetails>();
 		if (FAMILY_MEMBER_PARENT_TYPE.equals(type)) {
-			for (int i = 0; i < childrenList.length; i++) {
-				familyMembers.add(childrenList[i]);
+			for (int i = 0; i < mChildrenList.length; i++) {
+				familyMembers.add(mChildrenList[i]);
 			}
-			
-			for (int j = 0; j < parentsList.length; j++) {
+
+			for (int j = 0; j < mParentsList.length; j++) {
 				if (j != pos) {
-					familyMembers.add(parentsList[j]);
+					familyMembers.add(mParentsList[j]);
 				}
 			}
 		} 
-		
+
 		else if (FAMILY_MEMBER_CHILD_TYPE.equals(type)) {
-			for (int i = 0; i < childrenList.length; i++) {
+			for (int i = 0; i < mChildrenList.length; i++) {
 				if (i != pos) {
-					familyMembers.add(childrenList[i]);
+					familyMembers.add(mChildrenList[i]);
 				}
 			}
-			
-			for (int j = 0; j < parentsList.length; j++) {
-				familyMembers.add(parentsList[j]);
+
+			for (int j = 0; j < mParentsList.length; j++) {
+				familyMembers.add(mParentsList[j]);
 			}
 		} 
-		
+
 		else {
 			LogUtils.logWarning(getTag(), "bad family member type entered");
 		}
-		
+
 		return familyMembers;
 	}
 }

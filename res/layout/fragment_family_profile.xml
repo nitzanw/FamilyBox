@@ -12,25 +12,14 @@
         android:text="Family Name"
         android:textSize="23sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_family_profile_title"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/parents"
-        android:textSize="20sp" />
-
     <RelativeLayout
         android:id="@+id/rl_family_profile_tree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/white_cream_ab"
         android:layout_below="@id/tv_family_profile_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp" >
-
+        android:layout_centerHorizontal="true">
+        
         <LinearLayout
             android:id="@+id/ll_family_profile_parents"
             android:layout_width="match_parent"
@@ -73,6 +62,17 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical" />
         </LinearLayout>
+        
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ll_family_profile_parents"
+        android:layout_marginBottom="10dp"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/parents"
+        android:textSize="17sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -87,8 +87,9 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="7dp"
                 android:layout_marginLeft="10dp"
+                android:textStyle="bold"
                 android:text="@string/children"
-                android:textSize="20sp" />
+                android:textSize="17sp" />
 
             <HorizontalScrollView
                 android:id="@+id/hsv_family_profile_children"
