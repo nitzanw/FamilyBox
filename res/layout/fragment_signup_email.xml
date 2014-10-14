@@ -9,7 +9,7 @@
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="25dp"
         android:background="@drawable/profile_pic_elipse_signup"
         android:cropToPadding="true"
         android:scaleType="centerCrop" />
@@ -22,7 +22,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="11dp"
         android:gravity="center"
         android:orientation="horizontal" >
 
@@ -50,15 +50,15 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/et_signup_address"
+        android:id="@+id/et_signup_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_signup_first_row"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="5dp"
-        android:hint="@string/signup_address"
-        android:inputType="textPostalAddress"
+        android:layout_marginTop="11dp"
+        android:hint="@string/signup_email_address"
+        android:inputType="textWebEmailAddress"
         android:paddingBottom="13dp"
         android:textColor="@color/gray_signup_input_fields"
         android:textSize="13sp" />
@@ -67,65 +67,25 @@
         android:id="@+id/et_signup_birthday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_signup_address"
+        android:layout_below="@id/et_signup_email"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="11dp"
         android:hint="@string/signup_birthday"
         android:inputType="textPersonName"
         android:paddingBottom="13dp"
         android:textColor="@color/gray_signup_input_fields"
         android:textSize="13sp" />
 
-    <EditText
-        android:id="@+id/et_signup_middle_name"
+    
+     <EditText
+        android:id="@+id/et_signup_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_signup_birthday"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="5dp"
-        android:hint="@string/signup_middle_name"
-        android:inputType="textPersonName"
-        android:paddingBottom="13dp"
-        android:textColor="@color/gray_signup_input_fields"
-        android:textSize="13sp" />
-
-    <EditText
-        android:id="@+id/et_signup_previous_last"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/et_signup_middle_name"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="5dp"
-        android:hint="@string/signup_previous_last"
-        android:inputType="textPersonName"
-        android:paddingBottom="13dp"
-        android:textColor="@color/gray_signup_input_fields"
-        android:textSize="13sp" />
-
-    <EditText
-        android:id="@+id/et_signup_phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/et_signup_previous_last"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="5dp"
-        android:hint="@string/signup_phone_number"
-        android:inputType="phone"
-        android:paddingBottom="13dp"
-        android:textColor="@color/gray_signup_input_fields"
-        android:textSize="13sp" />
-     <EditText
-        android:id="@+id/et_signup_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/et_signup_phone"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="11dp"
         android:hint="@string/signup_enter_password"
         android:inputType="textPassword"
         android:paddingBottom="13dp"
@@ -138,7 +98,7 @@
         android:layout_below="@id/et_signup_password"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="11dp"
         android:hint="@string/signup_confirm_password"
         android:inputType="textPassword"
         android:paddingBottom="13dp"
@@ -151,7 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="25dp"
         android:background="@drawable/selector_signup" >
     </Button>
 
