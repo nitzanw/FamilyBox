@@ -9,7 +9,7 @@
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="35dp"
         android:background="@drawable/profile_pic_elipse_signup"
         android:cropToPadding="true"
         android:scaleType="centerCrop" />
@@ -22,7 +22,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="35dp"
         android:gravity="center"
         android:orientation="horizontal" >
 
@@ -111,7 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="35dp"
         android:background="@drawable/selector_signup" >
     </Button>
 
