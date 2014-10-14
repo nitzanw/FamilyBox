@@ -2,29 +2,57 @@ package com.wazapps.familybox.splashAndLogin;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.R.layout;
+import com.wazapps.familybox.util.WaveDrawable;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.OvershootInterpolator;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 
 
 public class SplashActivity extends Activity{
 	private static String TAG = SplashActivity.class.getName();
-	private static long SLEEP_TIME = 3; // Sleep for some time
+	private static long SLEEP_TIME = 4; // Sleep for some time
 	private static int SEC_FACTOR = 1000;
+	
+	private WaveDrawable waveDrawable;
+	private ImageView welcomeImage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-		overridePendingTransition(R.anim.enter, R.anim.exit); //TODO: handle transition animation in a better way
+		overridePendingTransition(R.anim.enter, R.anim.exit);
+		initAnimation();
 		
 		// Start timer and launch main activity
 		IntentLauncher appLaunch = new IntentLauncher();
 		appLaunch.start();
+	}
+	
+	private void initAnimation() {
+		welcomeImage = (ImageView) findViewById(R.id.welcome_elipse);
+		Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
+		welcomeImage.startAnimation(pulse);
+		waveDrawable = new WaveDrawable(Color.parseColor("#fbfbfb"), 550);
+		welcomeImage.setBackgroundDrawable(waveDrawable);
+		Interpolator interpolator = new AccelerateDecelerateInterpolator();
+		waveDrawable.setWaveInterpolator(interpolator);
+		waveDrawable.startAnimation();
 	}
 
 	private class IntentLauncher extends Thread {

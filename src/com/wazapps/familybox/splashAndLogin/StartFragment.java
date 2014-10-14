@@ -1,16 +1,26 @@
 package com.wazapps.familybox.splashAndLogin;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.R.id;
+import com.wazapps.familybox.util.WaveDrawable;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.OvershootInterpolator;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class StartFragment extends Fragment implements OnClickListener {
 	public interface StartScreenCallback {
@@ -48,7 +58,19 @@ public class StartFragment extends Fragment implements OnClickListener {
 		fbLoginButton.setOnClickListener(this);
 		signupButton.setOnClickListener(this);
 		
+		initAnimations();		
 		return root;
+	}
+	
+	private void initAnimations() {
+		ImageView fbLogo = (ImageView) root.findViewById(R.id.iv_login_logo);
+		Animation pulse = AnimationUtils.loadAnimation(getActivity(), R.anim.pulse_slow);
+		fbLogo.startAnimation(pulse);
+		WaveDrawable waveDrawable = new WaveDrawable(Color.parseColor("#F5D0A9"), 500, 3000);
+		fbLogo.setBackgroundDrawable(waveDrawable);
+		Interpolator interpolator = new AccelerateDecelerateInterpolator();
+		waveDrawable.setWaveInterpolator(interpolator);
+		waveDrawable.startAnimation();
 	}
 
 	@Override
