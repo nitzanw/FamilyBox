@@ -12,10 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.BounceInterpolator;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.ViewGroup;
@@ -65,6 +68,7 @@ public class StartFragment extends Fragment implements OnClickListener {
 	private void initAnimations() {
 		ImageView fbLogo = (ImageView) root.findViewById(R.id.iv_login_logo);
 		Animation pulse = AnimationUtils.loadAnimation(getActivity(), R.anim.pulse_slow);
+		pulse.setInterpolator(new AccelerateInterpolator(3));
 		fbLogo.startAnimation(pulse);
 		WaveDrawable waveDrawable = new WaveDrawable(Color.parseColor("#F5D0A9"), 500, 3000);
 		fbLogo.setBackgroundDrawable(waveDrawable);

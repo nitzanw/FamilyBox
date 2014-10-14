@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.CycleInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.graphics.PorterDuff.Mode;
@@ -47,6 +48,7 @@ public class SplashActivity extends Activity{
 	private void initAnimation() {
 		welcomeImage = (ImageView) findViewById(R.id.welcome_elipse);
 		Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
+		pulse.setInterpolator(new AccelerateInterpolator());
 		welcomeImage.startAnimation(pulse);
 		waveDrawable = new WaveDrawable(Color.parseColor("#fbfbfb"), 550);
 		welcomeImage.setBackgroundDrawable(waveDrawable);
