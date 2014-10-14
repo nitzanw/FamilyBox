@@ -4,23 +4,17 @@ import java.util.Arrays;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.photos.AlbumItem;
-import com.wazapps.familybox.photos.PhotoAlbumScreenActivity;
-import com.wazapps.familybox.photos.PhotoGridFragment;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class FamilyProfileAlbumAdapter extends BaseAdapter {
-
 	private FragmentActivity activity;
 	private AlbumItem[] albumList;
 
@@ -54,13 +48,11 @@ public class FamilyProfileAlbumAdapter extends BaseAdapter {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		// recycling the view:
 		if (v == null) {
-
 			v = linearInflater.inflate(R.layout.family_profile_album_item,
 					parent, false);
 		}
 
 		initAlbumView(position, v);
-
 		return v;
 	}
 
@@ -70,9 +62,5 @@ public class FamilyProfileAlbumAdapter extends BaseAdapter {
 				.setText(albumList[position].getAlbumName());
 		((TextView) v.findViewById(R.id.tv_album_date))
 				.setText(albumList[position].getAlbumDate());
-
 	}
-
-
-
 }

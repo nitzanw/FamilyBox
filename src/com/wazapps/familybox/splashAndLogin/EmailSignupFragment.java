@@ -26,6 +26,7 @@ implements OnClickListener, OnFocusChangeListener{
 	private EditText birthday, firstName, middleName,  //TODO: use these fields
 	lastName, address, previousName, phoneNumber;
 	private RoundedImageView uploadImage;
+	private EditText email;
 
 	public interface SignupScreenCallback {
 		public void openBirthdayInputDialog();
@@ -59,13 +60,11 @@ implements OnClickListener, OnFocusChangeListener{
 		this.uploadImage.setOnClickListener(this);
 		this.firstName = (EditText) root.findViewById(R.id.et_signup_name);
 		this.lastName = (EditText) root.findViewById(R.id.et_signup_last);
-		this.address = (EditText) root.findViewById(R.id.et_signup_address);
+		this.email = (EditText) root.findViewById(R.id.et_signup_email);
 		this.birthday = (EditText) root.findViewById(R.id.et_signup_birthday);
 		this.birthday.setOnFocusChangeListener(this);
 		this.birthday.setOnClickListener(this);
-		this.middleName = (EditText) root.findViewById(R.id.et_signup_middle_name);
-		this.previousName = (EditText) root.findViewById(R.id.et_signup_previous_last);
-		this.phoneNumber = (EditText) root.findViewById(R.id.et_signup_phone);
+
 
 		Button signupButton = (Button) root.findViewById(R.id.button_signup);
 		signupButton.setOnClickListener(this);
