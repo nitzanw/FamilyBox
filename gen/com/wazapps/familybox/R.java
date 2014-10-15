@@ -193,7 +193,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int yes_button_unpressed=0x7f02007a;
     }
     public static final class id {
-        public static final int action_extra=0x7f0a00a7;
+        public static final int action_extra=0x7f0a00a4;
         public static final int button_login_email=0x7f0a0065;
         public static final int button_login_facebook=0x7f0a0064;
         public static final int button_signup=0x7f0a0066;
@@ -211,15 +211,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int email_login_pw_input=0x7f0a002d;
         public static final int email_login_title=0x7f0a0029;
         public static final int et_empty_network_insert_name=0x7f0a0046;
-        public static final int et_signup_address=0x7f0a0093;
         public static final int et_signup_birthday=0x7f0a0094;
-        public static final int et_signup_confirm_password=0x7f0a0099;
+        public static final int et_signup_confirm_password=0x7f0a0096;
+        public static final int et_signup_email=0x7f0a0093;
         public static final int et_signup_last=0x7f0a0092;
-        public static final int et_signup_middle_name=0x7f0a0095;
         public static final int et_signup_name=0x7f0a0091;
-        public static final int et_signup_password=0x7f0a0098;
-        public static final int et_signup_phone=0x7f0a0097;
-        public static final int et_signup_previous_last=0x7f0a0096;
+        public static final int et_signup_password=0x7f0a0095;
         public static final int family_members_list_item=0x7f0a001a;
         public static final int family_tree_fragment_container=0x7f0a0001;
         public static final int fl_album_item=0x7f0a0008;
@@ -258,9 +255,9 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int iv_login_logo=0x7f0a0063;
         public static final int iv_member_query_accept=0x7f0a004c;
         public static final int iv_member_query_pic=0x7f0a0049;
-        public static final int iv_news_feed_item_user_image=0x7f0a009b;
+        public static final int iv_news_feed_item_user_image=0x7f0a0098;
         public static final int iv_personal_welcome_profile_pic=0x7f0a000f;
-        public static final int iv_photo_in_album=0x7f0a009a;
+        public static final int iv_photo_in_album=0x7f0a0097;
         public static final int iv_profile_family_member=0x7f0a001c;
         public static final int iv_profile_pic=0x7f0a006e;
         public static final int iv_share_icon=0x7f0a0061;
@@ -303,8 +300,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int ll_letter_y_list=0x7f0a008d;
         public static final int ll_letter_z_list=0x7f0a008e;
         public static final int ll_news_feed_empty=0x7f0a0069;
-        public static final int ll_news_feed_item_date=0x7f0a009f;
-        public static final int ll_profile_details_header_container=0x7f0a00a4;
+        public static final int ll_news_feed_item_date=0x7f0a009c;
+        public static final int ll_profile_details_header_container=0x7f0a00a1;
         public static final int ll_profile_upper=0x7f0a006d;
         public static final int ll_signup_first_row=0x7f0a0090;
         public static final int news_feed_empty_click=0x7f0a006a;
@@ -347,19 +344,19 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int tv_image_caption=0x7f0a0062;
         public static final int tv_member_query_name=0x7f0a0048;
         public static final int tv_member_query_question=0x7f0a004a;
-        public static final int tv_news_feed_item_date=0x7f0a00a0;
-        public static final int tv_news_feed_item_time=0x7f0a00a1;
-        public static final int tv_news_feed_item_update_msg=0x7f0a009e;
-        public static final int tv_news_feed_item_username=0x7f0a009c;
-        public static final int tv_news_feed_item_username_you_tag=0x7f0a009d;
+        public static final int tv_news_feed_item_date=0x7f0a009d;
+        public static final int tv_news_feed_item_time=0x7f0a009e;
+        public static final int tv_news_feed_item_update_msg=0x7f0a009b;
+        public static final int tv_news_feed_item_username=0x7f0a0099;
+        public static final int tv_news_feed_item_username_you_tag=0x7f0a009a;
         public static final int tv_personal_welcome=0x7f0a000d;
         public static final int tv_personal_welcome_profile_pic=0x7f0a000e;
-        public static final int tv_profile_detail_data=0x7f0a00a3;
-        public static final int tv_profile_detail_header=0x7f0a00a2;
-        public static final int tv_profile_details_header=0x7f0a00a5;
+        public static final int tv_profile_detail_data=0x7f0a00a0;
+        public static final int tv_profile_detail_header=0x7f0a009f;
+        public static final int tv_profile_details_header=0x7f0a00a2;
         public static final int tv_profile_status=0x7f0a0070;
         public static final int tv_profile_username=0x7f0a006f;
-        public static final int tv_shared_family_item=0x7f0a00a6;
+        public static final int tv_shared_family_item=0x7f0a00a3;
         public static final int welcome_elipse=0x7f0a0007;
     }
     public static final class layout {
@@ -495,9 +492,9 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int profile_status=0x7f07000a;
         public static final int profile_title=0x7f070055;
         public static final int role=0x7f07005f;
-        public static final int signup_address=0x7f07003c;
         public static final int signup_birthday=0x7f07003e;
         public static final int signup_confirm_password=0x7f070042;
+        public static final int signup_email_address=0x7f07003c;
         public static final int signup_enter_password=0x7f070041;
         public static final int signup_firstname=0x7f07003a;
         public static final int signup_lastname=0x7f07003b;
