@@ -24,7 +24,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 
-
 public class SplashActivity extends Activity{
 	private static String TAG = SplashActivity.class.getName();
 	private static long SLEEP_TIME = 4; // Sleep for some time
