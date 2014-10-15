@@ -22,8 +22,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import com.parse.Parse;
-import com.parse.ParseAnalytics;
 
 
 public class SplashActivity extends Activity{
