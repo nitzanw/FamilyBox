@@ -7,14 +7,16 @@
     <FrameLayout
         android:id="@+id/fl_image_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true" >
 
-        <com.wazapps.familybox.photos.CustomViewPager
+        <view
             android:id="@+id/photo_pager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/gray_drawer_text" >
-        </com.wazapps.familybox.photos.CustomViewPager>
+            class="com.wazapps.familybox.photos.CustomViewPager"
+            android:background="@color/gray_drawer_text" />
 
         <ImageButton
             android:id="@+id/ib_right_arrow"
@@ -67,6 +69,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:paddingBottom="13dp"
             android:gravity="center"
             android:maxLength="105"
             android:text="This is me and my friend Dan 00"
