@@ -1,7 +1,6 @@
 package com.wazapps.familybox.splashAndLogin;
 
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.R.layout;
 import com.wazapps.familybox.util.WaveDrawable;
 
 import android.app.Activity;
@@ -23,6 +22,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
 
 
 public class SplashActivity extends Activity{
