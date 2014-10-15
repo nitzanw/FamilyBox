@@ -17,22 +17,27 @@
         android:paddingRight="15dp"
         android:src="@drawable/x_button" />
 
-    <DatePicker
-        android:id="@+id/datePicker_signup_birthday"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="75dp" />
+        android:layout_centerInParent="true" >
 
-    <Button
-        android:id="@+id/button_signup_birthday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/datePicker_signup_birthday"
-        android:layout_marginBottom="30dp"
-        android:paddingBottom="20dp"
-        android:background="@drawable/selector_send" />
+        <DatePicker
+            android:id="@+id/datePicker_signup_birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="18dp"
+            android:layout_centerInParent="true" />
+
+        <Button
+            android:id="@+id/button_signup_birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/datePicker_signup_birthday"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/selector_send" />
+    </RelativeLayout>
 
 </RelativeLayout>
