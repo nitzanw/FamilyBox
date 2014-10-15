@@ -1,70 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal" >
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    
+    android:layout_gravity="bottom"
+    android:gravity="bottom" >
 
-    <FrameLayout
-        android:id="@+id/fl_image_layout"
+    <ImageView
+        android:id="@+id/iv_actual_image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:background="@drawable/example_image_1" >
-
-        <ImageButton
-            android:id="@+id/ib_right_arrow"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center_vertical|right"
-            android:background="@android:color/transparent"
-            android:src="@drawable/arrow_icon_right" />
-
-        <ImageButton
-            android:id="@+id/ib_left_arrow"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center_vertical|left"
-            android:background="@android:color/transparent"
-            android:src="@drawable/arrow_icon_left" />
-    </FrameLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl_image_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/fl_image_layout"
-        android:background="@drawable/image_frame" >
-
-        <ImageView
-            android:id="@+id/iv_favorite_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="4dp"
-            android:src="@drawable/heart_icon" />
-
-        <ImageView
-            android:id="@+id/iv_share_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:layout_toLeftOf="@id/iv_favorite_icon"
-            android:src="@drawable/share_icon" />
-
-        <TextView
-            android:id="@+id/tv_image_caption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center"
-            android:maxLength="105"
-            android:text="This is me and my friend Dan 00"
-            android:textAlignment="gravity" />
-    </RelativeLayout>
+    </ImageView>
 
 </RelativeLayout>

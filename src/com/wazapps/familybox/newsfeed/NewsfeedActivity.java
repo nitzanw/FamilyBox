@@ -1,5 +1,11 @@
 package com.wazapps.familybox.newsfeed;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.wazapps.familybox.ActivityWithDrawer;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.TabsFragment;
@@ -7,7 +13,7 @@ import com.wazapps.familybox.familyProfiles.FamilyProfileActivity;
 import com.wazapps.familybox.familyTree.FamilyTreeActivity;
 import com.wazapps.familybox.photos.PhotoAlbumsActivity;
 import com.wazapps.familybox.profiles.ProfileActivity;
-
+import com.wazapps.familybox.util.JSONParser;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -22,10 +28,52 @@ public class NewsfeedActivity extends ActivityWithDrawer {
 		overridePendingTransition(R.anim.enter, R.anim.exit); // TODO: handle
 																// transition
 																// animation in
-																// a better way
+		NewsFeedTabsFragment newsTabs = new NewsFeedTabsFragment();
+		Bundle args = new Bundle();
+		updateNewsPosts(args);
+		newsTabs.setArguments(args);
+		// a better way
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.content_frame, new NewsFeedTabsFragment(), TAG_NEWS_FEED);
+		ft.add(R.id.content_frame, newsTabs, TAG_NEWS_FEED);
 		ft.commit();
+	}
+
+	private void updateNewsPosts(Bundle args) {
+		String jsonStr = null;
+		JSONObject jsonObj = null;
+		JSONArray jsonArr = null;
+
+		jsonStr = JSONParser.loadJSONFromAsset(this, "familyBox.json");
+		if (jsonStr == null)
+			return;
+
+		ArrayList<NewsItem> newsPosts = new ArrayList<NewsItem>();
+		try {
+			jsonObj = new JSONObject(jsonStr);
+			jsonArr = jsonObj.getJSONArray("news_posts");
+			for (int i = 0; i < jsonArr.length(); i++) {
+				JSONObject post = jsonArr.getJSONObject(i);
+
+				String userid = post.getString("user_id");
+				long postid = post.getLong("post_id");
+				String actionType = post.getString("action_type");
+				ArrayList<String> extraInfo = new ArrayList<String>();
+				JSONArray extraItems = post.getJSONArray("extra_info");
+				for (int j = 0; j < extraItems.length(); j++) {
+					extraInfo.add(extraItems.getString(j));
+				}
+
+				NewsItem postItem = new NewsItem(userid, postid, actionType,
+						extraInfo);
+				newsPosts.add(postItem);
+			}
+			args.putParcelableArrayList(NewsFragment.NEWS_ITEM_LIST, newsPosts);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return;
+		}
+
 	}
 
 	@Override

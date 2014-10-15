@@ -62,15 +62,15 @@ public class PhotoGridAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				PhotoDialogFragment photoDialog = new PhotoDialogFragment();
+				PhotoPagerFragment photoDialog = new PhotoPagerFragment();
 				int photoPos = (Integer) v.getTag(PHOTO_POS);
 				Bundle args = new Bundle();
-				args.putInt(PhotoDialogFragment.PHOTO_FIRST_POS, photoPos);
-				args.putParcelableArray(PhotoDialogFragment.PHOTO_ALBUM_DATA,
+				args.putInt(PhotoPagerFragment.PHOTO_FIRST_POS, photoPos);
+				args.putParcelableArray(PhotoPagerFragment.PHOTO_ITEM_LIST,
 						photoItemsList);
 				photoDialog.setArguments(args);
 				photoDialog.show(activity.getSupportFragmentManager(),
-						PhotoDialogFragment.PHOTO_DIALOG_FRAG);
+						PhotoPagerFragment.PHOTO_PAGER_FRAG);
 
 			}
 
