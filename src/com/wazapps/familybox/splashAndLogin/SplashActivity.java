@@ -22,12 +22,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
+import com.parse.ParseObject;
 
 
 public class SplashActivity extends Activity{
 	private static String TAG = SplashActivity.class.getName();
 	private static long SLEEP_TIME = 4; // Sleep for some time
 	private static int SEC_FACTOR = 1000;
+	private static final String appId = "hFLXtlIwku3PGYy0ezKYQf67sRCamG1IvNToz22q";
+	private static final String clientKey = "klA7GiTnY25T6ou1aVwFdd4bPrsUBXArFVnBXIw3";
 	
 	private WaveDrawable waveDrawable;
 	private ImageView welcomeImage;
@@ -38,10 +43,16 @@ public class SplashActivity extends Activity{
 		setContentView(R.layout.activity_splash);
 		overridePendingTransition(R.anim.enter, R.anim.exit);
 		initAnimation();
+		initParse();
 		
 		// Start timer and launch main activity
 		IntentLauncher appLaunch = new IntentLauncher();
 		appLaunch.start();
+	}
+	
+	private void initParse() {
+		Parse.initialize(this, appId, clientKey);
+		//TODO: add offline storage of account details
 	}
 	
 	private void initAnimation() {
