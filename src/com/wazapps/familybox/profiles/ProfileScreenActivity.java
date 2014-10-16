@@ -5,12 +5,14 @@ import java.util.Arrays;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.photos.PhotoGridFragment;
+import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 
-public class ProfileScreenActivity extends FragmentActivity {
+public class ProfileScreenActivity extends FragmentActivity implements
+		AddProfileFragmentListener {
 
 	public static final String FAMILY_MEMBER_ARRAY_LIST = "family member array list";
 
@@ -26,8 +28,6 @@ public class ProfileScreenActivity extends FragmentActivity {
 		FamilyMemberDetails[] list = arrList
 				.toArray(new FamilyMemberDetails[arrList.size()]);
 		args.putParcelableArray(ProfileFragment.FAMILY_MEMBER_LIST, list);
-
-		// create a new PhotoAlbumScreenFragment and give it the arguments
 		ProfileFragment profileFrag = new ProfileFragment();
 		profileFrag.setArguments(args);
 		// set the fragment to the container
@@ -55,5 +55,17 @@ public class ProfileScreenActivity extends FragmentActivity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 
+	}
+
+	@Override
+	public void addProfileFragment(Bundle args) {
+		// create a new PhotoAlbumScreenFragment and give it the arguments
+		ProfileFragment profileFrag = new ProfileFragment();
+		profileFrag.setArguments(args);
+		// set the fragment to the container
+		getSupportFragmentManager()
+				.beginTransaction()
+				.add(R.id.fragment_container, profileFrag,
+						ProfileFragment.PROFILE_FRAG).addToBackStack(null).commit();
 	}
 }

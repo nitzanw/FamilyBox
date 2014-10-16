@@ -12,10 +12,10 @@ import com.wazapps.familybox.newsfeed.NewsfeedActivity;
 import com.wazapps.familybox.photos.AlbumItem;
 import com.wazapps.familybox.photos.PhotoAlbumsActivity;
 import com.wazapps.familybox.photos.PhotoItem;
+import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 
-
-public class ProfileActivity extends ActivityWithDrawer {
-	static final String TAG_PROFILE = "Profile";
+public class ProfileActivity extends ActivityWithDrawer implements
+		AddProfileFragmentListener {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -23,17 +23,17 @@ public class ProfileActivity extends ActivityWithDrawer {
 		getActionBar().setTitle(R.string.profile_title);
 		overridePendingTransition(R.anim.enter, R.anim.exit); // TODO: handle
 																// transition
-																// animations in
-																// a better way
+		
 		ProfileFragment profileFrag = new ProfileFragment();
-		setProfileArgsTemp(profileFrag);
+		profileFrag.setArguments(getProfileArgsTemp());
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.content_frame, profileFrag, TAG_PROFILE);
+		ft.add(R.id.content_frame, profileFrag, ProfileFragment.PROFILE_FRAG);
 		ft.commit();
+
 	}
 
 	// TODO remove when real data comes
-	private void setProfileArgsTemp(ProfileFragment frag) {
+	private Bundle getProfileArgsTemp() {
 		ProfileDetails[] profileDetailsData = { null, null, null, null };
 		profileDetailsData[0] = (new ProfileDetails("Address",
 				"K. yovel, mozkin st."));
@@ -91,7 +91,7 @@ public class ProfileActivity extends ActivityWithDrawer {
 		args.putParcelable(ProfileFragment.MEMBER_ITEM, child1);
 		args.putParcelableArray(ProfileFragment.FAMILY_MEMBER_LIST,
 				child1Family);
-		frag.setArguments(args);
+		return args;
 	}
 
 	@Override
@@ -129,6 +129,16 @@ public class ProfileActivity extends ActivityWithDrawer {
 		}
 
 		this.mDrawerLayout.closeDrawer(this.mDrawerList);
+	}
+
+	@Override
+	public void addProfileFragment(Bundle args) {
+		ProfileFragment profileFrag = new ProfileFragment();
+		profileFrag.setArguments(args);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.add(R.id.content_frame, profileFrag, ProfileFragment.PROFILE_FRAG).addToBackStack(null);
+		ft.commit();
+
 	}
 
 }
