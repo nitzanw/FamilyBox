@@ -52,4 +52,9 @@ public class FamiliesListItem implements Parcelable, Comparable<FamiliesListItem
 	public int compareTo(FamiliesListItem another) {
 		return this.getFamilyName().compareTo(another.getFamilyName());
 	}
+	@Override
+	public String toString() {
+		
+		return familyName;
+	}
 }
