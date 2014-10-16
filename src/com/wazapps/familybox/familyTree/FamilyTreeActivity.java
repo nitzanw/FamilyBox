@@ -14,7 +14,7 @@ import com.wazapps.familybox.profiles.ProfileFragment;
 
 
 public class FamilyTreeActivity extends ActivityWithDrawer {
-	static final String TAG_FAMILY_TREE = "Family Tree";
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class FamilyTreeActivity extends ActivityWithDrawer {
 																// animations in
 																// a better way
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.content_frame, new FamiliesListFragment(), TAG_FAMILY_TREE);
+		ft.add(R.id.content_frame, new FamiliesListFragment(), FamiliesListFragment.FAMILY_TREE_FRAG);
 		ft.commit();
 	}
 

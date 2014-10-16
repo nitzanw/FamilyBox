@@ -15,7 +15,7 @@ public class FamilyProfileScreenActivity extends FragmentActivity {
 		getSupportFragmentManager()
 		.beginTransaction()
 		.add(R.id.fragment_container, familyProfileFrag,
-				FamilyProfileFragment.TAG_FAMILY_PROFILE_FRAGMENT).commit();
+				FamilyProfileFragment.FAMILY_PROFILE_FRAGMENT).commit();
 		initActionBar();
 	}
 	

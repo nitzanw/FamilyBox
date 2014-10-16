@@ -34,7 +34,7 @@ public class NewsfeedActivity extends ActivityWithDrawer {
 		newsTabs.setArguments(args);
 		// a better way
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.content_frame, newsTabs, TAG_NEWS_FEED);
+		ft.add(R.id.content_frame, newsTabs, NewsFeedTabsFragment.NEW_FEED_TAB_FRAG);
 		ft.commit();
 	}
 
@@ -100,7 +100,7 @@ public class NewsfeedActivity extends ActivityWithDrawer {
 			break;
 		case NEWS_POS:
 			TabsFragment frag = (TabsFragment) getSupportFragmentManager()
-					.findFragmentByTag(TAG_NEWS_FEED);
+					.findFragmentByTag(NewsFeedTabsFragment.NEW_FEED_TAB_FRAG);
 			frag.switchTab(0);
 			break;
 

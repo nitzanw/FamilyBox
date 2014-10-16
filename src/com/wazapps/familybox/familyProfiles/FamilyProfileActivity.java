@@ -12,7 +12,7 @@ import com.wazapps.familybox.photos.PhotoAlbumsActivity;
 import com.wazapps.familybox.profiles.ProfileActivity;
 
 public class FamilyProfileActivity extends ActivityWithDrawer {
-	static final String TAG_FAMILY_PROFILE = "Family profile";
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,7 @@ public class FamilyProfileActivity extends ActivityWithDrawer {
 																// a better way
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.content_frame, new FamilyProfileFragment(),
-				TAG_FAMILY_PROFILE);
+				FamilyProfileFragment.FAMILY_PROFILE_FRAG);
 		ft.commit();
 	}
 

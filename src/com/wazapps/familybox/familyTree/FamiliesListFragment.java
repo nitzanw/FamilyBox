@@ -5,13 +5,10 @@ import java.util.Locale;
 
 import android.text.TextUtils;
 import android.view.Menu;
-import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.photos.SharedAlbumsListAdapter;
-
 public class FamiliesListFragment extends BasicFamilyListFragment {
+	public static final String FAMILY_TREE_FRAG = "family tree fragment";
 	FamiliesListAdapter familiesListAdapater;
 
 	@Override

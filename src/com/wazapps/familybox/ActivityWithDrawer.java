@@ -1,5 +1,11 @@
 package com.wazapps.familybox;
 
+import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
+import com.wazapps.familybox.familyTree.FamiliesListFragment;
+import com.wazapps.familybox.newsfeed.NewsFeedTabsFragment;
+import com.wazapps.familybox.photos.PhotoAlbumsActivity;
+import com.wazapps.familybox.photos.PhotoAlbumsTabsFragment;
+import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.util.MenuListAdapter;
 
 import android.content.res.Configuration;
@@ -18,9 +24,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public abstract class ActivityWithDrawer extends FragmentActivity {
-	static final String TAG_PHOTO_ALBUM = "photoAlbum";
-	public static final String TAG_NEWS_FEED = "newsFeed";
-	public static final String TAG_MY_PROFILE = "myProfile";
+//	static final String TAG_PHOTO_ALBUM = "photoAlbum";
+//	public static final String TAG_NEWS_FEED = "newsFeed";
+//	public static final String TAG_MY_PROFILE = "myProfile";
+//	protected static final String TAG_FAMILY_PROFILE = "familyProfile";
+//	protected static final String TAG_FAMILY_TREE = "familyTree";
 	public static final int MY_PROFILE_POS = 0;
 	public static final int MY_FAMILY_PROFILE_POS = 1;
 	public static final int FAMILY_TREE_POS = 2;
@@ -74,12 +82,17 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 				Fragment frag = getSupportFragmentManager().findFragmentById(
 						R.id.content_frame);
 
-				if (TAG_PHOTO_ALBUM.equals(frag.getTag()))
+				if (PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.photo_albums);
-				else if (TAG_NEWS_FEED.equals(frag.getTag()))
+				else if (NewsFeedTabsFragment.NEW_FEED_TAB_FRAG.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.news_feed_title);
-				else if (TAG_MY_PROFILE.equals(frag.getTag()))
+				else if (ProfileFragment.PROFILE_FRAG.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.profile_title);
+				else if(FamilyProfileFragment.FAMILY_PROFILE_FRAGMENT.equals(frag.getTag()))
+					getActionBar().setTitle(R.string.family_profile_title);
+				else if(FamiliesListFragment.FAMILY_TREE_FRAG.equals(frag.getTag()))
+					getActionBar().setTitle(R.string.family_tree_title);
+
 				// creates call to onPrepareOptionsMenu()
 				invalidateOptionsMenu();
 			}
