@@ -17,7 +17,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
 public class LoginActivity extends FragmentActivity 
 implements StartScreenCallback, BirthdayChooserCallback, 
@@ -143,8 +145,24 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	}
 	
 	@Override
-	public void signUp() {
-		//TODO: change the function code upon adding real sign up
+	public void signUp(String firstName, String lastName, String email,
+			String birthday, String password, String passwordConfirm) {
+		if (firstName.matches("") || lastName.matches("") || email.matches("") 
+				|| birthday.matches("") || password.matches("")) {
+			Toast toast = Toast.makeText(this, "You did not fill all of the required fields", Toast.LENGTH_SHORT);
+			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+			toast.show();
+			return;
+		} 
+		
+		if (!password.equals(passwordConfirm)) {
+			Toast toast = Toast.makeText(this, "Password confirm does not match password field", Toast.LENGTH_SHORT);
+			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+			toast.show();
+			
+		}
+		
+		
 		enterApp();
 	}
 }

@@ -23,15 +23,16 @@ public class EmailSignupFragment extends Fragment
 implements OnClickListener, OnFocusChangeListener{
 	private View root;
 	private SignupScreenCallback signupCallback = null;
-	private EditText birthday, firstName, middleName,  //TODO: use these fields
-	lastName, address, previousName, phoneNumber;
+	private EditText birthday, firstName, lastName, password, passwordConfirm;
+	
 	private RoundedImageView uploadImage;
 	private EditText email;
 
 	public interface SignupScreenCallback {
 		public void openBirthdayInputDialog();
 		public void openPhonePhotoBrowsing();
-		public void signUp();
+		public void signUp(String firstName, String lastName, String email,
+				String birthday, String password, String passwordConfirm);
 	}
 
 	@Override
@@ -64,7 +65,8 @@ implements OnClickListener, OnFocusChangeListener{
 		this.birthday = (EditText) root.findViewById(R.id.et_signup_birthday);
 		this.birthday.setOnFocusChangeListener(this);
 		this.birthday.setOnClickListener(this);
-
+		this.password = (EditText) root.findViewById(R.id.et_signup_password);
+		this.passwordConfirm = (EditText) root.findViewById(R.id.et_signup_confirm_password);
 
 		Button signupButton = (Button) root.findViewById(R.id.button_signup);
 		signupButton.setOnClickListener(this);
@@ -75,25 +77,36 @@ implements OnClickListener, OnFocusChangeListener{
 	 * to set a date via the BirthdaySignupDialogFragment
 	 */
 	public void setBirthday(String date) {
-		this.birthday.setText(date);
+		birthday.setText(date);
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.et_signup_birthday:
-			this.signupCallback.openBirthdayInputDialog();
+			signupCallback.openBirthdayInputDialog();
 			InputMethodManager imm = (InputMethodManager) getActivity()
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 			break;
 
 		case R.id.riv_signup_upload_image:
-			this.signupCallback.openPhonePhotoBrowsing();
+			signupCallback.openPhonePhotoBrowsing();
 			break;
 
 		case R.id.button_signup:
-			this.signupCallback.signUp();
+			String firstNameContent, lastNameContent, emailContent, 
+			birthdayContent, pwContent, pwConfirmContent;
+			
+			firstNameContent = firstName.getText().toString().trim();
+			lastNameContent = lastName.getText().toString().trim();
+			emailContent = email.getText().toString().trim();
+			birthdayContent = birthday.getText().toString().trim();
+			pwContent = password.getText().toString().trim();
+			pwConfirmContent = passwordConfirm.getText().toString().trim();
+			
+			signupCallback.signUp(firstNameContent, lastNameContent, 
+					emailContent, birthdayContent, pwContent, pwConfirmContent);
 			break;
 
 		default:
@@ -106,7 +119,7 @@ implements OnClickListener, OnFocusChangeListener{
 		switch (v.getId()) {
 		case R.id.et_signup_birthday:
 			if (hasFocus) {
-				this.signupCallback.openBirthdayInputDialog();
+				signupCallback.openBirthdayInputDialog();
 				InputMethodManager imm = (InputMethodManager) getActivity()
 						.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -119,13 +132,13 @@ implements OnClickListener, OnFocusChangeListener{
 	}
 
 	public void setDrawable(Drawable d) {
-		this.uploadImage.setBackground(d);
-		this.uploadImage.setImageDrawable(d);
+		uploadImage.setBackground(d);
+		uploadImage.setImageDrawable(d);
 	}
 
 	public void setBitmap(Bitmap myBitmap) {
-		this.uploadImage.setImageBitmap(myBitmap);
-		this.uploadImage.setBackgroundColor(getResources().getColor(
+		uploadImage.setImageBitmap(myBitmap);
+		uploadImage.setBackgroundColor(getResources().getColor(
 				android.R.color.transparent));
 	}
 }
