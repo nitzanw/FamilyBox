@@ -1,13 +1,16 @@
 package com.wazapps.familybox;
 
+import com.parse.ParseUser;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.familyTree.FamiliesListFragment;
 import com.wazapps.familybox.newsfeed.NewsFeedTabsFragment;
 import com.wazapps.familybox.photos.PhotoAlbumsActivity;
 import com.wazapps.familybox.photos.PhotoAlbumsTabsFragment;
 import com.wazapps.familybox.profiles.ProfileFragment;
+import com.wazapps.familybox.splashAndLogin.LoginActivity;
 import com.wazapps.familybox.util.MenuListAdapter;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -33,11 +36,12 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 	public static final int MY_FAMILY_PROFILE_POS = 1;
 	public static final int FAMILY_TREE_POS = 2;
 	public static final int PHOTOS_POS = 3;
-//	public static final int NOTES_POS = 4;
 	public static final int NEWS_POS = 4;
 	public static final int EXPAND_NETWORK_POS = 5;
-
+	
+	public static final String LOG_OUT_ACTION = "logout";
 	private static final String DRAWER_POSITION = "drawerPos";
+	
 	// Declare Variable
 	protected DrawerLayout mDrawerLayout;
 	protected ListView mDrawerList;
@@ -60,7 +64,6 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 				getString(R.string.drawer_family_profile),
 				getString(R.string.drawer_family_tree),
 				getString(R.string.drawer_photos),
-//				getString(R.string.drawer_notes),
 				getString(R.string.drawer_news),
 				getString(R.string.drawer_expand_network) };
 
@@ -153,6 +156,18 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 		// true, then it has handled the app icon touch event
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
+		}
+		
+		if (item.getItemId() == R.id.action_extra) {
+			ParseUser currUser = ParseUser.getCurrentUser();
+			if (currUser != null) {
+				ParseUser.logOut();
+			}
+			
+			Intent logoutIntent = new Intent(this, LoginActivity.class);
+			logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
+			startActivity(logoutIntent);
+			finish();
 		}
 		// Handle your other action bar items...
 

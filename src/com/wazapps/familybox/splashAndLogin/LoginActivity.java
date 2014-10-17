@@ -9,6 +9,7 @@ import com.parse.ParseObject;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+import com.wazapps.familybox.ActivityWithDrawer;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.misc.InputException;
 import com.wazapps.familybox.newsfeed.NewsfeedActivity;
@@ -48,13 +49,22 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		// Hide the status bar.
 		getActionBar().hide();
 		
+		//checking if loginActivity was called by a sign out action or by
+		//splash screen and determine the transition animations accordingly.
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras();
+		if (extras != null) {
+			if (extras.containsKey(ActivityWithDrawer.LOG_OUT_ACTION))
+				overridePendingTransition(R.anim.enter_reverse, R.anim.exit_reverse); 
+			
+			else if (extras.containsKey(SplashActivity.SPLASH_ACTION))
+				overridePendingTransition(R.anim.enter, R.anim.exit);
+		}
+		
 		getSupportFragmentManager()
 		.beginTransaction()
 		.replace(R.id.fragment_container, new StartFragment(), TAG_LOGIN_SCR)
 		.commit();
-
-		//TODO: handle transition animations in a better way
-		overridePendingTransition(R.anim.enter, R.anim.exit); //TODO: handle transition animation in a better way 
 	}
 	
 	/**
@@ -94,15 +104,11 @@ SignupScreenCallback, EmailLoginScreenCallback {
 
 	@Override
 	public void openFacebookLogin() {
-		//TODO: add real facebook login authentication
-		//in the meantime we use this is parse user authentication
-		ParseUser currUser = ParseUser.getCurrentUser();
-		if (currUser != null) {
-			ParseUser.logOut();
-			Toast.makeText(this, "signed out", Toast.LENGTH_SHORT).show();
-		} else {
-			Toast.makeText(this, "not logged in", Toast.LENGTH_SHORT).show();
-		}
+		//right now we are not going to implement this feature
+		Toast toast = Toast.makeText(this, "This feature is not yet available"
+				, Toast.LENGTH_SHORT);
+		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+		toast.show();
 	}
 
 	@Override
@@ -118,6 +124,13 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	public void openBirthdayInputDialog() {
 		BirthdaySignupDialogFragment dialog = new BirthdaySignupDialogFragment();
 		dialog.show(getSupportFragmentManager(), TAG_SIGNBIRTHDAY);
+	}
+	
+
+	@Override
+	public void openGenderInputDialog() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override
@@ -161,6 +174,7 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		try {
 			InputValidator.validateLoginInput(email, password);
 			ParseUser.logIn("fb_" + email, password);
+			enterApp();
 		} 
 		
 		catch (InputException e) {
@@ -174,8 +188,6 @@ SignupScreenCallback, EmailLoginScreenCallback {
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
 		}
-		
-		enterApp();
 	}
 	
 	@Override
@@ -199,7 +211,7 @@ SignupScreenCallback, EmailLoginScreenCallback {
 				//if the user has no related families in network
 				//create new family and jump to main application screen
 				FamilyHandler.createNewFamilyForUser(newUser);
-//				enterApp();
+				enterApp();
 			} else {
 				//the user has related families - open family selection menu
 				Toast.makeText(this,"family do exist!", Toast.LENGTH_LONG).show();

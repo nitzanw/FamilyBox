@@ -7,5 +7,4 @@
         android:orderInCategory="1"
         android:showAsAction="always|collapseActionView"
         android:title="@string/expanded_action_menu"/>
-
 </menu>

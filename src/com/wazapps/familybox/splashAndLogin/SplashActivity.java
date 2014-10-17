@@ -1,6 +1,7 @@
 package com.wazapps.familybox.splashAndLogin;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.newsfeed.NewsfeedActivity;
 import com.wazapps.familybox.util.WaveDrawable;
 
 import android.app.Activity;
@@ -25,6 +26,7 @@ import android.widget.ImageView;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 
 public class SplashActivity extends Activity{
@@ -33,6 +35,7 @@ public class SplashActivity extends Activity{
 	private static int SEC_FACTOR = 1000;
 	private static final String appId = "hFLXtlIwku3PGYy0ezKYQf67sRCamG1IvNToz22q";
 	private static final String clientKey = "klA7GiTnY25T6ou1aVwFdd4bPrsUBXArFVnBXIw3";
+	public static final String SPLASH_ACTION = "splash";
 	
 	private WaveDrawable waveDrawable;
 	private ImageView welcomeImage;
@@ -81,11 +84,19 @@ public class SplashActivity extends Activity{
 				Log.e(TAG, e.getMessage());
 			}
 			
-			// Start main activity
-			Intent intent = new Intent(SplashActivity.this,
-					LoginActivity.class);
-
-			startActivity(intent);
+			ParseUser currUser = ParseUser.getCurrentUser();
+			if (currUser != null) {
+				//user is logged in, enter app main screen
+				Intent intent = new Intent(SplashActivity.this, 
+						NewsfeedActivity.class);
+				startActivity(intent);
+			} else {
+				//user is not logged in, enter login screen
+				Intent intent = new Intent(SplashActivity.this,
+						LoginActivity.class);
+				intent.putExtra(SPLASH_ACTION, SPLASH_ACTION);
+				startActivity(intent);
+			}	
 			finish();
 		}
 	}

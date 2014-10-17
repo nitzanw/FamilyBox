@@ -46,7 +46,7 @@
         android:layout_alignLeft="@id/email_login_address"
         android:layout_below="@id/email_login_address"
         android:ems="12"
-        android:inputType="textEmailAddress" >
+        android:inputType="textWebEmailAddress" >
 
         <requestFocus />
     </EditText>
@@ -69,7 +69,7 @@
         android:layout_alignLeft="@id/email_login_pw"
         android:layout_below="@id/email_login_pw"
         android:ems="12"
-        android:inputType="textEmailAddress" >
+        android:inputType="textPassword" >
 
         <requestFocus />
     </EditText>

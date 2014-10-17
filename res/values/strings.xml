@@ -64,6 +64,7 @@
     <string name="signup_email_address">Email Address</string>
     <string name="signup_previous_last">Previous family Name (optional)</string>
     <string name="signup_birthday">Birthday</string>
+    <string name="signup_gender">Gender</string>
     <string name="signup_phone_number">Phone number (optional)</string>
     <string name="signup_middle_name">Middle name (optional)</string>
     <string name="signup_enter_password">Enter password</string>

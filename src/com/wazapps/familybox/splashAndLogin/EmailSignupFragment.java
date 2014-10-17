@@ -30,6 +30,7 @@ implements OnClickListener, OnFocusChangeListener{
 
 	public interface SignupScreenCallback {
 		public void openBirthdayInputDialog();
+		public void openGenderInputDialog();
 		public void openPhonePhotoBrowsing();
 		public void signUp(String firstName, String lastName, String email,
 				String birthday, String password, String passwordConfirm);
@@ -85,9 +86,16 @@ implements OnClickListener, OnFocusChangeListener{
 		switch (v.getId()) {
 		case R.id.et_signup_birthday:
 			signupCallback.openBirthdayInputDialog();
-			InputMethodManager imm = (InputMethodManager) getActivity()
+			InputMethodManager bimm = (InputMethodManager) getActivity()
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+			bimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+			break;
+			
+		case R.id.et_signup_gender:
+			signupCallback.openGenderInputDialog();
+			InputMethodManager gimm = (InputMethodManager) getActivity()
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			gimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 			break;
 
 		case R.id.riv_signup_upload_image:
