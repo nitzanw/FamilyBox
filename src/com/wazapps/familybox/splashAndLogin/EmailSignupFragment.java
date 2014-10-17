@@ -98,12 +98,15 @@ implements OnClickListener, OnFocusChangeListener{
 			String firstNameContent, lastNameContent, emailContent, 
 			birthdayContent, pwContent, pwConfirmContent;
 			
-			firstNameContent = firstName.getText().toString().trim();
-			lastNameContent = lastName.getText().toString().trim();
-			emailContent = email.getText().toString().trim();
+			firstNameContent = firstName.getText().toString().trim().toLowerCase();
+			lastNameContent = lastName.getText().toString().trim().toLowerCase();
+			emailContent = email.getText().toString().trim().toLowerCase();
 			birthdayContent = birthday.getText().toString().trim();
 			pwContent = password.getText().toString().trim();
 			pwConfirmContent = passwordConfirm.getText().toString().trim();
+			
+			//TODO: set a method for clearing problematic text fields (probably using
+			//exceptions or function return value
 			
 			signupCallback.signUp(firstNameContent, lastNameContent, 
 					emailContent, birthdayContent, pwContent, pwConfirmContent);

@@ -1,13 +1,24 @@
 package com.wazapps.familybox.splashAndLogin;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseRelation;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.misc.InputException;
 import com.wazapps.familybox.newsfeed.NewsfeedActivity;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.BirthdayChooserCallback;
 import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
 import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
 import com.wazapps.familybox.splashAndLogin.StartFragment.StartScreenCallback;
+import com.wazapps.familybox.util.FamilyHandler;
+import com.wazapps.familybox.util.InputValidator;
+import com.wazapps.familybox.util.UserHandler;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,7 +40,7 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	private static final String TAG_SIGNBIRTHDAY = "birthdayDialog";
 	private static final String TAG_SGINUP_FRAG = "signupScreen";
 	private static final int SELECT_PICTURE = 0;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -84,7 +95,14 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	@Override
 	public void openFacebookLogin() {
 		//TODO: add real facebook login authentication
-		enterApp();
+		//in the meantime we use this is parse user authentication
+		ParseUser currUser = ParseUser.getCurrentUser();
+		if (currUser != null) {
+			ParseUser.logOut();
+			Toast.makeText(this, "signed out", Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(this, "not logged in", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
@@ -139,30 +157,67 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	}
 
 	@Override
-	public void emailLoginAction() {
-		//TODO: add a real email login authentication
+	public void emailLoginAction(String email, String password) {
+		try {
+			InputValidator.validateLoginInput(email, password);
+			ParseUser.logIn("fb_" + email, password);
+		} 
+		
+		catch (InputException e) {
+			Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
+			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+			toast.show();
+			return;
+		}
+		
+		catch (ParseException e) {
+			Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
+			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+			toast.show();
+			return;
+		}
+		
 		enterApp();
 	}
 	
 	@Override
 	public void signUp(String firstName, String lastName, String email,
 			String birthday, String password, String passwordConfirm) {
-		if (firstName.matches("") || lastName.matches("") || email.matches("") 
-				|| birthday.matches("") || password.matches("")) {
-			Toast toast = Toast.makeText(this, "You did not fill all of the required fields", Toast.LENGTH_SHORT);
+		ParseUser newUser = null;
+		ArrayList<ParseObject> relatedFamilies = null;
+		
+		try {
+			InputValidator.validateSignupInput(firstName, lastName, email, 
+					birthday, password, passwordConfirm);
+			
+			newUser = UserHandler.createNewUser(firstName, lastName, email, 
+					password, birthday);
+				
+			relatedFamilies = FamilyHandler.getRelatedFamilies (
+					newUser.getInt("network"), newUser.getString("lastName"));
+			
+			if (relatedFamilies.size() == 0) {
+				Toast.makeText(this,"creating new family!", Toast.LENGTH_LONG).show();
+				//if the user has no related families in network
+				//create new family and jump to main application screen
+				FamilyHandler.createNewFamilyForUser(newUser);
+//				enterApp();
+			} else {
+				//the user has related families - open family selection menu
+				Toast.makeText(this,"family do exist!", Toast.LENGTH_LONG).show();
+			}
+		} catch (InputException e) {
+			Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
 			return;
-		} 
-		
-		if (!password.equals(passwordConfirm)) {
-			Toast toast = Toast.makeText(this, "Password confirm does not match password field", Toast.LENGTH_SHORT);
+		} catch (ParseException e) {
+			//TODO: maybe handle parseExceptions in a better way
+			String errMsg = e.getMessage();		
+			Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
-			
+			return;
 		}
-		
-		
-		enterApp();
 	}
 }

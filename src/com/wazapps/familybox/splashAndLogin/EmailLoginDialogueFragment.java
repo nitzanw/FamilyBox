@@ -11,16 +11,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
 
 public class EmailLoginDialogueFragment extends DialogFragment 
 implements OnClickListener {
-	
-	public interface EmailLoginScreenCallback {
-		public void emailLoginAction();
-	}
-	
+	private EditText emailField, passwordField;
 	private EmailLoginScreenCallback loginCallback;
 	private View root;	
+	
+	public interface EmailLoginScreenCallback {
+		public void emailLoginAction(String email, String password);
+	}
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -41,6 +42,8 @@ implements OnClickListener {
 		
 		root = inflater.inflate(R.layout.fragment_dialog_email_login, container, false);
 		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		emailField = (EditText) root.findViewById(R.id.email_login_adress_input);
+		passwordField = (EditText) root.findViewById(R.id.email_login_pw_input);
 		root.findViewById(R.id.email_login_exit).setOnClickListener(this);
 		root.findViewById(R.id.email_login_log_button).setOnClickListener(this);
 		root.findViewById(R.id.email_login_cancel_button).setOnClickListener(this);
@@ -54,8 +57,11 @@ implements OnClickListener {
 			dismiss();
 			break;
 			
-		case R.id.email_login_log_button:
-			loginCallback.emailLoginAction();
+		case R.id.email_login_log_button:			
+			String email, password;
+			email = emailField.getText().toString().trim().toLowerCase();
+			password = passwordField.getText().toString().trim().toLowerCase();
+			loginCallback.emailLoginAction(email, password);
 			break;
 			
 		case R.id.email_login_cancel_button:
