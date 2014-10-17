@@ -9,7 +9,8 @@ public class UserHandler {
 	}
 	
 	public static ParseUser createNewUser(String firstName, String lastName, 
-			String email, String password, String birthday) throws ParseException {
+			String email, String gender, String password, 
+			String birthday) throws ParseException {
 		ParseUser user = new ParseUser();
 		user.setUsername("fb_" + email);
 		user.setPassword(password);
@@ -17,7 +18,7 @@ public class UserHandler {
 		user.put("firstName", firstName);
 		user.put("lastName", lastName);
 		user.put("birthdate", birthday);
-		user.put("sex", "m");
+		user.put("gender", gender);
 		user.put("address", "");
 		user.put("middleName", "");
 		user.put("prevLastName", "");

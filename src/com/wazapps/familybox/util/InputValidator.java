@@ -29,11 +29,11 @@ public class InputValidator {
 
 	
 	public static void validateSignupInput(String firstName, String lastName, 
-			String email, String birthday, String password, 
+			String email, String birthday, String gender, String password, 
 			String passwordConfirm) throws InputException {
 		
 		if (firstName.matches("") || lastName.matches("") || email.matches("") 
-				|| birthday.matches("") || password.matches("")) {
+				|| gender.matches("") || birthday.matches("") || password.matches("")) {
 			throw new InputException("You did not fill all required fields");
 		}
 		

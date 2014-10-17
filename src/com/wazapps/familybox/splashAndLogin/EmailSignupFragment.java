@@ -23,7 +23,8 @@ public class EmailSignupFragment extends Fragment
 implements OnClickListener, OnFocusChangeListener{
 	private View root;
 	private SignupScreenCallback signupCallback = null;
-	private EditText birthday, firstName, lastName, password, passwordConfirm;
+	private EditText birthday, firstName, lastName, 
+	password, passwordConfirm, gender;
 	
 	private RoundedImageView uploadImage;
 	private EditText email;
@@ -33,7 +34,7 @@ implements OnClickListener, OnFocusChangeListener{
 		public void openGenderInputDialog();
 		public void openPhonePhotoBrowsing();
 		public void signUp(String firstName, String lastName, String email,
-				String birthday, String password, String passwordConfirm);
+				String birthday, String gender, String password, String passwordConfirm);
 	}
 
 	@Override
@@ -66,6 +67,9 @@ implements OnClickListener, OnFocusChangeListener{
 		this.birthday = (EditText) root.findViewById(R.id.et_signup_birthday);
 		this.birthday.setOnFocusChangeListener(this);
 		this.birthday.setOnClickListener(this);
+		this.gender = (EditText) root.findViewById(R.id.et_signup_gender);
+		this.gender.setOnFocusChangeListener(this);
+		this.gender.setOnClickListener(this);
 		this.password = (EditText) root.findViewById(R.id.et_signup_password);
 		this.passwordConfirm = (EditText) root.findViewById(R.id.et_signup_confirm_password);
 
@@ -78,7 +82,15 @@ implements OnClickListener, OnFocusChangeListener{
 	 * to set a date via the BirthdaySignupDialogFragment
 	 */
 	public void setBirthday(String date) {
-		birthday.setText(date);
+		this.birthday.setText(date);
+	}
+	
+	/**
+	 * Sets a gender in the gender field. used by the wrapping activity
+	 * to set a date via the GenderSignupDialogFragment
+	 */
+	public void setGender(String gender) {
+		this.gender.setText(gender);
 	}
 
 	@Override
@@ -104,12 +116,13 @@ implements OnClickListener, OnFocusChangeListener{
 
 		case R.id.button_signup:
 			String firstNameContent, lastNameContent, emailContent, 
-			birthdayContent, pwContent, pwConfirmContent;
+			birthdayContent, genderContent, pwContent, pwConfirmContent;
 			
 			firstNameContent = firstName.getText().toString().trim().toLowerCase();
 			lastNameContent = lastName.getText().toString().trim().toLowerCase();
 			emailContent = email.getText().toString().trim().toLowerCase();
 			birthdayContent = birthday.getText().toString().trim();
+			genderContent = gender.getText().toString().trim().toLowerCase();
 			pwContent = password.getText().toString().trim();
 			pwConfirmContent = passwordConfirm.getText().toString().trim();
 			
@@ -117,7 +130,8 @@ implements OnClickListener, OnFocusChangeListener{
 			//exceptions or function return value
 			
 			signupCallback.signUp(firstNameContent, lastNameContent, 
-					emailContent, birthdayContent, pwContent, pwConfirmContent);
+					emailContent, birthdayContent, genderContent, 
+					pwContent, pwConfirmContent);
 			break;
 
 		default:
@@ -131,11 +145,19 @@ implements OnClickListener, OnFocusChangeListener{
 		case R.id.et_signup_birthday:
 			if (hasFocus) {
 				signupCallback.openBirthdayInputDialog();
-				InputMethodManager imm = (InputMethodManager) getActivity()
+				InputMethodManager bimm = (InputMethodManager) getActivity()
 						.getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+				bimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 			}
 			break;
+			
+		case R.id.et_signup_gender:
+			if (hasFocus) {
+				signupCallback.openGenderInputDialog();
+				InputMethodManager gimm = (InputMethodManager) getActivity()
+						.getSystemService(Context.INPUT_METHOD_SERVICE);
+				gimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+			}
 
 		default:
 			break;

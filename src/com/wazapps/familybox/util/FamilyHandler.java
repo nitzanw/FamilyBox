@@ -36,11 +36,12 @@ public class FamilyHandler {
 		newFamily.put("network", user.getInt("network"));
 		//by default we assume that the user who created the new family
 		//is one of the parents
-		if (user.getString("sex").equals("m")) {
+		if (user.getString("gender").equals("male")) {
 			newFamily.put("father", user);
 		} else {
 			newFamily.put("mother", user);
 		}
+		
 		user.put("family", newFamily);
 		user.save();
 	}

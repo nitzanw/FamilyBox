@@ -16,6 +16,7 @@ import com.wazapps.familybox.newsfeed.NewsfeedActivity;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.BirthdayChooserCallback;
 import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
 import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
+import com.wazapps.familybox.splashAndLogin.GenderSignupDialogFragment.GenderChooserCallback;
 import com.wazapps.familybox.splashAndLogin.StartFragment.StartScreenCallback;
 import com.wazapps.familybox.util.FamilyHandler;
 import com.wazapps.familybox.util.InputValidator;
@@ -34,11 +35,12 @@ import android.view.View;
 import android.widget.Toast;
 
 public class LoginActivity extends FragmentActivity 
-implements StartScreenCallback, BirthdayChooserCallback, 
+implements StartScreenCallback, BirthdayChooserCallback, GenderChooserCallback,
 SignupScreenCallback, EmailLoginScreenCallback {
 	private static final String TAG_EMAIL_FRAG = "emailLogin";
 	private static final String TAG_LOGIN_SCR = "loginScreen";
 	private static final String TAG_SIGNBIRTHDAY = "birthdayDialog";
+	private static final String TAG_SIGNGENDER = "genderDialog";
 	private static final String TAG_SGINUP_FRAG = "signupScreen";
 	private static final int SELECT_PICTURE = 0;
 	
@@ -129,7 +131,8 @@ SignupScreenCallback, EmailLoginScreenCallback {
 
 	@Override
 	public void openGenderInputDialog() {
-		// TODO Auto-generated method stub
+		GenderSignupDialogFragment dialog = new GenderSignupDialogFragment();
+		dialog.show(getSupportFragmentManager(), TAG_SIGNGENDER);
 		
 	}
 	
@@ -138,6 +141,13 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		EmailSignupFragment frag = (EmailSignupFragment) getSupportFragmentManager()
 				.findFragmentByTag(TAG_SGINUP_FRAG);
 		frag.setBirthday(date);
+	}
+	
+	@Override
+	public void setGender(String gender) {
+		EmailSignupFragment frag = (EmailSignupFragment) getSupportFragmentManager()
+				.findFragmentByTag(TAG_SGINUP_FRAG);
+		frag.setGender(gender);
 	}
 
 
@@ -192,22 +202,22 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	
 	@Override
 	public void signUp(String firstName, String lastName, String email,
-			String birthday, String password, String passwordConfirm) {
+			String birthday, String gender, String password, 
+			String passwordConfirm) {
 		ParseUser newUser = null;
 		ArrayList<ParseObject> relatedFamilies = null;
 		
 		try {
 			InputValidator.validateSignupInput(firstName, lastName, email, 
-					birthday, password, passwordConfirm);
+					birthday, gender, password, passwordConfirm);
 			
 			newUser = UserHandler.createNewUser(firstName, lastName, email, 
-					password, birthday);
+					gender, password, birthday);
 				
 			relatedFamilies = FamilyHandler.getRelatedFamilies (
 					newUser.getInt("network"), newUser.getString("lastName"));
 			
 			if (relatedFamilies.size() == 0) {
-				Toast.makeText(this,"creating new family!", Toast.LENGTH_LONG).show();
 				//if the user has no related families in network
 				//create new family and jump to main application screen
 				FamilyHandler.createNewFamilyForUser(newUser);
