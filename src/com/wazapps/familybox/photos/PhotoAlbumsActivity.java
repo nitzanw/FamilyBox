@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 public class PhotoAlbumsActivity extends ActivityWithDrawer {
-	static final String TAG_PHOTO_ALBUM = "photoAlbum";
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 		overridePendingTransition(R.anim.enter, R.anim.exit); 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.content_frame, new PhotoAlbumsTabsFragment(),
-				TAG_PHOTO_ALBUM);
+				PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG);
 		ft.commit();
 	}
 
@@ -47,7 +47,7 @@ public class PhotoAlbumsActivity extends ActivityWithDrawer {
 
 		case PHOTOS_POS:
 			TabsFragment frag = (TabsFragment) getSupportFragmentManager()
-					.findFragmentByTag(TAG_PHOTO_ALBUM);
+					.findFragmentByTag(PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG);
 			frag.switchTab(0);
 			break;
 

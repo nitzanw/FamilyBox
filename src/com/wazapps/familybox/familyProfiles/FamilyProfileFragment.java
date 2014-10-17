@@ -29,7 +29,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private static final int ITEM_POS = R.string.position;
 	private static final int FAMILY_MEMBER_TYPE = R.string.family;
 
-	public static final String TAG_FAMILY_PROFILE_FRAGMENT = "family profile fragment";
+	public static final String FAMILY_PROFILE_FRAGMENT = "family profile fragment";
 	private static final String FAMILY_MEMBER_CHILD_TYPE = "child";
 	private static final String FAMILY_MEMBER_PARENT_TYPE = "parent";
 	private static final String FAMILY_MEMBER_ITEM_TYPE = "family member item";

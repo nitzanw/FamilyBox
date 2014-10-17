@@ -13,12 +13,14 @@ public class NewsFeedTabsFragment extends TabsFragment {
 
 	private static final String NEWS = "newsFragment";
 	private static final String EVENTS = "eventFragment";
+	public static final String NEW_FEED_TAB_FRAG = "news feed tab fragment";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (savedInstanceState != null) {}
-		
+		if (savedInstanceState != null) {
+		}
+
 		actionBar = getActivity().getActionBar();
 		setHasOptionsMenu(true);
 	}
@@ -30,18 +32,22 @@ public class NewsFeedTabsFragment extends TabsFragment {
 			return null;
 		}
 
-		ViewGroup rootView = (ViewGroup) inflater.inflate
-				(R.layout.fragment_photo_album_store_tabs, null);
-		this.tabHost = (FragmentTabHost) rootView.findViewById(android.R.id.tabhost);
-		this.tabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
-		
-		// add tabs to the tabs storage
-		this.tabHost.addTab(this.tabHost.newTabSpec(NEWS)
-				.setIndicator(makeTabIndicator(R.string.news)),
-				NewsFragment.class, this.getArguments());
+		ViewGroup rootView = (ViewGroup) inflater.inflate(
+				R.layout.fragment_photo_album_store_tabs, null);
+		this.tabHost = (FragmentTabHost) rootView
+				.findViewById(android.R.id.tabhost);
+		this.tabHost.setup(getActivity(), getChildFragmentManager(),
+				R.id.realtabcontent);
 
-		this.tabHost.addTab(this.tabHost.newTabSpec(EVENTS)
-				.setIndicator(makeTabIndicator(R.string.events)), 
+		// add tabs to the tabs storage
+		this.tabHost.addTab(
+				this.tabHost.newTabSpec(NEWS).setIndicator(
+						makeTabIndicator(R.string.news)), NewsFragment.class,
+				this.getArguments());
+
+		this.tabHost.addTab(
+				this.tabHost.newTabSpec(EVENTS).setIndicator(
+						makeTabIndicator(R.string.events)),
 				EventsFragment.class, this.getArguments());
 
 		return tabHost;

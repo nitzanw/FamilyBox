@@ -101,5 +101,6 @@
     <string name="family">Family</string>
     <string name="position">position</string>
     <string name="type">type</string>
+     <string name="search_family">Search family\.\.\.</string>
 
 </resources>

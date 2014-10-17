@@ -14,6 +14,7 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 	private static final String MY_FAMILY = "myFamily";
 	private static final String SHARED_ALBUM = "sharedAlbum";
 	private static final String FAVORITES = "favorites";
+	public static final String PHOTO_ALBUM_TABS_FRAG = "photo album tabs fragment";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

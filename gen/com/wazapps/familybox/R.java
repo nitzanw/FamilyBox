@@ -194,6 +194,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
     }
     public static final class id {
         public static final int action_extra=0x7f0a00a7;
+        public static final int action_search=0x7f0a00a8;
         public static final int button_login_email=0x7f0a005f;
         public static final int button_login_facebook=0x7f0a005e;
         public static final int button_signup=0x7f0a0060;
@@ -411,6 +412,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
     }
     public static final class menu {
         public static final int menu_extra_actions=0x7f090000;
+        public static final int menu_search_family=0x7f090001;
     }
     public static final class string {
         public static final int action_settings=0x7f070008;
@@ -496,6 +498,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int profile_status=0x7f07000a;
         public static final int profile_title=0x7f070055;
         public static final int role=0x7f07005f;
+        public static final int search_family=0x7f070064;
         public static final int signup_birthday=0x7f07003e;
         public static final int signup_confirm_password=0x7f070042;
         public static final int signup_email_address=0x7f07003c;

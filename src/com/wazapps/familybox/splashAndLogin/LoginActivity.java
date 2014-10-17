@@ -167,14 +167,12 @@ SignupScreenCallback, EmailLoginScreenCallback {
 			Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
-			return;
 		}
 		
 		catch (ParseException e) {
 			Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
-			return;
 		}
 		
 		enterApp();
