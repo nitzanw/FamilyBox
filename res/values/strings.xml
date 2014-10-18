@@ -22,6 +22,20 @@
     <string name="profile_details_birthday">Birthday</string>
     <string name="profile_details_birthday_data">19 October 1987</string>
     <string name="profile_close_family_title">Close Family</string>
+    <string name="edit_profile_change_photo">Change photo</string>
+    <string name="edit_profile_name">Name</string>
+    <string name="edit_profile_nickname">Nickname</string>
+    <string name="edit_profile_last_name">Family name</string>
+    <string name="edit_profile_previous_last_name">Previous family name</string>
+    <string name="edit_profile_middle_name">Middle name</string>
+    <string name="edit_profile_phone_number">Phone number</string>
+    <string name="edit_profile_birthday">Birthday</string>
+    <string name="edit_profile_address">Address</string>
+    <string name="edit_profile_change_password">Change password</string>
+    <string name="edit_profile_confirm_password">Confirm password</string>
+    <string name="edit_profile_change_member_data">Tap on a family member to change detailes</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="edit_action_menu">edit action menu</string>
     <string name="father">Father</string>
     <string name="father_name">Arie</string>
     <string name="mother_name">Mati</string>
@@ -102,6 +116,6 @@
     <string name="family">Family</string>
     <string name="position">position</string>
     <string name="type">type</string>
-     <string name="search_family">Search family\.\.\.</string>
+    <string name="search_family">Search family\.\.\.</string>
 
 </resources>

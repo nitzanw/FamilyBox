@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_edit_profile" >
+
+    <FrameLayout
+        android:id="@+id/fl_edit_profile_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:background="@drawable/change_photo_text_background"
+            android:gravity="center_vertical"
+            android:paddingLeft="60dp"
+            android:text="@string/edit_profile_change_photo"
+            android:textAlignment="gravity" />
+
+        <com.wazapps.familybox.util.RoundedImageView
+            android:id="@+id/riv_edit_profile_change_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/profile_pic"
+            android:cropToPadding="true"
+            android:scaleType="centerCrop" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_edit_profile_first_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fl_edit_profile_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="13dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/et_edit_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:hint="@string/edit_profile_name"
+            android:paddingBottom="13dp"
+            android:textColor="@color/gray_signup_input_fields"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/et_edit_last"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:hint="@string/edit_profile_last_name"
+            android:paddingBottom="13dp"
+            android:textColor="@color/gray_signup_input_fields"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_edit_profile_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_edit_profile_first_row"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/edit_profile_nickname"
+        android:inputType="textPersonName"
+        android:paddingBottom="13dp"
+        android:textColor="@color/gray_signup_input_fields"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:id="@+id/ll_edit_profile_second_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_edit_profile_nickname"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/et_edit_previous_last_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/edit_profile_previous_last_name"
+            android:inputType="textPersonName"
+            android:paddingBottom="13dp"
+            android:textColor="@color/gray_signup_input_fields"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/et_edit_middle_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/edit_profile_middle_name"
+            android:inputType="textPersonName"
+            android:paddingBottom="13dp"
+            android:textColor="@color/gray_signup_input_fields"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_edit_profile_third_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_edit_profile_second_row"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/et_edit_phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/edit_profile_phone_number"
+            android:inputType="phone"
+            android:paddingBottom="13dp"
+            android:textColor="@color/gray_signup_input_fields"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/et_edit_birthday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/edit_profile_birthday"
+            android:inputType="date"
+            android:paddingBottom="13dp"
+            android:textColor="@color/gray_signup_input_fields"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_edit_profile_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_edit_profile_third_row"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/edit_profile_address"
+        android:inputType="textPostalAddress"
+        android:paddingBottom="13dp"
+        android:textColor="@color/gray_signup_input_fields"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_edit_profile_change_relation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="95dp"
+        android:background="@drawable/tap_on_member_text_background"
+        android:gravity="center"
+        android:text="@string/edit_profile_change_member_data"
+        android:textSize="12sp" />
+
+    <HorizontalScrollView
+        android:id="@+id/hsv_edit_profile_family_members_list"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/family_members_list_gray_background"
+        android:overScrollMode="never"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:id="@+id/ll_family_members_list_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</RelativeLayout>

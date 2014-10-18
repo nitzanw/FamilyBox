@@ -7,20 +7,27 @@ import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLogi
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View.OnClickListener;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.SearchView.OnQueryTextListener;
 
 public class ProfileFragment extends Fragment implements OnClickListener {
 	public static final String PROFILE_FRAG = "profile fragment";
@@ -42,6 +49,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	private TextView mUserName;
 	AddProfileFragmentListener addProfileCallback = null;
 	private RoundedImageView mUserPhoto;
+	private MenuItem editItem;
 
 	public interface AddProfileFragmentListener {
 		void addProfileFragment(Bundle args);
@@ -92,6 +100,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 					.getParcelableArray(FAMILY_MEMBER_LIST);
 			mCurrentUserDetails = (FamilyMemberDetails) args
 					.getParcelable(MEMBER_ITEM);
+			setHasOptionsMenu(true);
 		}
 
 		else {
@@ -140,6 +149,28 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		args.putParcelableArray(FAMILY_MEMBER_LIST, familyMembers);
 		addProfileCallback.addProfileFragment(args);
 
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if (menu.findItem(R.id.action_edit) == null) {
+			inflater.inflate(R.menu.menu_edit_action, menu);
+		}
+
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_edit) {
+			Intent editIntent = new Intent(getActivity(),
+					EditProfileScreenActivity.class);
+			Bundle args = getArguments();
+			editIntent.putExtra(EditProfileFragment.EDIT_PROFILE_DATA, args);
+			getActivity().startActivity(editIntent);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	/**
