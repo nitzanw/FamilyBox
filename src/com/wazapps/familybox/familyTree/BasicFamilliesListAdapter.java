@@ -311,15 +311,17 @@ public class BasicFamilliesListAdapter extends SectionAdapter{
 	}
 
 	public void clearData() {
+		
 		this.familiesList = new ArrayList<FamiliesListItem>();
-		this.sectionDrawables = new ArrayList<Drawable>();
-		this.sectionLetters = new ArrayList<String>();
-		this.sectionIndexes = new ArrayList<Integer>();
-		this.sectionSizes = new ArrayList<Integer>();
+		this.sectionDrawables.clear();
+		this.sectionLetters.clear();
+		this.sectionIndexes.clear();
+		this.sectionSizes.clear();
 		this.currLetter = "";
 		this.numberOfSections = 0;
 		this.currSectionSize = 0;
 		notifyDataSetChanged();
 
 	}
+
 }

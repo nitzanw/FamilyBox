@@ -1,34 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>    
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:id="@+id/fragment_families_list">
-	<LinearLayout
-    	android:id="@+id/ll_families_list_empty"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_families_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/ll_families_list_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="vertical"
-        android:layout_gravity="center">
+        android:orientation="vertical" >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/tree_icon" />
+
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textSize="25sp"
             android:text="@string/families_list_empty"
             android:textColor="@color/gray_dialog_text_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textSize="25sp" />
+
         <TextView
-            android:textAlignment="gravity"
-            android:layout_marginTop="3dp"
-            android:textColor="@color/gray_dialog_text_color"
-            android:text="@string/families_list_empty_explain"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="@string/families_list_empty_explain"
+            android:textAlignment="gravity"
+            android:textColor="@color/gray_dialog_text_color" />
     </LinearLayout>
+
+    <com.wazapps.familybox.util.HeaderListView
+        android:id="@+id/hlv_headers_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white_cream_ab" >
+    </com.wazapps.familybox.util.HeaderListView>
+
+    <ListView
+        android:id="@+id/lv_searchable_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white_cream_ab" >
+    </ListView>
+
 </FrameLayout>

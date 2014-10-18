@@ -29,4 +29,6 @@ public class FamiliesListAdapter extends BasicFamilliesListAdapter {
 		activity.startActivity(familyAlbumsIntent);
 	}
 
+
+
 }

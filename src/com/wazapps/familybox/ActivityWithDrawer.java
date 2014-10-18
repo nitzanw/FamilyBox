@@ -27,21 +27,21 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public abstract class ActivityWithDrawer extends FragmentActivity {
-//	static final String TAG_PHOTO_ALBUM = "photoAlbum";
-//	public static final String TAG_NEWS_FEED = "newsFeed";
-//	public static final String TAG_MY_PROFILE = "myProfile";
-//	protected static final String TAG_FAMILY_PROFILE = "familyProfile";
-//	protected static final String TAG_FAMILY_TREE = "familyTree";
+	// static final String TAG_PHOTO_ALBUM = "photoAlbum";
+	// public static final String TAG_NEWS_FEED = "newsFeed";
+	// public static final String TAG_MY_PROFILE = "myProfile";
+	// protected static final String TAG_FAMILY_PROFILE = "familyProfile";
+	// protected static final String TAG_FAMILY_TREE = "familyTree";
 	public static final int MY_PROFILE_POS = 0;
 	public static final int MY_FAMILY_PROFILE_POS = 1;
 	public static final int FAMILY_TREE_POS = 2;
 	public static final int PHOTOS_POS = 3;
 	public static final int NEWS_POS = 4;
 	public static final int EXPAND_NETWORK_POS = 5;
-	
+
 	public static final String LOG_OUT_ACTION = "logout";
 	private static final String DRAWER_POSITION = "drawerPos";
-	
+
 	// Declare Variable
 	protected DrawerLayout mDrawerLayout;
 	protected ListView mDrawerList;
@@ -85,15 +85,19 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 				Fragment frag = getSupportFragmentManager().findFragmentById(
 						R.id.content_frame);
 
-				if (PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG.equals(frag.getTag()))
+				if (PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG.equals(frag
+						.getTag()))
 					getActionBar().setTitle(R.string.photo_albums);
-				else if (NewsFeedTabsFragment.NEW_FEED_TAB_FRAG.equals(frag.getTag()))
+				else if (NewsFeedTabsFragment.NEW_FEED_TAB_FRAG.equals(frag
+						.getTag()))
 					getActionBar().setTitle(R.string.news_feed_title);
 				else if (ProfileFragment.PROFILE_FRAG.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.profile_title);
-				else if(FamilyProfileFragment.FAMILY_PROFILE_FRAGMENT.equals(frag.getTag()))
+				else if (FamilyProfileFragment.FAMILY_PROFILE_FRAGMENT
+						.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.family_profile_title);
-				else if(FamiliesListFragment.FAMILY_TREE_FRAG.equals(frag.getTag()))
+				else if (FamiliesListFragment.FAMILY_TREE_FRAG.equals(frag
+						.getTag()))
 					getActionBar().setTitle(R.string.family_tree_title);
 
 				// creates call to onPrepareOptionsMenu()
@@ -157,13 +161,13 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-		
+
 		if (item.getItemId() == R.id.action_extra) {
 			ParseUser currUser = ParseUser.getCurrentUser();
 			if (currUser != null) {
 				ParseUser.logOut();
 			}
-			
+
 			Intent logoutIntent = new Intent(this, LoginActivity.class);
 			logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
 			startActivity(logoutIntent);
@@ -218,6 +222,10 @@ public abstract class ActivityWithDrawer extends FragmentActivity {
 		// items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 		menu.findItem(R.id.action_extra).setVisible(!drawerOpen);
+		MenuItem searchFamily = menu.findItem(R.id.action_search);
+		if (searchFamily != null) {
+			searchFamily.setVisible(!drawerOpen);
+		}
 		return true;
 	}
 
