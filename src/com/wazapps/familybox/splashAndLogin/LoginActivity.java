@@ -1,6 +1,9 @@
 package com.wazapps.familybox.splashAndLogin;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -19,6 +22,7 @@ import com.wazapps.familybox.splashAndLogin.GenderSignupDialogFragment.GenderCho
 import com.wazapps.familybox.splashAndLogin.StartFragment.StartScreenCallback;
 import com.wazapps.familybox.util.FamilyHandler;
 import com.wazapps.familybox.util.InputValidator;
+import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.UserHandler;
 
 import android.content.Intent;
@@ -28,6 +32,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Files;
 import android.support.v4.app.FragmentActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -41,15 +46,16 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	private static final String TAG_SIGNBIRTHDAY = "birthdayDialog";
 	private static final String TAG_SIGNGENDER = "genderDialog";
 	private static final String TAG_SGINUP_FRAG = "signupScreen";
+	private static final String TAG_FAMILYQUERY_FRAG = "familyQueryScreen";
 	private static final int SELECT_PICTURE = 0;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login_screen);
 		// Hide the status bar.
 		getActionBar().hide();
-		
+
 		//checking if loginActivity was called by a sign out action or by
 		//splash screen and determine the transition animations accordingly.
 		Intent intent = getIntent();
@@ -57,17 +63,17 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		if (extras != null) {
 			if (extras.containsKey(MainActivity.LOG_OUT_ACTION))
 				overridePendingTransition(R.anim.enter_reverse, R.anim.exit_reverse); 
-			
+
 			else if (extras.containsKey(SplashActivity.SPLASH_ACTION))
 				overridePendingTransition(R.anim.enter, R.anim.exit);
 		}
-		
+
 		getSupportFragmentManager()
 		.beginTransaction()
 		.replace(R.id.fragment_container, new StartFragment(), TAG_LOGIN_SCR)
 		.commit();
 	}
-	
+
 	/**
 	 * Launches the main activity, 
 	 * call this function when you want to pass to
@@ -78,7 +84,7 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		startActivity(intent);
 		this.finish();
 	}
-	
+
 	/**
 	 * Used to decode real path from uri. used by the photo chooser.
 	 */
@@ -126,22 +132,22 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		BirthdaySignupDialogFragment dialog = new BirthdaySignupDialogFragment();
 		dialog.show(getSupportFragmentManager(), TAG_SIGNBIRTHDAY);
 	}
-	
+
 
 	@Override
 	public void openGenderInputDialog() {
 		GenderSignupDialogFragment dialog = new GenderSignupDialogFragment();
 		dialog.show(getSupportFragmentManager(), TAG_SIGNGENDER);
-		
+
 	}
-	
+
 	@Override
 	public void setDate(String date) {
 		EmailSignupFragment frag = (EmailSignupFragment) getSupportFragmentManager()
 				.findFragmentByTag(TAG_SGINUP_FRAG);
 		frag.setBirthday(date);
 	}
-	
+
 	@Override
 	public void setGender(String gender) {
 		EmailSignupFragment frag = (EmailSignupFragment) getSupportFragmentManager()
@@ -164,15 +170,44 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_PICTURE) {
-				Uri currImageURI = data.getData();
+				FileInputStream fileInputStream = null;
 				File file = null;
+				String filename;
+				byte[] fileData;
+				Uri currImageURI = data.getData();
 				file = new File(getRealPathFromURI(currImageURI));
 
 				if (file.exists()) {
+					try {
+						filename = file.getName();
+						fileData = new byte[(int)file.length()];
+						fileInputStream = new FileInputStream(file);
+						fileInputStream.read(fileData);
+						fileInputStream.close();
+					} 
+					
+					catch (FileNotFoundException e) {
+						LogUtils.logError("LoginActivity.class", e.getMessage());
+						return;
+					
+					} catch (IOException e) {
+						LogUtils.logError("LoginActivity.class", e.getMessage());
+						return;
+						
+					} finally {
+						try {
+							if (fileInputStream != null)
+								fileInputStream.close();
+						} catch (IOException e) {
+							LogUtils.logError("LoginActivity.class", e.getMessage());
+							return;
+						}
+					}
+					
 					EmailSignupFragment frag = (EmailSignupFragment) 
 							getSupportFragmentManager().findFragmentByTag(TAG_SGINUP_FRAG);
 					Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-					frag.setBitmap(myBitmap);
+					frag.setProfileImage(myBitmap, fileData, filename);
 				}
 			}
 		}
@@ -185,47 +220,59 @@ SignupScreenCallback, EmailLoginScreenCallback {
 			ParseUser.logIn("fb_" + email, password);
 			enterApp();
 		} 
-		
+
 		catch (InputException e) {
 			Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
 		}
-		
+
 		catch (ParseException e) {
 			Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
 		}
 	}
-	
+
 	@Override
 	public void signUp(String firstName, String lastName, String email,
 			String birthday, String gender, String password, 
-			String passwordConfirm) {
+			String passwordConfirm, byte[] profilePictureData, 
+			String profilePictureName) {
 		ParseUser newUser = null;
 		ArrayList<ParseObject> relatedFamilies = null;
-		
+
 		try {
 			InputValidator.validateSignupInput(firstName, lastName, email, 
 					birthday, gender, password, passwordConfirm);
-			
+
 			newUser = UserHandler.createNewUser(firstName, lastName, email, 
-					gender, password, birthday);
-				
+					gender, password, birthday, profilePictureData, profilePictureName);
+
 			relatedFamilies = FamilyHandler.getRelatedFamilies (
 					newUser.getInt("network"), newUser.getString("lastName"));
-			
+
 			if (relatedFamilies.size() == 0) {
 				//if the user has no related families in network
 				//create new family and jump to main application screen
 				FamilyHandler.createNewFamilyForUser(newUser);
 				enterApp();
-			} else {
-				//the user has related families - open family selection menu
-				Toast.makeText(this,"family do exist!", Toast.LENGTH_LONG).show();
+			} 
+			
+			else {
+				//if the user has related families in network - check
+				//to which family he\she blongs
+				getSupportFragmentManager()
+				.beginTransaction()
+				.setCustomAnimations(R.anim.enter, R.anim.exit, 
+						R.anim.enter_reverse, R.anim.exit_reverse)
+						.replace(R.id.fragment_container, 
+								new FamilyQueryFragment(), 
+								TAG_FAMILYQUERY_FRAG).commit();
 			}
-		} catch (InputException e) {
+		} 
+
+		catch (InputException e) {
 			Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
