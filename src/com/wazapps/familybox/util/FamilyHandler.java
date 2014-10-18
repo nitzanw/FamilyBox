@@ -34,15 +34,9 @@ public class FamilyHandler {
 		newFamily.put("name", familyName);
 		//TODO: replace with real network object ID
 		newFamily.put("network", user.getInt("network"));
-		//by default we assume that the user who created the new family
-		//is one of the parents
-		if (user.getString("gender").equals("male")) {
-			newFamily.put("father", user);
-		} else {
-			newFamily.put("mother", user);
-		}
-		
+		newFamily.put("undefinedFamilyMember", user);
 		user.put("family", newFamily);
+		user.put("passFamilyQuery", true);
 		user.save();
 	}
 	

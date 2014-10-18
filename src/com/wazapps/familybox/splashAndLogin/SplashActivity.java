@@ -1,7 +1,7 @@
 package com.wazapps.familybox.splashAndLogin;
 
+import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.newsfeed.NewsfeedActivity;
 import com.wazapps.familybox.util.WaveDrawable;
 
 import android.app.Activity;
@@ -88,7 +88,7 @@ public class SplashActivity extends Activity{
 			if (currUser != null) {
 				//user is logged in, enter app main screen
 				Intent intent = new Intent(SplashActivity.this, 
-						NewsfeedActivity.class);
+						MainActivity.class);
 				startActivity(intent);
 			} else {
 				//user is not logged in, enter login screen

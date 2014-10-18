@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import com.wazapps.familybox.familyProfiles.FamilyProfileActivity;
+import com.wazapps.familybox.familyProfiles.FamilyProfileScreenActivity;
 import com.wazapps.familybox.photos.AlbumItem;
 
 public class FamiliesListAdapter extends BasicFamilliesListAdapter {
@@ -21,7 +21,7 @@ public class FamiliesListAdapter extends BasicFamilliesListAdapter {
 			int row, long id) {
 		super.onRowItemClick(parent, view, section, row, id);
 		Intent familyAlbumsIntent = new Intent(activity,
-				FamilyProfileActivity.class);
+				FamilyProfileScreenActivity.class);
 		AlbumItem[] albumList = { null, null, null, null, null, null };
 		Bundle args = new Bundle();
 		args.putParcelableArray("test1", albumList);

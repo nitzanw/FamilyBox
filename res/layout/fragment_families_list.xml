@@ -35,12 +35,7 @@
             android:textColor="@color/gray_dialog_text_color" />
     </LinearLayout>
 
-    <com.wazapps.familybox.util.HeaderListView
-        android:id="@+id/hlv_headers_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/white_cream_ab" >
-    </com.wazapps.familybox.util.HeaderListView>
+
 
     <ListView
         android:id="@+id/lv_searchable_list"

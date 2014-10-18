@@ -1,5 +1,7 @@
 package com.wazapps.familybox.splashAndLogin;
 
+import java.util.Arrays;
+
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.util.RoundedImageView;
 
@@ -28,13 +30,16 @@ implements OnClickListener, OnFocusChangeListener{
 	
 	private RoundedImageView uploadImage;
 	private EditText email;
+	private byte[] profilePictureData;
+	private String profilePictureName;
 
 	public interface SignupScreenCallback {
 		public void openBirthdayInputDialog();
 		public void openGenderInputDialog();
 		public void openPhonePhotoBrowsing();
 		public void signUp(String firstName, String lastName, String email,
-				String birthday, String gender, String password, String passwordConfirm);
+				String birthday, String gender, String password, String passwordConfirm,
+				byte[] profilePictureData, String profilePictureName);
 	}
 
 	@Override
@@ -53,8 +58,10 @@ implements OnClickListener, OnFocusChangeListener{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		root = inflater.inflate(R.layout.fragment_signup_email, container, false);
+		root = inflater.inflate(R.layout.fragment_signup_email, container, false);		
 		initViews();
+		profilePictureData = null;
+		profilePictureName = "";
 		return root;
 	}
 
@@ -131,7 +138,8 @@ implements OnClickListener, OnFocusChangeListener{
 			
 			signupCallback.signUp(firstNameContent, lastNameContent, 
 					emailContent, birthdayContent, genderContent, 
-					pwContent, pwConfirmContent);
+					pwContent, pwConfirmContent, profilePictureData,
+					profilePictureName);
 			break;
 
 		default:
@@ -169,9 +177,11 @@ implements OnClickListener, OnFocusChangeListener{
 		uploadImage.setImageDrawable(d);
 	}
 
-	public void setBitmap(Bitmap myBitmap) {
-		uploadImage.setImageBitmap(myBitmap);
+	public void setProfileImage(Bitmap fileBitmap, byte[] fileData, String filename) {
+		uploadImage.setImageBitmap(fileBitmap);
 		uploadImage.setBackgroundColor(getResources().getColor(
 				android.R.color.transparent));
+		profilePictureData = Arrays.copyOf(fileData, fileData.length);
+		profilePictureName = filename;
 	}
 }

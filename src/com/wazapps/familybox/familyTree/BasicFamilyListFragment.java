@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -26,24 +27,26 @@ import android.widget.TextView;
 import android.widget.SearchView.OnQueryTextListener;
 
 abstract public class BasicFamilyListFragment extends Fragment {
-	protected View root;
+	protected ViewGroup root;
 	protected ArrayList<FamiliesListItem> familiesListData;
 	protected HeaderListView familiesList;
 	protected SearchView search;
 	protected ListView searchableList;
 	private LinearLayout emptyFamily;
 	protected SearchListAdapter searchableListAdapter;
+	protected FrameLayout totalLayout;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		root = inflater.inflate(R.layout.fragment_families_list, container,
-				false);
+		root = (ViewGroup) inflater.inflate(R.layout.fragment_families_list,
+				container, false);
+		totalLayout = (FrameLayout) root
+				.findViewById(R.id.fragment_families_list);
 		emptyFamily = (LinearLayout) root
 				.findViewById(R.id.ll_families_list_empty);
 		searchableList = (ListView) root.findViewById(R.id.lv_searchable_list);
-		familiesList = (HeaderListView) root
-				.findViewById(R.id.hlv_headers_list);
+		familiesList = new HeaderListView(getActivity());
 
 		this.familiesListData = new ArrayList<FamiliesListItem>();
 		makeTempData();
@@ -52,7 +55,9 @@ abstract public class BasicFamilyListFragment extends Fragment {
 		if (this.familiesListData.isEmpty()) {
 			emptyFamily.setVisibility(View.VISIBLE);
 			familiesList.setVisibility(View.INVISIBLE);
+
 		} else {
+			totalLayout.addView(familiesList);	
 			emptyFamily.setVisibility(View.INVISIBLE);
 			familiesList.setVisibility(View.VISIBLE);
 			setHasOptionsMenu(true);
@@ -61,11 +66,17 @@ abstract public class BasicFamilyListFragment extends Fragment {
 	}
 
 	@Override
+	public void onDestroy() {
+		root.removeAllViewsInLayout();
+		super.onDestroy();
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
 		searchableListAdapter = new SearchListAdapter(getActivity(),
-				R.layout.families_list_item, R.id.tv_families_list_item_name,
-				familiesListData);
+				R.layout.searchable_family_list_item,
+				R.id.tv_search_families_list_item_name, familiesListData);
 		searchableList.setAdapter(searchableListAdapter);
 	}
 

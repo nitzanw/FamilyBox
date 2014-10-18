@@ -45,10 +45,10 @@ public class PhotoGridFragment extends Fragment {
 	}
 	
 	private void handleActionbarTitle() {
-		if (getActivity() instanceof PhotoAlbumsActivity) {
-			getActivity().getActionBar().setTitle("Photo Albums");
-		} else {
-			getActivity().getActionBar().setTitle(albumItem.getAlbumName());
-		}
+//		if (getActivity() instanceof PhotoAlbumsActivity) {
+//			getActivity().getActionBar().setTitle("Photo Albums");
+//		} else {
+//			getActivity().getActionBar().setTitle(albumItem.getAlbumName());
+//		}
 	}
 }

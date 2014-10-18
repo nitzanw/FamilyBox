@@ -40,7 +40,8 @@
     <string name="approve_invite_explain">An invitation request was sent, when accepted - you will be added to the family network and join your family</string>
     <string name="personal_welcome_title">Gal, Welcome!</string>
     <string name="personal_welcome_profile_pic">Are you happy with this profile picture? if not, click the \'change\' button</string>
-    <string name="family_query_title">Your family name is Zohar</string>
+    <string name="family_query_title">Hi User!</string>
+    <string name="family_query_family_name">Your family name is NAME</string>
     <string name="family_query_members_query">Are these your family members?</string>
     <string name="family_member_1">Arie Zohar</string>
     <string name="family_member_2">Mati Zohar</string>
