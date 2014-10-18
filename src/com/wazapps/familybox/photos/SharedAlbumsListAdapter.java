@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.familyProfiles.FamilyProfileActivity;
 import com.wazapps.familybox.familyTree.BasicFamilliesListAdapter;
 import com.wazapps.familybox.familyTree.FamiliesListItem;
 import com.wazapps.familybox.photos.AlbumGridScreenActivity;

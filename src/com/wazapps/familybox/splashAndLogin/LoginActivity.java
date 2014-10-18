@@ -9,10 +9,9 @@ import com.parse.ParseObject;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-import com.wazapps.familybox.ActivityWithDrawer;
+import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.misc.InputException;
-import com.wazapps.familybox.newsfeed.NewsfeedActivity;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.BirthdayChooserCallback;
 import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
 import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
@@ -56,7 +55,7 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
-			if (extras.containsKey(ActivityWithDrawer.LOG_OUT_ACTION))
+			if (extras.containsKey(MainActivity.LOG_OUT_ACTION))
 				overridePendingTransition(R.anim.enter_reverse, R.anim.exit_reverse); 
 			
 			else if (extras.containsKey(SplashActivity.SPLASH_ACTION))
@@ -75,7 +74,7 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	 * the application's actual main screen
 	 */
 	private void enterApp() {
-		Intent intent = new Intent(this, NewsfeedActivity.class);
+		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
 		this.finish();
 	}
