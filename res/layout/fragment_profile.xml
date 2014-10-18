@@ -3,31 +3,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-   
+
     <LinearLayout
         android:id="@+id/ll_profile_upper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/profile_area_background"
         android:gravity="center_horizontal"
-
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <FrameLayout
+            android:paddingTop="-25dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="23dp">
-
-            <ImageView
-                android:id="@+id/iv_profile_pic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/my_profile_pic_elipse_lines" />
+             >
 
             <ImageView
                 android:layout_width="wrap_content"
+                android:layout_marginTop="34dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/my_profile_pic_shading" />
+
+            <com.wazapps.familybox.util.RoundedImageView
+                android:id="@+id/riv_profile_image"
+                android:layout_width="122dp"
+                android:layout_height="122dp"
+                android:layout_marginTop="35dp"
+                android:background="@drawable/my_profile_pic_elipse_lines"
+                android:cropToPadding="true"
+                android:scaleType="centerCrop" />
         </FrameLayout>
 
         <TextView
@@ -43,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp"
             android:drawableLeft="@drawable/my_profile_status_line_sphere"
             android:drawablePadding="7dp"
             android:drawableStart="@drawable/my_profile_status_line_sphere"
@@ -50,52 +55,55 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_profile_upper"
         android:background="@android:color/background_light"
-        android:layout_below="@+id/ll_profile_upper">
-        
-        <ListView 
+        android:orientation="vertical" >
+
+        <ListView
             android:id="@+id/profile_details"
             android:layout_width="fill_parent"
             android:layout_height="150dp"
+            android:background="@drawable/seperator"
             android:divider="@null"
-			android:dividerHeight="0dp"
-            android:background="@drawable/seperator">
+            android:dividerHeight="0dp" >
         </ListView>
 
         <LinearLayout
-        	android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-        	android:layout_gravity="center_horizontal|bottom"
-        	android:background="@android:color/background_light"
-        	android:orientation="vertical">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@android:color/background_light"
+            android:orientation="vertical" >
 
-	        <TextView
-		        android:id="@+id/tv_close_family_title"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:background="@drawable/seperator"
-		        android:gravity="center_horizontal"
-		        android:paddingTop="5dp"
-		        android:text="@string/profile_close_family_title"
-		        android:textSize="20sp" />
-        
-			<HorizontalScrollView
-				android:id="@+id/hsv_family_members_list"
-				android:layout_width="fill_parent"
-				android:layout_height="120dp"
-				android:overScrollMode="never"
-				android:scrollbars="none"
-				android:background="@android:color/background_light">
-				<LinearLayout
-					android:id="@+id/ll_family_members_list_holder"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:orientation="horizontal" >
-				</LinearLayout>    
-			</HorizontalScrollView>
+            <TextView
+                android:id="@+id/tv_close_family_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/seperator"
+                android:gravity="center_horizontal"
+                android:paddingTop="5dp"
+                android:text="@string/profile_close_family_title"
+                android:textSize="20sp" />
+
+            <HorizontalScrollView
+                android:id="@+id/hsv_family_members_list"
+                android:layout_width="fill_parent"
+                android:layout_height="135dp"
+                android:background="@android:color/background_light"
+                android:overScrollMode="never"
+                android:scrollbars="none" >
+
+                <LinearLayout
+                    android:id="@+id/ll_family_members_list_holder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
-    </LinearLayout> 
+    </LinearLayout>
+
 </RelativeLayout>

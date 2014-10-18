@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
 import com.wazapps.familybox.util.LogUtils;
+import com.wazapps.familybox.util.RoundedImageView;
 
 import android.util.Log;
 import android.view.View.OnClickListener;
@@ -40,6 +41,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	private FamilyMemberDetails mCurrentUserDetails;
 	private TextView mUserName;
 	AddProfileFragmentListener addProfileCallback = null;
+	private RoundedImageView mUserPhoto;
 
 	public interface AddProfileFragmentListener {
 		void addProfileFragment(Bundle args);
@@ -70,7 +72,8 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 				.findViewById(R.id.profile_details);
 
 		mUserName = (TextView) root.findViewById(R.id.tv_profile_username);
-
+		mUserPhoto = (RoundedImageView) root
+				.findViewById(R.id.riv_profile_image);
 		// Clear the listView's top highlight scrolling effect
 		int glowDrawableId = root.getResources().getIdentifier(
 				"overscroll_glow", "drawable", "android");

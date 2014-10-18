@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	 android:layout_width="wrap_content"
-	 android:layout_height="wrap_content"
-	 android:orientation="vertical"
-	 android:id="@+id/family_members_list_item">
-	
-	 <TextView
-	 android:id="@+id/tv_close_family_role"
-	 android:layout_width="wrap_content"
-	 android:layout_height="wrap_content"
-	 android:layout_gravity="center_horizontal"
-	 android:textColor="@color/grey_subtitle"
-	 android:textSize="13sp"
-	 android:text="@string/father" />
-	
-	 <ImageView
-	 android:id="@+id/iv_profile_family_member"
-	 android:layout_width="wrap_content"
-	 android:layout_height="wrap_content"
-	 android:layout_marginLeft="10dp"
-	 android:layout_marginRight="10dp"
-	 android:layout_marginTop="-3dp"
-	 android:src="@drawable/family_member_profile_pic_elipse_lines" />
-	
-	 <TextView
-	 android:id="@+id/tv_close_family_member_name"
-	 android:layout_width="wrap_content"
-	 android:layout_height="wrap_content"
-	 android:layout_gravity="center_horizontal"
-	 android:layout_marginTop="-3dp"
-	 android:text="@string/father_name" />
+    android:id="@+id/family_members_list_item"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_close_family_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/father"
+        android:textColor="@color/grey_subtitle"
+        android:textSize="13sp" />
+
+    <com.wazapps.familybox.util.RoundedImageView
+        android:id="@+id/riv_profile_family_member"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="-3dp"
+        android:background="@drawable/family_member_profile_pic_elipse_lines"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tv_close_family_member_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="-6dp"
+        android:text="@string/father_name" />
+
 </LinearLayout>
