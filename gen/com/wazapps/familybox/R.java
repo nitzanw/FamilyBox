@@ -270,8 +270,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int iv_news_feed_item_user_image=0x7f0a0099;
         public static final int iv_personal_welcome_profile_pic=0x7f0a000f;
         public static final int iv_photo_in_album=0x7f0a0098;
-        public static final int iv_profile_family_member=0x7f0a001c;
-        public static final int iv_profile_pic=0x7f0a006d;
         public static final int iv_share_icon=0x7f0a00a7;
         public static final int left_drawer=0x7f0a0015;
         public static final int ll_families_list_empty=0x7f0a0052;
@@ -328,6 +326,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int realtabcontent=0x7f0a006b;
         public static final int riv_family_profile_child=0x7f0a0020;
         public static final int riv_family_profile_parent=0x7f0a0023;
+        public static final int riv_profile_family_member=0x7f0a001c;
+        public static final int riv_profile_image=0x7f0a006d;
         public static final int riv_signup_upload_image=0x7f0a008e;
         public static final int rl_family_profile_child=0x7f0a001f;
         public static final int rl_family_profile_tree=0x7f0a0055;
