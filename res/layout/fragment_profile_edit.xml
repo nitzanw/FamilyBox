@@ -24,7 +24,7 @@
             android:id="@+id/riv_edit_profile_change_pic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="29dp"
             android:background="@drawable/profile_pic"
             android:cropToPadding="true"
             android:scaleType="centerCrop" />
@@ -168,7 +168,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="95dp"
+        android:layout_marginBottom="105dp"
         android:background="@drawable/tap_on_member_text_background"
         android:gravity="center"
         android:text="@string/edit_profile_change_member_data"
@@ -177,9 +177,9 @@
     <HorizontalScrollView
         android:id="@+id/hsv_edit_profile_family_members_list"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="90dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/family_members_list_gray_background"
         android:overScrollMode="never"
         android:scrollbars="none" >
@@ -188,7 +188,7 @@
             android:id="@+id/ll_family_members_list_holder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="3dp"
             android:orientation="horizontal" >
         </LinearLayout>
     </HorizontalScrollView>

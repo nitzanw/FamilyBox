@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 public class EditProfileFragment extends Fragment {
 	public static final String EDIT_PROFILE_FRAG = "edit profile fragment";
@@ -33,6 +34,10 @@ public class EditProfileFragment extends Fragment {
 	private EditText mAddress;
 	private FamilyMemberDetails[] mFamilyMembersList;
 	private FamilyMemberDetails mCurrentUserDetails;
+
+	private EditProfileFamilyListAdapter mFamilyListAdapter;
+
+	private LinearLayout mFamilyListHolder;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,9 +73,18 @@ public class EditProfileFragment extends Fragment {
 		mPhoneNumber = (EditText) root.findViewById(R.id.et_edit_phone);
 		mBirthday = (EditText) root.findViewById(R.id.et_edit_birthday);
 		mAddress = (EditText) root.findViewById(R.id.et_edit_profile_address);
-
+		mFamilyListHolder = (LinearLayout)root.findViewById(R.id.ll_family_members_list_holder);
 		initViews();
+		initFamilyListView();
 		return root;
+	}
+	private void initFamilyListView() {
+		mFamilyListAdapter = new EditProfileFamilyListAdapter(this.getActivity(),
+				mFamilyMembersList);
+		for (int i = 0; i < mFamilyListAdapter.getCount(); i++) {
+			View v = mFamilyListAdapter.getView(i, null, (ViewGroup) getView());
+			mFamilyListHolder.addView(v);
+		}
 	}
 
 	private void initViews() {
@@ -85,6 +99,5 @@ public class EditProfileFragment extends Fragment {
 			mBirthday.setText(mCurrentUserDetails.getBirthday());
 			mAddress.setText(mCurrentUserDetails.getAddress());
 		}
-
 	}
 }

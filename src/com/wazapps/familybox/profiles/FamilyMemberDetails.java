@@ -133,4 +133,8 @@ public class FamilyMemberDetails implements Parcelable {
 	public String getAddress() {
 		return address;
 	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 }

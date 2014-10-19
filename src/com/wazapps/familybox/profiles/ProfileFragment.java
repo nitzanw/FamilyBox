@@ -87,6 +87,12 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 				"overscroll_glow", "drawable", "android");
 		Drawable androidGlow = root.getResources().getDrawable(glowDrawableId);
 		androidGlow.setColorFilter(R.color.orange_fb, Mode.CLEAR);
+		
+		if (mFamilyMembersList != null) {
+			initProfileDetailsViews();
+			initFamilyListView();
+		}
+		
 		return root;
 	}
 
@@ -105,15 +111,6 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 
 		else {
 			LogUtils.logWarning(getTag(), "profile arguments did not pass");
-		}
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (mFamilyMembersList != null) {
-			initProfileDetailsViews();
-			initFamilyListView();
 		}
 	}
 
