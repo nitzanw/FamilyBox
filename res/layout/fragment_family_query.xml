@@ -4,12 +4,23 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_signup" >
     
+    <com.wazapps.familybox.util.RoundedImageView
+        android:id="@+id/riv_query_profile_picture"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="65dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/profile_pic_elipse"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop" />
+    
     <TextView
         android:id="@+id/tv_family_query_title"
+        android:layout_below="@+id/riv_query_profile_picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="20dp"
         android:text="@string/family_query_title"
         android:textSize="25sp" />
     
@@ -41,9 +52,9 @@
 		android:layout_width="fill_parent"
 		android:layout_height="120dp"
 		android:overScrollMode="never"
-		android:layout_marginTop="50dp"
+		android:layout_marginTop="40dp"
 		android:scrollbars="none"
-		android:background="@android:color/background_light">
+		android:background="@android:color/transparent">
 		<LinearLayout
 			android:id="@+id/ll_family_query_members_list_holder"
 			android:layout_width="wrap_content"
@@ -63,14 +74,14 @@
             android:id="@+id/iv_empty_network_1_no"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:src="@drawable/empty_network_no" />
 
         <ImageView
             android:id="@+id/iv_empty_network_1_yes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:src="@drawable/empty_network_yes" />
     </LinearLayout>
     

@@ -15,6 +15,11 @@ import com.parse.SignUpCallback;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.misc.InputException;
+import com.wazapps.familybox.photos.AlbumItem;
+import com.wazapps.familybox.photos.PhotoItem;
+import com.wazapps.familybox.profiles.FamilyMemberDetails;
+import com.wazapps.familybox.profiles.ProfileDetails;
+import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.BirthdayChooserCallback;
 import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
 import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
@@ -34,6 +39,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Files;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
@@ -112,10 +118,11 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	@Override
 	public void openFacebookLogin() {
 		//right now we are not going to implement this feature
-		Toast toast = Toast.makeText(this, "This feature is not yet available"
-				, Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-		toast.show();
+//		Toast toast = Toast.makeText(this, "This feature is not yet available"
+//				, Toast.LENGTH_SHORT);
+//		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+//		toast.show();
+		handleFamilyQuery();
 	}
 
 	@Override
@@ -185,15 +192,15 @@ SignupScreenCallback, EmailLoginScreenCallback {
 						fileInputStream.read(fileData);
 						fileInputStream.close();
 					} 
-					
+
 					catch (FileNotFoundException e) {
 						LogUtils.logError("LoginActivity.class", e.getMessage());
 						return;
-					
+
 					} catch (IOException e) {
 						LogUtils.logError("LoginActivity.class", e.getMessage());
 						return;
-						
+
 					} finally {
 						try {
 							if (fileInputStream != null)
@@ -203,7 +210,7 @@ SignupScreenCallback, EmailLoginScreenCallback {
 							return;
 						}
 					}
-					
+
 					EmailSignupFragment frag = (EmailSignupFragment) 
 							getSupportFragmentManager().findFragmentByTag(TAG_SGINUP_FRAG);
 					Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -258,17 +265,11 @@ SignupScreenCallback, EmailLoginScreenCallback {
 				FamilyHandler.createNewFamilyForUser(newUser);
 				enterApp();
 			} 
-			
+
 			else {
 				//if the user has related families in network - check
 				//to which family he\she blongs
-				getSupportFragmentManager()
-				.beginTransaction()
-				.setCustomAnimations(R.anim.enter, R.anim.exit, 
-						R.anim.enter_reverse, R.anim.exit_reverse)
-						.replace(R.id.fragment_container, 
-								new FamilyQueryFragment(), 
-								TAG_FAMILYQUERY_FRAG).commit();
+				handleFamilyQuery();
 			}
 		} 
 
@@ -285,5 +286,59 @@ SignupScreenCallback, EmailLoginScreenCallback {
 			toast.show();
 			return;
 		}
+	}
+
+	private void handleFamilyQuery() {
+		FamilyQueryFragment familyQueryFrag = new FamilyQueryFragment();
+		familyQueryFrag.setArguments(getProfileArgsTemp());
+		getSupportFragmentManager().beginTransaction()
+		.setCustomAnimations(R.anim.enter, R.anim.exit, 
+				R.anim.enter_reverse, R.anim.exit_reverse)
+				.replace(R.id.fragment_container, familyQueryFrag, 
+						TAG_FAMILYQUERY_FRAG).commit();
+	}
+	
+	private Bundle getProfileArgsTemp() {
+		ProfileDetails[] profileDetailsData = { null, null, null, null };
+		profileDetailsData[0] = (new ProfileDetails("Address",
+				"K. yovel, mozkin st."));
+		profileDetailsData[1] = (new ProfileDetails("Birthday", "19.10.1987"));
+		profileDetailsData[2] = (new ProfileDetails("Previous Family Names",
+				"No previous family names"));
+		profileDetailsData[3] = (new ProfileDetails("Quotes",
+				"For every every there exists exists"));
+
+		FamilyMemberDetails dad = new FamilyMemberDetails("0", "",
+				getString(R.string.father_name), "Zohar",
+				getString(R.string.parent), profileDetailsData);
+		FamilyMemberDetails mom = new FamilyMemberDetails("1", "",
+				getString(R.string.mother_name), "Zohar",
+				getString(R.string.parent), profileDetailsData);
+		FamilyMemberDetails child1 = new FamilyMemberDetails("2", "",
+				getString(R.string.name) + " 1", "Zohar",
+				getString(R.string.child), profileDetailsData);
+		FamilyMemberDetails child2 = new FamilyMemberDetails("3", "",
+				getString(R.string.name) + " 2", "Zohar",
+				getString(R.string.child), profileDetailsData);
+		FamilyMemberDetails child3 = new FamilyMemberDetails("4", "",
+				getString(R.string.name) + " 3", "Zohar",
+				getString(R.string.child), profileDetailsData);
+		FamilyMemberDetails child4 = new FamilyMemberDetails("5", "",
+				getString(R.string.name) + " 4", "Zohar",
+				getString(R.string.child), profileDetailsData);
+		FamilyMemberDetails child5 = new FamilyMemberDetails("6", "",
+				getString(R.string.name) + " 5", "Zohar",
+				getString(R.string.child), profileDetailsData);
+
+		final FamilyMemberDetails[] parentsList = { dad, mom };
+		final FamilyMemberDetails[] childrenList = { child1, child2, child3,
+				child4, child5 };
+		final FamilyMemberDetails[] child1Family = {dad, mom, child1};
+
+		Bundle args = new Bundle();
+		args.putParcelable(FamilyQueryFragment.MEMBER_ITEM, child1);
+		args.putParcelableArray(FamilyQueryFragment.QUERY_FAMILIES_LIST,
+				child1Family);
+		return args;
 	}
 }

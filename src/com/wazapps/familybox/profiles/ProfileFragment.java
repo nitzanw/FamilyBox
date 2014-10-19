@@ -139,7 +139,6 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		args.putParcelable(MEMBER_ITEM, clickedUserDetails);
 		args.putParcelableArray(FAMILY_MEMBER_LIST, familyMembers);
 		addProfileCallback.addProfileFragment(args);
-
 	}
 
 	/**
