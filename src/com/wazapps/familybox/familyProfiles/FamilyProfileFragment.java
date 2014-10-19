@@ -152,27 +152,35 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		profileDetailsData[3] = (new ProfileDetails("Quotes",
 				"For every every there exists exists"));
 
+
 		FamilyMemberDetails dad = new FamilyMemberDetails("0", "",
 				getString(R.string.father_name), "Zohar",
-				getString(R.string.parent), profileDetailsData);
+				getString(R.string.parent), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails mom = new FamilyMemberDetails("1", "",
 				getString(R.string.mother_name), "Zohar",
-				getString(R.string.parent), profileDetailsData);
+				getString(R.string.parent), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails child1 = new FamilyMemberDetails("2", "",
 				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), profileDetailsData);
+				getString(R.string.child), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails child2 = new FamilyMemberDetails("3", "",
 				getString(R.string.name) + " 2", "Zohar",
-				getString(R.string.child), profileDetailsData);
+				getString(R.string.child), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails child3 = new FamilyMemberDetails("4", "",
 				getString(R.string.name) + " 3", "Zohar",
-				getString(R.string.child), profileDetailsData);
+				getString(R.string.child), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails child4 = new FamilyMemberDetails("5", "",
 				getString(R.string.name) + " 4", "Zohar",
-				getString(R.string.child), profileDetailsData);
+				getString(R.string.child), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails child5 = new FamilyMemberDetails("6", "",
 				getString(R.string.name) + " 5", "Zohar",
-				getString(R.string.child), profileDetailsData);
+				getString(R.string.child), "", "", "", "", "", "",
+				profileDetailsData);
 
 		FamilyMemberDetails[] localParentsList = { dad, mom };
 		FamilyMemberDetails[] localChildrenList = {child1, child2, child3, child4, child5};

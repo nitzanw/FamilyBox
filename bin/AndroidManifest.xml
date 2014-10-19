@@ -61,6 +61,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.wazapps.familybox.profiles.EditProfileScreenActivity"
+            android:configChanges="keyboardHidden|screenSize"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

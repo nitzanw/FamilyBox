@@ -41,7 +41,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class MainActivity extends FragmentActivity implements
-AddProfileFragmentListener {
+		AddProfileFragmentListener {
 
 	public static final int MY_PROFILE_POS = 0;
 	public static final int MY_FAMILY_PROFILE_POS = 1;
@@ -68,6 +68,7 @@ AddProfileFragmentListener {
 		setContentView(R.layout.drawer_main);
 		initDrawer();
 		selectItem(mPosition);
+		getActionBar().setTitle(getString(R.string.news_feed_title));
 	}
 
 	public void initDrawer() {
@@ -238,6 +239,10 @@ AddProfileFragmentListener {
 		if (searchFamily != null) {
 			searchFamily.setVisible(!drawerOpen);
 		}
+		MenuItem editProfile = menu.findItem(R.id.action_edit);
+		if (editProfile != null) {
+			editProfile.setVisible(!drawerOpen);
+		}
 		return true;
 	}
 
@@ -301,25 +306,32 @@ AddProfileFragmentListener {
 
 		FamilyMemberDetails dad = new FamilyMemberDetails("0", "",
 				getString(R.string.father_name), "Zohar",
-				getString(R.string.parent), profileDetailsData);
+				getString(R.string.parent), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails mom = new FamilyMemberDetails("1", "",
 				getString(R.string.mother_name), "Zohar",
-				getString(R.string.parent), profileDetailsData);
+				getString(R.string.parent), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails child1 = new FamilyMemberDetails("2", "",
 				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), profileDetailsData);
+				getString(R.string.child), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails child2 = new FamilyMemberDetails("3", "",
 				getString(R.string.name) + " 2", "Zohar",
-				getString(R.string.child), profileDetailsData);
+				getString(R.string.child), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails child3 = new FamilyMemberDetails("4", "",
 				getString(R.string.name) + " 3", "Zohar",
-				getString(R.string.child), profileDetailsData);
+				getString(R.string.child), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails child4 = new FamilyMemberDetails("5", "",
 				getString(R.string.name) + " 4", "Zohar",
-				getString(R.string.child), profileDetailsData);
+				getString(R.string.child), "", "", "", "", "", "",
+				profileDetailsData);
 		FamilyMemberDetails child5 = new FamilyMemberDetails("6", "",
 				getString(R.string.name) + " 5", "Zohar",
-				getString(R.string.child), profileDetailsData);
+				getString(R.string.child), "", "", "", "", "", "",
+				profileDetailsData);
 
 		final FamilyMemberDetails[] parentsList = { dad, mom };
 		final FamilyMemberDetails[] childrenList = { child1, child2, child3,
@@ -393,8 +405,9 @@ AddProfileFragmentListener {
 		ProfileFragment profileFrag = new ProfileFragment();
 		profileFrag.setArguments(args);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.content_frame, profileFrag, ProfileFragment.PROFILE_FRAG).addToBackStack(null);
+		ft.add(R.id.content_frame, profileFrag, ProfileFragment.PROFILE_FRAG)
+				.addToBackStack(null);
 		ft.commit();
-		
+
 	}
 }

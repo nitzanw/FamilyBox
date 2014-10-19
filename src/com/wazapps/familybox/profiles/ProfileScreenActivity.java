@@ -6,12 +6,13 @@ import java.util.Arrays;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.photos.PhotoGridFragment;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
+import com.wazapps.familybox.util.AbstractScreenActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 
-public class ProfileScreenActivity extends FragmentActivity implements
+public class ProfileScreenActivity extends AbstractScreenActivity implements
 		AddProfileFragmentListener {
 
 	public static final String FAMILY_MEMBER_ARRAY_LIST = "family member array list";
@@ -20,7 +21,6 @@ public class ProfileScreenActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_container);
 		// get the activity arguments
 		Bundle args = getIntent().getBundleExtra(ProfileFragment.PROFILE_DATA);
 		ArrayList<FamilyMemberDetails> arrList = args
@@ -35,26 +35,7 @@ public class ProfileScreenActivity extends FragmentActivity implements
 				.beginTransaction()
 				.add(R.id.fragment_container, profileFrag,
 						ProfileFragment.PROFILE_FRAG).commit();
-		initActionBar();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			finish();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	private void initActionBar() {
-		getActionBar().setIcon(
-				getResources().getDrawable(
-						R.drawable.action_bar_fc_icon_with_arrow));
-
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-
+		
 	}
 
 	@Override

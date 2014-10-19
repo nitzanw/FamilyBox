@@ -8,7 +8,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class FamilyMemberDetails implements Parcelable {
-	private String userId, imageURI, firstName, lastName, role;
+	private String userId, imageURI, firstName, lastName, role, nickname,
+			previousLastName, middleName, phoneNumber, birthday, address;
 	ProfileDetails[] details;
 
 	public static final Parcelable.Creator<FamilyMemberDetails> CREATOR = new Parcelable.Creator<FamilyMemberDetails>() {
@@ -23,13 +24,20 @@ public class FamilyMemberDetails implements Parcelable {
 	};
 
 	public FamilyMemberDetails(String userId, String imageURI,
-			String firstName, String lastName, String role,
-			ProfileDetails[] details) {
+			String firstName, String lastName, String role, String nickname,
+			String previousLastName, String middleName, String phoneNumber,
+			String birthday, String address, ProfileDetails[] details) {
 		this.userId = userId;
 		this.imageURI = imageURI;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.role = role;
+		this.nickname = nickname;
+		this.previousLastName = previousLastName;
+		this.middleName = middleName;
+		this.phoneNumber = phoneNumber;
+		this.birthday = birthday;
+		this.address = address;
 		this.details = Arrays.copyOf(details, details.length,
 				ProfileDetails[].class);
 	}
@@ -40,6 +48,12 @@ public class FamilyMemberDetails implements Parcelable {
 		this.firstName = details.readString();
 		this.lastName = details.readString();
 		this.role = details.readString();
+		this.nickname = details.readString();
+		this.previousLastName = details.readString();
+		this.middleName = details.readString();
+		this.phoneNumber = details.readString();
+		this.birthday = details.readString();
+		this.address = details.readString();
 		Parcelable[] parcelableArray = details
 				.readParcelableArray(ProfileDetails.class.getClassLoader());
 		this.details = null;
@@ -81,11 +95,42 @@ public class FamilyMemberDetails implements Parcelable {
 		dest.writeString(this.firstName);
 		dest.writeString(this.lastName);
 		dest.writeString(this.role);
+		dest.writeString(this.nickname);
+		dest.writeString(this.previousLastName);
+		dest.writeString(this.middleName);
+		dest.writeString(this.phoneNumber);
+		dest.writeString(this.birthday);
+		dest.writeString(this.address);
+
 		dest.writeParcelableArray(this.details, flags);
 	}
 
 	public String getLastName() {
 
 		return lastName;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public String getPreviousLastName() {
+		return previousLastName;
+	}
+
+	public String getMiddleName() {
+		return middleName;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public String getBirthday() {
+		return birthday;
+	}
+
+	public String getAddress() {
+		return address;
 	}
 }
