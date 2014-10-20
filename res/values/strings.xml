@@ -58,6 +58,9 @@
     <string name="family_query_title">Hi User!</string>
     <string name="family_query_family_name">Your family name is NAME</string>
     <string name="family_query_members_query">Are these your family members?</string>
+    <string name="family_member_query_name">Member Name</string>
+    <string name="family_member_query_question">What is your family relation with him?</string>
+    <string name="family_member_query_spinner_item_text">Option</string>
     <string name="family_member_1">Arie Zohar</string>
     <string name="family_member_2">Mati Zohar</string>
     <string name="family_member_3">Tal Zohar</string>

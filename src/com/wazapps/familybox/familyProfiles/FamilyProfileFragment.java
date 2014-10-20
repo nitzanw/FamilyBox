@@ -153,34 +153,36 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 				"For every every there exists exists"));
 
 
-		FamilyMemberDetails dad = new FamilyMemberDetails("0", "",
+		FamilyMemberDetails dad = new FamilyMemberDetails("0", "1","",
 				getString(R.string.father_name), "Zohar",
 				getString(R.string.parent), "", "", "", "", "", "",
-				profileDetailsData);
-		FamilyMemberDetails mom = new FamilyMemberDetails("1", "",
+				"m",profileDetailsData);
+		FamilyMemberDetails mom = new FamilyMemberDetails("1", "1","",
 				getString(R.string.mother_name), "Zohar",
 				getString(R.string.parent), "", "", "", "", "", "",
-				profileDetailsData);
-		FamilyMemberDetails child1 = new FamilyMemberDetails("2", "",
+				"f", profileDetailsData);
+		FamilyMemberDetails child1 = new FamilyMemberDetails("2", "1","",
 				getString(R.string.name) + " 1", "Zohar",
 				getString(R.string.child), "", "", "", "", "", "",
-				profileDetailsData);
-		FamilyMemberDetails child2 = new FamilyMemberDetails("3", "",
-				getString(R.string.name) + " 2", "Zohar",
+				"f",profileDetailsData);
+		FamilyMemberDetails child2 = new FamilyMemberDetails("3", "1","",
+				getString(R.string.name) + " 1", "Zohar",
 				getString(R.string.child), "", "", "", "", "", "",
-				profileDetailsData);
-		FamilyMemberDetails child3 = new FamilyMemberDetails("4", "",
-				getString(R.string.name) + " 3", "Zohar",
+				"f",profileDetailsData);
+		FamilyMemberDetails child3 = new FamilyMemberDetails("4", "1","",
+				getString(R.string.name) + " 1", "Zohar",
 				getString(R.string.child), "", "", "", "", "", "",
-				profileDetailsData);
-		FamilyMemberDetails child4 = new FamilyMemberDetails("5", "",
-				getString(R.string.name) + " 4", "Zohar",
+				"f",profileDetailsData);
+		
+		FamilyMemberDetails child4 = new FamilyMemberDetails("5", "1","",
+				getString(R.string.name) + " 1", "Zohar",
 				getString(R.string.child), "", "", "", "", "", "",
-				profileDetailsData);
-		FamilyMemberDetails child5 = new FamilyMemberDetails("6", "",
-				getString(R.string.name) + " 5", "Zohar",
+				"f",profileDetailsData);
+		
+		FamilyMemberDetails child5 = new FamilyMemberDetails("6", "1","",
+				getString(R.string.name) + " 1", "Zohar",
 				getString(R.string.child), "", "", "", "", "", "",
-				profileDetailsData);
+				"f",profileDetailsData);
 
 		FamilyMemberDetails[] localParentsList = { dad, mom };
 		FamilyMemberDetails[] localChildrenList = {child1, child2, child3, child4, child5};

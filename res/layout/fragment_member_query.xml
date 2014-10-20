@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/family_query_background" >
+    
+    <com.wazapps.familybox.util.RoundedImageView
+        android:id="@+id/riv_member_query_profile_picture"
+        android:layout_width="122dp"
+        android:layout_height="122dp"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/my_profile_pic_elipse_lines"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop" />
+    
+    <TextView
+        android:id="@+id/tv_member_query_name"
+        android:layout_below="@id/riv_member_query_profile_picture"
+        android:background="@drawable/family_query_title_background"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="30dp"
+        android:text="@string/family_member_query_name"
+        android:textSize="24sp" />
+    
+    <TextView
+        android:id="@+id/tv_member_query_family_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tv_member_query_name"
+        android:layout_marginTop="50dp"
+        android:text="@string/family_member_query_question"
+        android:textColor="@color/gray_dialog_text_color"
+        android:textSize="18sp" />
+    
+    <Spinner 
+        android:id="@+id/sp_member_query_relation_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_member_query_family_question"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"/>
+    
+    <Button
+        android:id="@+id/button_member_query_accept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="85dp"
+        android:layout_below="@id/sp_member_query_relation_options" 
+        android:background="@drawable/selector_send" >
+        
+    </Button>
+    
+</RelativeLayout>
