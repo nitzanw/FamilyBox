@@ -8,8 +8,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class FamilyMemberDetails implements Parcelable {
-	private String userId, imageURI, firstName, lastName, role, nickname,
-			previousLastName, middleName, phoneNumber, birthday, address;
+	private String userId, networkId, imageURI, firstName, lastName, role, nickname,
+			previousLastName, middleName, phoneNumber, birthday, address, gender;
 	ProfileDetails[] details;
 
 	public static final Parcelable.Creator<FamilyMemberDetails> CREATOR = new Parcelable.Creator<FamilyMemberDetails>() {
@@ -23,11 +23,12 @@ public class FamilyMemberDetails implements Parcelable {
 		}
 	};
 
-	public FamilyMemberDetails(String userId, String imageURI,
+	public FamilyMemberDetails(String userId, String networkId, String imageURI,
 			String firstName, String lastName, String role, String nickname,
 			String previousLastName, String middleName, String phoneNumber,
-			String birthday, String address, ProfileDetails[] details) {
+			String birthday, String address, String gender, ProfileDetails[] details) {
 		this.userId = userId;
+		this.networkId = networkId;
 		this.imageURI = imageURI;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -38,12 +39,14 @@ public class FamilyMemberDetails implements Parcelable {
 		this.phoneNumber = phoneNumber;
 		this.birthday = birthday;
 		this.address = address;
+		this.gender = gender;
 		this.details = Arrays.copyOf(details, details.length,
 				ProfileDetails[].class);
 	}
 
 	public FamilyMemberDetails(Parcel details) {
 		this.userId = details.readString();
+		this.networkId = details.readString();
 		this.imageURI = details.readString();
 		this.firstName = details.readString();
 		this.lastName = details.readString();
@@ -54,6 +57,7 @@ public class FamilyMemberDetails implements Parcelable {
 		this.phoneNumber = details.readString();
 		this.birthday = details.readString();
 		this.address = details.readString();
+		this.gender = details.readString();
 		Parcelable[] parcelableArray = details
 				.readParcelableArray(ProfileDetails.class.getClassLoader());
 		this.details = null;
@@ -91,6 +95,7 @@ public class FamilyMemberDetails implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(this.userId);
+		dest.writeString(this.networkId);
 		dest.writeString(this.imageURI);
 		dest.writeString(this.firstName);
 		dest.writeString(this.lastName);
@@ -101,12 +106,11 @@ public class FamilyMemberDetails implements Parcelable {
 		dest.writeString(this.phoneNumber);
 		dest.writeString(this.birthday);
 		dest.writeString(this.address);
-
+		dest.writeString(this.gender);
 		dest.writeParcelableArray(this.details, flags);
 	}
 
 	public String getLastName() {
-
 		return lastName;
 	}
 
@@ -133,7 +137,16 @@ public class FamilyMemberDetails implements Parcelable {
 	public String getAddress() {
 		return address;
 	}
+	
+	public String getNetworkId() {
+		return networkId;
+	}
+	
+	public String getGender() {
+		return gender;
+	}
 
+	//TODO: remove this
 	public void setRole(String role) {
 		this.role = role;
 	}

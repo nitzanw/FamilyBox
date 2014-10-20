@@ -23,6 +23,7 @@ import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.BirthdayChooserCallback;
 import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
 import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
+import com.wazapps.familybox.splashAndLogin.FamilyQueryFragment.MemberQueryHandlerCallback;
 import com.wazapps.familybox.splashAndLogin.GenderSignupDialogFragment.GenderChooserCallback;
 import com.wazapps.familybox.splashAndLogin.StartFragment.StartScreenCallback;
 import com.wazapps.familybox.util.FamilyHandler;
@@ -46,13 +47,14 @@ import android.widget.Toast;
 
 public class LoginActivity extends FragmentActivity 
 implements StartScreenCallback, BirthdayChooserCallback, GenderChooserCallback,
-SignupScreenCallback, EmailLoginScreenCallback {
+SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
 	private static final String TAG_EMAIL_FRAG = "emailLogin";
 	private static final String TAG_LOGIN_SCR = "loginScreen";
 	private static final String TAG_SIGNBIRTHDAY = "birthdayDialog";
 	private static final String TAG_SIGNGENDER = "genderDialog";
 	private static final String TAG_SGINUP_FRAG = "signupScreen";
 	private static final String TAG_FAMILYQUERY_FRAG = "familyQueryScreen";
+	private static final String TAG_MEMBERQUERY_FRAG = "memberQueryScreen";
 	private static final int SELECT_PICTURE = 0;
 
 	@Override
@@ -118,11 +120,11 @@ SignupScreenCallback, EmailLoginScreenCallback {
 	@Override
 	public void openFacebookLogin() {
 		//right now we are not going to implement this feature
-		Toast toast = Toast.makeText(this, "This feature is not yet available"
-				, Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-		toast.show();
-//		handleFamilyQuery();
+//		Toast toast = Toast.makeText(this, "This feature is not yet available"
+//				, Toast.LENGTH_SHORT);
+//		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+//		toast.show();
+		handleFamilyQuery();
 	}
 
 	@Override
@@ -288,13 +290,106 @@ SignupScreenCallback, EmailLoginScreenCallback {
 		}
 	}
 
-//	private void handleFamilyQuery() {
-//		FamilyQueryFragment familyQueryFrag = new FamilyQueryFragment();
-//		familyQueryFrag.setArguments(getProfileArgsTemp());
-//		getSupportFragmentManager().beginTransaction()
-//		.setCustomAnimations(R.anim.enter, R.anim.exit, 
-//				R.anim.enter_reverse, R.anim.exit_reverse)
-//				.replace(R.id.fragment_container, familyQueryFrag, 
-//						TAG_FAMILYQUERY_FRAG).commit();
-//	}
+	private void handleFamilyQuery() {
+		FamilyQueryFragment familyQueryFrag = new FamilyQueryFragment();
+		familyQueryFrag.setArguments(getFamilyQueryArgsTemp());
+		getSupportFragmentManager().beginTransaction()
+		.setCustomAnimations(R.anim.enter, R.anim.exit, 
+				R.anim.enter_reverse, R.anim.exit_reverse)
+				.replace(R.id.fragment_container, familyQueryFrag, 
+						TAG_FAMILYQUERY_FRAG).commit();
+	}
+	
+	private Bundle getFamilyQueryArgsTemp() {
+		ProfileDetails[] profileDetailsData = { null, null, null, null };
+		profileDetailsData[0] = (new ProfileDetails("Address",
+				"K. yovel, mozkin st."));
+		profileDetailsData[1] = (new ProfileDetails("Birthday", "19.10.1987"));
+		profileDetailsData[2] = (new ProfileDetails("Previous Family Names",
+				"No previous family names"));
+		profileDetailsData[3] = (new ProfileDetails("Quotes",
+				"For every every there exists exists"));
+
+		FamilyMemberDetails dad = new FamilyMemberDetails("0", "1","",
+				getString(R.string.father_name), "Zohar",
+				getString(R.string.parent), "", "", "", "", "", "",
+				"m",profileDetailsData);
+		FamilyMemberDetails mom = new FamilyMemberDetails("1", "1","",
+				getString(R.string.mother_name), "Zohar",
+				getString(R.string.parent), "", "", "", "", "", "",
+				"f", profileDetailsData);
+		FamilyMemberDetails child1 = new FamilyMemberDetails("2", "1","",
+				getString(R.string.name) + " 1", "Zohar",
+				getString(R.string.child), "", "", "", "", "", "",
+				"f",profileDetailsData);
+		FamilyMemberDetails child2 = new FamilyMemberDetails("3", "1","",
+				getString(R.string.name) + " 1", "Zohar",
+				getString(R.string.child), "", "", "", "", "", "",
+				"f",profileDetailsData);
+		FamilyMemberDetails child3 = new FamilyMemberDetails("4", "1","",
+				getString(R.string.name) + " 1", "Zohar",
+				getString(R.string.child), "", "", "", "", "", "",
+				"f",profileDetailsData);
+		
+		FamilyMemberDetails child4 = new FamilyMemberDetails("5", "1","",
+				getString(R.string.name) + " 1", "Zohar",
+				getString(R.string.child), "", "", "", "", "", "",
+				"f",profileDetailsData);
+		
+		FamilyMemberDetails child5 = new FamilyMemberDetails("6", "1","",
+				getString(R.string.name) + " 1", "Zohar",
+				getString(R.string.child), "", "", "", "", "", "",
+				"f",profileDetailsData);
+
+		final FamilyMemberDetails[] parentsList = { dad, mom };
+		final FamilyMemberDetails[] childrenList = { child1, child2, child3,
+				child4, child5 };
+		final FamilyMemberDetails[] child1Family = { dad, mom, child2, child3,
+				child4, child5 };
+
+		Bundle args = new Bundle();
+		args.putParcelable(FamilyQueryFragment.MEMBER_ITEM, child1);
+		args.putParcelableArray(FamilyQueryFragment.QUERY_FAMILIES_LIST,
+				child1Family);
+		return args;
+	}
+	
+	private Bundle getMemberQueryArgsTemp() {
+		ProfileDetails[] profileDetailsData = { null, null, null, null };
+		profileDetailsData[0] = (new ProfileDetails("Address",
+				"K. yovel, mozkin st."));
+		profileDetailsData[1] = (new ProfileDetails("Birthday", "19.10.1987"));
+		profileDetailsData[2] = (new ProfileDetails("Previous Family Names",
+				"No previous family names"));
+		profileDetailsData[3] = (new ProfileDetails("Quotes",
+				"For every every there exists exists"));
+		
+		FamilyMemberDetails dad = new FamilyMemberDetails("0", "1","",
+				getString(R.string.father_name), "Zohar",
+				getString(R.string.parent), "", "", "", "", "", "",
+				"m",profileDetailsData);
+		
+		ArrayList<String> rofl = new ArrayList<String>();
+		rofl.add("He's my dad");
+		rofl.add("and he's really awesome");
+		rofl.add("and cool");
+		rofl.add("and cool2");
+		rofl.add("and coo3");
+		
+		Bundle args = new Bundle();
+		args.putParcelable(MemberQueryFragment.FAMILY_MEMBER_ITEM, dad);
+		args.putStringArrayList(MemberQueryFragment.FAMILY_MEMBER_RELATION_OPTIONS, rofl);
+		return args;
+	}
+
+	@Override
+	public void handleMemberQuery() {
+		MemberQueryFragment memberQueryFrag = new MemberQueryFragment();
+		memberQueryFrag.setArguments(getMemberQueryArgsTemp());
+		getSupportFragmentManager().beginTransaction()
+		.setCustomAnimations(R.anim.enter, R.anim.exit, 
+				R.anim.enter_reverse, R.anim.exit_reverse)
+				.replace(R.id.fragment_container, memberQueryFrag, 
+						TAG_MEMBERQUERY_FRAG).commit();
+	}
 }
