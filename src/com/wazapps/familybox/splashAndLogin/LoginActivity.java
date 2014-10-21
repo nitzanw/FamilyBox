@@ -11,20 +11,18 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.misc.InputException;
-import com.wazapps.familybox.photos.AlbumItem;
-import com.wazapps.familybox.photos.PhotoItem;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
+import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.profiles.ProfileDetails;
-import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.BirthdayChooserCallback;
 import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
 import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
-import com.wazapps.familybox.splashAndLogin.FamilyQueryFragment.MemberQueryHandlerCallback;
+import com.wazapps.familybox.splashAndLogin.FamilyQueryFragment.QueryHandlerCallback;
 import com.wazapps.familybox.splashAndLogin.GenderSignupDialogFragment.GenderChooserCallback;
+import com.wazapps.familybox.splashAndLogin.MemberQueryFragment.QueryAnswerHandlerCallback;
 import com.wazapps.familybox.splashAndLogin.StartFragment.StartScreenCallback;
 import com.wazapps.familybox.util.FamilyHandler;
 import com.wazapps.familybox.util.InputValidator;
@@ -38,16 +36,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Files;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.Toast;
 
 public class LoginActivity extends FragmentActivity 
 implements StartScreenCallback, BirthdayChooserCallback, GenderChooserCallback,
-SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
+SignupScreenCallback, EmailLoginScreenCallback, QueryHandlerCallback,
+QueryAnswerHandlerCallback {
 	private static final String TAG_EMAIL_FRAG = "emailLogin";
 	private static final String TAG_LOGIN_SCR = "loginScreen";
 	private static final String TAG_SIGNBIRTHDAY = "birthdayDialog";
@@ -56,6 +52,27 @@ SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
 	private static final String TAG_FAMILYQUERY_FRAG = "familyQueryScreen";
 	private static final String TAG_MEMBERQUERY_FRAG = "memberQueryScreen";
 	private static final int SELECT_PICTURE = 0;
+	
+	private static final String GENDER_MALE = "male";
+	private static final String GENDER_FEMALE = "female";
+	private static final String ROLE_PARENT = "parent";
+	private static final String ROLE_CHILD = "child";
+	private static final String RELATION_FATHER = "father";
+	private static final String RELATION_MOTHER = "mother";
+	private static final String RELATION_BROTHER = "brother";
+	private static final String RELATION_SISTER = "sister";
+	private static final String RELATION_HUSBAND = "husband";
+	private static final String RELATION_WIFE = "wife";
+	private static final String RELATION_SON = "son";
+	private static final String RELATION_DAUGHTER = "daughter";
+	
+	private int familyQueryIndex = 0;
+	ArrayList<ParseObject> relatedFamilies = null;
+	ParseUser currentUser = null, currentFamilyMember = null;
+	FamilyMemberDetails2 currentFamilyMemberDetails = null;
+	ParseObject currentFamily = null;
+	ArrayList<ParseUser> relatedFamilyMembers = null;
+	ArrayList<FamilyMemberDetails2> relatedFamilyMemberDetails = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +80,6 @@ SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
 		setContentView(R.layout.activity_login_screen);
 		// Hide the status bar.
 		getActionBar().hide();
-
 		//checking if loginActivity was called by a sign out action or by
 		//splash screen and determine the transition animations accordingly.
 		Intent intent = getIntent();
@@ -120,19 +136,20 @@ SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
 	@Override
 	public void openFacebookLogin() {
 		//right now we are not going to implement this feature
-//		Toast toast = Toast.makeText(this, "This feature is not yet available"
-//				, Toast.LENGTH_SHORT);
-//		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-//		toast.show();
-		handleFamilyQuery();
+		Toast toast = Toast.makeText(this, "This feature is not yet available"
+				, Toast.LENGTH_SHORT);
+		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+		toast.show();
 	}
 
 	@Override
 	public void openSignup() {
 		getSupportFragmentManager()
 		.beginTransaction()
-		.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.enter_reverse, R.anim.exit_reverse)
-		.replace(R.id.fragment_container, new EmailSignupFragment(),TAG_SGINUP_FRAG)
+		.setCustomAnimations(R.anim.enter, R.anim.exit, 
+				R.anim.enter_reverse, R.anim.exit_reverse)
+		.replace(R.id.fragment_container, new EmailSignupFragment(), 
+				TAG_SGINUP_FRAG)
 		.addToBackStack(null).commit();
 	}
 
@@ -147,7 +164,6 @@ SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
 	public void openGenderInputDialog() {
 		GenderSignupDialogFragment dialog = new GenderSignupDialogFragment();
 		dialog.show(getSupportFragmentManager(), TAG_SIGNGENDER);
-
 	}
 
 	@Override
@@ -208,14 +224,17 @@ SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
 							if (fileInputStream != null)
 								fileInputStream.close();
 						} catch (IOException e) {
-							LogUtils.logError("LoginActivity.class", e.getMessage());
+							LogUtils.logError("LoginActivity.class", 
+									e.getMessage());
 							return;
 						}
 					}
 
 					EmailSignupFragment frag = (EmailSignupFragment) 
-							getSupportFragmentManager().findFragmentByTag(TAG_SGINUP_FRAG);
-					Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+							getSupportFragmentManager()
+							.findFragmentByTag(TAG_SGINUP_FRAG);
+					Bitmap myBitmap = BitmapFactory.decodeFile(
+							file.getAbsolutePath());
 					frag.setProfileImage(myBitmap, fileData, filename);
 				}
 			}
@@ -228,6 +247,7 @@ SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
 			InputValidator.validateLoginInput(email, password);
 			ParseUser.logIn("fb_" + email, password);
 			enterApp();
+			//TODO: validate that user has passed family query
 		} 
 
 		catch (InputException e) {
@@ -247,32 +267,22 @@ SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
 	public void signUp(String firstName, String lastName, String email,
 			String birthday, String gender, String password, 
 			String passwordConfirm, byte[] profilePictureData, 
-			String profilePictureName) {
-		ParseUser newUser = null;
-		ArrayList<ParseObject> relatedFamilies = null;
+			String profilePictureName) {	
 
 		try {
 			InputValidator.validateSignupInput(firstName, lastName, email, 
 					birthday, gender, password, passwordConfirm);
 
-			newUser = UserHandler.createNewUser(firstName, lastName, email, 
-					gender, password, birthday, profilePictureData, profilePictureName);
+			currentUser = UserHandler.createNewUser(firstName, lastName, email, 
+					gender, password, birthday, profilePictureData, 
+					profilePictureName);
 
 			relatedFamilies = FamilyHandler.getRelatedFamilies (
-					newUser.getInt("network"), newUser.getString("lastName"));
-
-			if (relatedFamilies.size() == 0) {
-				//if the user has no related families in network
-				//create new family and jump to main application screen
-				FamilyHandler.createNewFamilyForUser(newUser);
-				enterApp();
-			} 
-
-			else {
-				//if the user has related families in network - check
-				//to which family he\she blongs
-//				handleFamilyQuery();
-			}
+					currentUser.getString("network"), 
+					currentUser.getString("lastName"));
+			
+			familyQueryIndex = 0;
+			handleFamilyQuery();
 		} 
 
 		catch (InputException e) {
@@ -280,7 +290,9 @@ SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
 			return;
-		} catch (ParseException e) {
+		} 
+		
+		catch (ParseException e) {
 			//TODO: maybe handle parseExceptions in a better way
 			String errMsg = e.getMessage();		
 			Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
@@ -289,10 +301,40 @@ SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
 			return;
 		}
 	}
-
-	private void handleFamilyQuery() {
+	
+	@Override
+	public void handleFamilyQuery() throws ParseException {
+		//if no related families were found for the user 
+		//create a new family for him/her
+		if (familyQueryIndex >= relatedFamilies.size()) {
+			FamilyHandler.createNewFamilyForUser(currentUser);
+			enterApp();
+			return;
+		}
+						
+		//else - check the current related family
+		relatedFamilyMembers = new ArrayList<ParseUser>();
+		relatedFamilyMemberDetails = new ArrayList<FamilyMemberDetails2>();
+		currentFamily = relatedFamilies.get(familyQueryIndex);
+		UserHandler.fetchFamilyMembers(relatedFamilyMembers, 
+				relatedFamilyMemberDetails, currentFamily);
+		
+		//progress to the next family in the related families list
+		//in preparation for next iteration
+		familyQueryIndex++;
+		
+		//pass arguments and control to family query fragment
+		Bundle args = new Bundle();
+		args.putParcelable(FamilyQueryFragment.MEMBER_ITEM, 
+				new FamilyMemberDetails2(currentUser, "undefined"));
+		
+		args.putParcelableArray(FamilyQueryFragment.QUERY_FAMILIES_LIST,
+				relatedFamilyMemberDetails.toArray(
+						new FamilyMemberDetails2
+						[relatedFamilyMemberDetails.size()]));
+		
 		FamilyQueryFragment familyQueryFrag = new FamilyQueryFragment();
-		familyQueryFrag.setArguments(getFamilyQueryArgsTemp());
+		familyQueryFrag.setArguments(args);
 		getSupportFragmentManager().beginTransaction()
 		.setCustomAnimations(R.anim.enter, R.anim.exit, 
 				R.anim.enter_reverse, R.anim.exit_reverse)
@@ -300,96 +342,230 @@ SignupScreenCallback, EmailLoginScreenCallback, MemberQueryHandlerCallback {
 						TAG_FAMILYQUERY_FRAG).commit();
 	}
 	
-	private Bundle getFamilyQueryArgsTemp() {
-		ProfileDetails[] profileDetailsData = { null, null, null, null };
-		profileDetailsData[0] = (new ProfileDetails("Address",
-				"K. yovel, mozkin st."));
-		profileDetailsData[1] = (new ProfileDetails("Birthday", "19.10.1987"));
-		profileDetailsData[2] = (new ProfileDetails("Previous Family Names",
-				"No previous family names"));
-		profileDetailsData[3] = (new ProfileDetails("Quotes",
-				"For every every there exists exists"));
-
-		FamilyMemberDetails dad = new FamilyMemberDetails("0", "1","",
-				getString(R.string.father_name), "Zohar",
-				getString(R.string.parent), "", "", "", "", "", "",
-				"m",profileDetailsData);
-		FamilyMemberDetails mom = new FamilyMemberDetails("1", "1","",
-				getString(R.string.mother_name), "Zohar",
-				getString(R.string.parent), "", "", "", "", "", "",
-				"f", profileDetailsData);
-		FamilyMemberDetails child1 = new FamilyMemberDetails("2", "1","",
-				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		FamilyMemberDetails child2 = new FamilyMemberDetails("3", "1","",
-				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		FamilyMemberDetails child3 = new FamilyMemberDetails("4", "1","",
-				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		
-		FamilyMemberDetails child4 = new FamilyMemberDetails("5", "1","",
-				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		
-		FamilyMemberDetails child5 = new FamilyMemberDetails("6", "1","",
-				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-
-		final FamilyMemberDetails[] parentsList = { dad, mom };
-		final FamilyMemberDetails[] childrenList = { child1, child2, child3,
-				child4, child5 };
-		final FamilyMemberDetails[] child1Family = { dad, mom, child2, child3,
-				child4, child5 };
-
-		Bundle args = new Bundle();
-		args.putParcelable(FamilyQueryFragment.MEMBER_ITEM, child1);
-		args.putParcelableArray(FamilyQueryFragment.QUERY_FAMILIES_LIST,
-				child1Family);
-		return args;
-	}
-	
-	private Bundle getMemberQueryArgsTemp() {
-		ProfileDetails[] profileDetailsData = { null, null, null, null };
-		profileDetailsData[0] = (new ProfileDetails("Address",
-				"K. yovel, mozkin st."));
-		profileDetailsData[1] = (new ProfileDetails("Birthday", "19.10.1987"));
-		profileDetailsData[2] = (new ProfileDetails("Previous Family Names",
-				"No previous family names"));
-		profileDetailsData[3] = (new ProfileDetails("Quotes",
-				"For every every there exists exists"));
-		
-		FamilyMemberDetails dad = new FamilyMemberDetails("0", "1","",
-				getString(R.string.father_name), "Zohar",
-				getString(R.string.parent), "", "", "", "", "", "",
-				"m",profileDetailsData);
-		
-		ArrayList<String> rofl = new ArrayList<String>();
-		rofl.add("He's my dad");
-		rofl.add("and he's really awesome");
-		rofl.add("and cool");
-		rofl.add("and cool2");
-		rofl.add("and coo3");
-		
-		Bundle args = new Bundle();
-		args.putParcelable(MemberQueryFragment.FAMILY_MEMBER_ITEM, dad);
-		args.putStringArrayList(MemberQueryFragment.FAMILY_MEMBER_RELATION_OPTIONS, rofl);
-		return args;
-	}
-
 	@Override
-	public void handleMemberQuery() {
+	public void handleMemberQuery() throws ParseException {
+		currentFamilyMember = relatedFamilyMembers.get(0);
+		currentFamily.fetchIfNeeded();
+		currentFamilyMemberDetails = relatedFamilyMemberDetails.get(0);
+		boolean isFatherTaken = currentFamily.has("father");
+		boolean isMotherTaken = currentFamily.has("mother");
+		boolean isMemberMale = currentFamilyMember.getString("gender")
+				.equals("male")? true : false;
+		
+		ArrayList<String> relationOptions = 
+				generateRelationOptions(isFatherTaken, isMotherTaken);
+		
+		//if only one relation option exists then the answer is already known 
+		if (relationOptions.size() == 1) {
+			handleMemberQueryAnswer(relationOptions.get(0));
+		}
+		
+		Bundle args = new Bundle();
+		args.putParcelable(
+				MemberQueryFragment.FAMILY_MEMBER_ITEM, 
+				currentFamilyMemberDetails);
+		args.putStringArrayList(
+				MemberQueryFragment.FAMILY_MEMBER_RELATION_OPTIONS, 
+				relationOptions);
+		args.putBoolean(MemberQueryFragment.FAMILY_MEMBER_GENDER, isMemberMale);
+		
 		MemberQueryFragment memberQueryFrag = new MemberQueryFragment();
-		memberQueryFrag.setArguments(getMemberQueryArgsTemp());
+		memberQueryFrag.setArguments(args);
 		getSupportFragmentManager().beginTransaction()
 		.setCustomAnimations(R.anim.enter, R.anim.exit, 
 				R.anim.enter_reverse, R.anim.exit_reverse)
 				.replace(R.id.fragment_container, memberQueryFrag, 
 						TAG_MEMBERQUERY_FRAG).commit();
+	}
+	
+	@Override
+	public void handleMemberQueryAnswer(String relation) throws ParseException {
+		String userGender = currentUser.getString("gender");
+		String familyMemberGender = currentFamilyMemberDetails.getGender();
+		String familyMemberRole = currentFamilyMemberDetails.getRole();
+		
+		if (relation.equals("father") || relation.equals("mother")) {
+			ParseRelation<ParseUser> children = 
+					currentFamily.getRelation("children");
+			children.add(currentUser);
+			if (familyMemberRole.equals("undefined")) {
+				currentFamily.put(relation, currentFamilyMember);
+				currentFamily.remove("undefinedFamilyMember");
+			}
+		} 
+		
+		else if (relation.equals("husband") || relation.equals("wife")) {
+			if (userGender.equals(GENDER_MALE)) {
+				currentFamily.put("father", currentUser);
+			} else {
+				currentFamily.put("mother", currentUser);
+			}
+			
+			if (familyMemberRole.equals("undefined")) {
+				if (familyMemberGender.equals(GENDER_MALE)) {
+					currentFamily.put("father", currentFamilyMember);					
+				} else {
+					currentFamily.put("mother", currentFamilyMember);
+				}
+				currentFamily.remove("undefinedFamilyMember");
+			}
+		}
+		
+		else if (relation.equals("son") || relation.equals("daughter")) {
+			if (userGender.equals(GENDER_MALE)) {
+				currentFamily.put("father", currentUser);
+			} else {
+				currentFamily.put("mother", currentUser);
+			}
+			
+			if (familyMemberRole.equals("undefined")) {
+				ParseRelation<ParseUser> children = 
+						currentFamily.getRelation("children");
+				children.add(currentFamilyMember);
+				currentFamily.remove("undefinedFamilyMember");
+			}
+		}
+		
+		//if the user and family member are brothers\sisters:
+		else {
+			ParseRelation<ParseUser> children = 
+					currentFamily.getRelation("children");
+			children.add(currentUser);
+			if (familyMemberRole.equals("undefined")) {
+				children.add(currentFamilyMember);
+				currentFamily.remove("undefinedFamilyMember");
+			}
+		}
+		
+		currentUser.put("passFamilyQuery", true);
+		currentUser.put("family", currentFamily);
+		currentUser.save();
+		enterApp();
+	}
+	
+	public ArrayList<String> generateRelationOptions(
+			boolean isFatherTaken, boolean isMotherTaken) {
+		String userGender = currentUser.getString("gender");
+		String familyMemberGender = currentFamilyMemberDetails.getGender();
+		String familyMemberRole = currentFamilyMemberDetails.getRole();
+		ArrayList<String> options = new ArrayList<String>();
+		
+		//if user is male
+		if (userGender.equals(GENDER_MALE)) {
+			//if family member is male
+			if (familyMemberGender.equals(GENDER_MALE)) {
+				if (familyMemberRole.equals(ROLE_PARENT)) {
+					options.add(RELATION_FATHER);
+				} 
+				
+				else if (familyMemberRole.equals(ROLE_CHILD)) {
+					options.add(RELATION_BROTHER);
+					if (!isFatherTaken) {						
+						options.add(RELATION_SON);
+					}
+				} 
+				
+				//if family member role is undefined
+				else {
+					options.add(RELATION_BROTHER);
+					if (!isFatherTaken) {
+						options.add(RELATION_SON);
+						options.add(RELATION_FATHER);						
+					}
+				}
+			}
+			
+			//if family member is female
+			else if (familyMemberGender.equals(GENDER_FEMALE)) {	
+				if (familyMemberRole.equals(ROLE_PARENT)) {
+					options.add(RELATION_MOTHER);
+					if (!isFatherTaken) {
+						options.add(RELATION_WIFE);						
+					}
+				} 
+				
+				else if (familyMemberRole.equals(ROLE_CHILD)) {
+					options.add(RELATION_SISTER);
+					if (!isFatherTaken) {
+						options.add(RELATION_DAUGHTER);
+					}
+				}
+				
+				//if family member role is undefined
+				else {
+					options.add(RELATION_SISTER);
+					if (!isFatherTaken) {
+						options.add(RELATION_DAUGHTER);
+						if (!isMotherTaken) {
+							options.add(RELATION_WIFE);							
+						}
+					}
+					
+					if (!isMotherTaken) {
+						options.add(RELATION_MOTHER);
+					}
+				}
+			}
+		}
+		
+		//if user is female
+		else if (userGender.equals(GENDER_FEMALE)) {
+			//if family member is male
+			if (familyMemberGender.equals(GENDER_MALE)) {
+				if (familyMemberRole.equals(ROLE_PARENT)) {
+					options.add(RELATION_FATHER);
+					if (!isMotherTaken) {
+						options.add(RELATION_HUSBAND);
+					}
+				}
+				
+				else if (familyMemberRole.equals(ROLE_CHILD)) {
+					options.add(RELATION_BROTHER);
+					if (!isMotherTaken) {
+						options.add(RELATION_SON);
+					}
+				}
+				
+				//if family member role is undefined
+				else {
+					options.add(RELATION_BROTHER);
+					if (!isFatherTaken) {
+						options.add(RELATION_FATHER);
+						if (!isMotherTaken) {
+							options.add(RELATION_HUSBAND);
+						}
+					}
+					
+					if (!isMotherTaken) {
+						options.add(RELATION_SON);
+					}
+				}
+			}
+			
+			//if family member is also a female
+			else if (familyMemberGender.equals(GENDER_FEMALE)) {
+				if (familyMemberRole.equals(ROLE_PARENT)) {
+					options.add(RELATION_MOTHER);
+				}
+				
+				else if (familyMemberRole.equals(ROLE_CHILD)) {
+					options.add(RELATION_SISTER);
+					if (!isMotherTaken) {
+						options.add(RELATION_DAUGHTER);
+					}
+				}
+				
+				//if family member role is undefined
+				else {
+					options.add(RELATION_SISTER);
+					if (!isMotherTaken) {
+						options.add(RELATION_MOTHER);
+						options.add(RELATION_DAUGHTER);
+					}
+				}
+			}			
+		}
+		
+		return options;
 	}
 }

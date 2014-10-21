@@ -16,11 +16,16 @@ public class MemberQuerySpinnerAdapter extends BaseAdapter {
 	private FragmentActivity activity;
 	private ArrayList<String> options;	
 	private LayoutInflater layoutInflater;
+	private boolean isMemberMale;
+	
+	private static final String MALE_REFERENCE = "He is my ";
+	private static final String FEMALE_REFERENCE = "She is my ";
 	
 	public MemberQuerySpinnerAdapter(FragmentActivity activity, 
-			ArrayList<String> options) {
+			ArrayList<String> options, boolean isMemberMale) {
 		this.activity = activity;
 		this.options = options;
+		this.isMemberMale = isMemberMale;
 	}
 
 	@Override
@@ -50,7 +55,12 @@ public class MemberQuerySpinnerAdapter extends BaseAdapter {
 		}
 		TextView option = (TextView) 
 				v.findViewById(R.id.tv_member_query_spinner_item_text);
-		option.setText(this.options.get(position));
+		
+		if (isMemberMale) {			
+			option.setText(MALE_REFERENCE + this.options.get(position));
+		} else {
+			option.setText(FEMALE_REFERENCE + this.options.get(position));			
+		}
 		
 		return v;		
 	}

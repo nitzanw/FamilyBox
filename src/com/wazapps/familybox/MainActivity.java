@@ -69,6 +69,7 @@ public class MainActivity extends FragmentActivity implements
 		initDrawer();
 		selectItem(mPosition);
 		getActionBar().setTitle(getString(R.string.news_feed_title));
+		overridePendingTransition(R.anim.enter, R.anim.exit);
 	}
 
 	public void initDrawer() {

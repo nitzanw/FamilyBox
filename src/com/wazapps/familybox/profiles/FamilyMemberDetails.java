@@ -2,6 +2,7 @@ package com.wazapps.familybox.profiles;
 
 import java.util.Arrays;
 
+import com.parse.ParseUser;
 import com.wazapps.familybox.photos.PhotoItem;
 
 import android.os.Parcel;
