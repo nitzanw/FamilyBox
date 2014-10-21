@@ -3,6 +3,7 @@ package com.wazapps.familybox.photos;
 import java.util.Arrays;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -62,15 +63,16 @@ public class PhotoGridAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				PhotoPagerFragment photoDialog = new PhotoPagerFragment();
+				Intent photoIntent = new Intent(activity,
+						PhotoPagerActivity.class);
+
 				int photoPos = (Integer) v.getTag(PHOTO_POS);
 				Bundle args = new Bundle();
 				args.putInt(PhotoPagerFragment.PHOTO_FIRST_POS, photoPos);
 				args.putParcelableArray(PhotoPagerFragment.PHOTO_ITEM_LIST,
 						photoItemsList);
-				photoDialog.setArguments(args);
-				photoDialog.show(activity.getSupportFragmentManager(),
-						PhotoPagerFragment.PHOTO_PAGER_FRAG);
+				photoIntent.putExtra(PhotoPagerActivity.PHOTO_BUNDLE, args);
+				activity.startActivity(photoIntent);
 
 			}
 

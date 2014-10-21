@@ -82,21 +82,24 @@ public class MainActivity extends FragmentActivity implements
 
 		// TODO: add icons
 		// Generate icon
-		// icon = new int[] { R.drawable.big_search, R.drawable.profile_icon,
-		// R.drawable.favorite_grey, R.drawable.system_icon };
+		icon = new int[] { R.drawable.my_profile_drawer_icon,
+				R.drawable.family_profile_drawer_icon,
+				R.drawable.family_tree_drawer_icon,
+				R.drawable.photos_drawer_icon, R.drawable.news_drawer_icon,
+				R.drawable.expand_drawer_icon };
 
 		// Locate DrawerLayout in drawer_main.xml
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.action_bar_fb_logo_icon, R.string.drawer_open,
+				R.drawable.ic_navigation_drawer, R.string.drawer_open,
 				R.string.drawer_close) {
 
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
 				Fragment frag = getSupportFragmentManager().findFragmentById(
-						R.id.content_frame);
+						R.id.fragment_container);
 
 				if (PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG.equals(frag
 						.getTag()))
@@ -142,7 +145,7 @@ public class MainActivity extends FragmentActivity implements
 				GravityCompat.START);
 
 		// Pass results to MenuListAdapter Class
-		mMenuAdapter = new MenuListAdapter(this, title, subtitle);
+		mMenuAdapter = new MenuListAdapter(this, title, icon, subtitle);
 
 		// Set the MenuListAdapter to the ListView
 		mDrawerList.setAdapter(mMenuAdapter);
@@ -151,7 +154,7 @@ public class MainActivity extends FragmentActivity implements
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		// Enable ActionBar app icon to behave as action to toggle nav drawer
-		getActionBar().setIcon(android.R.color.transparent);
+//		getActionBar().setIcon(android.R.color.transparent);
 
 		mDrawerLayout.setOnKeyListener(new OnKeyListener() {
 			@Override
@@ -253,21 +256,21 @@ public class MainActivity extends FragmentActivity implements
 		case MY_PROFILE_POS:
 			ProfileFragment profileFrag = new ProfileFragment();
 			profileFrag.setArguments(getProfileArgsTemp());
-			ft.replace(R.id.content_frame, profileFrag,
+			ft.replace(R.id.fragment_container, profileFrag,
 					ProfileFragment.PROFILE_FRAG);
 			break;
 		case MY_FAMILY_PROFILE_POS:
-			ft.replace(R.id.content_frame, new FamilyProfileFragment(),
+			ft.replace(R.id.fragment_container, new FamilyProfileFragment(),
 					FamilyProfileFragment.FAMILY_PROFILE_FRAG);
 
 			break;
 		case FAMILY_TREE_POS:
-			ft.replace(R.id.content_frame, new FamiliesListFragment(),
+			ft.replace(R.id.fragment_container, new FamiliesListFragment(),
 					FamiliesListFragment.FAMILY_TREE_FRAG);
 			break;
 
 		case PHOTOS_POS:
-			ft.replace(R.id.content_frame, new PhotoAlbumsTabsFragment(),
+			ft.replace(R.id.fragment_container, new PhotoAlbumsTabsFragment(),
 					PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG);
 
 			break;
@@ -279,7 +282,7 @@ public class MainActivity extends FragmentActivity implements
 			newsTabs.setArguments(args);
 			// a better way
 
-			ft.replace(R.id.content_frame, newsTabs,
+			ft.replace(R.id.fragment_container, newsTabs,
 					NewsFeedTabsFragment.NEW_FEED_TAB_FRAG);
 
 			break;
@@ -304,36 +307,36 @@ public class MainActivity extends FragmentActivity implements
 		profileDetailsData[3] = (new ProfileDetails("Quotes",
 				"For every every there exists exists"));
 
-		FamilyMemberDetails dad = new FamilyMemberDetails("0", "1","",
+		FamilyMemberDetails dad = new FamilyMemberDetails("0", "1", "",
 				getString(R.string.father_name), "Zohar",
-				getString(R.string.parent), "", "", "", "", "", "",
-				"m",profileDetailsData);
-		FamilyMemberDetails mom = new FamilyMemberDetails("1", "1","",
+				getString(R.string.parent), "", "", "", "", "", "", "m",
+				profileDetailsData);
+		FamilyMemberDetails mom = new FamilyMemberDetails("1", "1", "",
 				getString(R.string.mother_name), "Zohar",
-				getString(R.string.parent), "", "", "", "", "", "",
-				"f", profileDetailsData);
-		FamilyMemberDetails child1 = new FamilyMemberDetails("2", "1","",
+				getString(R.string.parent), "", "", "", "", "", "", "f",
+				profileDetailsData);
+		FamilyMemberDetails child1 = new FamilyMemberDetails("2", "1", "",
 				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		FamilyMemberDetails child2 = new FamilyMemberDetails("3", "1","",
+				getString(R.string.child), "", "", "", "", "", "", "f",
+				profileDetailsData);
+		FamilyMemberDetails child2 = new FamilyMemberDetails("3", "1", "",
 				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		FamilyMemberDetails child3 = new FamilyMemberDetails("4", "1","",
+				getString(R.string.child), "", "", "", "", "", "", "f",
+				profileDetailsData);
+		FamilyMemberDetails child3 = new FamilyMemberDetails("4", "1", "",
 				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		
-		FamilyMemberDetails child4 = new FamilyMemberDetails("5", "1","",
+				getString(R.string.child), "", "", "", "", "", "", "f",
+				profileDetailsData);
+
+		FamilyMemberDetails child4 = new FamilyMemberDetails("5", "1", "",
 				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		
-		FamilyMemberDetails child5 = new FamilyMemberDetails("6", "1","",
+				getString(R.string.child), "", "", "", "", "", "", "f",
+				profileDetailsData);
+
+		FamilyMemberDetails child5 = new FamilyMemberDetails("6", "1", "",
 				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
+				getString(R.string.child), "", "", "", "", "", "", "f",
+				profileDetailsData);
 
 		final FamilyMemberDetails[] parentsList = { dad, mom };
 		final FamilyMemberDetails[] childrenList = { child1, child2, child3,
@@ -407,7 +410,7 @@ public class MainActivity extends FragmentActivity implements
 		ProfileFragment profileFrag = new ProfileFragment();
 		profileFrag.setArguments(args);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.content_frame, profileFrag, ProfileFragment.PROFILE_FRAG)
+		ft.add(R.id.fragment_container, profileFrag, ProfileFragment.PROFILE_FRAG)
 				.addToBackStack(null);
 		ft.commit();
 

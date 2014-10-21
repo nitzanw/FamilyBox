@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/photo_pager_layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
     <FrameLayout
         android:id="@+id/fl_image_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true" >
 
-        <view
+        <android.support.v4.view.ViewPager
             android:id="@+id/photo_pager"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            class="com.wazapps.familybox.photos.CustomViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@color/gray_drawer_text" />
 
         <ImageButton
             android:id="@+id/ib_right_arrow"
-            android:layout_width="25dp"
+            android:layout_width="40dp"
             android:layout_height="25dp"
             android:layout_gravity="center_vertical|right"
             android:background="@android:color/transparent"
+            android:paddingRight="-15dp"
             android:src="@drawable/arrow_icon_right" />
 
         <ImageButton
             android:id="@+id/ib_left_arrow"
-            android:layout_width="25dp"
+            android:layout_width="40dp"
             android:layout_height="25dp"
             android:layout_gravity="center_vertical|left"
             android:background="@android:color/transparent"
+            android:paddingLeft="-15dp"
             android:src="@drawable/arrow_icon_left" />
     </FrameLayout>
 
@@ -48,17 +49,28 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="12dp"
             android:src="@drawable/heart_icon" />
 
         <ImageView
             android:id="@+id/iv_share_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginRight="17dp"
+            android:layout_marginTop="12dp"
             android:layout_toLeftOf="@id/iv_favorite_icon"
             android:src="@drawable/share_icon" />
+
+        <ImageButton
+            android:id="@+id/ib_image_edit_caption"
+            android:layout_width="55dp"
+            android:layout_height="33dp"
+            android:layout_above="@+id/tv_image_caption"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:alpha="250"
+            android:background="@color/orange_photo_title_bg"
+            android:src="@drawable/edit_button_black_photo_caption_update" />
 
         <TextView
             android:id="@+id/tv_image_caption"
@@ -69,11 +81,12 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:paddingBottom="13dp"
             android:gravity="center"
             android:maxLength="105"
+            android:paddingBottom="13dp"
             android:text="This is me and my friend Dan 00"
-            android:textAlignment="gravity" />
+            android:textAlignment="gravity"
+            android:textColor="@android:color/black" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -3,8 +3,9 @@
 
     <item
         android:id="@+id/action_edit"
-        android:icon="@drawable/ic_contextual_edit"
-        android:orderInCategory="2"
+        android:icon="@drawable/edit_button_orange_action_bar"
+        android:orderInCategory="1"
         android:showAsAction="always|collapseActionView"
         android:title="@string/edit_action_menu"/>
+
 </menu>

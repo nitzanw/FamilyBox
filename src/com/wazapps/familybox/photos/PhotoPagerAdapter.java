@@ -10,11 +10,7 @@ import android.view.ViewGroup;
 
 public class PhotoPagerAdapter extends FragmentStatePagerAdapter {
 	
-	@Override
-	public void finishUpdate(ViewGroup container) {
-		super.finishUpdate(container);
 
-	}
 
 	private PhotoItem[] photoList;
 
