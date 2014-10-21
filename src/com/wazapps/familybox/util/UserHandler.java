@@ -25,7 +25,9 @@ public class UserHandler {
 		user.put("middleName", "");
 		user.put("prevLastName", "");
 		user.put("nickname", "");
-		user.put("network", 1); //TODO: replace with real network object ID
+		user.put("phoneNumber", "");
+		user.put("network", "1"); //TODO: replace with real network object ID
+		user.put("quotes", "");
 		user.put("passFamilyQuery", false);
 		
 		//upload profile picture to server and link it to user

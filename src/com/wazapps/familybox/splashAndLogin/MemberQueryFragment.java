@@ -3,6 +3,7 @@ package com.wazapps.familybox.splashAndLogin;
 import java.util.ArrayList;
 
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
+import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 
@@ -22,7 +23,7 @@ public class MemberQueryFragment extends Fragment {
 	private RoundedImageView mMemberProfilePic;
 	private Spinner mRelationPicker;
 	private TextView mFamilyMemberName;
-	private FamilyMemberDetails mFamilyMember;
+	private FamilyMemberDetails2 mFamilyMember;
 	private ArrayList<String> mSpinnerOptions;
 	
 	public static final String FAMILY_MEMBER_ITEM = "family member item";

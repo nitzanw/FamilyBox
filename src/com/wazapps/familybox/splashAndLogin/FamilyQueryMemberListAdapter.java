@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
+import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.util.RoundedImageView;
 
 import android.content.Context;
@@ -19,14 +20,14 @@ import android.widget.TextView;
 
 public class FamilyQueryMemberListAdapter extends BaseAdapter {
 	private FragmentActivity activity;
-	private FamilyMemberDetails[] familyMembersList;
+	private FamilyMemberDetails2[] familyMembersList;
 	private LayoutInflater linearInflater;
 	
 	public FamilyQueryMemberListAdapter(FragmentActivity activity, 
-			FamilyMemberDetails[] familyMembersList) {
+			FamilyMemberDetails2[] familyMembersList) {
 		this.activity = activity;
 		this.familyMembersList = Arrays.copyOf(familyMembersList,
-				familyMembersList.length, FamilyMemberDetails[].class);
+				familyMembersList.length, FamilyMemberDetails2[].class);
 	}
 
 	@Override
@@ -89,7 +90,7 @@ public class FamilyQueryMemberListAdapter extends BaseAdapter {
 		}
 
 		// TODO: add profile picture image handling
-		FamilyMemberDetails member = this.familyMembersList[position];
+		FamilyMemberDetails2 member = this.familyMembersList[position];
 		TextView name = (TextView) v
 				.findViewById(R.id.tv_query_family_member_name);
 		String memberName = member.getName() + " " + member.getLastName();

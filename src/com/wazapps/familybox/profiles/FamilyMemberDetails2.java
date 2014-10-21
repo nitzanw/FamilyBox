@@ -8,10 +8,9 @@ import com.wazapps.familybox.photos.PhotoItem;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class FamilyMemberDetails implements Parcelable {
+public class FamilyMemberDetails2 implements Parcelable {
 	private String userId, networkId, imageURI, firstName, lastName, role, nickname,
-			previousLastName, middleName, phoneNumber, birthday, address, gender;
-	ProfileDetails[] details;
+			previousLastName, middleName, phoneNumber, birthday, address, gender, quotes;
 
 	public static final Parcelable.Creator<FamilyMemberDetails> CREATOR = new Parcelable.Creator<FamilyMemberDetails>() {
 
@@ -24,10 +23,10 @@ public class FamilyMemberDetails implements Parcelable {
 		}
 	};
 
-	public FamilyMemberDetails(String userId, String networkId, String imageURI,
+	public FamilyMemberDetails2(String userId, String networkId, String imageURI,
 			String firstName, String lastName, String role, String nickname,
 			String previousLastName, String middleName, String phoneNumber,
-			String birthday, String address, String gender, ProfileDetails[] details) {
+			String birthday, String address, String gender, String quotes) {
 		this.userId = userId;
 		this.networkId = networkId;
 		this.imageURI = imageURI;
@@ -41,11 +40,10 @@ public class FamilyMemberDetails implements Parcelable {
 		this.birthday = birthday;
 		this.address = address;
 		this.gender = gender;
-		this.details = Arrays.copyOf(details, details.length,
-				ProfileDetails[].class);
+		this.quotes = quotes;
 	}
 
-	public FamilyMemberDetails(Parcel details) {
+	public FamilyMemberDetails2(Parcel details) {
 		this.userId = details.readString();
 		this.networkId = details.readString();
 		this.imageURI = details.readString();
@@ -59,17 +57,23 @@ public class FamilyMemberDetails implements Parcelable {
 		this.birthday = details.readString();
 		this.address = details.readString();
 		this.gender = details.readString();
-		Parcelable[] parcelableArray = details
-				.readParcelableArray(ProfileDetails.class.getClassLoader());
-		this.details = null;
-		if (parcelableArray != null) {
-			this.details = Arrays.copyOf(parcelableArray,
-					parcelableArray.length, ProfileDetails[].class);
-		}
+		this.quotes = details.readString();
 	}
-
-	public ProfileDetails[] getDetails() {
-		return this.details;
+	
+	public FamilyMemberDetails2(ParseUser user, String role) {
+		this.userId = user.getObjectId();
+		this.networkId = user.getString("network");
+		this.firstName = user.getString("firstName");
+		this.lastName = user.getString("lastName");
+		this.role = role;
+		this.nickname = user.getString("nickname");
+		this.previousLastName = user.getString("prevLastName");
+		this.middleName = user.getString("middleName");
+		this.phoneNumber = user.getString("phoneNumber");
+		this.birthday = user.getString("birthdate");
+		this.address = user.getString("address");
+		this.gender = user.getString("gender");
+		this.quotes = user.getString("quotes");
 	}
 
 	public String getUserId() {
@@ -108,7 +112,7 @@ public class FamilyMemberDetails implements Parcelable {
 		dest.writeString(this.birthday);
 		dest.writeString(this.address);
 		dest.writeString(this.gender);
-		dest.writeParcelableArray(this.details, flags);
+		dest.writeString(this.quotes);
 	}
 
 	public String getLastName() {
@@ -145,6 +149,10 @@ public class FamilyMemberDetails implements Parcelable {
 	
 	public String getGender() {
 		return gender;
+	}
+	
+	public String getQuotes() {
+		return quotes;
 	}
 
 	//TODO: remove this

@@ -1,8 +1,11 @@
 package com.wazapps.familybox.splashAndLogin;
 
 
+import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
+import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 
@@ -27,12 +30,13 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	private View root;
-	private MemberQueryHandlerCallback queryHandlerCallback;
-	private FamilyMemberDetails mCurrentUser;
-	private FamilyMemberDetails[] mFamilyList;
+	private QueryHandlerCallback queryHandlerCallback;
+	private FamilyMemberDetails2 mCurrentUser;
+	private FamilyMemberDetails2[] mFamilyList;
 	private TextView mFragTitle, mFragMsg, mFragMembers;
 	private LinearLayout mFamilyMembersHolder;
 	private FamilyQueryMemberListAdapter mFamilyListAdapter;
@@ -41,7 +45,8 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	public static final String QUERY_FAMILIES_LIST = "query families list";
 	public static final String MEMBER_ITEM = "member item";
 	
-	public interface MemberQueryHandlerCallback {
+	public interface QueryHandlerCallback {
+		public void handleFamilyQuery() throws ParseException;
 		public void handleMemberQuery();
 	}
 	
@@ -51,13 +56,13 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 		super.onAttach(activity);
 		
 		try {
-			this.queryHandlerCallback = (MemberQueryHandlerCallback) 
+			this.queryHandlerCallback = (QueryHandlerCallback) 
 					getActivity();
 		} 
 		
 		catch (ClassCastException e) {
 			Log.e(getTag(), "the activity does not implement " +
-					"MemberQueryHandlerCallback interface");
+					"QueryHandlerCallback interface");
 		}
 	}
 	
@@ -96,7 +101,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
-			mFamilyList = (FamilyMemberDetails[]) args.getParcelableArray(QUERY_FAMILIES_LIST);	
+			mFamilyList = (FamilyMemberDetails2[]) args.getParcelableArray(QUERY_FAMILIES_LIST);	
 			mCurrentUser = args.getParcelable(MEMBER_ITEM);
 		} else {
 			LogUtils.logWarning(getTag(), "family query arguments did not pass");
@@ -137,6 +142,16 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 			break;
 			
 		case R.id.button_family_query_no:
+			try {
+				queryHandlerCallback.handleFamilyQuery();
+			} 
+			
+			catch (ParseException e) {
+				//TODO: handle exception in a proper way
+				Toast.makeText(getActivity(), "error in parse", 
+						Toast.LENGTH_SHORT);
+			}
+			
 			break;
 
 		default:

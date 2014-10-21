@@ -17,7 +17,7 @@ public class FamilyHandler {
 	/**
 	 * Finds related families to a newly created parseUser. 
 	 */
-	public static ArrayList<ParseObject> getRelatedFamilies(int networkId, 
+	public static ArrayList<ParseObject> getRelatedFamilies(String networkId, 
 			String familyName) throws ParseException {
 		ArrayList<ParseObject> familiesList = null;
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Family");
@@ -33,7 +33,7 @@ public class FamilyHandler {
 		ParseObject newFamily = new ParseObject("Family");
 		newFamily.put("name", familyName);
 		//TODO: replace with real network object ID
-		newFamily.put("network", user.getInt("network"));
+		newFamily.put("network", user.getString("network"));
 		newFamily.put("undefinedFamilyMember", user);
 		user.put("family", newFamily);
 		user.put("passFamilyQuery", true);
