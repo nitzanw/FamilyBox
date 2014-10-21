@@ -47,7 +47,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	
 	public interface QueryHandlerCallback {
 		public void handleFamilyQuery() throws ParseException;
-		public void handleMemberQuery();
+		public void handleMemberQuery() throws ParseException;
 	}
 	
 	
@@ -138,7 +138,13 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.button_family_query_yes:
-			queryHandlerCallback.handleMemberQuery();
+			try {
+				queryHandlerCallback.handleMemberQuery();
+			} catch (ParseException e1) {
+				//TODO: handle exception in a proper way
+				Toast.makeText(getActivity(), "error in parse", 
+						Toast.LENGTH_SHORT).show();
+			}
 			break;
 			
 		case R.id.button_family_query_no:
@@ -149,7 +155,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 			catch (ParseException e) {
 				//TODO: handle exception in a proper way
 				Toast.makeText(getActivity(), "error in parse", 
-						Toast.LENGTH_SHORT);
+						Toast.LENGTH_SHORT).show();
 			}
 			
 			break;
