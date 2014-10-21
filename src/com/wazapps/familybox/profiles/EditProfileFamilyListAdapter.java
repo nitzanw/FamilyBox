@@ -70,6 +70,7 @@ public class EditProfileFamilyListAdapter extends AbstractFamilyListAdapter
 			@Override
 			public void onClick(View arg0) {
 				role.setText(editRole.getText().toString());
+				//TODO change this in the db!!!
 				familyMembersList[position].setRole(editRole.getText()
 						.toString());
 				restoreView();

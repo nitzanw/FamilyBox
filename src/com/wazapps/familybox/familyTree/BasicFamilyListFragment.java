@@ -2,6 +2,8 @@ package com.wazapps.familybox.familyTree;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import com.wazapps.familybox.R;
@@ -18,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -25,16 +28,26 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Toast;
 
-abstract public class BasicFamilyListFragment extends Fragment {
+public abstract class BasicFamilyListFragment extends Fragment {
+	protected static final int FAMILT_ITEM = R.string.family;
 	protected ViewGroup root;
 	protected ArrayList<FamiliesListItem> familiesListData;
 	protected HeaderListView familiesList;
 	protected SearchView search;
-	protected ListView searchableList;
 	private LinearLayout emptyFamily;
 	protected SearchListAdapter searchableListAdapter;
 	protected FrameLayout totalLayout;
+	private LinearLayout searchresult;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.familiesListData = new ArrayList<FamiliesListItem>();
+		Collections.sort(this.familiesListData);
+		makeTempData();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,19 +58,22 @@ abstract public class BasicFamilyListFragment extends Fragment {
 				.findViewById(R.id.fragment_families_list);
 		emptyFamily = (LinearLayout) root
 				.findViewById(R.id.ll_families_list_empty);
-		searchableList = (ListView) root.findViewById(R.id.lv_searchable_list);
+		searchresult = (LinearLayout) root
+				.findViewById(R.id.ll_search_results_layout);
+		searchableListAdapter = new SearchListAdapter(getActivity(),
+				familiesListData);
+		// searchableList.setAdapter(searchableListAdapter);
 		familiesList = new HeaderListView(getActivity());
+		familiesList.setBackgroundColor(getResources().getColor(
+				R.color.white_cream_ab));
 
-		this.familiesListData = new ArrayList<FamiliesListItem>();
-		makeTempData();
-		Collections.sort(this.familiesListData);
-		searchableList.setVisibility(View.INVISIBLE);
+		searchresult.setVisibility(View.GONE);
 		if (this.familiesListData.isEmpty()) {
 			emptyFamily.setVisibility(View.VISIBLE);
 			familiesList.setVisibility(View.INVISIBLE);
 
 		} else {
-			totalLayout.addView(familiesList);	
+			totalLayout.addView(familiesList);
 			emptyFamily.setVisibility(View.INVISIBLE);
 			familiesList.setVisibility(View.VISIBLE);
 			setHasOptionsMenu(true);
@@ -69,15 +85,6 @@ abstract public class BasicFamilyListFragment extends Fragment {
 	public void onDestroy() {
 		root.removeAllViewsInLayout();
 		super.onDestroy();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		searchableListAdapter = new SearchListAdapter(getActivity(),
-				R.layout.searchable_family_list_item,
-				R.id.tv_search_families_list_item_name, familiesListData);
-		searchableList.setAdapter(searchableListAdapter);
 	}
 
 	@Override
@@ -100,19 +107,65 @@ abstract public class BasicFamilyListFragment extends Fragment {
 			@Override
 			public boolean onQueryTextChange(String newText) {
 
+				searchresult.removeAllViews();
 				if (newText == null || TextUtils.isEmpty(newText)) {
-					searchableList.setVisibility(View.INVISIBLE);
+					searchresult.setVisibility(View.GONE);
 					familiesList.setVisibility(View.VISIBLE);
 					return true;
 				}
-				searchableList.setVisibility(View.VISIBLE);
-				familiesList.setVisibility(View.INVISIBLE);
+				ArrayList<FamiliesListItem> filteredList = new ArrayList<FamiliesListItem>(
+						filter(newText));
+				searchableListAdapter.setData(filteredList);
+				searchableListAdapter.notifyDataSetChanged();
+				for (int i = 0; i < filteredList.size(); i++) {
 
-				searchableListAdapter.getFilter().filter(newText);
+					View v = searchableListAdapter.getView(i, null,
+							(ViewGroup) getView());
+					v.setTag(FAMILT_ITEM, filteredList.get(i));
+					v.setClickable(true);
+					v.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							createOnClickOperation(v);
+						}
+
+						
+					});
+					searchresult.addView(v);
+
+				}
+				searchresult.setVisibility(View.VISIBLE);
+				familiesList.setVisibility(View.GONE);
+
+				// searchableListAdapter.getFilter().filter(newText);
 				return true;
 
 			}
 		});
+	}
+	abstract protected void createOnClickOperation(View v);
+	
+	
+	public ArrayList<FamiliesListItem> filter(String constraint) {
+		if (constraint == null || constraint.length() == 0) {
+			// No filter implemented we return all the list
+			return familiesListData;
+		} else {
+			// We perform filtering operation
+			ArrayList<FamiliesListItem> currfamilliesList = new ArrayList<FamiliesListItem>();
+
+			for (FamiliesListItem f : familiesListData) {
+				if (f.getFamilyName()
+						.toLowerCase(Locale.getDefault())
+						.startsWith(
+								constraint.toString().toLowerCase(
+										Locale.getDefault())))
+					currfamilliesList.add(f);
+			}
+
+			return currfamilliesList;
+		}
 	}
 
 	@Override
@@ -180,4 +233,5 @@ abstract public class BasicFamilyListFragment extends Fragment {
 		familiesListData.add(new FamiliesListItem("f1u1", "Zaken"));
 		familiesListData.add(new FamiliesListItem("f1u1", "Zilber"));
 	}
+
 }
