@@ -38,8 +38,8 @@
 
     <RelativeLayout
         android:id="@+id/rl_image_frame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignBottom="@+id/fl_image_layout"
         android:background="@drawable/image_frame" >
 
@@ -48,45 +48,78 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="12dp"
-            android:src="@drawable/heart_icon" />
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="6dp"
+            android:src="@drawable/photos_black_star" />
 
         <ImageView
             android:id="@+id/iv_share_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="17dp"
+            android:layout_marginRight="18dp"
             android:layout_marginTop="12dp"
             android:layout_toLeftOf="@id/iv_favorite_icon"
-            android:src="@drawable/share_icon" />
+            android:src="@drawable/black_share_button" />
 
-        <ImageButton
-            android:id="@+id/ib_image_edit_caption"
-            android:layout_width="55dp"
-            android:layout_height="40dp"
-            android:layout_above="@+id/tv_image_caption"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="10dp"
-            android:alpha="250"
-            android:background="@color/orange_photo_title_bg"
-            android:src="@drawable/edit_button_black_photo_caption_update" />
-
-        <TextView
-            android:id="@+id/tv_image_caption"
+        <FrameLayout
+            android:id="@+id/fl_caption_edit_buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center"
-            android:maxLength="105"
-            android:paddingBottom="13dp"
-            android:text="This is me and my friend Dan 00"
-            android:textAlignment="gravity"
-            android:textColor="@android:color/black" />
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="15dp" >
+
+            <ImageView
+                android:id="@+id/iv_image_edit_caption"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/edit_button_black_photo_caption_update" />
+
+            <ImageView
+                android:id="@+id/iv_accept_caption_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:src="@drawable/accept_button_black"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_image_caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toLeftOf="@+id/fl_caption_edit_buttons"
+            android:gravity="center" >
+
+            <EditText
+                android:id="@+id/et_image_caption_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:gravity="fill_horizontal"
+                android:hint="This is me and my"
+                android:paddingBottom="5dp"
+                android:textSize="14dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_image_caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="6dp"
+                android:gravity="fill_horizontal"
+                android:maxLines="2"
+                android:minLines="2"
+                android:paddingBottom="-15dp"
+                android:text="This is me and my "
+                android:textColor="@android:color/black" />
+        </FrameLayout>
     </RelativeLayout>
 
 </RelativeLayout>

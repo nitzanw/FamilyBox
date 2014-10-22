@@ -21,6 +21,7 @@ import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 import com.wazapps.familybox.splashAndLogin.LoginActivity;
 import com.wazapps.familybox.util.JSONParser;
+import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.MenuListAdapter;
 
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -134,6 +136,8 @@ public class MainActivity extends FragmentActivity implements
 		// Set the drawer toggle as the DrawerListener
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+		getActionBar().setIcon(
+				getResources().getDrawable(R.drawable.drawer_app_icon));
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 
@@ -155,7 +159,7 @@ public class MainActivity extends FragmentActivity implements
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		// Enable ActionBar app icon to behave as action to toggle nav drawer
-//		getActionBar().setIcon(android.R.color.transparent);
+		// getActionBar().setIcon(android.R.color.transparent);
 
 		mDrawerLayout.setOnKeyListener(new OnKeyListener() {
 			@Override
@@ -215,6 +219,11 @@ public class MainActivity extends FragmentActivity implements
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			FragmentManager mngr = getSupportFragmentManager();
+			// make sure there is only one fragment on the backstack:
+			while (mngr.getBackStackEntryCount() > 0) {
+				mngr.popBackStackImmediate();
+			}
 			selectItem(position);
 		}
 	}
@@ -411,8 +420,8 @@ public class MainActivity extends FragmentActivity implements
 		ProfileFragment profileFrag = new ProfileFragment();
 		profileFrag.setArguments(args);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.fragment_container, profileFrag, ProfileFragment.PROFILE_FRAG)
-				.addToBackStack(null);
+		ft.add(R.id.fragment_container, profileFrag,
+				ProfileFragment.PROFILE_FRAG).addToBackStack(null);
 		ft.commit();
 
 	}

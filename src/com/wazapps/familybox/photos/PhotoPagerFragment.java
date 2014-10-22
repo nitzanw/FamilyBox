@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +21,9 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,10 +40,14 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 	private TextView mImageCaption;
 	private boolean captionFrameOn = true;
 	private FrameLayout mImage;
+	private ImageView mEditButton;
+	private ImageView mAcceptEdit;
+	private EditText mImageEditCaption;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		Bundle args = getArguments();
 		if (args != null) {
 
@@ -114,8 +121,16 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 		root.findViewById(R.id.ib_left_arrow).setOnClickListener(this);
 		root.findViewById(R.id.iv_favorite_icon).setOnClickListener(this);
 		root.findViewById(R.id.iv_share_icon).setOnClickListener(this);
-		mImageFrame = (RelativeLayout) root.findViewById(R.id.rl_image_frame);
+		mEditButton = (ImageView) root.findViewById(R.id.iv_image_edit_caption);
+		mEditButton.setOnClickListener(this);
+		mAcceptEdit = (ImageView) root
+				.findViewById(R.id.iv_accept_caption_edit);
+		mAcceptEdit.setOnClickListener(this);
 
+		mImageFrame = (RelativeLayout) root.findViewById(R.id.rl_image_frame);
+		mImageEditCaption = (EditText) root
+				.findViewById(R.id.et_image_caption_edit);
+		mImageEditCaption.setHint(photoList[currentPosition].getCaption());
 		mImageCaption = (TextView) root.findViewById(R.id.tv_image_caption);
 		mImageCaption.setText(photoList[currentPosition].getCaption());
 		return root;
@@ -156,6 +171,22 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 
 		} else if (R.id.iv_share_icon == v.getId()) {
 
+		} else if (R.id.iv_image_edit_caption == v.getId()) {
+			mEditButton.setVisibility(View.INVISIBLE);
+			mAcceptEdit.setVisibility(View.VISIBLE);
+			mImageEditCaption.setVisibility(View.VISIBLE);
+			mImageCaption.setVisibility(View.INVISIBLE);
+		} else if (R.id.iv_accept_caption_edit == v.getId()) {
+			String text = mImageEditCaption.getText().toString();
+			if (!TextUtils.isEmpty(text)) {
+
+				photoList[currentPosition].setCaption(text);
+				mImageCaption.setText(text);
+			}
+			mEditButton.setVisibility(View.VISIBLE);
+			mAcceptEdit.setVisibility(View.INVISIBLE);
+			mImageEditCaption.setVisibility(View.INVISIBLE);
+			mImageCaption.setVisibility(View.VISIBLE);
 		}
 	}
 }
