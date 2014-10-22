@@ -44,35 +44,29 @@ public class InputHandler {
 	}
 
 	
-	public static boolean validateSignupInput(String firstName, String lastName, 
+	public static String validateSignupInput(String firstName, String lastName, 
 			String email, String birthday, String gender, String password, 
-			String passwordConfirm, String errMsg) {
+			String passwordConfirm) {
 		
 		if (firstName.matches("") || lastName.matches("") || email.matches("") 
 				|| gender.matches("") || birthday.matches("") || password.matches("")) {
-			errMsg = "You did not fill all required fields";
-			return false;
+			return "You did not fill all required fields";
 		}
 		
 		if (password.length() < 4) {
-			errMsg = "password is too short. " +
-					"must be at least 4 characters";
-			return false;
+			return "password is too short. " +
+					"must be at least 4 chars";
 		}
 		
 		if (!password.equals(passwordConfirm)) {
-			errMsg = "Password field does not match password" +
-					" confirm field\n" + "please make sure that you enter " +
-					"the same password twice";
-			return false;
+			return "password does not match password confirm";
 		}
 		
 		if (!validateEmailAddress(email)) {
-			errMsg = "email address is invalid";
-			return false;
+			return "email address is invalid";
 		}
 		
-		return true;
+		return "";
 	}
 	
 	public static ArrayList<String> generateRelationOptions(

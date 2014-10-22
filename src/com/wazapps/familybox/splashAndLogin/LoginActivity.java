@@ -423,10 +423,9 @@ QueryAnswerHandlerCallback {
 			String passwordConfirm, byte[] profilePictureData, 
 			String profilePictureName) {	
 
-		//TODO: fix this stupid bug
-		String errMsg = "";
-		if (!InputHandler.validateSignupInput(firstName, lastName, email, 
-				birthday, gender, password, passwordConfirm, errMsg)) {	
+		String errMsg = InputHandler.validateSignupInput(firstName, lastName, email, 
+				birthday, gender, password, passwordConfirm);
+		if (!errMsg.equals("")) {	
 			Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
@@ -573,8 +572,10 @@ QueryAnswerHandlerCallback {
 	}
 	
 	public void handleUserCreationError(ParseException e, boolean wasUserCreated) {
-		Toast toast = Toast.makeText(this, "Error in user creation, " +
-				"please sign up again", Toast.LENGTH_LONG);
+		String errMsg = (e.getMessage().startsWith("username"))? 
+			"Email already taken" : 
+			"Error in user creation, please sign up again";
+		Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
 		LogUtils.logError("LoginActivity", e.getMessage());
 		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 		toast.show();
