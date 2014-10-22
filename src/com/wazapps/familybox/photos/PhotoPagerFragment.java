@@ -1,6 +1,8 @@
 package com.wazapps.familybox.photos;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.profiles.EditProfileFragment;
+import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.util.LogUtils;
 
 import android.os.Bundle;
@@ -22,12 +24,11 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class PhotoPagerFragment extends DialogFragment implements
-		OnClickListener {
+public class PhotoPagerFragment extends Fragment implements OnClickListener {
 	protected static final String PHOTO_FIRST_POS = "first photo pos";
 	protected static final String PHOTO_ITEM_LIST = "photo list";
 	protected static final String PHOTO_PAGER_FRAG = "photo pager dialog";
-	static CustomViewPager mPager;
+	static ViewPager mPager;
 	private View root;
 	private PhotoPagerAdapter mAdapter;
 	private PhotoItem[] photoList;
@@ -42,7 +43,11 @@ public class PhotoPagerFragment extends DialogFragment implements
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
-			photoList = (PhotoItem[]) args.getParcelableArray(PHOTO_ITEM_LIST);
+
+			Parcelable[] ps = (Parcelable[]) args
+					.getParcelableArray(PHOTO_ITEM_LIST);
+			photoList = new PhotoItem[ps.length];
+			System.arraycopy(ps, 0, photoList, 0, ps.length);
 			currentPosition = args.getInt(PHOTO_FIRST_POS);
 		}
 		mAdapter = new PhotoPagerAdapter(getChildFragmentManager(), photoList);
@@ -52,10 +57,9 @@ public class PhotoPagerFragment extends DialogFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		root = (View) inflater.inflate(R.layout.photo_pager_layout, container,
 				false);
-		mPager = (CustomViewPager) root.findViewById(R.id.photo_pager);
+		mPager = (ViewPager) root.findViewById(R.id.photo_pager);
 		mPager.setAdapter(mAdapter);
 		mPager.setCurrentItem(currentPosition);
 		mPager.setOnPageChangeListener(new OnPageChangeListener() {
@@ -118,7 +122,7 @@ public class PhotoPagerFragment extends DialogFragment implements
 	}
 
 	private void itemClicked() {
-		
+
 		// toggle the visibility of the orange frame
 		if (captionFrameOn) {
 			mImageFrame.setVisibility(View.INVISIBLE);

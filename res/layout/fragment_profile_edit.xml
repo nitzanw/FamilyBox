@@ -42,27 +42,50 @@
         android:gravity="center"
         android:orientation="horizontal" >
 
-        <EditText
-            android:id="@+id/et_edit_name"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:enabled="false"
-            android:hint="@string/edit_profile_name"
-            android:paddingBottom="13dp"
-            android:textColor="@color/gray_signup_input_fields"
-            android:textSize="12sp" />
+            android:layout_weight="1" >
 
-        <EditText
-            android:id="@+id/et_edit_last"
+            <EditText
+                android:id="@+id/et_edit_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:paddingBottom="13dp"
+                android:textColor="@color/gray_signup_input_fields"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="12.3dp"
+                android:paddingTop="6dp"
+                android:text="@string/edit_profile_name"
+                android:textSize="12sp" />
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:enabled="false"
-            android:hint="@string/edit_profile_last_name"
-            android:paddingBottom="13dp"
-            android:textColor="@color/gray_signup_input_fields"
-            android:textSize="12sp" />
+            android:layout_weight="1" >
+
+            <EditText
+                android:id="@+id/et_edit_last"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:paddingBottom="13dp"
+                android:textColor="@color/gray_signup_input_fields"
+                android:textSize="12sp" />
+             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="12.3dp"
+                android:paddingTop="6dp"
+                android:text="@string/edit_profile_last_name"
+                android:textSize="12sp" />
+        </FrameLayout>
     </LinearLayout>
 
     <EditText

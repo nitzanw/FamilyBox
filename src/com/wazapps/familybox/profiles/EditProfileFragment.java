@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -47,11 +50,12 @@ public class EditProfileFragment extends Fragment {
 		if (args != null) {
 			Parcelable[] ps = (Parcelable[]) args
 					.getParcelableArray(EditProfileFragment.EDIT_FAMILY_MEMBER_LIST);
-			
+
 			mFamilyMembersList = new FamilyMemberDetails[ps.length];
 			System.arraycopy(ps, 0, mFamilyMembersList, 0, ps.length);
 			mCurrentUserDetails = (FamilyMemberDetails) args
 					.getParcelable(EDIT_MEMBER_ITEM);
+			setHasOptionsMenu(true);
 		} else {
 			LogUtils.logWarning(getTag(), "argument didn't pass correctly");
 		}
@@ -73,14 +77,16 @@ public class EditProfileFragment extends Fragment {
 		mPhoneNumber = (EditText) root.findViewById(R.id.et_edit_phone);
 		mBirthday = (EditText) root.findViewById(R.id.et_edit_birthday);
 		mAddress = (EditText) root.findViewById(R.id.et_edit_profile_address);
-		mFamilyListHolder = (LinearLayout)root.findViewById(R.id.ll_family_members_list_holder);
+		mFamilyListHolder = (LinearLayout) root
+				.findViewById(R.id.ll_family_members_list_holder);
 		initViews();
 		initFamilyListView();
 		return root;
 	}
+
 	private void initFamilyListView() {
-		mFamilyListAdapter = new EditProfileFamilyListAdapter(this.getActivity(),
-				mFamilyMembersList);
+		mFamilyListAdapter = new EditProfileFamilyListAdapter(
+				this.getActivity(), mFamilyMembersList);
 		for (int i = 0; i < mFamilyListAdapter.getCount(); i++) {
 			View v = mFamilyListAdapter.getView(i, null, (ViewGroup) getView());
 			mFamilyListHolder.addView(v);
@@ -100,4 +106,22 @@ public class EditProfileFragment extends Fragment {
 			mAddress.setText(mCurrentUserDetails.getAddress());
 		}
 	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if (menu.findItem(R.id.action_accept) == null) {
+			inflater.inflate(R.menu.menu_accept, menu);
+		}
+
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_accept) {
+			getActivity().finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 }

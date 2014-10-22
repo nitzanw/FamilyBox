@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_accept"
+        android:icon="@drawable/action_bar_edit_profile_accept_button"
+        android:orderInCategory="3"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/accept_action_menu"/>
+</menu>

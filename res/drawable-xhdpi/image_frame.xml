@@ -9,10 +9,10 @@
     </item>
 
     <!-- this mess is what we have to do to get a bottom border only. -->
-    <item android:top="-25dp"
+    <item android:top="-5dp"
         android:left="-55dp"
         android:right="-55dp"
-        android:bottom="-1dp">
+        android:bottom="-5dp">
         <shape
             android:shape="rectangle">
             <stroke android:width="50dp" android:color="@color/orange_photo_title_bg"/>
