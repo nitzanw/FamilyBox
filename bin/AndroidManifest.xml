@@ -70,7 +70,7 @@
             android:name="com.wazapps.familybox.photos.PhotoPagerActivity"
             android:configChanges="keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
         </activity>
     </application>
 
