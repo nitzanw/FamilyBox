@@ -3,41 +3,61 @@ package com.wazapps.familybox.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class FamilyHandler {
-	/**
-	 * Finds related families to a newly created parseUser. 
-	 */
-	public static ArrayList<ParseObject> getRelatedFamilies(String networkId, 
-			String familyName) throws ParseException {
-		ArrayList<ParseObject> familiesList = null;
+	public static void fetchRelatedFamilies(String familyName, String networkId, 
+			FindCallback<ParseObject> callbackFunc) {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Family");
 		query.whereEqualTo("name", familyName);
 		query.whereEqualTo("network", networkId);
-		familiesList = new ArrayList<ParseObject>(query.find());		
-		return familiesList;
+		query.findInBackground(callbackFunc);
 	}
-	
-	public static void createNewFamilyForUser(ParseUser user) 
-			throws ParseException {
-		user.fetchIfNeeded();
-		String familyName = user.getString("lastName");
-		ParseObject newFamily = new ParseObject("Family");
-		newFamily.put("name", familyName);
-		newFamily.put("network", user.getString("network"));
-		newFamily.put("undefined", user);
-		user.put("family", newFamily);
-		user.put("passFamilyQuery", true);
-		user.save();
+		
+	public static void createNewFamilyForUser(ParseUser user, 
+			final Activity activity, final SaveCallback callbackFunc) {
+		user.fetchInBackground(new GetCallback<ParseUser>() {
+
+			@Override
+			public void done(ParseUser user, ParseException e) {
+				//if data fetching was successful
+				if (e == null) {
+					String familyName = user.getString("lastName");
+					ParseObject newFamily = new ParseObject("Family");
+					newFamily.put("name", familyName);
+					newFamily.put("network", user.getString("network"));
+					newFamily.put("undefined", user);
+					user.put("family", newFamily);
+					user.put("passFamilyQuery", true);
+					user.saveInBackground(callbackFunc);
+				} 
+				
+				//if data fetching failed - cancel the sign up process
+				else {
+					Toast toast = Toast.makeText(activity, 
+							"Error in user creation, please sign up again", 
+							Toast.LENGTH_LONG);
+					LogUtils.logError("FamilyHandler", e.getMessage());
+					toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+					toast.show();
+					ParseUser.logOut();
+					user.deleteInBackground();
+				}
+				
+			}
+		});
 	}
 	
 	public static void createNewPrevFamilyForUser(ParseUser user) throws ParseException {

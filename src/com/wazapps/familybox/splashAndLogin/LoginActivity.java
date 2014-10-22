@@ -6,17 +6,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.parse.SignUpCallback;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.misc.InputException;
-import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
-import com.wazapps.familybox.profiles.ProfileDetails;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.BirthdayChooserCallback;
 import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
 import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
@@ -37,6 +39,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -64,13 +68,22 @@ QueryAnswerHandlerCallback {
 	private static final String GENDER_KEY = "gender";
 	private static final String CHILDREN_KEY = "children";
 	
-	private int familyQueryIndex = 0;
-	ArrayList<ParseObject> relatedFamilies = null;
-	ParseUser currentUser = null, currentFamilyMember = null;
-	FamilyMemberDetails2 currentFamilyMemberDetails = null;
-	ParseObject currentFamily = null;
-	ArrayList<ParseUser> relatedFamilyMembers = null;
-	ArrayList<FamilyMemberDetails2> relatedFamilyMemberDetails = null;
+	public int familyQueryIndex = 0;
+	public ArrayList<ParseObject> relatedFamilies = null;
+	public ParseUser currentUser = null, currentFamilyMember = null;
+	public FamilyMemberDetails2 currentFamilyMemberDetails = null;
+	public ParseObject currentFamily = null;
+	public ArrayList<ParseUser> relatedFamilyMembers = null;
+	public ArrayList<FamilyMemberDetails2> relatedFamilyMemberDetails = null;
+
+	private UserHandler userHandler = null;
+	
+	//pre-creating the callback functions used by parse to make code more readable
+	//all these callbacks are defined in the "setupCallbackFunctions" method
+	private SignUpCallback userCreationCallback = null;
+	private SaveCallback familyCreationCallback = null;
+	private FindCallback<ParseObject> familiesListFetchCallback = null;
+	private UserHandler.FamilyMembersFetchCallback familyMembersFetchCallback = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,13 +102,157 @@ QueryAnswerHandlerCallback {
 			else if (extras.containsKey(SplashActivity.SPLASH_ACTION))
 				overridePendingTransition(R.anim.enter, R.anim.exit);
 		}
+		
+		userHandler = new UserHandler();
+		setUpCallbackFunctions();
 
 		getSupportFragmentManager()
 		.beginTransaction()
 		.replace(R.id.fragment_container, new StartFragment(), TAG_LOGIN_SCR)
 		.commit();
 	}
+	
+	private void setUpCallbackFunctions() {
+		//handles the sign up process after registering the user on parse
+		userCreationCallback = new SignUpCallback() {
+			private LoginActivity loginActivity;
+			
+			@Override
+			public void done(ParseException e) {
+				//if sign up succeeded - fetch all families
+				//that might be related to user
+				if (e == null) {
+					String userNetwork = 
+							loginActivity.currentUser.getString("network");
+					String userFamilyName = 
+							loginActivity.currentUser.getString("lastName");
+					
+					FamilyHandler.fetchRelatedFamilies(userFamilyName, 
+							userNetwork, loginActivity.familiesListFetchCallback);
+				} 
+				
+				//if sign up failed
+				else {
+					loginActivity.handleUserCreationError(e, false);
+				}	
+			}
+			
+			private SignUpCallback init(LoginActivity loginActivity) {
+				this.loginActivity = loginActivity;
+				return this;
+			}
+		}.init(this);
+		
+		//handles the beginning of the families list query after
+		//fetching the related families list
+		familiesListFetchCallback = new FindCallback<ParseObject>() {
+			private LoginActivity loginActivity;
+			
+			@Override
+			public void done(List<ParseObject> fetchedFamilies, 
+					ParseException e) {
+				
+				//if fetching succeeded
+				if (e == null) {
+					loginActivity.relatedFamilies = 
+							new ArrayList<ParseObject>(fetchedFamilies);
+					
+					loginActivity.familyQueryIndex = 0;
+					loginActivity.handleFamilyQuery();
+				} 
+				
+				//if fetching failed
+				else {
+					loginActivity.handleUserCreationError(e, true);
+				}
+			}
+			
+			private FindCallback<ParseObject> init(
+					LoginActivity loginActivity) {
+				this.loginActivity = loginActivity;
+				return this;
+			}
+		}.init(this);
+		
+		//handles the launching process of the application
+		//after creating a new family for the new user
+		familyCreationCallback = new SaveCallback() {
+			private LoginActivity loginActivity;
+			
+			@Override
+			public void done(ParseException e) {
+				//if family creation for the new user was successful
+				//then user can enter the main application
+				if (e == null) {
+					loginActivity.enterApp();							
+				} 
+				
+				//if family creation failed
+				else {
+					loginActivity.handleUserCreationError(e, true);
+				}
+			}
+			
+			private SaveCallback init(LoginActivity loginActivity) {
+				this.loginActivity = loginActivity;
+				return this;
+			}
+		}.init(this);
+		
+		//opens the family members query fragment after fetching 
+		//the family members data
+		familyMembersFetchCallback = new UserHandler.FamilyMembersFetchCallback() {
+			private LoginActivity loginActivity;
+			
+			@Override
+			public void done(ParseException e) {
+				//if fetching was successful
+				if (e == null) {
+					loginActivity.launchFamilyQueryFragment();
+				} 
+				
+				else {
+					//if fetching failed
+					loginActivity.handleUserCreationError(e, true);
+				}
+			}
+			
+			private UserHandler.FamilyMembersFetchCallback init(
+					LoginActivity loginActivity) {
+				this.loginActivity = loginActivity;
+				return this;
+			}
+		}.init(this);
+	}
 
+	/**
+	 * Launches the family query fragment, with the fetched
+	 * families list
+	 */
+	protected void launchFamilyQueryFragment() {
+		//progress to the next family in the related families list
+		//in preparation for next iteration
+		familyQueryIndex++;
+		
+		//pass arguments and control to family query fragment
+		Bundle args = new Bundle();
+		args.putParcelable(FamilyQueryFragment.MEMBER_ITEM, 
+				new FamilyMemberDetails2(currentUser, ROLE_UNDEFINED));
+		args.putParcelableArray(FamilyQueryFragment.QUERY_FAMILIES_LIST,
+				relatedFamilyMemberDetails.toArray(new FamilyMemberDetails2
+						[relatedFamilyMemberDetails.size()]));
+		
+		FamilyQueryFragment familyQueryFrag = new FamilyQueryFragment();
+		familyQueryFrag.setArguments(args);
+		//TODO: fix backstack bug
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		ft.setCustomAnimations(R.anim.enter, R.anim.exit, 
+				R.anim.enter_reverse, R.anim.exit_reverse);
+		ft.replace(R.id.fragment_container, familyQueryFrag, 
+						TAG_FAMILYQUERY_FRAG).commit();
+	}
+	
 	/**
 	 * Launches the main activity, 
 	 * call this function when you want to pass to
@@ -156,7 +313,6 @@ QueryAnswerHandlerCallback {
 		BirthdaySignupDialogFragment dialog = new BirthdaySignupDialogFragment();
 		dialog.show(getSupportFragmentManager(), TAG_SIGNBIRTHDAY);
 	}
-
 
 	@Override
 	public void openGenderInputDialog() {
@@ -267,77 +423,40 @@ QueryAnswerHandlerCallback {
 			String passwordConfirm, byte[] profilePictureData, 
 			String profilePictureName) {	
 
-		try {
-			InputHandler.validateSignupInput(firstName, lastName, email, 
-					birthday, gender, password, passwordConfirm);
-
-			currentUser = UserHandler.createNewUser(firstName, lastName, email, 
-					gender, password, birthday, profilePictureData, 
-					profilePictureName);
-
-			relatedFamilies = FamilyHandler.getRelatedFamilies (
-					currentUser.getString("network"), 
-					currentUser.getString("lastName"));
-			
-			familyQueryIndex = 0;
-			handleFamilyQuery();
-		} 
-
-		catch (InputException e) {
-			Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
-			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-			toast.show();
-			return;
-		} 
-		
-		catch (ParseException e) {
-			//TODO: maybe handle parseExceptions in a better way
-			String errMsg = e.getMessage();		
+		//TODO: fix this stupid bug
+		String errMsg = "";
+		if (!InputHandler.validateSignupInput(firstName, lastName, email, 
+				birthday, gender, password, passwordConfirm, errMsg)) {	
 			Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 			toast.show();
 			return;
 		}
-	}
+
+		currentUser = userHandler.createNewUser(firstName, lastName, email, 
+				gender, password, birthday, profilePictureData, 
+				profilePictureName, userCreationCallback);
+	} 
 	
 	@Override
-	public void handleFamilyQuery() throws ParseException {
+	public void handleFamilyQuery() {
 		//if no related families were found for the user 
 		//create a new family for him/her
 		if (familyQueryIndex >= relatedFamilies.size()) {
-			FamilyHandler.createNewFamilyForUser(currentUser);
-			enterApp();
+			FamilyHandler.createNewFamilyForUser(currentUser, 
+					this, familyCreationCallback);
 			return;
 		}
 						
 		//else - check the current related family
+		//fetch its members and show to user
 		relatedFamilyMembers = new ArrayList<ParseUser>();
 		relatedFamilyMemberDetails = new ArrayList<FamilyMemberDetails2>();
 		currentFamily = relatedFamilies.get(familyQueryIndex);
-		UserHandler.fetchFamilyMembers(relatedFamilyMembers, 
-				relatedFamilyMemberDetails, currentFamily);
 		
-		//progress to the next family in the related families list
-		//in preparation for next iteration
-		familyQueryIndex++;
-		
-		//pass arguments and control to family query fragment
-		Bundle args = new Bundle();
-		args.putParcelable(FamilyQueryFragment.MEMBER_ITEM, 
-				new FamilyMemberDetails2(currentUser, ROLE_UNDEFINED));
-		
-		args.putParcelableArray(FamilyQueryFragment.QUERY_FAMILIES_LIST,
-				relatedFamilyMemberDetails.toArray(
-						new FamilyMemberDetails2
-						[relatedFamilyMemberDetails.size()]));
-		
-		FamilyQueryFragment familyQueryFrag = new FamilyQueryFragment();
-		familyQueryFrag.setArguments(args);
-		getSupportFragmentManager().beginTransaction()
-		.setCustomAnimations(R.anim.enter, R.anim.exit, 
-				R.anim.enter_reverse, R.anim.exit_reverse)
-				.replace(R.id.fragment_container, familyQueryFrag, 
-						TAG_FAMILYQUERY_FRAG).commit();
+		userHandler.fetchFamilyMembers(relatedFamilyMembers, 
+				relatedFamilyMemberDetails, currentFamily, 
+				familyMembersFetchCallback);
 	}
 	
 	@Override
@@ -451,5 +570,18 @@ QueryAnswerHandlerCallback {
 		currentUser.put("family", currentFamily);
 		currentUser.save();
 		enterApp();
+	}
+	
+	public void handleUserCreationError(ParseException e, boolean wasUserCreated) {
+		Toast toast = Toast.makeText(this, "Error in user creation, " +
+				"please sign up again", Toast.LENGTH_LONG);
+		LogUtils.logError("LoginActivity", e.getMessage());
+		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+		toast.show();
+		
+		if (wasUserCreated) {
+			ParseUser.logOut();
+			currentUser.deleteInBackground();			
+		}
 	}
 }
