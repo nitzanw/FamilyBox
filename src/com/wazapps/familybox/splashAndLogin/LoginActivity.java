@@ -17,6 +17,9 @@ import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.FamilyHandler;
+import com.wazapps.familybox.handlers.InputHandler;
+import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.misc.InputException;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.BirthdayChooserCallback;
@@ -26,10 +29,7 @@ import com.wazapps.familybox.splashAndLogin.FamilyQueryFragment.QueryHandlerCall
 import com.wazapps.familybox.splashAndLogin.GenderSignupDialogFragment.GenderChooserCallback;
 import com.wazapps.familybox.splashAndLogin.MemberQueryFragment.QueryAnswerHandlerCallback;
 import com.wazapps.familybox.splashAndLogin.StartFragment.StartScreenCallback;
-import com.wazapps.familybox.util.FamilyHandler;
-import com.wazapps.familybox.util.InputHandler;
 import com.wazapps.familybox.util.LogUtils;
-import com.wazapps.familybox.util.UserHandler;
 
 import android.content.Intent;
 import android.database.Cursor;

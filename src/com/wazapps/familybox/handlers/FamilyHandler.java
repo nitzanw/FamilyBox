@@ -1,4 +1,4 @@
-package com.wazapps.familybox.util;
+package com.wazapps.familybox.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.wazapps.familybox.util.LogUtils;
 
 public class FamilyHandler {
 	public static void fetchRelatedFamilies(String familyName, String networkId, 
