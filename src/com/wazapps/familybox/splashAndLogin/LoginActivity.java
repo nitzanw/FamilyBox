@@ -25,7 +25,7 @@ import com.wazapps.familybox.splashAndLogin.GenderSignupDialogFragment.GenderCho
 import com.wazapps.familybox.splashAndLogin.MemberQueryFragment.QueryAnswerHandlerCallback;
 import com.wazapps.familybox.splashAndLogin.StartFragment.StartScreenCallback;
 import com.wazapps.familybox.util.FamilyHandler;
-import com.wazapps.familybox.util.InputValidator;
+import com.wazapps.familybox.util.InputHandler;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.UserHandler;
 
@@ -54,17 +54,15 @@ QueryAnswerHandlerCallback {
 	private static final int SELECT_PICTURE = 0;
 	
 	private static final String GENDER_MALE = "male";
-	private static final String GENDER_FEMALE = "female";
-	private static final String ROLE_PARENT = "parent";
-	private static final String ROLE_CHILD = "child";
+	private static final String ROLE_UNDEFINED = "undefined";
 	private static final String RELATION_FATHER = "father";
 	private static final String RELATION_MOTHER = "mother";
-	private static final String RELATION_BROTHER = "brother";
-	private static final String RELATION_SISTER = "sister";
 	private static final String RELATION_HUSBAND = "husband";
 	private static final String RELATION_WIFE = "wife";
 	private static final String RELATION_SON = "son";
 	private static final String RELATION_DAUGHTER = "daughter";
+	private static final String GENDER_KEY = "gender";
+	private static final String CHILDREN_KEY = "children";
 	
 	private int familyQueryIndex = 0;
 	ArrayList<ParseObject> relatedFamilies = null;
@@ -244,7 +242,7 @@ QueryAnswerHandlerCallback {
 	@Override
 	public void emailLoginAction(String email, String password) {
 		try {
-			InputValidator.validateLoginInput(email, password);
+			InputHandler.validateLoginInput(email, password);
 			ParseUser.logIn("fb_" + email, password);
 			enterApp();
 			//TODO: validate that user has passed family query
@@ -270,7 +268,7 @@ QueryAnswerHandlerCallback {
 			String profilePictureName) {	
 
 		try {
-			InputValidator.validateSignupInput(firstName, lastName, email, 
+			InputHandler.validateSignupInput(firstName, lastName, email, 
 					birthday, gender, password, passwordConfirm);
 
 			currentUser = UserHandler.createNewUser(firstName, lastName, email, 
@@ -326,7 +324,7 @@ QueryAnswerHandlerCallback {
 		//pass arguments and control to family query fragment
 		Bundle args = new Bundle();
 		args.putParcelable(FamilyQueryFragment.MEMBER_ITEM, 
-				new FamilyMemberDetails2(currentUser, "undefined"));
+				new FamilyMemberDetails2(currentUser, ROLE_UNDEFINED));
 		
 		args.putParcelableArray(FamilyQueryFragment.QUERY_FAMILIES_LIST,
 				relatedFamilyMemberDetails.toArray(
@@ -347,13 +345,15 @@ QueryAnswerHandlerCallback {
 		currentFamilyMember = relatedFamilyMembers.get(0);
 		currentFamily.fetchIfNeeded();
 		currentFamilyMemberDetails = relatedFamilyMemberDetails.get(0);
-		boolean isFatherTaken = currentFamily.has("father");
-		boolean isMotherTaken = currentFamily.has("mother");
-		boolean isMemberMale = currentFamilyMember.getString("gender")
-				.equals("male")? true : false;
+		boolean isFatherTaken = currentFamily.has(RELATION_FATHER);
+		boolean isMotherTaken = currentFamily.has(RELATION_MOTHER);
+		boolean isMemberMale = currentFamilyMember.getString(GENDER_KEY)
+				.equals(GENDER_MALE)? true : false;
 		
-		ArrayList<String> relationOptions = 
-				generateRelationOptions(isFatherTaken, isMotherTaken);
+		ArrayList<String> relationOptions = InputHandler
+				.generateRelationOptions(currentUser, 
+						currentFamilyMemberDetails, 
+						isFatherTaken, isMotherTaken);
 		
 		//if only one relation option exists then the answer is already known 
 		if (relationOptions.size() == 1) {
@@ -367,7 +367,8 @@ QueryAnswerHandlerCallback {
 		args.putStringArrayList(
 				MemberQueryFragment.FAMILY_MEMBER_RELATION_OPTIONS, 
 				relationOptions);
-		args.putBoolean(MemberQueryFragment.FAMILY_MEMBER_GENDER, isMemberMale);
+		args.putBoolean(MemberQueryFragment.FAMILY_MEMBER_GENDER, 
+				isMemberMale);
 		
 		MemberQueryFragment memberQueryFrag = new MemberQueryFragment();
 		memberQueryFrag.setArguments(args);
@@ -380,60 +381,69 @@ QueryAnswerHandlerCallback {
 	
 	@Override
 	public void handleMemberQueryAnswer(String relation) throws ParseException {
-		String userGender = currentUser.getString("gender");
+		String userGender = currentUser.getString(GENDER_KEY);
 		String familyMemberGender = currentFamilyMemberDetails.getGender();
 		String familyMemberRole = currentFamilyMemberDetails.getRole();
+		boolean isMemberUndefined = familyMemberRole
+				.equals(ROLE_UNDEFINED)? true : false;
+		boolean isUserMale = userGender
+				.equals(GENDER_MALE)? true : false;
+		boolean isMemberMale = familyMemberGender
+				.equals(GENDER_MALE)? true : false;
 		
-		if (relation.equals("father") || relation.equals("mother")) {
+		if (relation.equals(RELATION_FATHER) 
+				|| relation.equals(RELATION_MOTHER)) {
 			ParseRelation<ParseUser> children = 
-					currentFamily.getRelation("children");
+					currentFamily.getRelation(CHILDREN_KEY);
 			children.add(currentUser);
-			if (familyMemberRole.equals("undefined")) {
+			if (isMemberUndefined) {
 				currentFamily.put(relation, currentFamilyMember);
-				currentFamily.remove("undefinedFamilyMember");
+				currentFamily.remove(ROLE_UNDEFINED);
 			}
 		} 
 		
-		else if (relation.equals("husband") || relation.equals("wife")) {
-			if (userGender.equals(GENDER_MALE)) {
-				currentFamily.put("father", currentUser);
+		else if (relation.equals(RELATION_HUSBAND) 
+				|| relation.equals(RELATION_WIFE)) {
+			if (isUserMale) {
+				currentFamily.put(RELATION_FATHER, currentUser);
 			} else {
-				currentFamily.put("mother", currentUser);
+				currentFamily.put(RELATION_MOTHER, currentUser);
 			}
 			
-			if (familyMemberRole.equals("undefined")) {
-				if (familyMemberGender.equals(GENDER_MALE)) {
-					currentFamily.put("father", currentFamilyMember);					
+			if (isMemberUndefined) {
+				if (isMemberMale) {
+					currentFamily.put(RELATION_FATHER, currentFamilyMember);					
 				} else {
-					currentFamily.put("mother", currentFamilyMember);
+					currentFamily.put(RELATION_MOTHER, currentFamilyMember);
 				}
-				currentFamily.remove("undefinedFamilyMember");
+				currentFamily.remove(ROLE_UNDEFINED);
 			}
 		}
 		
-		else if (relation.equals("son") || relation.equals("daughter")) {
-			if (userGender.equals(GENDER_MALE)) {
-				currentFamily.put("father", currentUser);
+		else if (relation.equals(RELATION_SON) 
+				|| relation.equals(RELATION_DAUGHTER)) {
+			if (isUserMale) {
+				currentFamily.put(RELATION_FATHER, currentUser);
 			} else {
-				currentFamily.put("mother", currentUser);
+				currentFamily.put(RELATION_MOTHER, currentUser);
 			}
 			
-			if (familyMemberRole.equals("undefined")) {
+			if (isMemberUndefined) {
 				ParseRelation<ParseUser> children = 
-						currentFamily.getRelation("children");
+						currentFamily.getRelation(CHILDREN_KEY);
 				children.add(currentFamilyMember);
-				currentFamily.remove("undefinedFamilyMember");
+				currentFamily.remove(ROLE_UNDEFINED);
 			}
 		}
 		
 		//if the user and family member are brothers\sisters:
 		else {
 			ParseRelation<ParseUser> children = 
-					currentFamily.getRelation("children");
+					currentFamily.getRelation(CHILDREN_KEY);
 			children.add(currentUser);
-			if (familyMemberRole.equals("undefined")) {
+			if (isMemberUndefined) {
 				children.add(currentFamilyMember);
-				currentFamily.remove("undefinedFamilyMember");
+				currentFamily.remove(ROLE_UNDEFINED);
 			}
 		}
 		
@@ -441,131 +451,5 @@ QueryAnswerHandlerCallback {
 		currentUser.put("family", currentFamily);
 		currentUser.save();
 		enterApp();
-	}
-	
-	public ArrayList<String> generateRelationOptions(
-			boolean isFatherTaken, boolean isMotherTaken) {
-		String userGender = currentUser.getString("gender");
-		String familyMemberGender = currentFamilyMemberDetails.getGender();
-		String familyMemberRole = currentFamilyMemberDetails.getRole();
-		ArrayList<String> options = new ArrayList<String>();
-		
-		//if user is male
-		if (userGender.equals(GENDER_MALE)) {
-			//if family member is male
-			if (familyMemberGender.equals(GENDER_MALE)) {
-				if (familyMemberRole.equals(ROLE_PARENT)) {
-					options.add(RELATION_FATHER);
-				} 
-				
-				else if (familyMemberRole.equals(ROLE_CHILD)) {
-					options.add(RELATION_BROTHER);
-					if (!isFatherTaken) {						
-						options.add(RELATION_SON);
-					}
-				} 
-				
-				//if family member role is undefined
-				else {
-					options.add(RELATION_BROTHER);
-					if (!isFatherTaken) {
-						options.add(RELATION_SON);
-						options.add(RELATION_FATHER);						
-					}
-				}
-			}
-			
-			//if family member is female
-			else if (familyMemberGender.equals(GENDER_FEMALE)) {	
-				if (familyMemberRole.equals(ROLE_PARENT)) {
-					options.add(RELATION_MOTHER);
-					if (!isFatherTaken) {
-						options.add(RELATION_WIFE);						
-					}
-				} 
-				
-				else if (familyMemberRole.equals(ROLE_CHILD)) {
-					options.add(RELATION_SISTER);
-					if (!isFatherTaken) {
-						options.add(RELATION_DAUGHTER);
-					}
-				}
-				
-				//if family member role is undefined
-				else {
-					options.add(RELATION_SISTER);
-					if (!isFatherTaken) {
-						options.add(RELATION_DAUGHTER);
-						if (!isMotherTaken) {
-							options.add(RELATION_WIFE);							
-						}
-					}
-					
-					if (!isMotherTaken) {
-						options.add(RELATION_MOTHER);
-					}
-				}
-			}
-		}
-		
-		//if user is female
-		else if (userGender.equals(GENDER_FEMALE)) {
-			//if family member is male
-			if (familyMemberGender.equals(GENDER_MALE)) {
-				if (familyMemberRole.equals(ROLE_PARENT)) {
-					options.add(RELATION_FATHER);
-					if (!isMotherTaken) {
-						options.add(RELATION_HUSBAND);
-					}
-				}
-				
-				else if (familyMemberRole.equals(ROLE_CHILD)) {
-					options.add(RELATION_BROTHER);
-					if (!isMotherTaken) {
-						options.add(RELATION_SON);
-					}
-				}
-				
-				//if family member role is undefined
-				else {
-					options.add(RELATION_BROTHER);
-					if (!isFatherTaken) {
-						options.add(RELATION_FATHER);
-						if (!isMotherTaken) {
-							options.add(RELATION_HUSBAND);
-						}
-					}
-					
-					if (!isMotherTaken) {
-						options.add(RELATION_SON);
-					}
-				}
-			}
-			
-			//if family member is also a female
-			else if (familyMemberGender.equals(GENDER_FEMALE)) {
-				if (familyMemberRole.equals(ROLE_PARENT)) {
-					options.add(RELATION_MOTHER);
-				}
-				
-				else if (familyMemberRole.equals(ROLE_CHILD)) {
-					options.add(RELATION_SISTER);
-					if (!isMotherTaken) {
-						options.add(RELATION_DAUGHTER);
-					}
-				}
-				
-				//if family member role is undefined
-				else {
-					options.add(RELATION_SISTER);
-					if (!isMotherTaken) {
-						options.add(RELATION_MOTHER);
-						options.add(RELATION_DAUGHTER);
-					}
-				}
-			}			
-		}
-		
-		return options;
 	}
 }

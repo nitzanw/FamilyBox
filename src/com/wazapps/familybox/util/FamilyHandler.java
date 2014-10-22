@@ -34,7 +34,7 @@ public class FamilyHandler {
 		ParseObject newFamily = new ParseObject("Family");
 		newFamily.put("name", familyName);
 		newFamily.put("network", user.getString("network"));
-		newFamily.put("undefinedFamilyMember", user);
+		newFamily.put("undefined", user);
 		user.put("family", newFamily);
 		user.put("passFamilyQuery", true);
 		user.save();

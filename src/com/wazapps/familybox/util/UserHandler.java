@@ -52,8 +52,8 @@ public class UserHandler {
 			ArrayList<FamilyMemberDetails2> familyMembersDetails, 
 			ParseObject family) throws ParseException {
 		family.fetchIfNeeded();
-		if (family.has("undefinedFamilyMember")) {
-			ParseUser undef = family.getParseUser("undefinedFamilyMember");
+		if (family.has("undefined")) {
+			ParseUser undef = family.getParseUser("undefined");
 			undef.fetchIfNeeded();
 			FamilyMemberDetails2 memberDetails = 
 					new FamilyMemberDetails2(undef, "undefined");
@@ -95,32 +95,5 @@ public class UserHandler {
 			}
 		}
 		
-	}
-	
-	public static ArrayList<ParseUser> getFamilyMembers(ParseObject family) 
-			throws ParseException {
-		ArrayList<ParseUser> familyMembers = new ArrayList<ParseUser>();
-		family.fetchIfNeeded();
-		if (family.has("undefinedFamilyMember")) {
-			familyMembers.add(family.getParseUser("undefinedFamilyMember"));
-		}
-		
-		if (family.has("father")) {
-			familyMembers.add(family.getParseUser("father"));
-		}
-		
-		if (family.has("mother")) {
-			familyMembers.add(family.getParseUser("mother"));
-		}
-		
-		if (family.has("children")) {
-			ParseRelation<ParseUser> children = family.getRelation("children");
-			List<ParseUser> childrenList = children.getQuery().find();
-			for (ParseUser child : childrenList) {
-				familyMembers.add(child);
-			}
-		}
-		
-		return familyMembers;
 	}
 }
