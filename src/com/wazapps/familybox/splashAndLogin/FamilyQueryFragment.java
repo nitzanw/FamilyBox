@@ -8,9 +8,11 @@ import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
+import com.wazapps.familybox.util.WaveDrawable;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -27,8 +29,10 @@ import android.view.animation.AnticipateInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,20 +87,27 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 		
 		yesButton.setOnClickListener(this);
 		noButton.setOnClickListener(this);
+		initAnimations();
 		
 		return root;
 	}
 	
-	//TODO: either fix or delete
 	private void initAnimations() {
-		Animation profileJump = AnimationUtils
-				.loadAnimation(getActivity(), R.anim.pulse_strong);
-		profileJump.setStartOffset(1);
-		profileJump.setRepeatCount(1);
-		profileJump.setInterpolator(new AccelerateDecelerateInterpolator());
-		RoundedImageView profilePic = (RoundedImageView) root
-				.findViewById(R.id.riv_query_profile_picture);
-		profilePic.startAnimation(profileJump);
+		Animation pulse = AnimationUtils.loadAnimation(getActivity(), 
+				R.anim.pulse_slow);
+		pulse.setInterpolator(new AccelerateInterpolator(4));		
+		ImageView animationBackground = 
+				(ImageView) root.findViewById(R.id.iv_family_query_profile_effect);
+		
+		WaveDrawable waveDrawable = new WaveDrawable(
+				Color.parseColor("#F5D0A9"), 400, 3000);
+		animationBackground.setBackgroundDrawable(waveDrawable);
+		Interpolator interpolator = 
+				new AccelerateDecelerateInterpolator();
+		
+		mProfilePic.startAnimation(pulse);
+		waveDrawable.setWaveInterpolator(interpolator);
+		waveDrawable.startAnimation();
 	}
 	
 	@Override
