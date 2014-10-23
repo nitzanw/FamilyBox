@@ -1,9 +1,11 @@
 package com.wazapps.familybox.splashAndLogin;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +39,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -314,48 +317,27 @@ QueryAnswerHandlerCallback {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_PICTURE) {
-				FileInputStream fileInputStream = null;
 				File file = null;
 				String filename;
 				byte[] fileData;
 				Uri currImageURI = data.getData();
 				file = new File(getRealPathFromURI(currImageURI));
+				filename = file.getName();
 
 				if (file.exists()) {
-					try {
-						filename = file.getName();
-						fileData = new byte[(int)file.length()];
-						fileInputStream = new FileInputStream(file);
-						fileInputStream.read(fileData);
-						fileInputStream.close();
-					} 
-
-					catch (FileNotFoundException e) {
-						LogUtils.logError("LoginActivity.class", e.getMessage());
-						return;
-
-					} catch (IOException e) {
-						LogUtils.logError("LoginActivity.class", e.getMessage());
-						return;
-
-					} finally {
-						try {
-							if (fileInputStream != null)
-								fileInputStream.close();
-						} catch (IOException e) {
-							LogUtils.logError("LoginActivity", 
-									e.getMessage());
-							return;
-						}
-					}
-
 					EmailSignupFragment frag = (EmailSignupFragment) 
 							getSupportFragmentManager()
 							.findFragmentByTag(TAG_SGINUP_FRAG);
+					Options options = new Options();
+					options.inSampleSize = 4; //downsample factor
 					Bitmap myBitmap = BitmapFactory.decodeFile(
-							file.getAbsolutePath());
-					frag.setProfileImage(myBitmap, fileData, filename);
-				}
+							file.getAbsolutePath(), options);
+					ByteArrayOutputStream stream = new ByteArrayOutputStream();
+					myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+					fileData = stream.toByteArray();
+					filename = "profilePic.JPEG";
+					frag.setProfileImage(myBitmap, fileData, filename);					
+				}	
 			}
 		}
 	}

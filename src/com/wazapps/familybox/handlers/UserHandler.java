@@ -142,7 +142,7 @@ public class UserHandler {
 		//upload profile picture to server and link it to user
 		if (!(profilePictureName.equals("")) && (profilePictureData != null)) {
 			ParseFile profilePic = new ParseFile(profilePictureName, 
-					profilePictureData);		
+					profilePictureData);
 			profilePic.saveInBackground(new SaveCallback() {
 				private ParseUser user;
 				private SignUpCallback callbackFunc;
