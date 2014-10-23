@@ -10,6 +10,7 @@ import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	private View root;
 	private QueryHandlerCallback queryHandlerCallback;
+	private RoundedImageView mProfilePic;
 	private FamilyMemberDetails2 mCurrentUser;
 	private FamilyMemberDetails2[] mFamilyList;
 	private TextView mFragTitle, mFragMsg, mFragMembers;
@@ -46,8 +48,8 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	public static final String MEMBER_ITEM = "member item";
 	
 	public interface QueryHandlerCallback {
-		public void handleFamilyQuery() throws ParseException;
-		public void handleMemberQuery() throws ParseException;
+		public void handleFamilyQuery();
+		public void handleMemberQuery();
 	}
 	
 	
@@ -74,6 +76,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 				root.findViewById(R.id.ll_family_query_members_list_holder);
 		mFragTitle = (TextView) root.findViewById(R.id.tv_family_query_title);
 		mFragMsg = (TextView) root.findViewById(R.id.tv_family_query_family_name);
+		mProfilePic = (RoundedImageView) root.findViewById(R.id.riv_query_profile_picture);
 		mFragMembers = (TextView) root.findViewById(R.id.tv_family_query_members);
 		yesButton = (Button) root.findViewById(R.id.button_family_query_yes);
 		noButton = (Button) root.findViewById(R.id.button_family_query_no);
@@ -113,6 +116,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 		super.onResume();
 		String firstName = mCurrentUser.getName();
 		String lastName = mCurrentUser.getLastName();
+		Bitmap profilePic = mCurrentUser.getprofilePhoto();
 		firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
 		lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
 		mFragTitle.setText("Hi " + firstName + "!");
@@ -121,6 +125,12 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 			mFragMembers.setText("Is this your family member?");
 		}
 		
+		if (profilePic != null) {
+			mProfilePic.setImageBitmap(profilePic);
+			mProfilePic.setBackgroundColor(getResources().getColor(
+					android.R.color.transparent));			
+		}
+	
 		initFamilyMembersListView();		
 	}
 	
@@ -138,26 +148,11 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.button_family_query_yes:
-			try {
-				queryHandlerCallback.handleMemberQuery();
-			} catch (ParseException e1) {
-				//TODO: handle exception in a proper way
-				Toast.makeText(getActivity(), "error in parse", 
-						Toast.LENGTH_SHORT).show();
-			}
+			queryHandlerCallback.handleMemberQuery();
 			break;
 			
 		case R.id.button_family_query_no:
-			try {
-				queryHandlerCallback.handleFamilyQuery();
-			} 
-			
-			catch (ParseException e) {
-				//TODO: handle exception in a proper way
-				Toast.makeText(getActivity(), "error in parse", 
-						Toast.LENGTH_SHORT).show();
-			}
-			
+			queryHandlerCallback.handleFamilyQuery();
 			break;
 
 		default:

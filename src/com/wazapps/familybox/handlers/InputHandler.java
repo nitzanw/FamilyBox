@@ -13,19 +13,6 @@ public class InputHandler {
 			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	
-	private static final String GENDER_MALE = "male";
-	private static final String ROLE_PARENT = "parent";
-	private static final String ROLE_CHILD = "child";
-	
-	private static final String RELATION_FATHER = "father";
-	private static final String RELATION_MOTHER = "mother";
-	private static final String RELATION_BROTHER = "brother";
-	private static final String RELATION_SISTER = "sister";
-	private static final String RELATION_HUSBAND = "husband";
-	private static final String RELATION_WIFE = "wife";
-	private static final String RELATION_SON = "son";
-	private static final String RELATION_DAUGHTER = "daughter";
-	
 	private static boolean validateEmailAddress(String email) {
 		Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 		Matcher matcher = pattern.matcher(email);
@@ -73,66 +60,68 @@ public class InputHandler {
 			ParseUser currentUser, 
 			FamilyMemberDetails2 currentFamilyMemberDetails,
 			boolean isFatherTaken, boolean isMotherTaken) {
-		String userGender = currentUser.getString("gender");
+		String userGender = currentUser.getString(UserHandler.GENDER_KEY);
 		String familyMemberGender = currentFamilyMemberDetails.getGender();
 		String familyMemberRole = currentFamilyMemberDetails.getRole();
-		boolean isUserMale = (userGender.equals(GENDER_MALE))? true : false,
-				isMemberMale = (familyMemberGender.equals(GENDER_MALE))? true : false;
+		boolean isUserMale = 
+				(userGender.equals(UserHandler.GENDER_MALE))? true : false;
+		boolean	isMemberMale = 
+				(familyMemberGender.equals(UserHandler.GENDER_MALE))? true : false;
 		ArrayList<String> options = new ArrayList<String>();
 		
 		//if user is male
 		if (isUserMale) {
 			//if family member is male
 			if (isMemberMale) {
-				if (familyMemberRole.equals(ROLE_PARENT)) {
-					options.add(RELATION_FATHER);
+				if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_PARENT)) {
+					options.add(FamilyHandler.RELATION_FATHER);
 				} 
 				
-				else if (familyMemberRole.equals(ROLE_CHILD)) {
-					options.add(RELATION_BROTHER);
+				else if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_CHILD)) {
+					options.add(FamilyHandler.RELATION_BROTHER);
 					if (!isFatherTaken) {						
-						options.add(RELATION_SON);
+						options.add(FamilyHandler.RELATION_SON);
 					}
 				} 
 				
 				//if family member role is undefined
 				else {
-					options.add(RELATION_BROTHER);
+					options.add(FamilyHandler.RELATION_BROTHER);
 					if (!isFatherTaken) {
-						options.add(RELATION_SON);
-						options.add(RELATION_FATHER);						
+						options.add(FamilyHandler.RELATION_SON);
+						options.add(FamilyHandler.RELATION_FATHER);						
 					}
 				}
 			}
 			
 			//if family member is female
 			else if (!isMemberMale) {	
-				if (familyMemberRole.equals(ROLE_PARENT)) {
-					options.add(RELATION_MOTHER);
+				if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_PARENT)) {
+					options.add(FamilyHandler.RELATION_MOTHER);
 					if (!isFatherTaken) {
-						options.add(RELATION_WIFE);						
+						options.add(FamilyHandler.RELATION_WIFE);						
 					}
 				} 
 				
-				else if (familyMemberRole.equals(ROLE_CHILD)) {
-					options.add(RELATION_SISTER);
+				else if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_CHILD)) {
+					options.add(FamilyHandler.RELATION_SISTER);
 					if (!isFatherTaken) {
-						options.add(RELATION_DAUGHTER);
+						options.add(FamilyHandler.RELATION_DAUGHTER);
 					}
 				}
 				
 				//if family member role is undefined
 				else {
-					options.add(RELATION_SISTER);
+					options.add(FamilyHandler.RELATION_SISTER);
 					if (!isFatherTaken) {
-						options.add(RELATION_DAUGHTER);
+						options.add(FamilyHandler.RELATION_DAUGHTER);
 						if (!isMotherTaken) {
-							options.add(RELATION_WIFE);							
+							options.add(FamilyHandler.RELATION_WIFE);							
 						}
 					}
 					
 					if (!isMotherTaken) {
-						options.add(RELATION_MOTHER);
+						options.add(FamilyHandler.RELATION_MOTHER);
 					}
 				}
 			}
@@ -142,55 +131,55 @@ public class InputHandler {
 		else if (!isUserMale) {
 			//if family member is male
 			if (isMemberMale) {
-				if (familyMemberRole.equals(ROLE_PARENT)) {
-					options.add(RELATION_FATHER);
+				if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_PARENT)) {
+					options.add(FamilyHandler.RELATION_FATHER);
 					if (!isMotherTaken) {
-						options.add(RELATION_HUSBAND);
+						options.add(FamilyHandler.RELATION_HUSBAND);
 					}
 				}
 				
-				else if (familyMemberRole.equals(ROLE_CHILD)) {
-					options.add(RELATION_BROTHER);
+				else if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_CHILD)) {
+					options.add(FamilyHandler.RELATION_BROTHER);
 					if (!isMotherTaken) {
-						options.add(RELATION_SON);
+						options.add(FamilyHandler.RELATION_SON);
 					}
 				}
 				
 				//if family member role is undefined
 				else {
-					options.add(RELATION_BROTHER);
+					options.add(FamilyHandler.RELATION_BROTHER);
 					if (!isFatherTaken) {
-						options.add(RELATION_FATHER);
+						options.add(FamilyHandler.RELATION_FATHER);
 						if (!isMotherTaken) {
-							options.add(RELATION_HUSBAND);
+							options.add(FamilyHandler.RELATION_HUSBAND);
 						}
 					}
 					
 					if (!isMotherTaken) {
-						options.add(RELATION_SON);
+						options.add(FamilyHandler.RELATION_SON);
 					}
 				}
 			}
 			
 			//if family member is also a female
 			else if (!isMemberMale) {
-				if (familyMemberRole.equals(ROLE_PARENT)) {
-					options.add(RELATION_MOTHER);
+				if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_PARENT)) {
+					options.add(FamilyHandler.RELATION_MOTHER);
 				}
 				
-				else if (familyMemberRole.equals(ROLE_CHILD)) {
-					options.add(RELATION_SISTER);
+				else if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_CHILD)) {
+					options.add(FamilyHandler.RELATION_SISTER);
 					if (!isMotherTaken) {
-						options.add(RELATION_DAUGHTER);
+						options.add(FamilyHandler.RELATION_DAUGHTER);
 					}
 				}
 				
 				//if family member role is undefined
 				else {
-					options.add(RELATION_SISTER);
+					options.add(FamilyHandler.RELATION_SISTER);
 					if (!isMotherTaken) {
-						options.add(RELATION_MOTHER);
-						options.add(RELATION_DAUGHTER);
+						options.add(FamilyHandler.RELATION_MOTHER);
+						options.add(FamilyHandler.RELATION_DAUGHTER);
 					}
 				}
 			}			

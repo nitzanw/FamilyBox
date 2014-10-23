@@ -385,7 +385,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int riv_member_query_profile_picture=0x7f0a006d;
         public static final int riv_profile_family_member=0x7f0a0023;
         public static final int riv_profile_image=0x7f0a0078;
-        public static final int riv_query_profile_family_member=0x7f0a002c;
+        public static final int riv_query_profile_family_member_picture=0x7f0a002c;
         public static final int riv_query_profile_picture=0x7f0a005f;
         public static final int riv_signup_upload_image=0x7f0a00a8;
         public static final int rl_edit_profile_family_member=0x7f0a001b;

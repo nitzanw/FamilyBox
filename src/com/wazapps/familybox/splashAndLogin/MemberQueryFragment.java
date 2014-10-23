@@ -11,6 +11,7 @@ import com.wazapps.familybox.util.RoundedImageView;
 
 import com.wazapps.familybox.R;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -44,7 +45,7 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 	public static final String FAMILY_MEMBER_GENDER = "family member gender";
 	
 	public interface QueryAnswerHandlerCallback {
-		public void handleMemberQueryAnswer(String currOption) throws ParseException;
+		public void handleMemberQueryAnswer(String currOption);
 	}
 	
 	@Override
@@ -100,6 +101,12 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 		if (!mIsMemberMale) {
 			mFamilyMemberQuestion.setText("What is your family relation with her?");
 		}
+		Bitmap profilePic = mFamilyMember.getprofilePhoto();
+		if (profilePic != null) {
+			mMemberProfilePic.setImageBitmap(mFamilyMember.getprofilePhoto());
+			mMemberProfilePic.setBackgroundColor(getResources().getColor(
+					android.R.color.transparent));
+		}
 		super.onResume();
 	}
 
@@ -108,13 +115,7 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.button_member_query_accept:
 			String currOption = mRelationPicker.getSelectedItem().toString();
-			try {
-				mQueryAnswerHandler.handleMemberQueryAnswer(currOption);
-			} catch (ParseException e) {
-				//TODO: handle exception in a proper way
-				Toast.makeText(getActivity(), "error in parse", 
-						Toast.LENGTH_SHORT).show();
-			}
+			mQueryAnswerHandler.handleMemberQueryAnswer(currOption);
 			break;
 
 		default:
