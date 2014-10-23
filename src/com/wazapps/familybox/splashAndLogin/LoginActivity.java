@@ -22,6 +22,7 @@ import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.InputHandler;
+import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.misc.InputException;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
@@ -232,24 +233,6 @@ QueryAnswerHandlerCallback {
 		this.finish();
 	}
 
-	/**
-	 * Used to decode real path from uri. used by the photo chooser.
-	 */
-	private String getRealPathFromURI(Uri contentURI) {
-		final String[] imageColumns = { MediaStore.Images.Media._ID,
-				MediaStore.Images.Media.DATA };
-		Cursor cursor = getContentResolver().query(contentURI, imageColumns,
-				null, null, null);
-		if (cursor == null) { 
-			return contentURI.getPath();
-		} else {
-			cursor.moveToFirst();
-			int idx = cursor
-					.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-			return cursor.getString(idx);
-		}
-	}
-
 	@Override
 	public void openEmailLogin() {
 		EmailLoginDialogueFragment frag = new EmailLoginDialogueFragment();
@@ -317,25 +300,17 @@ QueryAnswerHandlerCallback {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_PICTURE) {
-				File file = null;
-				String filename;
-				byte[] fileData;
 				Uri currImageURI = data.getData();
-				file = new File(getRealPathFromURI(currImageURI));
-				filename = file.getName();
+				File file = new File(PhotoHandler.getRealPathFromURI(
+						this, currImageURI));
 
 				if (file.exists()) {
 					EmailSignupFragment frag = (EmailSignupFragment) 
 							getSupportFragmentManager()
 							.findFragmentByTag(TAG_SGINUP_FRAG);
-					Options options = new Options();
-					options.inSampleSize = 4; //downsample factor
-					Bitmap myBitmap = BitmapFactory.decodeFile(
-							file.getAbsolutePath(), options);
-					ByteArrayOutputStream stream = new ByteArrayOutputStream();
-					myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-					fileData = stream.toByteArray();
-					filename = "profilePic.JPEG";
+					Bitmap myBitmap = PhotoHandler.getImageBitmapFromFile(file);
+					byte[] fileData = PhotoHandler.createDownsampledPictureData(myBitmap);
+					String filename = "profilePic.JPEG";
 					frag.setProfileImage(myBitmap, fileData, filename);					
 				}	
 			}
