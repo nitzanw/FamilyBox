@@ -130,7 +130,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 		mImageFrame = (RelativeLayout) root.findViewById(R.id.rl_image_frame);
 		mImageEditCaption = (EditText) root
 				.findViewById(R.id.et_image_caption_edit);
-		mImageEditCaption.setHint(photoList[currentPosition].getCaption());
+		mImageEditCaption.setText(photoList[currentPosition].getCaption());
 		mImageCaption = (TextView) root.findViewById(R.id.tv_image_caption);
 		mImageCaption.setText(photoList[currentPosition].getCaption());
 		return root;
@@ -176,6 +176,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			mAcceptEdit.setVisibility(View.VISIBLE);
 			mImageEditCaption.setVisibility(View.VISIBLE);
 			mImageCaption.setVisibility(View.INVISIBLE);
+
 		} else if (R.id.iv_accept_caption_edit == v.getId()) {
 			String text = mImageEditCaption.getText().toString();
 			if (!TextUtils.isEmpty(text)) {
