@@ -124,4 +124,10 @@
     <string name="type">type</string>
     <string name="search_family">Search family\.\.\.</string>
 
+    <string-array name="action_list">
+        <item>Log out</item>
+        <item>Change password</item>
+        <item>About</item>
+    </string-array>
+
 </resources>
