@@ -8,6 +8,7 @@ import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.util.RoundedImageView;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,8 +94,16 @@ public class FamilyQueryMemberListAdapter extends BaseAdapter {
 		FamilyMemberDetails2 member = this.familyMembersList[position];
 		TextView name = (TextView) v
 				.findViewById(R.id.tv_query_family_member_name);
+		RoundedImageView picture = (RoundedImageView) v
+				.findViewById(R.id.riv_query_profile_family_member_picture);
 		String memberName = member.getName() + " " + member.getLastName();
+		Bitmap profilePicture = member.getprofilePhoto();
 		name.setText(memberName);
+		if (profilePicture != null) {
+			picture.setImageBitmap(profilePicture);
+			picture.setBackgroundColor(v.getResources().getColor(
+					android.R.color.transparent));			
+		}
 	}
 
 }

@@ -121,6 +121,8 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 		root.findViewById(R.id.ib_left_arrow).setOnClickListener(this);
 		root.findViewById(R.id.iv_favorite_icon).setOnClickListener(this);
 		root.findViewById(R.id.iv_share_icon).setOnClickListener(this);
+		root.findViewById(R.id.iv_back_icon).setOnClickListener(this);
+
 		mEditButton = (ImageView) root.findViewById(R.id.iv_image_edit_caption);
 		mEditButton.setOnClickListener(this);
 		mAcceptEdit = (ImageView) root
@@ -188,6 +190,8 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			mAcceptEdit.setVisibility(View.INVISIBLE);
 			mImageEditCaption.setVisibility(View.INVISIBLE);
 			mImageCaption.setVisibility(View.VISIBLE);
+		} else if (R.id.iv_back_icon == v.getId()) {
+			getActivity().finish();
 		}
 	}
 }

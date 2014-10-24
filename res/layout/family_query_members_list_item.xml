@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <com.wazapps.familybox.util.RoundedImageView
-        android:id="@+id/riv_query_profile_family_member"
+        android:id="@+id/riv_query_profile_family_member_picture"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginLeft="8dp"

@@ -2,18 +2,35 @@ package com.wazapps.familybox.profiles;
 
 import java.util.Arrays;
 
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.photos.PhotoItem;
+import com.wazapps.familybox.util.LogUtils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class FamilyMemberDetails2 implements Parcelable {
-	private String userId, networkId, imageURI, firstName, lastName, role, nickname,
-			previousLastName, middleName, phoneNumber, birthday, address, gender, quotes;
+	public static abstract class DownloadCallback {
+		public abstract void done(ParseException e);
+	}
+	
+	public static String ROLE_UNDEFINED = "undefined";
+	public static String ROLE_PARENT = "parent";
+	public static String ROLE_CHILD = "child";
+	
+	private String userId, networkId, firstName, lastName, role, nickname,
+			previousLastName, middleName, phoneNumber, birthday, 
+			address, gender, quotes;
+	private byte[] profilePic;
 
-	public static final Parcelable.Creator<FamilyMemberDetails> CREATOR = new Parcelable.Creator<FamilyMemberDetails>() {
+	public static final Parcelable.Creator<FamilyMemberDetails> CREATOR = 
+			new Parcelable.Creator<FamilyMemberDetails>() {
 
 		public FamilyMemberDetails createFromParcel(Parcel source) {
 			return new FamilyMemberDetails(source);
@@ -24,13 +41,13 @@ public class FamilyMemberDetails2 implements Parcelable {
 		}
 	};
 
-	public FamilyMemberDetails2(String userId, String networkId, String imageURI,
+	public FamilyMemberDetails2(String userId, String networkId,
 			String firstName, String lastName, String role, String nickname,
 			String previousLastName, String middleName, String phoneNumber,
-			String birthday, String address, String gender, String quotes) {
+			String birthday, String address, String gender, String quotes, 
+			byte[] profilePic) {
 		this.userId = userId;
 		this.networkId = networkId;
-		this.imageURI = imageURI;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.role = role;
@@ -42,12 +59,16 @@ public class FamilyMemberDetails2 implements Parcelable {
 		this.address = address;
 		this.gender = gender;
 		this.quotes = quotes;
+		if (profilePic != null) {
+			this.profilePic = Arrays.copyOf(profilePic, profilePic.length);			
+		} else {
+			this.profilePic = null;
+		}
 	}
 
 	public FamilyMemberDetails2(Parcel details) {
 		this.userId = details.readString();
 		this.networkId = details.readString();
-		this.imageURI = details.readString();
 		this.firstName = details.readString();
 		this.lastName = details.readString();
 		this.role = details.readString();
@@ -59,6 +80,13 @@ public class FamilyMemberDetails2 implements Parcelable {
 		this.address = details.readString();
 		this.gender = details.readString();
 		this.quotes = details.readString();
+		int profilePicLength = details.readInt();
+		if (profilePicLength > 0) {
+			this.profilePic = new byte[profilePicLength];
+			details.readByteArray(this.profilePic);
+		} else {
+			this.profilePic = null;
+		}
 	}
 	
 	public FamilyMemberDetails2(ParseUser user, String role) {
@@ -75,14 +103,66 @@ public class FamilyMemberDetails2 implements Parcelable {
 		this.address = user.getString("address");
 		this.gender = user.getString("gender");
 		this.quotes = user.getString("quotes");
+		this.profilePic = null; //set individualy through dedicated function
+	}
+	
+	public void downloadProfilePicAsync(ParseUser user, 
+			DownloadCallback callbackFunc) {
+		if (!user.has(UserHandler.PROFILE_PICTURE_KEY)) {
+			this.profilePic = null;
+			callbackFunc.done(null);
+			return;
+		}
+		
+		ParseFile profilePic = (ParseFile) 
+				user.get(UserHandler.PROFILE_PICTURE_KEY);
+		
+		profilePic.getDataInBackground(new GetDataCallback() {
+			FamilyMemberDetails2 userDetails;
+			DownloadCallback callbackFunc;
+			
+			@Override
+			public void done(byte[] data, ParseException e) {
+				if (e == null) {
+					this.userDetails.setProfilePic(data);
+				} else {
+					LogUtils.logError("FamilyMemberDetails", e.getMessage());
+				}
+				
+				this.callbackFunc.done(e);
+			}
+			
+			private GetDataCallback init(FamilyMemberDetails2 userDetails,
+					DownloadCallback callbackFunc) {
+				this.userDetails = userDetails;
+				this.callbackFunc = callbackFunc;
+				return this;
+			}
+		}.init(this, callbackFunc));
+	}
+	
+	public boolean downloadProfilePicSync(ParseUser user) {
+		if (!user.has(UserHandler.PROFILE_PICTURE_KEY)) {
+			return false;
+		}
+		
+		ParseFile profilePic = (ParseFile) 
+				user.get(UserHandler.PROFILE_PICTURE_KEY);
+		try {
+			this.profilePic = profilePic.getData();
+		} 
+		
+		catch (ParseException e) {
+			LogUtils.logError("FamilyMemberDetails", e.getMessage());
+			this.profilePic = null;
+			return false;
+		}
+		
+		return true;
 	}
 
 	public String getUserId() {
 		return this.userId;
-	}
-
-	public String getImageURI() {
-		return this.imageURI;
 	}
 
 	public String getName() {
@@ -102,7 +182,6 @@ public class FamilyMemberDetails2 implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(this.userId);
 		dest.writeString(this.networkId);
-		dest.writeString(this.imageURI);
 		dest.writeString(this.firstName);
 		dest.writeString(this.lastName);
 		dest.writeString(this.role);
@@ -114,6 +193,12 @@ public class FamilyMemberDetails2 implements Parcelable {
 		dest.writeString(this.address);
 		dest.writeString(this.gender);
 		dest.writeString(this.quotes);
+		if (this.profilePic != null) {
+			dest.writeInt(this.profilePic.length);
+			dest.writeByteArray(this.profilePic);			
+		} else {
+			dest.writeInt(0);
+		}
 	}
 
 	public String getLastName() {
@@ -155,9 +240,18 @@ public class FamilyMemberDetails2 implements Parcelable {
 	public String getQuotes() {
 		return quotes;
 	}
-
-	//TODO: remove this
-	public void setRole(String role) {
-		this.role = role;
+	
+	public Bitmap getprofilePhoto() {
+		Bitmap bitmap = null;
+		if (this.profilePic != null) {
+			bitmap = BitmapFactory.decodeByteArray(
+					this.profilePic, 0, this.profilePic.length);			
+		}
+		
+		return bitmap;
+	}
+	
+	public void setProfilePic(byte[] profilePic) {
+		this.profilePic = Arrays.copyOf(profilePic, profilePic.length);
 	}
 }

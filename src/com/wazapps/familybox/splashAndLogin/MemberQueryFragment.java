@@ -8,20 +8,29 @@ import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.splashAndLogin.FamilyQueryFragment.QueryHandlerCallback;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
+import com.wazapps.familybox.util.WaveDrawable;
 
 import com.wazapps.familybox.R;
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +53,7 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 	public static final String FAMILY_MEMBER_GENDER = "family member gender";
 	
 	public interface QueryAnswerHandlerCallback {
-		public void handleMemberQueryAnswer(String currOption) throws ParseException;
+		public void handleMemberQueryAnswer(String currOption);
 	}
 	
 	@Override
@@ -76,8 +85,27 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 		mAcceptButton = (Button) 
 				root.findViewById(R.id.button_member_query_accept);
 		mAcceptButton.setOnClickListener(this);
+		initAnimations();
 		
 		return root;
+	}
+	
+	private void initAnimations() {
+		Animation pulse = AnimationUtils.loadAnimation(getActivity(), 
+				R.anim.pulse_slow);
+		pulse.setInterpolator(new AccelerateInterpolator(4));		
+		ImageView animationBackground = 
+				(ImageView) root.findViewById(R.id.iv_member_query_profile_effect);
+		
+		WaveDrawable waveDrawable = new WaveDrawable(
+				Color.parseColor("#F5D0A9"), 400, 3000);
+		animationBackground.setBackgroundDrawable(waveDrawable);
+		Interpolator interpolator = 
+				new AccelerateDecelerateInterpolator();
+		
+		mMemberProfilePic.startAnimation(pulse);
+		waveDrawable.setWaveInterpolator(interpolator);
+		waveDrawable.startAnimation();
 	}
 	
 	@Override
@@ -100,6 +128,12 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 		if (!mIsMemberMale) {
 			mFamilyMemberQuestion.setText("What is your family relation with her?");
 		}
+		Bitmap profilePic = mFamilyMember.getprofilePhoto();
+		if (profilePic != null) {
+			mMemberProfilePic.setImageBitmap(mFamilyMember.getprofilePhoto());
+			mMemberProfilePic.setBackgroundColor(getResources().getColor(
+					android.R.color.transparent));
+		}
 		super.onResume();
 	}
 
@@ -108,13 +142,7 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.button_member_query_accept:
 			String currOption = mRelationPicker.getSelectedItem().toString();
-			try {
-				mQueryAnswerHandler.handleMemberQueryAnswer(currOption);
-			} catch (ParseException e) {
-				//TODO: handle exception in a proper way
-				Toast.makeText(getActivity(), "error in parse", 
-						Toast.LENGTH_SHORT).show();
-			}
+			mQueryAnswerHandler.handleMemberQueryAnswer(currOption);
 			break;
 
 		default:

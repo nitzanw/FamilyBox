@@ -8,8 +8,11 @@ import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
+import com.wazapps.familybox.util.WaveDrawable;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -26,8 +29,10 @@ import android.view.animation.AnticipateInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +40,7 @@ import android.widget.Toast;
 public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	private View root;
 	private QueryHandlerCallback queryHandlerCallback;
+	private RoundedImageView mProfilePic;
 	private FamilyMemberDetails2 mCurrentUser;
 	private FamilyMemberDetails2[] mFamilyList;
 	private TextView mFragTitle, mFragMsg, mFragMembers;
@@ -46,8 +52,8 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	public static final String MEMBER_ITEM = "member item";
 	
 	public interface QueryHandlerCallback {
-		public void handleFamilyQuery() throws ParseException;
-		public void handleMemberQuery() throws ParseException;
+		public void handleFamilyQuery();
+		public void handleMemberQuery();
 	}
 	
 	
@@ -74,26 +80,34 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 				root.findViewById(R.id.ll_family_query_members_list_holder);
 		mFragTitle = (TextView) root.findViewById(R.id.tv_family_query_title);
 		mFragMsg = (TextView) root.findViewById(R.id.tv_family_query_family_name);
+		mProfilePic = (RoundedImageView) root.findViewById(R.id.riv_query_profile_picture);
 		mFragMembers = (TextView) root.findViewById(R.id.tv_family_query_members);
 		yesButton = (Button) root.findViewById(R.id.button_family_query_yes);
 		noButton = (Button) root.findViewById(R.id.button_family_query_no);
 		
 		yesButton.setOnClickListener(this);
 		noButton.setOnClickListener(this);
+		initAnimations();
 		
 		return root;
 	}
 	
-	//TODO: either fix or delete
 	private void initAnimations() {
-		Animation profileJump = AnimationUtils
-				.loadAnimation(getActivity(), R.anim.pulse_strong);
-		profileJump.setStartOffset(1);
-		profileJump.setRepeatCount(1);
-		profileJump.setInterpolator(new AccelerateDecelerateInterpolator());
-		RoundedImageView profilePic = (RoundedImageView) root
-				.findViewById(R.id.riv_query_profile_picture);
-		profilePic.startAnimation(profileJump);
+		Animation pulse = AnimationUtils.loadAnimation(getActivity(), 
+				R.anim.pulse_slow);
+		pulse.setInterpolator(new AccelerateInterpolator(4));		
+		ImageView animationBackground = 
+				(ImageView) root.findViewById(R.id.iv_family_query_profile_effect);
+		
+		WaveDrawable waveDrawable = new WaveDrawable(
+				Color.parseColor("#F5D0A9"), 400, 3000);
+		animationBackground.setBackgroundDrawable(waveDrawable);
+		Interpolator interpolator = 
+				new AccelerateDecelerateInterpolator();
+		
+		mProfilePic.startAnimation(pulse);
+		waveDrawable.setWaveInterpolator(interpolator);
+		waveDrawable.startAnimation();
 	}
 	
 	@Override
@@ -113,6 +127,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 		super.onResume();
 		String firstName = mCurrentUser.getName();
 		String lastName = mCurrentUser.getLastName();
+		Bitmap profilePic = mCurrentUser.getprofilePhoto();
 		firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
 		lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
 		mFragTitle.setText("Hi " + firstName + "!");
@@ -121,6 +136,12 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 			mFragMembers.setText("Is this your family member?");
 		}
 		
+		if (profilePic != null) {
+			mProfilePic.setImageBitmap(profilePic);
+			mProfilePic.setBackgroundColor(getResources().getColor(
+					android.R.color.transparent));			
+		}
+	
 		initFamilyMembersListView();		
 	}
 	
@@ -138,26 +159,11 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.button_family_query_yes:
-			try {
-				queryHandlerCallback.handleMemberQuery();
-			} catch (ParseException e1) {
-				//TODO: handle exception in a proper way
-				Toast.makeText(getActivity(), "error in parse", 
-						Toast.LENGTH_SHORT).show();
-			}
+			queryHandlerCallback.handleMemberQuery();
 			break;
 			
 		case R.id.button_family_query_no:
-			try {
-				queryHandlerCallback.handleFamilyQuery();
-			} 
-			
-			catch (ParseException e) {
-				//TODO: handle exception in a proper way
-				Toast.makeText(getActivity(), "error in parse", 
-						Toast.LENGTH_SHORT).show();
-			}
-			
+			queryHandlerCallback.handleFamilyQuery();
 			break;
 
 		default:

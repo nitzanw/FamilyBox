@@ -61,6 +61,15 @@
             android:layout_toLeftOf="@id/iv_favorite_icon"
             android:src="@drawable/black_share_button" />
 
+        <ImageView
+            android:id="@+id/iv_back_icon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/up_arrow" />
+
         <FrameLayout
             android:id="@+id/fl_caption_edit_buttons"
             android:layout_width="wrap_content"
@@ -88,10 +97,11 @@
         <FrameLayout
             android:id="@+id/fl_image_caption"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="8dp"
+            android:layout_marginRight="3dp"
             android:layout_toLeftOf="@+id/fl_caption_edit_buttons"
             android:gravity="center" >
 
@@ -101,11 +111,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:gravity="fill_horizontal"
-                android:visibility="invisible"
                 android:hint="This is me and my"
                 android:paddingBottom="5dp"
                 android:textSize="14dp"
-                />
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/tv_image_caption"
