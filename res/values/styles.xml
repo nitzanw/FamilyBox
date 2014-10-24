@@ -15,8 +15,19 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:actionBarWidgetTheme">@style/MyPopupMenuTextView</item>
+        <item name="android:popupMenuStyle">@style/MyPopupMenu</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:homeAsUpIndicator">@drawable/up_arrow</item>
+    </style>
+
+    <style name="MyPopupMenu" parent="android:Theme.Holo.Light">
+        <item name="android:popupBackground">@drawable/overflow_bg_grad</item>
+    </style>
+    <!-- Change Overflow Menu ListView Text Size and Text Size -->
+    <style name="MyPopupMenuTextView" parent="@style/android:Theme.Holo.Light">
+        <item name="android:textColor">@color/gray_drawer_text</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <!-- general styles for the action bar -->

@@ -4,55 +4,120 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_profile_upper"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/profile_area_background"
-        android:gravity="center_horizontal"
-        android:orientation="vertical" >
+        android:background="@android:color/background_light" >
 
         <FrameLayout
-            android:paddingTop="-25dp"
+            android:id="@+id/fl_image_area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-             >
+            android:layout_marginLeft="10dp" >
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_marginTop="34dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/my_profile_pic_shading" />
 
             <com.wazapps.familybox.util.RoundedImageView
                 android:id="@+id/riv_profile_image"
                 android:layout_width="122dp"
                 android:layout_height="122dp"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="11dp"
                 android:background="@drawable/my_profile_pic_elipse_lines"
                 android:cropToPadding="true"
                 android:scaleType="centerCrop" />
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/tv_profile_username"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/user_name"
-            android:textSize="20sp" />
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/fl_image_area"
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/tv_profile_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="10dp"
-            android:drawableLeft="@drawable/my_profile_status_line_sphere"
-            android:drawablePadding="7dp"
-            android:drawableStart="@drawable/my_profile_status_line_sphere"
-            android:text="@string/profile_status" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tv_profile_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_name"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"
+                android:background="@drawable/change_photo_text_background" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="-5dp" >
+
+                <TextView
+                    android:id="@+id/tv_profile_status_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:drawableLeft="@drawable/my_profile_status_line_sphere"
+                    android:drawablePadding="7dp"
+                    android:drawableStart="@drawable/my_profile_status_line_sphere"
+                    android:text="@string/profile_status_title" />
+
+                <ImageButton
+                    android:id="@+id/ib_submit_status"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/action_bar_edit_profile_accept_button"
+                    android:visibility="invisible" />
+
+                <ImageButton
+                    android:id="@+id/ib_edit_status"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/edit_button_gray_profile_status_update" />
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="175dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="9dp"
+                android:paddingTop="-15dp" >
+
+                <EditText
+                    android:id="@+id/et_profile_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="2dp"
+                    android:maxLines="3"
+                    android:text="@string/profile_status"
+                    android:textSize="14sp"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/tv_profile_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="6.5dp"
+                    android:lineSpacingExtra="2dp"
+                    android:maxLines="3"
+                    android:text="@string/profile_status" >
+                </TextView>
+            </FrameLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -64,7 +129,7 @@
         <ListView
             android:id="@+id/profile_details"
             android:layout_width="fill_parent"
-            android:layout_height="150dp"
+            android:layout_height="215dp"
             android:background="@drawable/seperator"
             android:divider="@null"
             android:dividerHeight="0dp" >

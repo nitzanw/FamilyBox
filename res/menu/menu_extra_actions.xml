@@ -5,6 +5,21 @@
         android:id="@+id/action_extra"
         android:icon="@drawable/overflow_button"
         android:orderInCategory="2"
-        android:showAsAction="always|collapseActionView"
-        android:title="@string/expanded_action_menu"/>
+        android:showAsAction="always|collapseActionView">
+        <menu>
+            <item
+                android:id="@+id/logout"
+                android:showAsAction="never"
+                android:title="@string/ab_logout"/>
+            <item
+                android:id="@+id/password"
+                android:showAsAction="never"
+                android:title="@string/ab_password"/>
+            <item
+                android:id="@+id/about"
+                android:showAsAction="never"
+                android:title="@string/ab_about"/>
+        </menu>
+    </item>
+
 </menu>

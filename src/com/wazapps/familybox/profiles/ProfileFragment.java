@@ -23,6 +23,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -50,6 +53,10 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	AddProfileFragmentListener addProfileCallback = null;
 	private RoundedImageView mUserPhoto;
 	private MenuItem editItem;
+	private TextView mUserStatus;
+	private EditText mUserStatusEdit;
+	private ImageButton mEditStatusbtn;
+	private ImageButton mSubmitStatus;
 
 	public interface AddProfileFragmentListener {
 		void addProfileFragment(Bundle args);
@@ -80,6 +87,12 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 				.findViewById(R.id.profile_details);
 
 		mUserName = (TextView) root.findViewById(R.id.tv_profile_username);
+		mUserStatus = (TextView) root.findViewById(R.id.tv_profile_status);
+		mUserStatusEdit = (EditText) root.findViewById(R.id.et_profile_status);
+		mEditStatusbtn = (ImageButton) root.findViewById(R.id.ib_edit_status);
+		mEditStatusbtn.setOnClickListener(this);
+		mSubmitStatus = (ImageButton) root.findViewById(R.id.ib_submit_status);
+		mSubmitStatus.setOnClickListener(this);
 		mUserPhoto = (RoundedImageView) root
 				.findViewById(R.id.riv_profile_image);
 		// Clear the listView's top highlight scrolling effect
@@ -87,12 +100,12 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 				"overscroll_glow", "drawable", "android");
 		Drawable androidGlow = root.getResources().getDrawable(glowDrawableId);
 		androidGlow.setColorFilter(R.color.orange_fb, Mode.CLEAR);
-		
+
 		if (mFamilyMembersList != null) {
 			initProfileDetailsViews();
 			initFamilyListView();
 		}
-		
+
 		return root;
 	}
 
@@ -117,6 +130,9 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	private void initProfileDetailsViews() {
 		mUserName.setText(mCurrentUserDetails.getName() + " "
 				+ mCurrentUserDetails.getLastName());
+
+		mUserStatus.setText("This is a fake status!!!");
+		mUserStatusEdit.setText("This is a fake status!!!");
 		mProfileDetailsAdapter = new ProfileDetailsAdapter(getActivity(),
 				mCurrentUserDetails.getDetails());
 		mProfileDetailsList.setAdapter(mProfileDetailsAdapter);
@@ -136,15 +152,29 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-
-		Bundle args = new Bundle();
-		int pos = (Integer) v.getTag(ITEM_POS); // get the current item position
-												// in family list
-		FamilyMemberDetails[] familyMembers = createFamilyList(pos);
-		FamilyMemberDetails clickedUserDetails = mFamilyMembersList[pos];
-		args.putParcelable(MEMBER_ITEM, clickedUserDetails);
-		args.putParcelableArray(FAMILY_MEMBER_LIST, familyMembers);
-		addProfileCallback.addProfileFragment(args);
+		if (v.getId() == R.id.ib_edit_status) {
+			mSubmitStatus.setVisibility(View.VISIBLE);
+			mEditStatusbtn.setVisibility(View.INVISIBLE);
+			mUserStatusEdit.setText(mUserStatus.getText());
+			mUserStatusEdit.setVisibility(View.VISIBLE);
+			mUserStatus.setVisibility(View.INVISIBLE);
+		} else if ((v.getId() == R.id.ib_submit_status)) {
+			mEditStatusbtn.setVisibility(View.VISIBLE);
+			mSubmitStatus.setVisibility(View.INVISIBLE);
+			mUserStatus.setText(mUserStatusEdit.getText().toString());
+			mUserStatusEdit.setVisibility(View.INVISIBLE);
+			mUserStatus.setVisibility(View.VISIBLE);
+		} else {
+			Bundle args = new Bundle();
+			int pos = (Integer) v.getTag(ITEM_POS); // get the current item
+													// position
+													// in family list
+			FamilyMemberDetails[] familyMembers = createFamilyList(pos);
+			FamilyMemberDetails clickedUserDetails = mFamilyMembersList[pos];
+			args.putParcelable(MEMBER_ITEM, clickedUserDetails);
+			args.putParcelableArray(FAMILY_MEMBER_LIST, familyMembers);
+			addProfileCallback.addProfileFragment(args);
+		}
 	}
 
 	@Override
@@ -154,7 +184,6 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		}
 
 	}
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

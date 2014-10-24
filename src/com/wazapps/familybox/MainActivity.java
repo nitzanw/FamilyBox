@@ -19,6 +19,7 @@ import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.ProfileDetails;
 import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
+import com.wazapps.familybox.splashAndLogin.ChangePasswordDialogFragment;
 import com.wazapps.familybox.splashAndLogin.LoginActivity;
 import com.wazapps.familybox.util.JSONParser;
 import com.wazapps.familybox.util.LogUtils;
@@ -183,7 +184,7 @@ public class MainActivity extends FragmentActivity implements
 			return true;
 		}
 
-		if (item.getItemId() == R.id.action_extra) {
+		if (item.getItemId() == R.id.logout) {
 			ParseUser currUser = ParseUser.getCurrentUser();
 			if (currUser != null) {
 				ParseUser.logOut();
@@ -193,6 +194,13 @@ public class MainActivity extends FragmentActivity implements
 			logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
 			startActivity(logoutIntent);
 			finish();
+		} else if (item.getItemId() == R.id.password) {
+
+			ChangePasswordDialogFragment changePw = new ChangePasswordDialogFragment();
+			changePw.show(getSupportFragmentManager(),
+					ChangePasswordDialogFragment.CHANGE_PASSWORD_DIALOG_FRAG);
+		} else if (item.getItemId() == R.id.about) {
+
 		}
 		// Handle your other action bar items...
 

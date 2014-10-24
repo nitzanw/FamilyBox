@@ -2,9 +2,11 @@
 
     <color name="black_overlay">#66000000</color>
     <color name="white_cream_ab">#fbfbfb</color>
+    <color name="white_cream_overflow">#ebebeb</color>
     <color name="orange_fb">#ffbe57</color>
     <color name="grey_subtitle">#6c6b6b</color>
     <color name="grey_light">#d4d4d4</color>
+    <color name="search_grey_divider">#e4e6e8</color>
     <color name="grey_photo_album_title_bg">#cee4e6e8</color>
     <color name="orange_photo_title_bg">#cfffbe57</color>
     <color name="gray_index_letter_bg">#e4e6e8</color>
