@@ -4,6 +4,7 @@ package com.wazapps.familybox.splashAndLogin;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.util.LogUtils;
@@ -128,8 +129,8 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 		String firstName = mCurrentUser.getName();
 		String lastName = mCurrentUser.getLastName();
 		Bitmap profilePic = mCurrentUser.getprofilePhoto();
-		firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
-		lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
+		firstName = InputHandler.capitalizeName(firstName);
+		lastName = InputHandler.capitalizeName(lastName);
 		mFragTitle.setText("Hi " + firstName + "!");
 		mFragMsg.setText("Your family name is " + lastName + ",");
 		if (mFamilyList.length == 1) {

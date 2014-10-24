@@ -3,6 +3,7 @@ package com.wazapps.familybox.splashAndLogin;
 import java.util.ArrayList;
 
 import com.parse.ParseException;
+import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.splashAndLogin.FamilyQueryFragment.QueryHandlerCallback;
@@ -122,12 +123,18 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 	}
 	
 	public void onResume() {
-		MemberQuerySpinnerAdapter querySpinnerAdapter = new MemberQuerySpinnerAdapter(getActivity(), mSpinnerOptions, mIsMemberMale);
+		MemberQuerySpinnerAdapter querySpinnerAdapter = 
+				new MemberQuerySpinnerAdapter(getActivity(), 
+						mSpinnerOptions, mIsMemberMale);
 		mRelationPicker.setAdapter(querySpinnerAdapter);
-		mFamilyMemberName.setText(mFamilyMember.getName() + " " + mFamilyMember.getLastName());
+		String memberName = InputHandler.capitalizeFullname(
+				mFamilyMember.getName(), mFamilyMember.getLastName());
+		mFamilyMemberName.setText(memberName);
+		
 		if (!mIsMemberMale) {
 			mFamilyMemberQuestion.setText("What is your family relation with her?");
 		}
+		
 		Bitmap profilePic = mFamilyMember.getprofilePhoto();
 		if (profilePic != null) {
 			mMemberProfilePic.setImageBitmap(mFamilyMember.getprofilePhoto());
