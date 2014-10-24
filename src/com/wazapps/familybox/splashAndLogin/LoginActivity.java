@@ -86,21 +86,35 @@ QueryAnswerHandlerCallback {
 		setContentView(R.layout.activity_login_screen);
 		// Hide the status bar.
 		getActionBar().hide();
-		//checking if loginActivity was called by a sign out action or by
-		//splash screen and determine the transition animations accordingly.
+		userHandler = new UserHandler();
+		setUpCallbackFunctions();
+		
 		Intent intent = getIntent();
-		Bundle extras = intent.getExtras();
+		Bundle extras = intent.getExtras();		
 		if (extras != null) {
+			//checking if the system should prompt user with family query or with
+			//the regular login screen. if family query is launched - call
+			//userCreationCallback and pass control to it.
+			if (extras.containsKey(SplashActivity.HANDLE_QUERY)) {
+				if (extras.getBoolean(SplashActivity.HANDLE_QUERY)) {
+					//maybe pass logics to splash screen and use pin to 
+					//local datastore for passing information
+					currentUser = ParseUser.getCurrentUser();
+					userCreationCallback.done(null);
+					return;
+				}
+			}
+			
+			//checking if loginActivity was called by a sign out action or by
+			//splash screen and determine the transition animations accordingly.
 			if (extras.containsKey(MainActivity.LOG_OUT_ACTION))
-				overridePendingTransition(R.anim.enter_reverse, R.anim.exit_reverse); 
+				overridePendingTransition(R.anim.enter_reverse, 
+						R.anim.exit_reverse); 
 
 			else if (extras.containsKey(SplashActivity.SPLASH_ACTION))
 				overridePendingTransition(R.anim.enter, R.anim.exit);
 		}
 		
-		userHandler = new UserHandler();
-		setUpCallbackFunctions();
-
 		getSupportFragmentManager()
 		.beginTransaction()
 		.replace(R.id.fragment_container, new StartFragment(), TAG_LOGIN_SCR)
@@ -242,10 +256,14 @@ QueryAnswerHandlerCallback {
 	@Override
 	public void openFacebookLogin() {
 		//right now we are not going to implement this feature
-		Toast toast = Toast.makeText(this, "This feature is not yet available"
-				, Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-		toast.show();
+//		Toast toast = Toast.makeText(this, "This feature is not yet available"
+//				, Toast.LENGTH_SHORT);
+//		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+//		toast.show();
+		Intent intent = new Intent(this, 
+				MainActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	@Override

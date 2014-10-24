@@ -2,6 +2,8 @@ package com.wazapps.familybox.splashAndLogin;
 
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.UserHandler;
+import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.WaveDrawable;
 
 import android.app.Activity;
@@ -25,6 +27,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -36,6 +39,8 @@ public class SplashActivity extends Activity{
 	private static final String appId = "hFLXtlIwku3PGYy0ezKYQf67sRCamG1IvNToz22q";
 	private static final String clientKey = "klA7GiTnY25T6ou1aVwFdd4bPrsUBXArFVnBXIw3";
 	public static final String SPLASH_ACTION = "splash";
+	public static final String HANDLE_QUERY = "handle query";
+	public static final String USER_LOGGED = "user logged";
 	
 	private WaveDrawable waveDrawable;
 	private ImageView welcomeImage;
@@ -85,19 +90,48 @@ public class SplashActivity extends Activity{
 			}
 			
 			ParseUser currUser = ParseUser.getCurrentUser();
+			//if user is logged in - get to main screen or to family query
 			if (currUser != null) {
-				//user is logged in, enter app main screen
-				Intent intent = new Intent(SplashActivity.this, 
-						MainActivity.class);
-				startActivity(intent);
-			} else {
-				//user is not logged in, enter login screen
-				Intent intent = new Intent(SplashActivity.this,
-						LoginActivity.class);
-				intent.putExtra(SPLASH_ACTION, SPLASH_ACTION);
-				startActivity(intent);
+				try {
+					currUser.fetchIfNeeded();
+					//TODO: pin data to local datastore
+					
+					boolean passedQuery = 
+							currUser.getBoolean(UserHandler.PASS_QUERY_KEY);
+					
+					if (passedQuery) {
+						launchMainActivity();
+					} else {
+						launchLoginActivity(true);
+					}
+				} 
+				
+				catch (ParseException e) {
+					UserHandler.userLogout();
+					launchLoginActivity(false);
+				}
+			} 
+			
+			//user is not logged in, enter login screen
+			else {
+				launchLoginActivity(false);
 			}	
+			
 			finish();
+		}
+		
+		private void launchLoginActivity(boolean handleQuery) {
+			Intent intent = new Intent(SplashActivity.this,
+					LoginActivity.class);
+			intent.putExtra(SPLASH_ACTION, SPLASH_ACTION);
+			intent.putExtra(HANDLE_QUERY, handleQuery);
+			startActivity(intent);
+		}
+		
+		private void launchMainActivity() {
+			Intent intent = new Intent(SplashActivity.this, 
+					MainActivity.class);
+			startActivity(intent);
 		}
 	}
 }
