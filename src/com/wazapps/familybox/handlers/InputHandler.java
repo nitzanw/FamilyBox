@@ -5,7 +5,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.parse.ParseUser;
-import com.wazapps.familybox.misc.InputException;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 
 public class InputHandler {
@@ -20,14 +19,16 @@ public class InputHandler {
 		return matcher.matches();
 	}
 	
-	public static void validateLoginInput(String email, String password) throws InputException {
+	public static String validateLoginInput(String email, String password) {
 		if (email.matches("") || password.matches("")) {
-			throw new InputException("You did not fill all required fields");
+			return "You did not fill all required fields";
 		}
 		
 		if (!validateEmailAddress(email)) {
-			throw new InputException("email address is invalid");
+			return "email address is invalid";
 		}
+		
+		return "";
 	}
 
 	
@@ -54,6 +55,26 @@ public class InputHandler {
 		}
 		
 		return "";
+	}
+	
+	public static String capitalizeName(String name) {
+		if (name.length() > 1) {
+			return name.substring(0, 1).toUpperCase() + name.substring(1);			
+		}
+		
+		return name;
+	}
+	
+	public static String capitalizeFullname(String firstName, String lastName) {
+		if (firstName.length() > 1) {
+			firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);	
+		}
+		
+		if (lastName.length() > 1) {
+			lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);	
+		}
+		
+		return firstName + " " + lastName;
 	}
 	
 	public static ArrayList<String> generateRelationOptions(

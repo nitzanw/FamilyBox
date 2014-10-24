@@ -175,4 +175,9 @@ public class UserHandler {
 		new AsyncFamilyMemberFetch(familyMembers, 
 				familyMembersDetails, family, callbackFunc).execute();
 	}
+	
+	public static void userLogout() {
+		ParseUser.logOut();
+		ParseUser.unpinAllInBackground();
+	}
 }

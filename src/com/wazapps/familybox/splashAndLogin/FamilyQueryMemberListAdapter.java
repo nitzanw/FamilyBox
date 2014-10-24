@@ -3,6 +3,7 @@ package com.wazapps.familybox.splashAndLogin;
 import java.util.Arrays;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.util.RoundedImageView;
@@ -90,14 +91,15 @@ public class FamilyQueryMemberListAdapter extends BaseAdapter {
 			break;
 		}
 
-		// TODO: add profile picture image handling
 		FamilyMemberDetails2 member = this.familyMembersList[position];
 		TextView name = (TextView) v
 				.findViewById(R.id.tv_query_family_member_name);
 		RoundedImageView picture = (RoundedImageView) v
 				.findViewById(R.id.riv_query_profile_family_member_picture);
-		String memberName = member.getName() + " " + member.getLastName();
+		
 		Bitmap profilePicture = member.getprofilePhoto();
+		String memberName = InputHandler.capitalizeFullname(member.getName(), 
+				member.getLastName());
 		name.setText(memberName);
 		if (profilePicture != null) {
 			picture.setImageBitmap(profilePicture);

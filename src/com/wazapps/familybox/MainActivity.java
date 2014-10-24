@@ -270,6 +270,8 @@ public class MainActivity extends FragmentActivity implements
 	public void selectItem(int position) {
 		mPosition = position;
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		//TODO: maybe remove or replace with faster animation
+		ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast); 
 		switch (position) {
 		case MY_PROFILE_POS:
 			ProfileFragment profileFrag = new ProfileFragment();

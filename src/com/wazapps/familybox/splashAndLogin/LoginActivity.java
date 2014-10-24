@@ -1,20 +1,14 @@
 package com.wazapps.familybox.splashAndLogin;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
@@ -24,7 +18,6 @@ import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
-import com.wazapps.familybox.misc.InputException;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2.DownloadCallback;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.BirthdayChooserCallback;
@@ -86,21 +79,35 @@ QueryAnswerHandlerCallback {
 		setContentView(R.layout.activity_login_screen);
 		// Hide the status bar.
 		getActionBar().hide();
-		//checking if loginActivity was called by a sign out action or by
-		//splash screen and determine the transition animations accordingly.
+		userHandler = new UserHandler();
+		setUpCallbackFunctions();
+		
 		Intent intent = getIntent();
-		Bundle extras = intent.getExtras();
+		Bundle extras = intent.getExtras();		
 		if (extras != null) {
+			//checking if loginActivity was called by a sign out action or by
+			//splash screen and determine the transition animations accordingly.
 			if (extras.containsKey(MainActivity.LOG_OUT_ACTION))
-				overridePendingTransition(R.anim.enter_reverse, R.anim.exit_reverse); 
+				overridePendingTransition(R.anim.enter_reverse, 
+						R.anim.exit_reverse); 
 
 			else if (extras.containsKey(SplashActivity.SPLASH_ACTION))
 				overridePendingTransition(R.anim.enter, R.anim.exit);
+			
+			//checking if the system should prompt user with family query or with
+			//the regular login screen. if family query is launched - call
+			//userCreationCallback and pass control to it.
+			if (extras.containsKey(SplashActivity.HANDLE_QUERY)) {
+				if (extras.getBoolean(SplashActivity.HANDLE_QUERY)) {
+					//maybe pass logics to splash screen and use pin to 
+					//local datastore for passing information
+					currentUser = ParseUser.getCurrentUser();
+					userCreationCallback.done(null);
+					return;
+				}
+			}
 		}
 		
-		userHandler = new UserHandler();
-		setUpCallbackFunctions();
-
 		getSupportFragmentManager()
 		.beginTransaction()
 		.replace(R.id.fragment_container, new StartFragment(), TAG_LOGIN_SCR)
@@ -242,10 +249,14 @@ QueryAnswerHandlerCallback {
 	@Override
 	public void openFacebookLogin() {
 		//right now we are not going to implement this feature
-		Toast toast = Toast.makeText(this, "This feature is not yet available"
-				, Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-		toast.show();
+//		Toast toast = Toast.makeText(this, "This feature is not yet available"
+//				, Toast.LENGTH_SHORT);
+//		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+//		toast.show();
+		Intent intent = new Intent(this, 
+				MainActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	@Override
@@ -319,24 +330,45 @@ QueryAnswerHandlerCallback {
 
 	@Override
 	public void emailLoginAction(String email, String password) {
-		try {
-			InputHandler.validateLoginInput(email, password);
-			ParseUser.logIn("fb_" + email, password);
-			enterApp();
-			//TODO: validate that user has passed family query
-		} 
-
-		catch (InputException e) {
-			Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
-			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-			toast.show();
-		}
-
-		catch (ParseException e) {
-			Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
-			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-			toast.show();
-		}
+			String errMsg = InputHandler.validateLoginInput(email, password);
+			if (!errMsg.equals("")) {
+				Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+				toast.show();
+				return;
+			}
+			
+			ParseUser.logInInBackground("fb_" + email, 
+					password, new LogInCallback() {
+				private LoginActivity loginActivity;
+				
+				@Override
+				public void done(ParseUser user, ParseException e) {
+					//if login process succeeded
+					if (e == null) {
+						loginActivity.currentUser = user;
+						//if the user did not pass the family query yet
+						if (!currentUser.getBoolean(UserHandler.PASS_QUERY_KEY)) {
+							loginActivity.userCreationCallback.done(null);
+						} else {
+							loginActivity.enterApp();
+						}
+					} 
+					
+					//if login process failed
+					else {
+						Toast toast = Toast.makeText(loginActivity, e.getMessage(), 
+								Toast.LENGTH_LONG);
+						toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+						toast.show();
+					}
+				}
+				
+				private LogInCallback init(LoginActivity loginActivity) {
+					this.loginActivity = loginActivity;
+					return this;
+				}
+			}.init(this));
 	}
 
 	@Override
