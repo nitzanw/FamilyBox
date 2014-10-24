@@ -13,11 +13,13 @@ public final class R {
         public static final int enter_reverse=0x7f040001;
         public static final int exit=0x7f040002;
         public static final int exit_reverse=0x7f040003;
-        public static final int pop_enter=0x7f040004;
-        public static final int pop_exit=0x7f040005;
-        public static final int pulse=0x7f040006;
-        public static final int pulse_slow=0x7f040007;
-        public static final int pulse_strong=0x7f040008;
+        public static final int fade_in_fast=0x7f040004;
+        public static final int fade_out_fast=0x7f040005;
+        public static final int pop_enter=0x7f040006;
+        public static final int pop_exit=0x7f040007;
+        public static final int pulse=0x7f040008;
+        public static final int pulse_slow=0x7f040009;
+        public static final int pulse_strong=0x7f04000a;
     }
     public static final class array {
         public static final int action_list=0x7f080000;
