@@ -62,7 +62,7 @@ implements OnClickListener {
 			email = emailField.getText().toString().trim().toLowerCase();
 			password = passwordField.getText().toString().trim().toLowerCase();
 			loginCallback.emailLoginAction(email, password);
-			//TODO add dismiss to dialog
+			dismiss();
 			break;
 			
 		case R.id.email_login_cancel_button:

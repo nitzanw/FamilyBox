@@ -47,6 +47,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 	private ImageView mEditButton;
 	private ImageView mAcceptEdit;
 	private EditText mImageEditCaption;
+	private boolean onPageScrollStateChanged = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,6 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 
 			@Override
 			public void onPageSelected(int position) {
-
 			}
 
 			@Override
@@ -89,7 +89,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-
+				onPageScrollStateChanged = true;
 			}
 		});
 		// to make the orange frame appear and disappear:
@@ -134,24 +134,32 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 		mAcceptEdit.setOnClickListener(this);
 
 		mImageFrame = (RelativeLayout) root.findViewById(R.id.rl_image_frame);
-
 		makeFrameDisappear(3000);
-
 		mImageEditCaption = (EditText) root
 				.findViewById(R.id.et_image_caption_edit);
 		mImageEditCaption.setText(photoList[currentPosition].getCaption());
 		mImageCaption = (TextView) root.findViewById(R.id.tv_image_caption);
 		mImageCaption.setText(photoList[currentPosition].getCaption());
+
 		return root;
 	}
 
-	private void makeFrameDisappear(int timeInMilli) {
+	private void makeFrameDisappear(final int timeInMilli) {
 		new Handler().postDelayed(new Runnable() {
+
 			@Override
 			public void run() {
-				captionFrameOn = false;
-				mImageFrame.setVisibility(View.INVISIBLE);
-
+				if (!onPageScrollStateChanged) {
+					// if the user hasen't moved the pager:
+					captionFrameOn = false;
+					mImageFrame.setVisibility(View.INVISIBLE);
+				} else {
+					// if the user has moved the pager, wait until he stops
+					// moving it, and when he does, you can make the frame
+					// disappear
+					onPageScrollStateChanged = false;
+					makeFrameDisappear(timeInMilli);
+				}
 			}
 		}, timeInMilli);
 	}
@@ -163,7 +171,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			mImageFrame.setVisibility(View.INVISIBLE);
 		} else {
 			mImageFrame.setVisibility(View.VISIBLE);
-			makeFrameDisappear(6000);
+			makeFrameDisappear(5000);
 		}
 		captionFrameOn = !captionFrameOn;
 

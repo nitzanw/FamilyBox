@@ -1,4 +1,5 @@
 package com.wazapps.familybox.splashAndLogin;
+
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.R.id;
 import com.wazapps.familybox.util.WaveDrawable;
@@ -24,26 +25,32 @@ import android.view.animation.OvershootInterpolator;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 public class StartFragment extends Fragment implements OnClickListener {
 	public interface StartScreenCallback {
 		public void openEmailLogin();
+
 		public void openFacebookLogin();
+
 		public void openSignup();
 	}
 
 	private View root;
 	private StartScreenCallback loginCB = null;
+	private LinearLayout progressSpinner;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
 			this.loginCB = (StartScreenCallback) getActivity();
-		} 
-		
-		catch(ClassCastException e){
-			Log.e(getTag(), "The activity does not implement LoginCallback interface");
+		}
+
+		catch (ClassCastException e) {
+			Log.e(getTag(),
+					"The activity does not implement LoginCallback interface");
 		}
 
 	}
@@ -51,26 +58,33 @@ public class StartFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		root = inflater.inflate(R.layout.fragment_login_screen, container, false);
-		
-		Button emailLoginButton = (Button) root.findViewById(R.id.button_login_email);
-		Button fbLoginButton = (Button) root.findViewById(R.id.button_login_facebook);
+		root = inflater.inflate(R.layout.fragment_login_screen, container,
+				false);
+		progressSpinner = (LinearLayout) root
+				.findViewById(R.id.ll_progress_spinner);
+	
+		Button emailLoginButton = (Button) root
+				.findViewById(R.id.button_login_email);
+		Button fbLoginButton = (Button) root
+				.findViewById(R.id.button_login_facebook);
 		Button signupButton = (Button) root.findViewById(R.id.button_signup);
-		
+
 		emailLoginButton.setOnClickListener(this);
 		fbLoginButton.setOnClickListener(this);
 		signupButton.setOnClickListener(this);
-		
-		initAnimations();		
+
+		initAnimations();
 		return root;
 	}
-	
+
 	private void initAnimations() {
 		ImageView fbLogo = (ImageView) root.findViewById(R.id.iv_login_logo);
-		Animation pulse = AnimationUtils.loadAnimation(getActivity(), R.anim.pulse_slow);
+		Animation pulse = AnimationUtils.loadAnimation(getActivity(),
+				R.anim.pulse_slow);
 		pulse.setInterpolator(new AccelerateInterpolator(3));
 		fbLogo.startAnimation(pulse);
-		WaveDrawable waveDrawable = new WaveDrawable(Color.parseColor("#F5D0A9"), 500, 3000);
+		WaveDrawable waveDrawable = new WaveDrawable(
+				Color.parseColor("#F5D0A9"), 500, 3000);
 		fbLogo.setBackgroundDrawable(waveDrawable);
 		Interpolator interpolator = new AccelerateDecelerateInterpolator();
 		waveDrawable.setWaveInterpolator(interpolator);
@@ -87,13 +101,23 @@ public class StartFragment extends Fragment implements OnClickListener {
 		case id.button_signup:
 			this.loginCB.openSignup();
 			break;
-			
+
 		case id.button_login_facebook:
 			this.loginCB.openFacebookLogin();
 			break;
-			
+
 		default:
 			break;
 		}
-	}	
+	}
+
+	public void turnOnProgress() {
+		progressSpinner.setVisibility(View.VISIBLE);
+
+	}
+
+	public void turnOffProgress() {
+		progressSpinner.setVisibility(View.INVISIBLE);
+
+	}
 }

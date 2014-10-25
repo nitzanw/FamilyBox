@@ -45,7 +45,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	private FamilyMemberDetails2 mCurrentUser;
 	private FamilyMemberDetails2[] mFamilyList;
 	private TextView mFragTitle, mFragMsg, mFragMembers;
-	private LinearLayout mFamilyMembersHolder;
+	private LinearLayout mFamilyMembersHolder, mLoadingSpinner;
 	private FamilyQueryMemberListAdapter mFamilyListAdapter;
 	private Button yesButton, noButton;
 	
@@ -83,6 +83,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 		mFragMsg = (TextView) root.findViewById(R.id.tv_family_query_family_name);
 		mProfilePic = (RoundedImageView) root.findViewById(R.id.riv_query_profile_picture);
 		mFragMembers = (TextView) root.findViewById(R.id.tv_family_query_members);
+		mLoadingSpinner = (LinearLayout) root.findViewById(R.id.ll_family_query_progress_spinner);
 		yesButton = (Button) root.findViewById(R.id.button_family_query_yes);
 		noButton = (Button) root.findViewById(R.id.button_family_query_no);
 		
@@ -164,12 +165,20 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 			break;
 			
 		case R.id.button_family_query_no:
+			mLoadingSpinner.setVisibility(View.VISIBLE);
 			queryHandlerCallback.handleFamilyQuery();
 			break;
 
 		default:
 			break;
 		}
-		
+	}
+	
+	public void startLoadingSpinner() {
+		mLoadingSpinner.setVisibility(View.VISIBLE);
+	}
+	
+	public void stopLoadingSpinner() {
+		mLoadingSpinner.setVisibility(View.INVISIBLE);
 	}
 }
