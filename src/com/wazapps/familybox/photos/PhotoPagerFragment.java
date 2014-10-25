@@ -1,11 +1,15 @@
 package com.wazapps.familybox.photos;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.profiles.EditProfileFragment;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.util.LogUtils;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -130,12 +134,26 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 		mAcceptEdit.setOnClickListener(this);
 
 		mImageFrame = (RelativeLayout) root.findViewById(R.id.rl_image_frame);
+
+		makeFrameDisappear(3000);
+
 		mImageEditCaption = (EditText) root
 				.findViewById(R.id.et_image_caption_edit);
 		mImageEditCaption.setText(photoList[currentPosition].getCaption());
 		mImageCaption = (TextView) root.findViewById(R.id.tv_image_caption);
 		mImageCaption.setText(photoList[currentPosition].getCaption());
 		return root;
+	}
+
+	private void makeFrameDisappear(int timeInMilli) {
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				captionFrameOn = false;
+				mImageFrame.setVisibility(View.INVISIBLE);
+
+			}
+		}, timeInMilli);
 	}
 
 	private void itemClicked() {
@@ -145,6 +163,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			mImageFrame.setVisibility(View.INVISIBLE);
 		} else {
 			mImageFrame.setVisibility(View.VISIBLE);
+			makeFrameDisappear(6000);
 		}
 		captionFrameOn = !captionFrameOn;
 

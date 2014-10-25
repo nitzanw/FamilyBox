@@ -330,6 +330,7 @@ QueryAnswerHandlerCallback {
 
 	@Override
 	public void emailLoginAction(String email, String password) {
+		//TODO add login spinner here!
 			String errMsg = InputHandler.validateLoginInput(email, password);
 			if (!errMsg.equals("")) {
 				Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
@@ -376,7 +377,7 @@ QueryAnswerHandlerCallback {
 			String birthday, String gender, String password, 
 			String passwordConfirm, byte[] profilePictureData, 
 			String profilePictureName) {	
-
+//TODO add progress here
 		String errMsg = InputHandler.validateSignupInput(firstName, lastName, email, 
 				birthday, gender, password, passwordConfirm);
 		if (!errMsg.equals("")) {	
