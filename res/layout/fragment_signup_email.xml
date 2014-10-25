@@ -48,7 +48,7 @@
             android:textColor="@color/gray_signup_input_fields"
             android:textSize="13sp" />
     </LinearLayout>
-    
+
     <EditText
         android:id="@+id/et_signup_email"
         android:layout_width="match_parent"
@@ -62,68 +62,69 @@
         android:paddingBottom="13dp"
         android:textColor="@color/gray_signup_input_fields"
         android:textSize="13sp" />
-    
-     <LinearLayout
+
+    <LinearLayout
         android:id="@+id/ll_signup_bday_and_gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_signup_email"
         android:layout_centerHorizontal="true"
-     	android:layout_marginTop="11dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
+        android:layout_marginTop="11dp"
         android:gravity="center"
         android:orientation="horizontal" >
-        
+
         <EditText
-        android:id="@+id/et_signup_birthday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/signup_birthday"
-        android:inputType="textPersonName"
-        android:paddingBottom="13dp"
-        android:layout_weight="1"
-        android:textColor="@color/gray_signup_input_fields"
-        android:textSize="13sp" />  
-        
+            android:id="@+id/et_signup_birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/signup_birthday"
+            android:inputType="textPersonName"
+            android:paddingBottom="13dp"
+            android:textColor="@color/gray_signup_input_fields"
+            android:textSize="13sp" />
+
         <EditText
-        android:id="@+id/et_signup_gender"
-        android:layout_width="wrap_content"
+            android:id="@+id/et_signup_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/signup_gender"
+            android:inputType="textPersonName"
+            android:paddingBottom="13dp"
+            android:textColor="@color/gray_signup_input_fields"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_signup_password"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/signup_gender"
-        android:inputType="textPersonName"
+        android:layout_below="@id/ll_signup_bday_and_gender"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="11dp"
+        android:hint="@string/signup_enter_password"
+        android:inputType="textPassword"
         android:paddingBottom="13dp"
-        android:layout_weight="1"
         android:textColor="@color/gray_signup_input_fields"
-        android:textSize="13sp" /> 
-	</LinearLayout>   
-   
+        android:textSize="13sp" />
+
     <EditText
-		android:id="@+id/et_signup_password"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/ll_signup_bday_and_gender"
-		android:layout_marginLeft="25dp"
-		android:layout_marginRight="25dp"
-		android:layout_marginTop="11dp"
-		android:hint="@string/signup_enter_password"
-		android:inputType="textPassword"
-		android:paddingBottom="13dp"
-		android:textColor="@color/gray_signup_input_fields"
-		android:textSize="13sp" />
-    <EditText
-		android:id="@+id/et_signup_confirm_password"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/et_signup_password"
-		android:layout_marginLeft="25dp"
-		android:layout_marginRight="25dp"
-		android:layout_marginTop="11dp"
-		android:hint="@string/signup_confirm_password"
-		android:inputType="textPassword"
-		android:paddingBottom="13dp"
-		android:textColor="@color/gray_signup_input_fields"
-		android:textSize="13sp" />
+        android:id="@+id/et_signup_confirm_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_signup_password"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="11dp"
+        android:hint="@string/signup_confirm_password"
+        android:inputType="textPassword"
+        android:paddingBottom="13dp"
+        android:textColor="@color/gray_signup_input_fields"
+        android:textSize="13sp" />
 
     <Button
         android:id="@+id/button_signup"
@@ -134,5 +135,20 @@
         android:layout_marginBottom="35dp"
         android:background="@drawable/selector_signup" >
     </Button>
+
+    <LinearLayout
+        android:id="@+id/ll_progress_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/pb_start_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -3,40 +3,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context="com.familybox.wazapps.familybox.LoginScreenActivity">
+    tools:context="com.familybox.wazapps.familybox.LoginScreenActivity" >
 
-<ImageView
-    android:id="@+id/iv_login_logo"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-	android:layout_centerHorizontal="true"
-    android:paddingTop="20dp"
-    android:paddingBottom="50dp"
-    android:src="@drawable/familybox_logo_small"/>
+    <ImageView
+        android:id="@+id/iv_login_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="50dp"
+        android:paddingTop="20dp"
+        android:src="@drawable/familybox_logo_small" />
+
     <Button
         android:id="@+id/button_login_facebook"
-        android:layout_marginTop="245dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/facebook_sign_in_button"
-        />
+        android:layout_marginTop="245dp"
+        android:background="@drawable/facebook_sign_in_button" />
+
     <Button
-        android:layout_marginTop="-15dp"
         android:id="@+id/button_login_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/button_login_facebook"
-        android:background="@drawable/mail_sign_in_button"
-        />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-15dp"
+        android:background="@drawable/mail_sign_in_button" />
+
     <Button
         android:id="@+id/button_signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/button_login_email"
-        android:background="@drawable/sign_up_button"
-        />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/sign_up_button" />
+
+    <LinearLayout
+        android:id="@+id/ll_progress_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/pb_start_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 </RelativeLayout>
