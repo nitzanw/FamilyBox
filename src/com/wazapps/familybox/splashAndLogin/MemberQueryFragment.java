@@ -32,6 +32,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 	private Spinner mRelationPicker;
 	private TextView mFamilyMemberName, mFamilyMemberQuestion;
 	private Button mAcceptButton;
+	private LinearLayout mLoadingSpinner; 
 	private FamilyMemberDetails2 mFamilyMember;
 	private ArrayList<String> mSpinnerOptions;
 	private QueryAnswerHandlerCallback mQueryAnswerHandler;
@@ -83,6 +85,8 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 				root.findViewById(R.id.tv_member_query_name);
 		mFamilyMemberQuestion = (TextView) 
 				root.findViewById(R.id.tv_member_query_family_question);
+		mLoadingSpinner = (LinearLayout) 
+				root.findViewById(R.id.ll_member_query_progress_spinner);
 		mAcceptButton = (Button) 
 				root.findViewById(R.id.button_member_query_accept);
 		mAcceptButton.setOnClickListener(this);
@@ -148,6 +152,8 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.button_member_query_accept:
+			//add loading animation upon processing data
+			mLoadingSpinner.setVisibility(View.VISIBLE);
 			String currOption = mRelationPicker.getSelectedItem().toString();
 			mQueryAnswerHandler.handleMemberQueryAnswer(currOption);
 			break;
@@ -155,6 +161,5 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 		default:
 			break;
 		}
-		
 	}
 }

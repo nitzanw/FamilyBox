@@ -62,8 +62,6 @@ public class StartFragment extends Fragment implements OnClickListener {
 				false);
 		progressSpinner = (LinearLayout) root
 				.findViewById(R.id.ll_progress_spinner);
-		
-//		ProgressBar v = (ProgressBar) root.findViewById(R.id.pb_start_screen);
 	
 		Button emailLoginButton = (Button) root
 				.findViewById(R.id.button_login_email);

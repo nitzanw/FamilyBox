@@ -49,7 +49,7 @@ public class LoginActivity extends FragmentActivity implements
 		SignupScreenCallback, EmailLoginScreenCallback, QueryHandlerCallback,
 		QueryAnswerHandlerCallback {
 	private static final String TAG_EMAIL_FRAG = "emailLogin";
-	private static final String TAG_LOGIN_SCR = "loginScreen";
+	protected static final String TAG_LOGIN_SCR = "loginScreen";
 	private static final String TAG_SIGNBIRTHDAY = "birthdayDialog";
 	private static final String TAG_SIGNGENDER = "genderDialog";
 	private static final String TAG_SGINUP_FRAG = "signupScreen";
@@ -330,7 +330,7 @@ public class LoginActivity extends FragmentActivity implements
 	public void emailLoginAction(String email, String password) {
 		final StartFragment startFrag = (StartFragment) getSupportFragmentManager()
 				.findFragmentByTag(TAG_LOGIN_SCR);
-
+		
 		String errMsg = InputHandler.validateLoginInput(email, password);
 		if (!errMsg.equals("")) {
 			Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
@@ -338,6 +338,7 @@ public class LoginActivity extends FragmentActivity implements
 			toast.show();
 			return;
 		} else if (startFrag != null) {
+			//add loading animation upon processing data
 			startFrag.turnOnProgress();
 		}
 
@@ -385,11 +386,12 @@ public class LoginActivity extends FragmentActivity implements
 			String passwordConfirm, byte[] profilePictureData,
 			String profilePictureName) {
 		
-		final EmailSignupFragment signUpFrag = (EmailSignupFragment) getSupportFragmentManager()
-				.findFragmentByTag(TAG_SGINUP_FRAG);
+		final EmailSignupFragment signUpFrag = (EmailSignupFragment) 
+				getSupportFragmentManager().findFragmentByTag(TAG_SGINUP_FRAG);
 		
 		String errMsg = InputHandler.validateSignupInput(firstName, lastName,
 				email, birthday, gender, password, passwordConfirm);
+		
 		if (!errMsg.equals("")) {
 			Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
@@ -428,16 +430,21 @@ public class LoginActivity extends FragmentActivity implements
 
 	@Override
 	public void handleMemberQuery() {
+		//fetch the familyQueryFragment in case we want to start loading animation
+		final FamilyQueryFragment familyQueryFrag = 
+				(FamilyQueryFragment) getSupportFragmentManager()
+				.findFragmentByTag(TAG_FAMILYQUERY_FRAG);
+		
 		currentFamily.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
 			private LoginActivity loginActivity;
 
 			@Override
 			public void done(ParseObject object, ParseException e) {
 				if (e == null) {
-					loginActivity.currentFamilyMember = relatedFamilyMembers
-							.get(0);
-					loginActivity.currentFamilyMemberDetails = relatedFamilyMemberDetails
-							.get(0);
+					loginActivity.currentFamilyMember = 
+							relatedFamilyMembers.get(0);
+					loginActivity.currentFamilyMemberDetails = 
+							relatedFamilyMemberDetails.get(0);
 
 					boolean isFatherTaken = loginActivity.currentFamily
 							.has(FamilyHandler.RELATION_FATHER);
@@ -455,8 +462,8 @@ public class LoginActivity extends FragmentActivity implements
 					// if only one relation option exists then the answer is
 					// already known
 					if (relationOptions.size() == 1) {
-						loginActivity.handleMemberQueryAnswer(relationOptions
-								.get(0));
+						familyQueryFrag.startLoadingSpinner();
+						loginActivity.handleMemberQueryAnswer(relationOptions.get(0));
 						return;
 					}
 
