@@ -6,10 +6,10 @@
 
     <LinearLayout
         android:id="@+id/ll_add_album_first_row"
-        android:layout_width="265dp"
+        android:layout_width="290dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="23dp"
         android:orientation="horizontal" >
 
         <EditText
@@ -33,11 +33,11 @@
 
     <EditText
         android:id="@+id/et_add_album_description"
-        android:layout_width="265dp"
+        android:layout_width="290dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_add_album_first_row"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:hint="@string/add_album_description"
         android:textSize="12sp" />
 
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_add_album_description"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="17dp"
         android:background="@drawable/new_album_screen_share_button"
         android:gravity="center"
         android:paddingLeft="9dp"
@@ -58,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_add_album_share_with_btn"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="17dp"
         android:background="@drawable/new_album_photos_upload_section_background" >
 
         <HorizontalScrollView
@@ -115,7 +115,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="78dp"
+            android:layout_marginTop="82dp"
             android:background="@drawable/new_album_screen_add_button_empty_screen" >
 
             <TextView

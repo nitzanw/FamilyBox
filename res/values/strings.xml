@@ -141,5 +141,6 @@
     <string name="add_album_add_photos_empty">Click to add new Photos</string>
     <string name="add_album_uploading">Uploading\.\.\.</string>
     <string name="add_album_done">Done</string>
+    <string name="add_album_title">Add New Album</string>
 
 </resources>

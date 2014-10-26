@@ -578,6 +578,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int add_album_menu=0x7f070068;
         public static final int add_album_name=0x7f070085;
         public static final int add_album_share=0x7f070087;
+        public static final int add_album_title=0x7f07008c;
         public static final int add_album_uploading=0x7f07008a;
         public static final int album_date=0x7f07002b;
         public static final int album_title=0x7f07002a;

@@ -6,6 +6,7 @@ import com.wazapps.familybox.R;
 import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,13 +16,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class AddAlbumFragment extends Fragment implements OnClickListener {
+public class AddAlbumFragment extends Fragment implements OnClickListener,
+		OnFocusChangeListener {
 	public static final String ADD_ALBUM_FRAG = "add album fragment";
 	private ViewGroup rootView;
 	private EditText mAlbumName;
@@ -64,6 +68,8 @@ public class AddAlbumFragment extends Fragment implements OnClickListener {
 	private void initViews() {
 		mAlbumName = (EditText) rootView.findViewById(R.id.et_add_album_name);
 		mAlbumDate = (EditText) rootView.findViewById(R.id.et_add_album_date);
+		mAlbumDate.setOnFocusChangeListener(this);
+
 		mAlbumDate.setOnClickListener(this);
 		mAlbumDesc = (EditText) rootView
 				.findViewById(R.id.et_add_album_description);
@@ -85,28 +91,17 @@ public class AddAlbumFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.menu_accept, menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_accept) {
-			// TODO upload the album to the server
-			getActivity().finish();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+		getActivity().getActionBar().setTitle(
+				getString(R.string.add_album_title));
 	}
 
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.et_add_album_date) {
 			addAlbumCallback.openDateInputDialog();
+			InputMethodManager bimm = (InputMethodManager) getActivity()
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			bimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 		} else if (v.getId() == R.id.tv_add_album_share_with_btn) {
 			// TODO create new dialog
 		} else if (v.getId() == R.id.rl_add_photos_btn_empty) {
@@ -135,6 +130,17 @@ public class AddAlbumFragment extends Fragment implements OnClickListener {
 
 	public void setAlbumDate(String date) {
 		mAlbumDate.setText(date);
+
+	}
+
+	@Override
+	public void onFocusChange(View v, boolean hasFocus) {
+		if (hasFocus) {
+			addAlbumCallback.openDateInputDialog();
+			InputMethodManager bimm = (InputMethodManager) getActivity()
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			bimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+		}
 
 	}
 }

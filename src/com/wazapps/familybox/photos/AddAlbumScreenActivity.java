@@ -1,6 +1,8 @@
 package com.wazapps.familybox.photos;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.photos.AddAlbumFragment.AddAlbumScreenCallback;
@@ -36,5 +38,22 @@ public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 		if (addAlbum != null) {
 			addAlbum.setAlbumDate(date);
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_accept) {
+			// TODO upload the album to the server
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		getMenuInflater().inflate(R.menu.menu_accept, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 }

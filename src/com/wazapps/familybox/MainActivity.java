@@ -245,7 +245,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_extra_actions, menu);
-		final MenuItem searchMenuItem = menu.findItem(R.id.action_extra);
+		final MenuItem extraMenuItem = menu.findItem(R.id.action_extra);
 		return super.onCreateOptionsMenu(menu);
 	}
 
