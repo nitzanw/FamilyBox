@@ -4,76 +4,64 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
+   <RelativeLayout
         android:id="@+id/ll_profile_upper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/background_light" >
-
-        <FrameLayout
-            android:id="@+id/fl_image_area"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/my_profile_pic_shading" />
-
-            <com.wazapps.familybox.util.RoundedImageView
-                android:id="@+id/riv_profile_image"
-                android:layout_width="122dp"
-                android:layout_height="122dp"
-                android:layout_marginTop="11dp"
-                android:background="@drawable/my_profile_pic_elipse_lines"
-                android:cropToPadding="true"
-                android:scaleType="centerCrop" />
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        
+       <RelativeLayout 
+           android:layout_width="match_parent"
+           android:layout_height="145dp">
+           
+           <ImageView android:id="@+id/iv_profile_picture_background"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginTop="20dp"
-            android:layout_toRightOf="@+id/fl_image_area"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tv_profile_username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/user_name"
-                android:textSize="20sp" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="10dp"
-                android:background="@drawable/change_photo_text_background" />
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="-5dp" >
-
-                <TextView
+            android:src="@drawable/profile_background"/>
+           
+           <com.wazapps.familybox.util.RoundedImageView
+                android:id="@+id/riv_profile_image"
+                android:layout_width="114dp"
+                android:layout_height="114dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/my_profile_pic_elipse_lines"
+                android:cropToPadding="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop" />
+           
+			<TextView
+				android:id="@+id/tv_profile_username"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_marginLeft="5dp"
+				android:text="@string/user_name"
+				android:layout_toRightOf="@id/riv_profile_image"
+				android:textSize="20sp"/>
+			
+			<RelativeLayout 
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_below="@id/iv_profile_picture_background"
+			    android:layout_marginLeft="107dp">
+			    
+			    <TextView
                     android:id="@+id/tv_profile_status_title"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_height="wrap_content" 
+                    android:layout_marginTop="4dp" 
+                    android:textStyle="bold"     
+                    android:text="@string/profile_status_title"
                     android:drawableLeft="@drawable/my_profile_status_line_sphere"
-                    android:drawablePadding="7dp"
-                    android:drawableStart="@drawable/my_profile_status_line_sphere"
-                    android:text="@string/profile_status_title" />
-
-                <ImageButton
+                    android:drawablePadding="3dp" />
+			    
+			    <ImageButton
                     android:id="@+id/ib_submit_status"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="2dp"
-                    android:layout_marginTop="2dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/action_bar_edit_profile_accept_button"
                     android:visibility="invisible" />
@@ -84,40 +72,40 @@
                     android:layout_height="30dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="2dp"
-                    android:layout_marginTop="2dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/edit_button_gray_profile_status_update" />
-            </RelativeLayout>
+                
+                <FrameLayout
+	                android:layout_width="175dp"
+	                android:layout_height="33dp"
+	                android:layout_marginBottom="10dp"
+	                android:layout_toRightOf="@id/tv_profile_status_title"
+	                android:layout_marginLeft="3dp">
 
-            <FrameLayout
-                android:layout_width="175dp"
-                android:layout_height="70dp"
-                android:layout_marginLeft="9dp"
-                android:paddingTop="-15dp" >
+	                <EditText
+	                    android:id="@+id/et_profile_status"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:lineSpacingExtra="2dp"
+	                    android:maxLines="3"
+	                    android:text="@string/profile_status"
+	                    android:textSize="14sp"
+	                    android:visibility="invisible" />
 
-                <EditText
-                    android:id="@+id/et_profile_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingExtra="2dp"
-                    android:maxLines="3"
-                    android:text="@string/profile_status"
-                    android:textSize="14sp"
-                    android:visibility="invisible" />
-
-                <TextView
-                    android:id="@+id/tv_profile_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="6.5dp"
-                    android:lineSpacingExtra="2dp"
-                    android:maxLines="3"
-                    android:text="@string/profile_status" >
-                </TextView>
-            </FrameLayout>
-        </LinearLayout>
-    </RelativeLayout>
+	                <TextView
+	                    android:id="@+id/tv_profile_status"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:lineSpacingExtra="2dp"
+	                    android:layout_marginTop="4dp"
+	                    android:layout_marginLeft="12dp"
+	                    android:maxLines="3"
+	                    android:text="@string/profile_status" >
+                	</TextView>
+            	</FrameLayout>
+			</RelativeLayout>
+       </RelativeLayout>
+   </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -146,7 +134,8 @@
                 android:id="@+id/tv_close_family_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/seperator"
+                android:textColor="@color/grey_subtitle"
+                android:background="@drawable/profile_sections_background"
                 android:gravity="center_horizontal"
                 android:paddingTop="5dp"
                 android:text="@string/profile_close_family_title"

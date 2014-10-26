@@ -6,6 +6,9 @@ import com.wazapps.familybox.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,10 +59,26 @@ public class ProfileDetailsAdapter extends BaseAdapter {
 		detailsTitle.setText(title);
 		detailsContents.setText(data);	
 		
+		//if this is the details title
+		if (position == 0) {
+			Drawable background = activity.getResources()
+					.getDrawable(R.drawable.profile_sections_background);
+			detailsTitle.setBackground(background);
+			detailsTitle.setGravity(Gravity.CENTER);
+			detailsTitle.setTextSize(20);
+			detailsContents.setVisibility(View.INVISIBLE);
+		} else if (position == 1) {
+			detailsTitle.setPadding(30, 0, 0, 0);
+			detailsContents.setPadding(30, 0, 0, 0);
+		} else {
+			detailsTitle.setPadding(30, 30, 0, 0);
+			detailsContents.setPadding(30, 0, 0, 0);
+		}
+		
 		//if this is the last element - add some padding to the bottom of it
 		//to improve the listView's visuals
 		if (position == this.getCount() - 1) {
-			detailsContents.setPadding(0, 0, 0, 50);
+			detailsContents.setPadding(30, 0, 0, 50);
 		}	
 		return v;		
 	}
