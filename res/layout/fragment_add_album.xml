@@ -58,10 +58,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_add_album_share_with_btn"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="13dp"
         android:background="@drawable/new_album_photos_upload_section_background" >
 
         <HorizontalScrollView
+            android:layout_marginTop="7dp"
             android:id="@+id/hsv_album_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

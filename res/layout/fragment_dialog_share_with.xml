@@ -38,7 +38,7 @@
         <ListView
             android:id="@+id/lv_share_w_family_list"
             android:layout_width="wrap_content"
-            android:layout_height="215dp"
+            android:layout_height="210dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" >
         </ListView>
@@ -50,7 +50,7 @@
             android:layout_below="@+id/lv_share_w_family_list"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/selector_accept" />
     </RelativeLayout>
 
