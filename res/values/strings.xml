@@ -105,6 +105,7 @@
     <string name="drawer_menu">Menu</string>
     <string name="expanded_action_menu">expanded action menu</string>
     <string name="accept_action_menu">accept action menu</string>
+    <string name="add_album_menu">add album menu</string>
     <string name="news">News</string>
     <string name="events">Events</string>
     <string name="news_feed_title">News feed</string>
@@ -132,5 +133,13 @@
     <string name="ab_new_password">New password</string>
     <string name="ab_confirm_password">Confirm password</string>
     <string name="ab_error_current_password">*The password you entered is incorrect</string>
+    <string name="add_album_date">Date</string>
+    <string name="add_album_name">Album Name</string>
+    <string name="add_album_description">Description</string>
+    <string name="add_album_share">Share with\.\.\.</string>
+    <string name="add_album_add_photos">Add Photos</string>
+    <string name="add_album_add_photos_empty">Click to add new Photos</string>
+    <string name="add_album_uploading">Uploading\.\.\.</string>
+    <string name="add_album_done">Done</string>
 
 </resources>

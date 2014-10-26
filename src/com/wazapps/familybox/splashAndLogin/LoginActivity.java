@@ -20,7 +20,7 @@ import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2.DownloadCallback;
-import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.BirthdayChooserCallback;
+import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.DateChooserCallback;
 import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
 import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
 import com.wazapps.familybox.splashAndLogin.FamilyQueryFragment.QueryHandlerCallback;
@@ -45,7 +45,7 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 public class LoginActivity extends FragmentActivity implements
-		StartScreenCallback, BirthdayChooserCallback, GenderChooserCallback,
+		StartScreenCallback, DateChooserCallback, GenderChooserCallback,
 		SignupScreenCallback, EmailLoginScreenCallback, QueryHandlerCallback,
 		QueryAnswerHandlerCallback {
 	private static final String TAG_EMAIL_FRAG = "emailLogin";

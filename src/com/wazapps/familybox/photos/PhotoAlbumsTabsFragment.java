@@ -4,9 +4,13 @@ import com.wazapps.familybox.R;
 import com.wazapps.familybox.TabsFragment;
 import com.wazapps.familybox.familyTree.FamiliesListItem;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -32,9 +36,9 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		if (container == null) {
 			return null;
 		}
-		
+
 		Bundle args = makeTempData();
-		ViewGroup rootView = (ViewGroup) inflater.inflate (
+		ViewGroup rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_photo_album_store_tabs, null);
 		this.tabHost = (FragmentTabHost) rootView
 				.findViewById(android.R.id.tabhost);
@@ -59,10 +63,29 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 
 		return this.tabHost;
 	}
-	
-	//TODO: get real data
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_add_album, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_add_album) {
+
+			Intent addAlbum = new Intent(getActivity(),
+					AddAlbumScreenActivity.class);
+			getActivity().startActivity(addAlbum);
+
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	// TODO: get real data
 	/**
 	 * Get temporary data for testing purposes
+	 * 
 	 * @return
 	 */
 	private Bundle makeTempData() {
@@ -78,10 +101,10 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		}
 
 		for (int i = 0; i < 6; i++) {
-			albumList[i] = new AlbumItem(String.valueOf(i),tempData, albumName + i,
-					"December 201" + i);
+			albumList[i] = new AlbumItem(String.valueOf(i), tempData, albumName
+					+ i, "December 201" + i);
 		}
-		
+
 		Bundle args = new Bundle();
 		args.putParcelableArray(PhotoGridFragment.ALBUM_ITEM_LIST, albumList);
 		args.putParcelable(PhotoGridFragment.ALBUM_ITEM, albumList[0]);

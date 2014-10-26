@@ -18,10 +18,10 @@ import android.widget.ImageButton;
 public class BirthdaySignupDialogFragment extends DialogFragment implements
 		OnClickListener {
 	private View root;
-	private BirthdayChooserCallback birthdayCallback = null;
+	private DateChooserCallback birthdayCallback = null;
 	private DatePicker picker;
 
-	public interface BirthdayChooserCallback {
+	public interface DateChooserCallback {
 		public void setDate(String date);
 	}
 
@@ -29,7 +29,7 @@ public class BirthdaySignupDialogFragment extends DialogFragment implements
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			birthdayCallback = (BirthdayChooserCallback) getActivity();
+			birthdayCallback = (DateChooserCallback) getActivity();
 		} 
 		
 		catch (ClassCastException e) {

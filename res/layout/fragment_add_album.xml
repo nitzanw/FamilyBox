@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/new_album_screen_background" >
+
+    <LinearLayout
+        android:id="@+id/ll_add_album_first_row"
+        android:layout_width="265dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/et_add_album_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/add_album_name"
+            android:inputType="textPersonName"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/et_add_album_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/add_album_date"
+            android:inputType="date"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_add_album_description"
+        android:layout_width="265dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_add_album_first_row"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:hint="@string/add_album_description"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_add_album_share_with_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_add_album_description"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:background="@drawable/new_album_screen_share_button"
+        android:gravity="center"
+        android:paddingLeft="9dp"
+        android:text="@string/add_album_share"
+        android:textAlignment="gravity" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_add_album_share_with_btn"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/new_album_photos_upload_section_background" >
+
+        <HorizontalScrollView
+            android:id="@+id/hsv_album_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            android:layout_above="@+id/tv_add_photos_btn" >
+
+            <LinearLayout
+                android:id="@+id/ll_add_album_photos_input_section"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/ll_input_section_row_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" />
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/ll_input_section_row_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/tv_add_photos_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/margin_bottom"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom"
+            android:background="@drawable/new_album_screen_add_button"
+            android:gravity="center"
+            android:paddingTop="3dp"
+            android:text="@string/add_album_add_photos"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/margin_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_alignParentBottom="true" />
+
+        <RelativeLayout
+            android:id="@+id/rl_add_photos_btn_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="78dp"
+            android:background="@drawable/new_album_screen_add_button_empty_screen" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/new_album_screen_add_button"
+                android:gravity="center"
+                android:paddingLeft="11dp"
+                android:text="@string/add_album_add_photos_empty"
+                android:textAlignment="center" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

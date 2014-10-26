@@ -84,7 +84,6 @@ public class MainActivity extends FragmentActivity implements
 				getString(R.string.drawer_news),
 				getString(R.string.drawer_expand_network) };
 
-		// TODO: add icons
 		// Generate icon
 		icon = new int[] { R.drawable.my_profile_drawer_icon,
 				R.drawable.family_profile_drawer_icon,
@@ -264,14 +263,18 @@ public class MainActivity extends FragmentActivity implements
 		if (editProfile != null) {
 			editProfile.setVisible(!drawerOpen);
 		}
+		MenuItem addAlbum = menu.findItem(R.id.action_add_album);
+		if (addAlbum != null) {
+			addAlbum.setVisible(!drawerOpen);
+		}
 		return true;
 	}
 
 	public void selectItem(int position) {
 		mPosition = position;
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		//TODO: maybe remove or replace with faster animation
-		ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast); 
+		// TODO: maybe remove or replace with faster animation
+		ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 		switch (position) {
 		case MY_PROFILE_POS:
 			ProfileFragment profileFrag = new ProfileFragment();
