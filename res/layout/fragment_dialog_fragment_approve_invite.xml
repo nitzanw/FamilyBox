@@ -53,7 +53,7 @@
             android:id="@+id/iv_approve_invite_accept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/approve_invite_accept"/>
+            android:src="@drawable/selector_accept"/>
 
 
 

@@ -321,13 +321,14 @@ public class MainActivity extends FragmentActivity implements
 
 	// TODO remove when real data comes
 	private Bundle getProfileArgsTemp() {
-		ProfileDetails[] profileDetailsData = { null, null, null, null };
-		profileDetailsData[0] = (new ProfileDetails("Address",
+		ProfileDetails[] profileDetailsData = { null, null, null, null, null };
+		profileDetailsData[0] = (new ProfileDetails("Details", ""));
+		profileDetailsData[1] = (new ProfileDetails("Address",
 				"K. yovel, mozkin st."));
-		profileDetailsData[1] = (new ProfileDetails("Birthday", "19.10.1987"));
-		profileDetailsData[2] = (new ProfileDetails("Previous Family Names",
+		profileDetailsData[2] = (new ProfileDetails("Birthday", "19.10.1987"));
+		profileDetailsData[3] = (new ProfileDetails("Previous Family Names",
 				"No previous family names"));
-		profileDetailsData[3] = (new ProfileDetails("Quotes",
+		profileDetailsData[4] = (new ProfileDetails("Quotes",
 				"For every every there exists exists"));
 
 		FamilyMemberDetails dad = new FamilyMemberDetails("0", "1", "",

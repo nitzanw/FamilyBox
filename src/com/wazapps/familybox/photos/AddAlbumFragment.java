@@ -103,7 +103,8 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
 			bimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 		} else if (v.getId() == R.id.tv_add_album_share_with_btn) {
-			// TODO create new dialog
+			ShareWithDialogFragment shareWith = new ShareWithDialogFragment();
+			shareWith.show(getChildFragmentManager(), ShareWithDialogFragment.SHARE_W_DIALOG_FRAG);
 		} else if (v.getId() == R.id.rl_add_photos_btn_empty) {
 			// TODO get real data:
 			ArrayList<String> urlPhotoList = new ArrayList<String>();

@@ -142,5 +142,6 @@
     <string name="add_album_uploading">Uploading\.\.\.</string>
     <string name="add_album_done">Done</string>
     <string name="add_album_title">Add New Album</string>
+    <string name="add_album_share_w_dialog">Share with:</string>
 
 </resources>
