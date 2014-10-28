@@ -143,5 +143,10 @@
     <string name="add_album_done">Done</string>
     <string name="add_album_title">Add New Album</string>
     <string name="add_album_share_w_dialog">Share with:</string>
+    <string name="multi_app_name">MultiImageChooser</string>
+    <string name="free_version_label">Free version - Images left: %d</string>
+    <string name="error_database">There was an error opening the images database. Please report the problem.</string>
+    <string name="requesting_thumbnails">Requesting thumbnails, please be patient</string>
+    <string name="id">id</string>
 
 </resources>
