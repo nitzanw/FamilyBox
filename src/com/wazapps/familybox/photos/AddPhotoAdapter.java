@@ -1,24 +1,16 @@
 package com.wazapps.familybox.photos;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.handlers.PhotoHandler;
-import com.wazapps.familybox.splashAndLogin.EmailSignupFragment;
-import com.wazapps.familybox.util.ImageFetcher;
-
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.ImageFetcher;
 
 public class AddPhotoAdapter extends BaseAdapter {
 

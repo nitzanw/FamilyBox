@@ -2,28 +2,15 @@ package com.wazapps.familybox.familyTree;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.photos.AlbumGridScreenActivity;
-import com.wazapps.familybox.photos.AlbumItem;
-import com.wazapps.familybox.photos.PhotoGridFragment;
-import com.wazapps.familybox.photos.PhotoItem;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
+
+import com.wazapps.familybox.R;
 
 public class SearchListAdapter extends BaseAdapter {
 

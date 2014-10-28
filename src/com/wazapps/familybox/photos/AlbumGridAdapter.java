@@ -2,20 +2,20 @@ package com.wazapps.familybox.photos;
 
 import java.util.Arrays;
 
-import com.wazapps.familybox.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.wazapps.familybox.R;
 
 public class AlbumGridAdapter extends BaseAdapter {
 

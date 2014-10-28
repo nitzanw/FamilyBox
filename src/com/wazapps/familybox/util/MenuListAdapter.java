@@ -1,7 +1,5 @@
 package com.wazapps.familybox.util;
 
-import com.wazapps.familybox.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.wazapps.familybox.R;
 
 //The drawer menu list adapter
 public class MenuListAdapter extends BaseAdapter {

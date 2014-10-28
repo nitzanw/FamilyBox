@@ -1,19 +1,18 @@
 package com.wazapps.familybox.splashAndLogin;
 
-import com.wazapps.familybox.R;
-
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.view.View.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+
+import com.wazapps.familybox.R;
 
 public class GenderSignupDialogFragment extends DialogFragment 
 		implements OnClickListener {

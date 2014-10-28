@@ -2,10 +2,6 @@ package com.wazapps.familybox.newsfeed;
 
 import java.util.ArrayList;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.R.id;
-import com.wazapps.familybox.R.layout;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.wazapps.familybox.R;
 
 public class NewsAdapter extends BaseAdapter {
 	private Activity activity;

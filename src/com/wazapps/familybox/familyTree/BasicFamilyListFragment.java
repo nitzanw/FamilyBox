@@ -2,15 +2,8 @@ package com.wazapps.familybox.familyTree;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.photos.SharedAlbumsListAdapter;
-import com.wazapps.familybox.util.HeaderListView;
-
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,17 +11,17 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.SearchView.OnQueryTextListener;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.HeaderListView;
 
 public abstract class BasicFamilyListFragment extends Fragment {
 	protected static final int FAMILT_ITEM = R.string.family;

@@ -1,9 +1,5 @@
 package com.wazapps.familybox.handlers;
 
-import android.app.Activity;
-import android.view.Gravity;
-import android.widget.Toast;
-
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -12,8 +8,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.wazapps.familybox.splashAndLogin.LoginActivity;
-import com.wazapps.familybox.util.LogUtils;
 
 public class FamilyHandler {
 	public static final String FAMILY_CLASS_NAME = "Family";
@@ -42,36 +36,61 @@ public class FamilyHandler {
 		query.findInBackground(callbackFunc);
 	}
 		
-	public static void createNewFamilyForUser(ParseUser user, 
-			final LoginActivity activity, final SaveCallback callbackFunc) {
+	public static void createNewFamilyForUser(ParseUser user,
+			ParseObject newFamily, final SaveCallback callbackFunc) {
 		user.fetchInBackground(new GetCallback<ParseUser>() {
-
+			private ParseObject newFamily;
+			
 			@Override
 			public void done(ParseUser user, ParseException e) {
+				
 				//if data fetching was successful
 				if (e == null) {
 					String familyName = user.getString(UserHandler.LAST_NAME_KEY);
-					ParseObject newFamily = new ParseObject(FAMILY_CLASS_NAME);
 					newFamily.put(NAME_KEY, familyName);
 					newFamily.put(NETWORK_KEY, user.getString(NETWORK_KEY));
 					newFamily.put(UNDEFINED_KEY, user);
-					user.put(UserHandler.FAMILY_KEY, newFamily);
-					user.put(UserHandler.PASS_QUERY_KEY, true);
-					user.saveInBackground(callbackFunc);
+					newFamily.saveInBackground(new SaveCallback() {
+						private ParseUser user;
+						private ParseObject newFamily;
+						
+						@Override
+						public void done(ParseException e) {
+							if (e == null) {
+								user.put(UserHandler.FAMILY_KEY, 
+										newFamily.getObjectId());
+								user.put(UserHandler.PASS_QUERY_KEY, true);
+								user.saveInBackground(callbackFunc);								
+							} else {
+								callbackFunc.done(e);
+							}
+						}
+						
+						private SaveCallback init(ParseUser user, ParseObject newFamily) {
+							this.user = user;
+							this.newFamily = newFamily;
+							return this;
+						}
+					}.init(user, newFamily));
 				} 
 				
 				//if data fetching failed - cancel the sign up process
 				else {
-					activity.handleUserCreationError(e, true);
+					callbackFunc.done(e);
 				}	
 			}
-		});
+			
+			private GetCallback<ParseUser> init(ParseObject newFamily) {
+				this.newFamily = newFamily;
+				return this;
+			}
+		}.init(newFamily));
 	}
 	
 	public static void updateUsersAndFamilyRelation(ParseUser currentUser, 
 			ParseUser currentFamilyMember, ParseObject currentFamily, 
 			String relation, boolean isMemberUndefined, boolean isUserMale, 
-			boolean isMemberMale, SaveCallback callbackFunc) {
+			boolean isMemberMale, final SaveCallback callbackFunc) {
 		if (relation.equals(RELATION_FATHER) 
 				|| relation.equals(RELATION_MOTHER)) {
 			ParseRelation<ParseUser> children = 
@@ -129,7 +148,28 @@ public class FamilyHandler {
 		}
 		
 		currentUser.put(UserHandler.PASS_QUERY_KEY, true);
-		currentUser.put(UserHandler.FAMILY_KEY, currentFamily);
-		currentUser.saveInBackground(callbackFunc);
+		currentUser.put(UserHandler.FAMILY_KEY, currentFamily.getObjectId());
+		
+		currentFamily.saveInBackground(new SaveCallback() {
+			private ParseUser currentUser;
+			
+			@Override
+			public void done(ParseException e) {
+				if (e == null) {
+					if (currentUser.isDirty()) {
+						currentUser.saveInBackground(callbackFunc);
+					} else {
+						callbackFunc.done(null);
+					}
+				} else {
+					callbackFunc.done(e);
+				}				
+			}
+			
+			private SaveCallback init(ParseUser currentUser) {
+				this.currentUser = currentUser;
+				return this;
+			}
+		}.init(currentUser));
 	}
 }

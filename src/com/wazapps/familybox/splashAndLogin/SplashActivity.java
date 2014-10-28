@@ -1,43 +1,30 @@
 package com.wazapps.familybox.splashAndLogin;
 
-import com.wazapps.familybox.MainActivity;
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.handlers.UserHandler;
-import com.wazapps.familybox.util.LogUtils;
-import com.wazapps.familybox.util.WaveDrawable;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.AnticipateInterpolator;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.view.animation.OvershootInterpolator;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import com.parse.Parse;
-import com.parse.ParseAnalytics;
+
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.wazapps.familybox.MainActivity;
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.UserHandler;
+import com.wazapps.familybox.util.WaveDrawable;
 
 
 public class SplashActivity extends Activity{
 	private static String TAG = SplashActivity.class.getName();
 	private static long SLEEP_TIME = 4; // Sleep for some time
 	private static int SEC_FACTOR = 1000;
-	private static final String appId = "hFLXtlIwku3PGYy0ezKYQf67sRCamG1IvNToz22q";
-	private static final String clientKey = "klA7GiTnY25T6ou1aVwFdd4bPrsUBXArFVnBXIw3";
+	
 	public static final String SPLASH_ACTION = "splash";
 	public static final String HANDLE_QUERY = "handle query";
 	public static final String USER_LOGGED = "user logged";
@@ -51,16 +38,10 @@ public class SplashActivity extends Activity{
 		setContentView(R.layout.activity_splash);
 		overridePendingTransition(R.anim.enter, R.anim.exit);
 		initAnimation();
-		initParse();
 		
 		// Start timer and launch main activity
 		IntentLauncher appLaunch = new IntentLauncher();
 		appLaunch.start();
-	}
-	
-	private void initParse() {
-		Parse.initialize(this, appId, clientKey);
-		//TODO: add offline storage of account details
 	}
 	
 	private void initAnimation() {
@@ -90,6 +71,7 @@ public class SplashActivity extends Activity{
 			}
 			
 			ParseUser currUser = ParseUser.getCurrentUser();
+			
 			//if user is logged in - get to main screen or to family query
 			if (currUser != null) {
 				try {

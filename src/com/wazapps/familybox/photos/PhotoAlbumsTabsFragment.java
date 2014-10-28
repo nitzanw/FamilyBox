@@ -1,9 +1,5 @@
 package com.wazapps.familybox.photos;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.TabsFragment;
-import com.wazapps.familybox.familyTree.FamiliesListItem;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
@@ -13,6 +9,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.TabsFragment;
+import com.wazapps.familybox.familyTree.FamiliesListItem;
 
 public class PhotoAlbumsTabsFragment extends TabsFragment {
 	private static final String MY_FAMILY = "myFamily";

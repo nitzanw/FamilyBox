@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.MultiImageChooserActivity;
 
 public class AddAlbumFragment extends Fragment implements OnClickListener,

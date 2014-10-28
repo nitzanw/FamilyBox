@@ -1,9 +1,6 @@
 package com.wazapps.familybox.profiles;
 
-import java.util.ArrayList;
-
 import android.os.Bundle;
-import android.os.Parcelable;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.util.AbstractScreenActivity;

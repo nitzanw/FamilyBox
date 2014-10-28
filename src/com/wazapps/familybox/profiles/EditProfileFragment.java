@@ -1,10 +1,5 @@
 package com.wazapps.familybox.profiles;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.util.LogUtils;
-import com.wazapps.familybox.util.RoundedImageView;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -16,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.LogUtils;
+import com.wazapps.familybox.util.RoundedImageView;
 
 public class EditProfileFragment extends Fragment {
 	public static final String EDIT_PROFILE_FRAG = "edit profile fragment";

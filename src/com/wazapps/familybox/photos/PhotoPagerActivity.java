@@ -1,9 +1,9 @@
 package com.wazapps.familybox.photos;
 
-import com.wazapps.familybox.R;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+
+import com.wazapps.familybox.R;
 
 public class PhotoPagerActivity extends FragmentActivity{
 	protected static final String PHOTO_BUNDLE = "photo data";

@@ -4,11 +4,22 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
+import android.widget.Toast;
+
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
@@ -18,6 +29,7 @@ import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
+import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2;
 import com.wazapps.familybox.profiles.FamilyMemberDetails2.DownloadCallback;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.DateChooserCallback;
@@ -28,21 +40,6 @@ import com.wazapps.familybox.splashAndLogin.GenderSignupDialogFragment.GenderCho
 import com.wazapps.familybox.splashAndLogin.MemberQueryFragment.QueryAnswerHandlerCallback;
 import com.wazapps.familybox.splashAndLogin.StartFragment.StartScreenCallback;
 import com.wazapps.familybox.util.LogUtils;
-
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.view.Gravity;
-import android.widget.Toast;
 
 public class LoginActivity extends FragmentActivity implements
 		StartScreenCallback, DateChooserCallback, GenderChooserCallback,
@@ -56,6 +53,9 @@ public class LoginActivity extends FragmentActivity implements
 	private static final String TAG_FAMILYQUERY_FRAG = "familyQueryScreen";
 	private static final String TAG_MEMBERQUERY_FRAG = "memberQueryScreen";
 	private static final int SELECT_PICTURE = 0;
+	
+	public static final String PIN_USER_FAMILY = "UserFamily";
+	public static final String PIN_USER_FAMILY_MEMBERS = "UserFamilyMembers";
 
 	public int familyQueryIndex = 0;
 	public ArrayList<ParseObject> relatedFamilies = null;
@@ -74,6 +74,7 @@ public class LoginActivity extends FragmentActivity implements
 	private SaveCallback familyCreationCallback = null;
 	private FindCallback<ParseObject> familiesListFetchCallback = null;
 	private UserHandler.FamilyMembersFetchCallback familyMembersFetchCallback = null;
+	private LogInCallback loginCallback = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +128,7 @@ public class LoginActivity extends FragmentActivity implements
 			public void done(ParseException e) {
 				// if sign up succeeded - fetch all families
 				// that might be related to user
-				if (e == null) {
+				if (e == null) {	
 					String userNetwork = loginActivity.currentUser
 							.getString(UserHandler.NETWORK_KEY);
 					String userFamilyName = loginActivity.currentUser
@@ -228,6 +229,108 @@ public class LoginActivity extends FragmentActivity implements
 				return this;
 			}
 		}.init(this);
+		
+		//Handles the process of login in the user
+		//and caching relevant data
+		loginCallback = new LogInCallback() {
+			final StartFragment startFrag = (StartFragment) 
+					getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_SCR);
+			LoginActivity loginActivity;
+			
+			@Override
+			public void done(ParseUser user, ParseException e) {
+				// if login process succeeded
+				if (e == null) {
+					loginActivity.currentUser = user;
+					
+					// if the user did not pass the family query yet
+					// pass to family query screen.
+					if (!currentUser
+							.getBoolean(UserHandler.PASS_QUERY_KEY)) {
+						loginActivity.userCreationCallback.done(null);
+						return;
+					} 
+					
+					//else if the user has passed the family query
+					//then cache related family & members data and
+					//enter main app
+					else {
+						ParseQuery<ParseObject> familyQuery = ParseQuery
+								.getQuery(FamilyHandler.FAMILY_CLASS_NAME);
+						
+						String familyId = loginActivity.currentUser
+								.getString(UserHandler.FAMILY_KEY);
+						
+						//fetch the user's family for caching purposes
+						familyQuery.getInBackground(familyId, 
+								new GetCallback<ParseObject>() {
+							
+							@Override
+							public void done(ParseObject family, ParseException e) {
+								if (e == null) {
+									loginActivity.currentFamily = family;
+									
+									loginActivity.relatedFamilyMembers = 
+											new ArrayList<ParseUser>();
+									
+									loginActivity.relatedFamilyMemberDetails = 
+											new ArrayList<FamilyMemberDetails2>();
+									
+									loginActivity.userHandler.fetchFamilyMembers(
+											loginActivity.relatedFamilyMembers, 
+											loginActivity.relatedFamilyMemberDetails, 
+											loginActivity.currentFamily, 
+											new FamilyMembersFetchCallback() {
+										
+										@Override
+										public void done(ParseException e) {
+											if (e == null) {
+												loginActivity.enterApp();
+												return;
+											} 
+											
+											else {
+												loginActivity.handleUserLoginError(
+														e, "error in user login. " +
+																"please log in again", 
+																true, false);
+												if (startFrag != null) {
+													startFrag.turnOffProgress();
+												}	
+											}
+										}
+									});
+								} 
+								
+								else {
+									loginActivity.handleUserLoginError(e, 
+											"error in user login. please " +
+											"log in again", true, false);
+									if (startFrag != null) {
+										startFrag.turnOffProgress();
+									}	
+								}
+							}
+						});
+					}
+				}
+
+				// if login process failed
+				else {
+					loginActivity.handleUserLoginError(e, 
+							e.getMessage(), false, false);
+					if (startFrag != null) {
+						startFrag.turnOffProgress();
+					}							
+				}
+				
+			}
+			
+			private LogInCallback init(LoginActivity loginActivity) {
+				this.loginActivity = loginActivity;
+				return this;
+			}
+		}.init(this);
 	}
 
 	/**
@@ -235,9 +338,47 @@ public class LoginActivity extends FragmentActivity implements
 	 * the application's actual main screen
 	 */
 	private void enterApp() {
-		Intent intent = new Intent(this, MainActivity.class);
-		startActivity(intent);
-		this.finish();
+		currentFamily.pinInBackground(PIN_USER_FAMILY, 
+				new SaveCallback() {
+			private LoginActivity loginActivity;
+			
+			@Override
+			public void done(ParseException e) {
+				//if family pin succeeded
+				if (e == null) {
+					ParseUser.pinAllInBackground(PIN_USER_FAMILY_MEMBERS, 
+							loginActivity.relatedFamilyMembers, 
+							new SaveCallback() {
+						@Override
+						public void done(ParseException e) {
+							if (e == null) {
+								Intent intent = new Intent(loginActivity, 
+										MainActivity.class);
+								startActivity(intent);
+								loginActivity.finish();									
+							} 
+							
+							else {
+								loginActivity.handleUserLoginError(e, 
+										"error in user login. please log " +
+										"in again", true, true);
+							}
+						}
+					});					
+				} 
+				
+				//if family pin failed
+				else {
+					loginActivity.handleUserLoginError(e, "error in user " +
+							"login. please log in again", true, false);
+				}
+			}
+			
+			private SaveCallback init(LoginActivity loginActivity) {
+				this.loginActivity = loginActivity;
+				return this;
+			}
+		}.init(this));
 	}
 
 	@Override
@@ -333,51 +474,14 @@ public class LoginActivity extends FragmentActivity implements
 		
 		String errMsg = InputHandler.validateLoginInput(email, password);
 		if (!errMsg.equals("")) {
-			Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
-			toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-			toast.show();
+			handleUserLoginError(null, errMsg, false, false);
 			return;
 		} else if (startFrag != null) {
 			//add loading animation upon processing data
-			startFrag.turnOnProgress();
+			startFrag.turnOnProgress();			
 		}
 
-		ParseUser.logInInBackground("fb_" + email, password,
-				new LogInCallback() {
-					private LoginActivity loginActivity;
-
-					@Override
-					public void done(ParseUser user, ParseException e) {
-						// if login process succeeded
-						if (e == null) {
-							loginActivity.currentUser = user;
-							// if the user did not pass the family query yet
-							if (!currentUser
-									.getBoolean(UserHandler.PASS_QUERY_KEY)) {
-								loginActivity.userCreationCallback.done(null);
-							} else {
-								loginActivity.enterApp();
-							}
-						}
-
-						// if login process failed
-						else {
-							Toast toast = Toast.makeText(loginActivity,
-									e.getMessage(), Toast.LENGTH_LONG);
-							toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-							toast.show();
-							if (startFrag != null) {
-								startFrag.turnOffProgress();
-							}
-							
-						}
-					}
-
-					private LogInCallback init(LoginActivity loginActivity) {
-						this.loginActivity = loginActivity;
-						return this;
-					}
-				}.init(this));
+		ParseUser.logInInBackground("fb_" + email, password, loginCallback);
 	}
 
 	@Override
@@ -412,7 +516,9 @@ public class LoginActivity extends FragmentActivity implements
 		// if no related families were found for the user
 		// create a new family for him/her
 		if (familyQueryIndex >= relatedFamilies.size()) {
-			FamilyHandler.createNewFamilyForUser(currentUser, this,
+			currentFamily = new ParseObject(FamilyHandler.FAMILY_CLASS_NAME);
+			relatedFamilyMembers = new ArrayList<ParseUser>();
+			FamilyHandler.createNewFamilyForUser(currentUser, currentFamily,
 					familyCreationCallback);
 			return;
 		}
@@ -503,7 +609,7 @@ public class LoginActivity extends FragmentActivity implements
 					@Override
 					public void done(ParseException e) {
 						if (e == null) {
-							loginActivity.enterApp();
+							loginActivity.enterApp();																			
 						} else {
 							// TODO: handle error
 						}
@@ -527,6 +633,25 @@ public class LoginActivity extends FragmentActivity implements
 		if (wasUserCreated) {
 			ParseUser.logOut();
 			currentUser.deleteInBackground();
+			ParseUser.unpinAllInBackground();
+		}
+	}
+		
+	public void handleUserLoginError(ParseException e, String errMsg, boolean isUserLogged, boolean eraseDatabase ) {
+		Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
+		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+		toast.show();
+		
+		if (e != null) {
+			LogUtils.logError("LoginActivity", e.getMessage());
+		}
+		
+		if (isUserLogged) {
+			ParseUser.logOut();
+		}
+		
+		if (eraseDatabase) {
+			ParseUser.unpinAllInBackground();
 		}
 	}
 

@@ -2,23 +2,19 @@ package com.wazapps.familybox.splashAndLogin;
 
 import java.util.Arrays;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.handlers.InputHandler;
-import com.wazapps.familybox.profiles.FamilyMemberDetails;
-import com.wazapps.familybox.profiles.FamilyMemberDetails2;
-import com.wazapps.familybox.util.RoundedImageView;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.InputHandler;
+import com.wazapps.familybox.profiles.FamilyMemberDetails2;
+import com.wazapps.familybox.util.RoundedImageView;
 
 public class FamilyQueryMemberListAdapter extends BaseAdapter {
 	private FragmentActivity activity;

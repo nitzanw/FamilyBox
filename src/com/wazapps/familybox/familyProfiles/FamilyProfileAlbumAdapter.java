@@ -2,9 +2,6 @@ package com.wazapps.familybox.familyProfiles;
 
 import java.util.Arrays;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.photos.AlbumItem;
-
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -13,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.photos.AlbumItem;
 
 public class FamilyProfileAlbumAdapter extends BaseAdapter {
 	private FragmentActivity activity;

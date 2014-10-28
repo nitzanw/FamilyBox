@@ -1,7 +1,5 @@
 package com.wazapps.familybox.splashAndLogin;
 
-import com.wazapps.familybox.R;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +10,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+
+import com.wazapps.familybox.R;
 
 public class EmailLoginDialogueFragment extends DialogFragment 
 implements OnClickListener {

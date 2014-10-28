@@ -2,16 +2,6 @@ package com.wazapps.familybox.splashAndLogin;
 
 import java.util.ArrayList;
 
-import com.parse.ParseException;
-import com.wazapps.familybox.handlers.InputHandler;
-import com.wazapps.familybox.profiles.FamilyMemberDetails;
-import com.wazapps.familybox.profiles.FamilyMemberDetails2;
-import com.wazapps.familybox.splashAndLogin.FamilyQueryFragment.QueryHandlerCallback;
-import com.wazapps.familybox.util.LogUtils;
-import com.wazapps.familybox.util.RoundedImageView;
-import com.wazapps.familybox.util.WaveDrawable;
-
-import com.wazapps.familybox.R;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -21,21 +11,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.InputHandler;
+import com.wazapps.familybox.profiles.FamilyMemberDetails2;
+import com.wazapps.familybox.util.LogUtils;
+import com.wazapps.familybox.util.RoundedImageView;
+import com.wazapps.familybox.util.WaveDrawable;
 
 public class MemberQueryFragment extends Fragment implements OnClickListener {
 	private View root;

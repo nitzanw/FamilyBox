@@ -1,11 +1,9 @@
 package com.wazapps.familybox.photos;
 
+import android.os.Bundle;
+
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.util.AbstractScreenActivity;
-
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.MenuItem;
 
 public class PhotoAlbumScreenActivity extends AbstractScreenActivity {
 

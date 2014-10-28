@@ -1,7 +1,5 @@
 package com.wazapps.familybox.util;
 
-import com.wazapps.familybox.R;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -16,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+
+import com.wazapps.familybox.R;
 
 public class HeaderListView extends RelativeLayout {
 
