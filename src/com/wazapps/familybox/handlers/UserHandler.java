@@ -32,6 +32,8 @@ public class UserHandler {
 	public static String FAMILY_KEY = "family";
 	public static String GENDER_MALE = "male";
 	
+	public static String MY_MEMBERS_LOCAL_KEY = "MyMembers";
+	
 	public static abstract class FamilyMembersFetchCallback {
 		public abstract void done(ParseException e);
 	}
@@ -151,7 +153,7 @@ public class UserHandler {
 				@Override
 				public void done(ParseException e) {
 					if (e == null) {
-						user.put(PROFILE_PICTURE_KEY, profilePic);							
+						user.put(PROFILE_PICTURE_KEY, profilePic);
 					}
 					user.signUpInBackground(callbackFunc);
 				}
@@ -164,7 +166,9 @@ public class UserHandler {
 					return this;
 				}
 			}.init(user, callbackFunc, profilePic));
-		} else {
+		} 
+		
+		else {
 			user.signUpInBackground(callbackFunc);
 		}
 	}

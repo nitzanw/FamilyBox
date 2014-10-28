@@ -25,6 +25,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
@@ -36,8 +38,7 @@ public class SplashActivity extends Activity{
 	private static String TAG = SplashActivity.class.getName();
 	private static long SLEEP_TIME = 4; // Sleep for some time
 	private static int SEC_FACTOR = 1000;
-	private static final String appId = "hFLXtlIwku3PGYy0ezKYQf67sRCamG1IvNToz22q";
-	private static final String clientKey = "klA7GiTnY25T6ou1aVwFdd4bPrsUBXArFVnBXIw3";
+	
 	public static final String SPLASH_ACTION = "splash";
 	public static final String HANDLE_QUERY = "handle query";
 	public static final String USER_LOGGED = "user logged";
@@ -51,16 +52,10 @@ public class SplashActivity extends Activity{
 		setContentView(R.layout.activity_splash);
 		overridePendingTransition(R.anim.enter, R.anim.exit);
 		initAnimation();
-		initParse();
 		
 		// Start timer and launch main activity
 		IntentLauncher appLaunch = new IntentLauncher();
 		appLaunch.start();
-	}
-	
-	private void initParse() {
-		Parse.initialize(this, appId, clientKey);
-		//TODO: add offline storage of account details
 	}
 	
 	private void initAnimation() {
@@ -90,6 +85,7 @@ public class SplashActivity extends Activity{
 			}
 			
 			ParseUser currUser = ParseUser.getCurrentUser();
+			
 			//if user is logged in - get to main screen or to family query
 			if (currUser != null) {
 				try {

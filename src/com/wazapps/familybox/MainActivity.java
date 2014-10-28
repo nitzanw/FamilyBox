@@ -6,9 +6,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.parse.DeleteCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.familyTree.FamiliesListFragment;
+import com.wazapps.familybox.handlers.FamilyHandler;
+import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.newsfeed.NewsFeedTabsFragment;
 import com.wazapps.familybox.newsfeed.NewsFragment;
 import com.wazapps.familybox.newsfeed.NewsItem;
@@ -42,6 +49,7 @@ import android.view.View;
 import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
 		AddProfileFragmentListener {
@@ -73,6 +81,24 @@ public class MainActivity extends FragmentActivity implements
 		selectItem(mPosition);
 		getActionBar().setTitle(getString(R.string.news_feed_title));
 		overridePendingTransition(R.anim.enter, R.anim.exit);
+//		testFunction();
+	}
+	
+	public void testFunction() {
+		ParseUser user = ParseUser.getCurrentUser();
+		String familyId = user.getString(UserHandler.FAMILY_KEY);
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("Family");
+		query.fromLocalDatastore();
+		try {
+			ParseObject family = query.get(familyId);
+			family.fetchFromLocalDatastore();
+			ParseUser arie = family.getParseUser(FamilyHandler.FATHER_KEY);
+			arie.fetchFromLocalDatastore();
+			Toast.makeText(this, arie.getString(UserHandler.FIRST_NAME_KEY), Toast.LENGTH_SHORT).show();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void initDrawer() {
@@ -187,12 +213,13 @@ public class MainActivity extends FragmentActivity implements
 			ParseUser currUser = ParseUser.getCurrentUser();
 			if (currUser != null) {
 				ParseUser.logOut();
+				ParseUser.unpinAllInBackground("UserFamilyMembers");
+				ParseObject.unpinAllInBackground("UserFamily");
+				Intent logoutIntent = new Intent(MainActivity.this, LoginActivity.class);
+				logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
+				startActivity(logoutIntent);
+				finish();
 			}
-
-			Intent logoutIntent = new Intent(this, LoginActivity.class);
-			logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
-			startActivity(logoutIntent);
-			finish();
 		} else if (item.getItemId() == R.id.password) {
 
 			ChangePasswordDialogFragment changePw = new ChangePasswordDialogFragment();
