@@ -15,7 +15,7 @@ import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class FamilyMemberDetails2 implements Parcelable {
+public class UserData implements Parcelable {
 	public static abstract class DownloadCallback {
 		public abstract void done(ParseException e);
 	}
@@ -41,7 +41,7 @@ public class FamilyMemberDetails2 implements Parcelable {
 		}
 	};
 
-	public FamilyMemberDetails2(String userId, String networkId,
+	public UserData(String userId, String networkId,
 			String firstName, String lastName, String role, String nickname,
 			String previousLastName, String middleName, String phoneNumber,
 			String birthday, String address, String gender, String quotes, 
@@ -66,7 +66,7 @@ public class FamilyMemberDetails2 implements Parcelable {
 		}
 	}
 
-	public FamilyMemberDetails2(Parcel details) {
+	public UserData(Parcel details) {
 		this.userId = details.readString();
 		this.networkId = details.readString();
 		this.firstName = details.readString();
@@ -89,7 +89,7 @@ public class FamilyMemberDetails2 implements Parcelable {
 		}
 	}
 	
-	public FamilyMemberDetails2(ParseUser user, String role) {
+	public UserData(ParseUser user, String role) {
 		this.userId = user.getObjectId();
 		this.networkId = user.getString("network");
 		this.firstName = user.getString("firstName");
@@ -118,7 +118,7 @@ public class FamilyMemberDetails2 implements Parcelable {
 				user.get(UserHandler.PROFILE_PICTURE_KEY);
 		
 		profilePic.getDataInBackground(new GetDataCallback() {
-			FamilyMemberDetails2 userDetails;
+			UserData userDetails;
 			DownloadCallback callbackFunc;
 			
 			@Override
@@ -132,7 +132,7 @@ public class FamilyMemberDetails2 implements Parcelable {
 				this.callbackFunc.done(e);
 			}
 			
-			private GetDataCallback init(FamilyMemberDetails2 userDetails,
+			private GetDataCallback init(UserData userDetails,
 					DownloadCallback callbackFunc) {
 				this.userDetails = userDetails;
 				this.callbackFunc = callbackFunc;
@@ -253,5 +253,9 @@ public class FamilyMemberDetails2 implements Parcelable {
 	
 	public void setProfilePic(byte[] profilePic) {
 		this.profilePic = Arrays.copyOf(profilePic, profilePic.length);
+	}
+	
+	public void setRole(String role) {
+		this.role = role;
 	}
 }

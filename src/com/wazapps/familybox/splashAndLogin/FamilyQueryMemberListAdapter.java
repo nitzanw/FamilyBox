@@ -5,7 +5,7 @@ import java.util.Arrays;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
-import com.wazapps.familybox.profiles.FamilyMemberDetails2;
+import com.wazapps.familybox.profiles.UserData;
 import com.wazapps.familybox.util.RoundedImageView;
 
 import android.content.Context;
@@ -22,14 +22,14 @@ import android.widget.TextView;
 
 public class FamilyQueryMemberListAdapter extends BaseAdapter {
 	private FragmentActivity activity;
-	private FamilyMemberDetails2[] familyMembersList;
+	private UserData[] familyMembersList;
 	private LayoutInflater linearInflater;
 	
 	public FamilyQueryMemberListAdapter(FragmentActivity activity, 
-			FamilyMemberDetails2[] familyMembersList) {
+			UserData[] familyMembersList) {
 		this.activity = activity;
 		this.familyMembersList = Arrays.copyOf(familyMembersList,
-				familyMembersList.length, FamilyMemberDetails2[].class);
+				familyMembersList.length, UserData[].class);
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class FamilyQueryMemberListAdapter extends BaseAdapter {
 			break;
 		}
 
-		FamilyMemberDetails2 member = this.familyMembersList[position];
+		UserData member = this.familyMembersList[position];
 		TextView name = (TextView) v
 				.findViewById(R.id.tv_query_family_member_name);
 		RoundedImageView picture = (RoundedImageView) v

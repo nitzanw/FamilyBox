@@ -6,7 +6,7 @@ import com.parse.ParseUser;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
-import com.wazapps.familybox.profiles.FamilyMemberDetails2;
+import com.wazapps.familybox.profiles.UserData;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 import com.wazapps.familybox.util.WaveDrawable;
@@ -42,8 +42,8 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	private View root;
 	private QueryHandlerCallback queryHandlerCallback;
 	private RoundedImageView mProfilePic;
-	private FamilyMemberDetails2 mCurrentUser;
-	private FamilyMemberDetails2[] mFamilyList;
+	private UserData mCurrentUser;
+	private UserData[] mFamilyList;
 	private TextView mFragTitle, mFragMsg, mFragMembers;
 	private LinearLayout mFamilyMembersHolder, mLoadingSpinner;
 	private FamilyQueryMemberListAdapter mFamilyListAdapter;
@@ -117,7 +117,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
-			mFamilyList = (FamilyMemberDetails2[]) args.getParcelableArray(QUERY_FAMILIES_LIST);	
+			mFamilyList = (UserData[]) args.getParcelableArray(QUERY_FAMILIES_LIST);	
 			mCurrentUser = args.getParcelable(MEMBER_ITEM);
 		} else {
 			LogUtils.logWarning(getTag(), "family query arguments did not pass");

@@ -16,6 +16,7 @@ import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.familyTree.FamiliesListFragment;
 import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.UserHandler;
+import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
 import com.wazapps.familybox.newsfeed.NewsFeedTabsFragment;
 import com.wazapps.familybox.newsfeed.NewsFragment;
 import com.wazapps.familybox.newsfeed.NewsItem;
@@ -25,6 +26,7 @@ import com.wazapps.familybox.photos.PhotoItem;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.ProfileDetails;
 import com.wazapps.familybox.profiles.ProfileFragment;
+import com.wazapps.familybox.profiles.UserData;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 import com.wazapps.familybox.splashAndLogin.ChangePasswordDialogFragment;
 import com.wazapps.familybox.splashAndLogin.LoginActivity;
@@ -53,6 +55,14 @@ import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
 		AddProfileFragmentListener {
+	
+	public static abstract class MainActivityCallback {
+		public abstract void done(Exception e);
+	}
+	
+	public static abstract class GetDataCallback {
+		public abstract void done(Bundle data, Exception e);
+	}
 
 	public static final int MY_PROFILE_POS = 0;
 	public static final int MY_FAMILY_PROFILE_POS = 1;
@@ -68,11 +78,19 @@ public class MainActivity extends FragmentActivity implements
 	protected DrawerLayout mDrawerLayout;
 	protected ListView mDrawerList;
 	protected ActionBarDrawerToggle mDrawerToggle;
-	MenuListAdapter mMenuAdapter;
 	protected int mPosition = NEWS_POS;
+	MenuListAdapter mMenuAdapter;
 	String[] title;
 	String[] subtitle;
 	int[] icon;
+	
+	//cached user data variables and handlers
+	private UserHandler userHandler = null;
+	private ParseUser currentUser = null;
+	private UserData userData = null;
+	private ParseObject currentFamily = null;
+	private ArrayList<ParseUser> familyMembers = null;
+	private ArrayList<UserData> familyMembersData = null;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,7 +99,7 @@ public class MainActivity extends FragmentActivity implements
 		selectItem(mPosition);
 		getActionBar().setTitle(getString(R.string.news_feed_title));
 		overridePendingTransition(R.anim.enter, R.anim.exit);
-//		testFunction();
+		userHandler = new UserHandler();
 	}
 	
 	public void testFunction() {
@@ -299,51 +317,86 @@ public class MainActivity extends FragmentActivity implements
 
 	public void selectItem(int position) {
 		mPosition = position;
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		// TODO: maybe remove or replace with faster animation
-		ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 		switch (position) {
+		
 		case MY_PROFILE_POS:
-			ProfileFragment profileFrag = new ProfileFragment();
-			profileFrag.setArguments(getProfileArgsTemp());
-			ft.replace(R.id.fragment_container, profileFrag,
-					ProfileFragment.PROFILE_FRAG);
+			getProfileData(new GetDataCallback() {
+				MainActivity activity;
+				
+				@Override
+				public void done(Bundle data, Exception e) {
+					ProfileFragment profileFrag = new ProfileFragment();
+					profileFrag.setArguments(activity.getProfileArgsTemp());
+					FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+					ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
+					ft.replace(R.id.fragment_container, profileFrag,
+							ProfileFragment.PROFILE_FRAG);
+					ft.commit();
+					activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
+				}
+				
+				private GetDataCallback init(MainActivity activity) {
+					this.activity = activity;
+					return this;
+				}
+			}.init(this));
+			
 			break;
+			
+			
 		case MY_FAMILY_PROFILE_POS:
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 			ft.replace(R.id.fragment_container, new FamilyProfileFragment(),
 					FamilyProfileFragment.FAMILY_PROFILE_FRAG);
-
+			ft.commit();
+			this.mDrawerLayout.closeDrawer(this.mDrawerList);
+			
 			break;
 		case FAMILY_TREE_POS:
-			ft.replace(R.id.fragment_container, new FamiliesListFragment(),
+			FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+			ft2.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
+			ft2.replace(R.id.fragment_container, new FamiliesListFragment(),
 					FamiliesListFragment.FAMILY_TREE_FRAG);
+			ft2.commit();
+			this.mDrawerLayout.closeDrawer(this.mDrawerList);
+			
 			break;
 
 		case PHOTOS_POS:
-			ft.replace(R.id.fragment_container, new PhotoAlbumsTabsFragment(),
+			FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
+			ft3.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
+			ft3.replace(R.id.fragment_container, new PhotoAlbumsTabsFragment(),
 					PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG);
+			ft3.commit();
+			this.mDrawerLayout.closeDrawer(this.mDrawerList);
 
 			break;
 
 		case NEWS_POS:
+			FragmentTransaction ft4 = getSupportFragmentManager().beginTransaction();
+			ft4.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 			NewsFeedTabsFragment newsTabs = new NewsFeedTabsFragment();
 			Bundle args = new Bundle();
 			updateNewsPosts(args);
 			newsTabs.setArguments(args);
 			// a better way
 
-			ft.replace(R.id.fragment_container, newsTabs,
+			ft4.replace(R.id.fragment_container, newsTabs,
 					NewsFeedTabsFragment.NEW_FEED_TAB_FRAG);
-
+			ft4.commit();
+			this.mDrawerLayout.closeDrawer(this.mDrawerList);
+			
 			break;
 
 		case EXPAND_NETWORK_POS:
-
+			FragmentTransaction ft5 = getSupportFragmentManager().beginTransaction();
+			ft5.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
+			this.mDrawerLayout.closeDrawer(this.mDrawerList);
+			ft5.commit();
+			
 			break;
 		}
-
-		ft.commit();
-		this.mDrawerLayout.closeDrawer(this.mDrawerList);
 	}
 
 	// TODO remove when real data comes
@@ -464,6 +517,114 @@ public class MainActivity extends FragmentActivity implements
 		ft.add(R.id.fragment_container, profileFrag,
 				ProfileFragment.PROFILE_FRAG).addToBackStack(null);
 		ft.commit();
-
+	}
+	
+	private void getProfileData(final GetDataCallback callbackFunc) {
+		fetchProfileLocalData(new MainActivityCallback() {
+			private MainActivity activity;
+			
+			@Override
+			public void done(Exception e) {
+				
+				//if data fetching has failed
+				if (e != null) {
+					callbackFunc.done(null, e);
+					return;
+				}
+				
+				Bundle data = new Bundle();
+				data.putParcelable(ProfileFragment.MEMBER_ITEM, 
+						activity.userData);
+				data.putParcelableArray(ProfileFragment.FAMILY_MEMBER_LIST, 
+						activity.familyMembersData.toArray(new UserData
+								[activity.familyMembersData.size()]));
+				callbackFunc.done(data, null);
+			}
+			
+			private MainActivityCallback init(MainActivity activity) {
+				this.activity = activity;
+				return this;
+			}
+		}.init(this));
+	}
+	
+	public void fetchProfileLocalData (
+			final MainActivityCallback callbackFunc) {
+		//if data has already been fetched before
+		if ((currentUser != null) && (currentFamily != null) && 
+				(familyMembers != null) && (familyMembersData != null) && 
+				(userData != null)) {
+			callbackFunc.done(null);
+		}
+		
+		//else - start fetching data
+		currentUser = ParseUser.getCurrentUser();
+		
+		//if no user is logged in
+		if (currentUser == null) {
+			callbackFunc.done(new Exception("no user is logged in"));
+		}
+		
+		String famildId = currentUser.getString(UserHandler.FAMILY_KEY);
+		ParseQuery<ParseObject> familyQuery = 
+				ParseQuery.getQuery(FamilyHandler.FAMILY_CLASS_NAME);
+		familyQuery.fromLocalDatastore();
+		//fetch the user's family from local datastore
+		familyQuery.getInBackground(famildId, new GetCallback<ParseObject>() {
+			MainActivity activity;
+			
+			@Override
+			public void done(ParseObject family, ParseException e) {
+				//if query fetching failed
+				if (e != null) {
+					callbackFunc.done(e);
+					return;
+				}
+				
+				//else if query fetching succeeded
+				//fetch family members from local datastore
+				String userId = activity.currentUser.getObjectId();
+				activity.familyMembers = new ArrayList<ParseUser>();
+				activity.familyMembersData = new ArrayList<UserData>();
+				activity.userData = new UserData(activity.currentUser, UserData.ROLE_UNDEFINED);
+				activity.currentFamily = family;
+				activity.userHandler.fetchFamilyMembersLocally (
+						activity.familyMembers, 
+						activity.familyMembersData, 
+						activity.currentFamily, userId, 
+						new FamilyMembersFetchCallback() {
+							
+							@Override
+							public void done(ParseException e) {
+								
+								//if family members data fetching has failed
+								if (e != null) {
+									callbackFunc.done(e);
+									return;
+								}
+								
+								//get the user's role in the family
+								try {
+									String userRole = activity.userHandler
+											.getUserRole(activity.currentUser, 
+											activity.currentFamily, false);
+									activity.userData.setRole(userRole);
+								} 
+								
+								catch (Exception roleError) {
+									callbackFunc.done(roleError);
+									return;
+								}
+								
+								callbackFunc.done(null);
+							}
+						});
+			}
+			
+			private GetCallback<ParseObject> init(MainActivity activity) {
+				this.activity = activity;
+				return this;
+			}
+		}.init(this));
 	}
 }

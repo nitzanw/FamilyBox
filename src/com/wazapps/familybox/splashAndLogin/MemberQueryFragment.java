@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.parse.ParseException;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
-import com.wazapps.familybox.profiles.FamilyMemberDetails2;
+import com.wazapps.familybox.profiles.UserData;
 import com.wazapps.familybox.splashAndLogin.FamilyQueryFragment.QueryHandlerCallback;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
@@ -44,7 +44,7 @@ public class MemberQueryFragment extends Fragment implements OnClickListener {
 	private TextView mFamilyMemberName, mFamilyMemberQuestion;
 	private Button mAcceptButton;
 	private LinearLayout mLoadingSpinner; 
-	private FamilyMemberDetails2 mFamilyMember;
+	private UserData mFamilyMember;
 	private ArrayList<String> mSpinnerOptions;
 	private QueryAnswerHandlerCallback mQueryAnswerHandler;
 	private boolean mIsMemberMale;

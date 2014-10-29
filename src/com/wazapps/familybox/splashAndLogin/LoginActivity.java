@@ -20,8 +20,8 @@ import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
-import com.wazapps.familybox.profiles.FamilyMemberDetails2;
-import com.wazapps.familybox.profiles.FamilyMemberDetails2.DownloadCallback;
+import com.wazapps.familybox.profiles.UserData;
+import com.wazapps.familybox.profiles.UserData.DownloadCallback;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.DateChooserCallback;
 import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
 import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
@@ -65,10 +65,10 @@ public class LoginActivity extends FragmentActivity implements
 	public int familyQueryIndex = 0;
 	public ArrayList<ParseObject> relatedFamilies = null;
 	public ParseUser currentUser = null, currentFamilyMember = null;
-	public FamilyMemberDetails2 currentFamilyMemberDetails = null;
+	public UserData currentFamilyMemberDetails = null;
 	public ParseObject currentFamily = null;
 	public ArrayList<ParseUser> relatedFamilyMembers = null;
-	public ArrayList<FamilyMemberDetails2> relatedFamilyMemberDetails = null;
+	public ArrayList<UserData> relatedFamilyMemberDetails = null;
 
 	private UserHandler userHandler = null;
 
@@ -279,7 +279,7 @@ public class LoginActivity extends FragmentActivity implements
 											new ArrayList<ParseUser>();
 									
 									loginActivity.relatedFamilyMemberDetails = 
-											new ArrayList<FamilyMemberDetails2>();
+											new ArrayList<UserData>();
 									
 									loginActivity.userHandler.fetchFamilyMembers(
 											loginActivity.relatedFamilyMembers, 
@@ -531,7 +531,7 @@ public class LoginActivity extends FragmentActivity implements
 		// else - check the current related family
 		// fetch its members and show to user
 		relatedFamilyMembers = new ArrayList<ParseUser>();
-		relatedFamilyMemberDetails = new ArrayList<FamilyMemberDetails2>();
+		relatedFamilyMemberDetails = new ArrayList<UserData>();
 		currentFamily = relatedFamilies.get(familyQueryIndex);
 
 		userHandler.fetchFamilyMembers(relatedFamilyMembers,
@@ -599,7 +599,7 @@ public class LoginActivity extends FragmentActivity implements
 		String familyMemberGender = currentFamilyMemberDetails.getGender();
 		String familyMemberRole = currentFamilyMemberDetails.getRole();
 		boolean isMemberUndefined = familyMemberRole
-				.equals(FamilyMemberDetails2.ROLE_UNDEFINED) ? true : false;
+				.equals(UserData.ROLE_UNDEFINED) ? true : false;
 		boolean isUserMale = userGender.equals(UserHandler.GENDER_MALE) ? true
 				: false;
 		boolean isMemberMale = familyMemberGender
@@ -628,7 +628,8 @@ public class LoginActivity extends FragmentActivity implements
 	}
 
 	public void handleUserCreationError(ParseException e, boolean wasUserCreated) {
-		String errMsg = (e.getMessage().startsWith("username")) ? "Email already taken"
+		String errMsg = (e.getMessage()
+				.startsWith("username")) ? "Email already taken"
 				: "Error in user creation, please sign up again";
 		Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
 		LogUtils.logError("LoginActivity", e.getMessage());
@@ -638,11 +639,11 @@ public class LoginActivity extends FragmentActivity implements
 		if (wasUserCreated) {
 			ParseUser.logOut();
 			currentUser.deleteInBackground();
-			ParseUser.unpinAllInBackground();
 		}
 	}
 		
-	public void handleUserLoginError(ParseException e, String errMsg, boolean isUserLogged, boolean eraseDatabase ) {
+	public void handleUserLoginError(ParseException e, 
+			String errMsg, boolean isUserLogged, boolean eraseDatabase ) {
 		Toast toast = Toast.makeText(this, errMsg, Toast.LENGTH_LONG);
 		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 		toast.show();
@@ -669,12 +670,12 @@ public class LoginActivity extends FragmentActivity implements
 		familyQueryIndex++;
 
 		// pass arguments and control to family query fragment
-		FamilyMemberDetails2 userDetails = new FamilyMemberDetails2(
-				currentUser, FamilyMemberDetails2.ROLE_UNDEFINED);
+		UserData userDetails = new UserData(
+				currentUser, UserData.ROLE_UNDEFINED);
 		userDetails.downloadProfilePicAsync(currentUser,
 				new DownloadCallback() {
-					private FamilyMemberDetails2 userDetails;
-					ArrayList<FamilyMemberDetails2> relatedFamilyMembers;
+					private UserData userDetails;
+					ArrayList<UserData> relatedFamilyMembers;
 
 					@Override
 					public void done(ParseException e) {
@@ -685,8 +686,8 @@ public class LoginActivity extends FragmentActivity implements
 						args.putParcelableArray(
 								FamilyQueryFragment.QUERY_FAMILIES_LIST,
 								relatedFamilyMembers
-										.toArray(new FamilyMemberDetails2[relatedFamilyMemberDetails
-												.size()]));
+										.toArray(new UserData
+												[relatedFamilyMemberDetails.size()]));
 
 						FamilyQueryFragment familyQueryFrag = new FamilyQueryFragment();
 						familyQueryFrag.setArguments(args);
@@ -700,8 +701,8 @@ public class LoginActivity extends FragmentActivity implements
 					}
 
 					private DownloadCallback init(
-							FamilyMemberDetails2 userDetails,
-							ArrayList<FamilyMemberDetails2> relatedFamilyMembersDetails) {
+							UserData userDetails,
+							ArrayList<UserData> relatedFamilyMembersDetails) {
 						this.userDetails = userDetails;
 						this.relatedFamilyMembers = relatedFamilyMembersDetails;
 						return this;

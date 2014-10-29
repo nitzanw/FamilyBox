@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.parse.ParseUser;
-import com.wazapps.familybox.profiles.FamilyMemberDetails2;
+import com.wazapps.familybox.profiles.UserData;
 
 public class InputHandler {
 	private static final String EMAIL_PATTERN = 
@@ -79,7 +79,7 @@ public class InputHandler {
 	
 	public static ArrayList<String> generateRelationOptions(
 			ParseUser currentUser, 
-			FamilyMemberDetails2 currentFamilyMemberDetails,
+			UserData currentFamilyMemberDetails,
 			boolean isFatherTaken, boolean isMotherTaken) {
 		String userGender = currentUser.getString(UserHandler.GENDER_KEY);
 		String familyMemberGender = currentFamilyMemberDetails.getGender();
@@ -94,11 +94,11 @@ public class InputHandler {
 		if (isUserMale) {
 			//if family member is male
 			if (isMemberMale) {
-				if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_PARENT)) {
+				if (familyMemberRole.equals(UserData.ROLE_PARENT)) {
 					options.add(FamilyHandler.RELATION_FATHER);
 				} 
 				
-				else if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_CHILD)) {
+				else if (familyMemberRole.equals(UserData.ROLE_CHILD)) {
 					options.add(FamilyHandler.RELATION_BROTHER);
 					if (!isFatherTaken) {						
 						options.add(FamilyHandler.RELATION_SON);
@@ -117,14 +117,14 @@ public class InputHandler {
 			
 			//if family member is female
 			else if (!isMemberMale) {	
-				if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_PARENT)) {
+				if (familyMemberRole.equals(UserData.ROLE_PARENT)) {
 					options.add(FamilyHandler.RELATION_MOTHER);
 					if (!isFatherTaken) {
 						options.add(FamilyHandler.RELATION_WIFE);						
 					}
 				} 
 				
-				else if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_CHILD)) {
+				else if (familyMemberRole.equals(UserData.ROLE_CHILD)) {
 					options.add(FamilyHandler.RELATION_SISTER);
 					if (!isFatherTaken) {
 						options.add(FamilyHandler.RELATION_DAUGHTER);
@@ -152,14 +152,14 @@ public class InputHandler {
 		else if (!isUserMale) {
 			//if family member is male
 			if (isMemberMale) {
-				if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_PARENT)) {
+				if (familyMemberRole.equals(UserData.ROLE_PARENT)) {
 					options.add(FamilyHandler.RELATION_FATHER);
 					if (!isMotherTaken) {
 						options.add(FamilyHandler.RELATION_HUSBAND);
 					}
 				}
 				
-				else if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_CHILD)) {
+				else if (familyMemberRole.equals(UserData.ROLE_CHILD)) {
 					options.add(FamilyHandler.RELATION_BROTHER);
 					if (!isMotherTaken) {
 						options.add(FamilyHandler.RELATION_SON);
@@ -184,11 +184,11 @@ public class InputHandler {
 			
 			//if family member is also a female
 			else if (!isMemberMale) {
-				if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_PARENT)) {
+				if (familyMemberRole.equals(UserData.ROLE_PARENT)) {
 					options.add(FamilyHandler.RELATION_MOTHER);
 				}
 				
-				else if (familyMemberRole.equals(FamilyMemberDetails2.ROLE_CHILD)) {
+				else if (familyMemberRole.equals(UserData.ROLE_CHILD)) {
 					options.add(FamilyHandler.RELATION_SISTER);
 					if (!isMotherTaken) {
 						options.add(FamilyHandler.RELATION_DAUGHTER);
