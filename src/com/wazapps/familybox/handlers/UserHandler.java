@@ -31,6 +31,9 @@ public class UserHandler {
 	public static String PROFILE_PICTURE_KEY = "profilePic";
 	public static String FAMILY_KEY = "family";
 	public static String PREV_FAMILY_KEY = "prevFamily";
+	public static String STATUS_KEY = "status";
+	public static String EMAIL_KEY = "email";
+	
 	public static String GENDER_MALE = "male";
 	
 	public static String MY_MEMBERS_LOCAL_KEY = "MyMembers";
@@ -215,6 +218,8 @@ public class UserHandler {
 		user.put(PHONE_NUMBER_KEY, "");
 		user.put(NETWORK_KEY, "1"); //TODO: replace with real network object ID
 		user.put(QUOTES_KEY, "");
+		user.put(PREV_FAMILY_KEY, "");
+		user.put(STATUS_KEY, "Just joined Familybox :)");
 		user.put(PASS_QUERY_KEY, false);
 		
 		//upload profile picture to server and link it to user

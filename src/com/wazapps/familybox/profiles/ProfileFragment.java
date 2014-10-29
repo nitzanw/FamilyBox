@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 
@@ -36,24 +38,33 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	private static final int ITEM_TYPE = R.string.type;
 	private static final int ITEM_POS = R.string.position;
 
+	private ProfileFamilyListAdapter mFamilyListAdapter;
+	private ProfileDetailsAdapter mProfileDetailsAdapter;
+	
+	//the fragment's profile data
+	private UserData[] mFamilyMembersList;
+	private UserData mCurrentUserDetails;
+
+	//the fragment's views
 	private View root;
 	private LinearLayout mFamilyListHolder;
 	private ListView mProfileDetailsList;
-	private ProfileFamilyListAdapter mFamilyListAdapter;
-	private ProfileDetailsAdapter mProfileDetailsAdapter;
-	private FamilyMemberDetails[] mFamilyMembersList;
-	private FamilyMemberDetails mCurrentUserDetails;
 	private TextView mUserName;
-	AddProfileFragmentListener addProfileCallback = null;
 	private RoundedImageView mUserPhoto;
 	private MenuItem editItem;
 	private TextView mUserStatus;
 	private EditText mUserStatusEdit;
 	private ImageButton mEditStatusbtn;
 	private ImageButton mSubmitStatus;
+	AddProfileFragmentListener addProfileCallback = null;
+	UpdateProfileStatus updateProfileStatusCallback = null;
 
 	public interface AddProfileFragmentListener {
 		void addProfileFragment(Bundle args);
+	}
+	
+	public interface UpdateProfileStatus {
+		void updateProfileStatus(String status);
 	}
 
 	@Override
@@ -61,17 +72,20 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		super.onAttach(activity);
 		try {
 			addProfileCallback = (AddProfileFragmentListener) getActivity();
+			updateProfileStatusCallback = (UpdateProfileStatus) getActivity();
 		}
 
 		catch (ClassCastException e) {
-			Log.e("loginCallbackErr",
-					"Activity should implement AddProfileFragmentListener interface");
+			LogUtils.logError("ProfileFragment", 
+					"Activity should implement " +
+					"AddProfileFragmentListener interface" +
+					"and UpdateProfileStatus interface");
 		}
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, 
+			ViewGroup container,Bundle savedInstanceState) {
 		root = inflater.inflate(R.layout.fragment_profile, container, false);
 
 		mFamilyListHolder = (LinearLayout) root
@@ -106,35 +120,46 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle args = getArguments();
-		if (args != null) {
+		Bundle profileArgs = getArguments();
+		if (profileArgs != null) {
 			// get the data for the profile
-			mFamilyMembersList = (FamilyMemberDetails[]) args
+			mFamilyMembersList = (UserData[]) profileArgs
 					.getParcelableArray(FAMILY_MEMBER_LIST);
-			mCurrentUserDetails = (FamilyMemberDetails) args
+			mCurrentUserDetails = (UserData) profileArgs
 					.getParcelable(MEMBER_ITEM);
 			setHasOptionsMenu(true);
 		}
 
 		else {
-			LogUtils.logWarning(getTag(), "profile arguments did not pass");
+			LogUtils.logWarning(getTag(), 
+					"profile arguments did not pass");
 		}
 	}
 
 	private void initProfileDetailsViews() {
-		mUserName.setText(mCurrentUserDetails.getName() + " "
-				+ mCurrentUserDetails.getLastName());
-
-		mUserStatus.setText("This is a fake status!!!");
-		mUserStatusEdit.setText("This is a fake status!!!");
+		String userName = InputHandler.capitalizeFullname(
+				mCurrentUserDetails.getName(), 
+				mCurrentUserDetails.getLastName());
+		String status = mCurrentUserDetails.getStatus();
+		Bitmap profilePic = mCurrentUserDetails.getprofilePhoto();
+		
+		mUserName.setText(userName);
+		mUserStatus.setText(status);
+		mUserStatusEdit.setText(status);
+		if (profilePic != null) {
+			mUserPhoto.setImageBitmap(profilePic);
+			mUserPhoto.setBackgroundColor(getResources().getColor(
+					android.R.color.transparent));	
+		}
+		
 		mProfileDetailsAdapter = new ProfileDetailsAdapter(getActivity(),
-				mCurrentUserDetails.getDetails());
+				mCurrentUserDetails.getUserProfileDetails());
 		mProfileDetailsList.setAdapter(mProfileDetailsAdapter);
 	}
 
 	private void initFamilyListView() {
 		mFamilyListAdapter = new ProfileFamilyListAdapter(this.getActivity(),
-				mFamilyMembersList);
+				mFamilyMembersList, mCurrentUserDetails);
 		for (int i = 0; i < mFamilyListAdapter.getCount(); i++) {
 			View v = mFamilyListAdapter.getView(i, null, (ViewGroup) getView());
 			v.setTag(ITEM_TYPE, MEMBER_ITEM_TYPE);
@@ -155,20 +180,29 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		} else if ((v.getId() == R.id.ib_submit_status)) {
 			mEditStatusbtn.setVisibility(View.VISIBLE);
 			mSubmitStatus.setVisibility(View.INVISIBLE);
-			mUserStatus.setText(mUserStatusEdit.getText().toString());
+			String oldStatus = mUserStatus.getText().toString();
+			String newStatus = mUserStatusEdit.getText().toString();
+			if (!oldStatus.equals(newStatus)) {
+				mUserStatus.setText(mUserStatusEdit.getText().toString());
+				updateProfileStatusCallback.updateProfileStatus(newStatus);
+			}
+			
+			
 			mUserStatusEdit.setVisibility(View.INVISIBLE);
 			mUserStatus.setVisibility(View.VISIBLE);
-		} else {
-			Bundle args = new Bundle();
-			int pos = (Integer) v.getTag(ITEM_POS); // get the current item
-													// position
-													// in family list
-			FamilyMemberDetails[] familyMembers = createFamilyList(pos);
-			FamilyMemberDetails clickedUserDetails = mFamilyMembersList[pos];
-			args.putParcelable(MEMBER_ITEM, clickedUserDetails);
-			args.putParcelableArray(FAMILY_MEMBER_LIST, familyMembers);
-			addProfileCallback.addProfileFragment(args);
-		}
+		} 
+		
+//		else {
+//			Bundle args = new Bundle();
+//			int pos = (Integer) v.getTag(ITEM_POS); // get the current item
+//													// position
+//													// in family list
+//			FamilyMemberDetails[] familyMembers = createFamilyList(pos);
+//			FamilyMemberDetails clickedUserDetails = mFamilyMembersList[pos];
+//			args.putParcelable(MEMBER_ITEM, clickedUserDetails);
+//			args.putParcelableArray(FAMILY_MEMBER_LIST, familyMembers);
+//			addProfileCallback.addProfileFragment(args);
+//		}
 	}
 
 	@Override
@@ -190,22 +224,5 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * This will be removed
-	 */
-	private FamilyMemberDetails[] createFamilyList(int pos) {
-		// TODO: add real data
-		ArrayList<FamilyMemberDetails> familyMembers = new ArrayList<FamilyMemberDetails>();
-		for (int i = 0; i < mFamilyMembersList.length; i++) {
-			if (i != pos) {
-				familyMembers.add(mFamilyMembersList[i]);
-			}
-		}
-		familyMembers.add(mCurrentUserDetails);
-		FamilyMemberDetails[] arr = new FamilyMemberDetails[familyMembers
-				.size()];
-		return familyMembers.toArray(arr);
 	}
 }

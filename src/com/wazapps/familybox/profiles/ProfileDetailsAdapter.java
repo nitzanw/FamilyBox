@@ -21,7 +21,8 @@ public class ProfileDetailsAdapter extends BaseAdapter {
 	public ProfileDetailsAdapter(Activity activity, 
 			ProfileDetails[] profileDetails) {
 		this.activity = activity;
-		this.profileDetails = Arrays.copyOf(profileDetails, profileDetails.length, ProfileDetails[].class);
+		this.profileDetails = Arrays.copyOf(profileDetails, 
+				profileDetails.length, ProfileDetails[].class);
 	}
 	
 	@Override
@@ -77,7 +78,11 @@ public class ProfileDetailsAdapter extends BaseAdapter {
 		//if this is the last element - add some padding to the bottom of it
 		//to improve the listView's visuals
 		if (position == this.getCount() - 1) {
-			detailsContents.setPadding(30, 0, 0, 50);
+			if (this.getCount() == 4) {
+				detailsContents.setPadding(30, 0, 0, 70);
+			} else {
+				detailsContents.setPadding(30, 0, 0, 50);				
+			}
 		}	
 		return v;		
 	}

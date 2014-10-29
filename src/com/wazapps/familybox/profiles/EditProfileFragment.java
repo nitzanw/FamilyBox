@@ -1,5 +1,6 @@
 package com.wazapps.familybox.profiles;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -13,16 +14,19 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 
 public class EditProfileFragment extends Fragment {
 	public static final String EDIT_PROFILE_FRAG = "edit profile fragment";
 
-	public static final String EDIT_FAMILY_MEMBER_LIST = ProfileFragment.FAMILY_MEMBER_LIST;
-	public static final String EDIT_MEMBER_ITEM = ProfileFragment.MEMBER_ITEM;
-
-	public static final String EDIT_PROFILE_DATA = "edit profile data";
+	public static final String EDIT_FAMILY_MEMBER_LIST = 
+			ProfileFragment.FAMILY_MEMBER_LIST;
+	public static final String EDIT_MEMBER_ITEM = 
+			ProfileFragment.MEMBER_ITEM;
+	public static final String EDIT_PROFILE_DATA = 
+			"edit profile data";
 
 	private View root;
 	private RoundedImageView mEditImage;
@@ -34,48 +38,62 @@ public class EditProfileFragment extends Fragment {
 	private EditText mPhoneNumber;
 	private EditText mBirthday;
 	private EditText mAddress;
-	private FamilyMemberDetails[] mFamilyMembersList;
-	private FamilyMemberDetails mCurrentUserDetails;
+	private UserData[] mFamilyMembersList;
+	private UserData mCurrentUserDetails;
 
 	private EditProfileFamilyListAdapter mFamilyListAdapter;
-
 	private LinearLayout mFamilyListHolder;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LogUtils.logError("ROFL", "LOL!!!");
 
 		Bundle args = getArguments();
 		if (args != null) {
-			Parcelable[] ps = (Parcelable[]) args
-					.getParcelableArray(EditProfileFragment.EDIT_FAMILY_MEMBER_LIST);
+			Parcelable[] memberList = (Parcelable[]) args
+					.getParcelableArray(EditProfileFragment
+							.EDIT_FAMILY_MEMBER_LIST);
 
-			mFamilyMembersList = new FamilyMemberDetails[ps.length];
-			System.arraycopy(ps, 0, mFamilyMembersList, 0, ps.length);
-			mCurrentUserDetails = (FamilyMemberDetails) args
+			mFamilyMembersList = new UserData[memberList.length];
+			System.arraycopy(memberList, 0, mFamilyMembersList, 0, 
+					memberList.length);
+			
+			mCurrentUserDetails = (UserData) args
 					.getParcelable(EDIT_MEMBER_ITEM);
+			
 			setHasOptionsMenu(true);
-		} else {
-			LogUtils.logWarning(getTag(), "argument didn't pass correctly");
+		} 
+		
+		else {
+			LogUtils.logWarning(getTag(), 
+					"argument didn't pass correctly");
 		}
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		root = inflater.inflate(R.layout.fragment_profile_edit, container,
-				false);
-		mEditImage = (RoundedImageView) root
-				.findViewById(R.id.riv_edit_profile_change_pic);
-		mName = (EditText) root.findViewById(R.id.et_edit_name);
-		mCurrentFamilyName = (EditText) root.findViewById(R.id.et_edit_last);
-		mNickname = (EditText) root.findViewById(R.id.et_edit_profile_nickname);
-		mPreviousFamilyName = (EditText) root
-				.findViewById(R.id.et_edit_previous_last_name);
-		mMiddleName = (EditText) root.findViewById(R.id.et_edit_middle_name);
-		mPhoneNumber = (EditText) root.findViewById(R.id.et_edit_phone);
-		mBirthday = (EditText) root.findViewById(R.id.et_edit_birthday);
-		mAddress = (EditText) root.findViewById(R.id.et_edit_profile_address);
+		root = inflater.inflate(R.layout.fragment_profile_edit, 
+				container,false);
+		mEditImage = (RoundedImageView) 
+				root.findViewById(R.id.riv_edit_profile_change_pic);
+		mName = (EditText) 
+				root.findViewById(R.id.et_edit_name);
+		mCurrentFamilyName = (EditText) 
+				root.findViewById(R.id.et_edit_last);
+		mNickname = (EditText) 
+				root.findViewById(R.id.et_edit_profile_nickname);
+		mPreviousFamilyName = (EditText) 
+				root.findViewById(R.id.et_edit_previous_last_name);
+		mMiddleName = (EditText) 
+				root.findViewById(R.id.et_edit_middle_name);
+		mPhoneNumber = (EditText) 
+				root.findViewById(R.id.et_edit_phone);
+		mBirthday = (EditText) 
+				root.findViewById(R.id.et_edit_birthday);
+		mAddress = (EditText) 
+				root.findViewById(R.id.et_edit_profile_address);
 		mFamilyListHolder = (LinearLayout) root
 				.findViewById(R.id.ll_family_members_list_holder);
 		initViews();
@@ -85,7 +103,7 @@ public class EditProfileFragment extends Fragment {
 
 	private void initFamilyListView() {
 		mFamilyListAdapter = new EditProfileFamilyListAdapter(
-				this.getActivity(), mFamilyMembersList);
+				this.getActivity(), mFamilyMembersList, mCurrentUserDetails);
 		for (int i = 0; i < mFamilyListAdapter.getCount(); i++) {
 			View v = mFamilyListAdapter.getView(i, null, (ViewGroup) getView());
 			mFamilyListHolder.addView(v);
@@ -94,15 +112,35 @@ public class EditProfileFragment extends Fragment {
 
 	private void initViews() {
 		if (mCurrentUserDetails != null) {
-			mName.setText(mCurrentUserDetails.getName());
-			mCurrentFamilyName.setText(mCurrentUserDetails.getLastName());
-			mNickname.setText(mCurrentUserDetails.getNickname());
-			mPreviousFamilyName.setText(mCurrentUserDetails
-					.getPreviousLastName());
-			mMiddleName.setText(mCurrentUserDetails.getMiddleName());
-			mPhoneNumber.setText(mCurrentUserDetails.getPhoneNumber());
-			mBirthday.setText(mCurrentUserDetails.getBirthday());
-			mAddress.setText(mCurrentUserDetails.getAddress());
+			String firstName = InputHandler
+					.capitalizeName(mCurrentUserDetails.getName());
+			String lastName = InputHandler
+					.capitalizeName(mCurrentUserDetails.getLastName());
+			String nickName = InputHandler
+					.capitalizeName(mCurrentUserDetails.getNickname());
+			String prevLastName = InputHandler
+					.capitalizeName(mCurrentUserDetails.getPreviousLastName());
+			String middleName = InputHandler
+					.capitalizeName(mCurrentUserDetails.getMiddleName());
+			String phoneNumber = mCurrentUserDetails.getPhoneNumber();
+			String birthday = mCurrentUserDetails.getBirthday();
+			String address = mCurrentUserDetails.getAddress();
+			Bitmap photo = mCurrentUserDetails.getprofilePhoto();
+			
+			mName.setText(firstName);
+			mCurrentFamilyName.setText(lastName);
+			mNickname.setText(nickName);
+			mPreviousFamilyName.setText(prevLastName);
+			mMiddleName.setText(middleName);
+			mPhoneNumber.setText(phoneNumber);
+			mBirthday.setText(birthday);
+			mAddress.setText(address);
+			
+			if (photo != null) {
+				mEditImage.setImageBitmap(photo);
+				mEditImage.setBackgroundColor(getResources().getColor(
+						android.R.color.transparent));	
+			}
 		}
 	}
 
@@ -111,7 +149,6 @@ public class EditProfileFragment extends Fragment {
 		if (menu.findItem(R.id.action_accept) == null) {
 			inflater.inflate(R.menu.menu_accept, menu);
 		}
-
 	}
 
 	@Override

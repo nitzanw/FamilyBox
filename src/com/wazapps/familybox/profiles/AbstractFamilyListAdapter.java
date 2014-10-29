@@ -11,14 +11,16 @@ import android.widget.BaseAdapter;
 
 public abstract class AbstractFamilyListAdapter extends BaseAdapter {
 	protected FragmentActivity activity;
-	protected FamilyMemberDetails[] familyMembersList;
+	protected UserData userData;
+	protected UserData[] familyMembersList;
 	protected LayoutInflater linearInflater;
 
 	public AbstractFamilyListAdapter(FragmentActivity activity,
-			FamilyMemberDetails[] familyMembersList) {
+			UserData[] familyMembersList, UserData userData) {
 		this.activity = activity;
 		this.familyMembersList = Arrays.copyOf(familyMembersList,
-				familyMembersList.length, FamilyMemberDetails[].class);
+				familyMembersList.length, UserData[].class);
+		this.userData = userData;
 		this.linearInflater = (LayoutInflater) activity
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}

@@ -12,12 +12,11 @@
         
        <RelativeLayout 
            android:layout_width="match_parent"
-           android:layout_height="145dp">
+           android:layout_height="156dp">
            
            <ImageView android:id="@+id/iv_profile_picture_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:src="@drawable/profile_background"/>
            
            <com.wazapps.familybox.util.RoundedImageView
@@ -34,34 +33,20 @@
 				android:id="@+id/tv_profile_username"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_centerVertical="true"
-				android:layout_marginLeft="5dp"
+				android:layout_marginTop="50dp"
+				android:layout_marginLeft="20dp"
+				android:textStyle="bold"
 				android:text="@string/user_name"
 				android:layout_toRightOf="@id/riv_profile_image"
-				android:textSize="20sp"/>
+				android:textSize="23sp"/>
 			
-			<RelativeLayout 
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_below="@id/iv_profile_picture_background"
-			    android:layout_marginLeft="107dp">
-			    
-			    <TextView
-                    android:id="@+id/tv_profile_status_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" 
-                    android:layout_marginTop="4dp" 
-                    android:textStyle="bold"     
-                    android:text="@string/profile_status_title"
-                    android:drawableLeft="@drawable/my_profile_status_line_sphere"
-                    android:drawablePadding="3dp" />
-			    
-			    <ImageButton
+				<ImageButton
                     android:id="@+id/ib_submit_status"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="2dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_alignBottom="@id/tv_profile_username"
+                    android:layout_toRightOf="@id/tv_profile_username"
                     android:background="@android:color/transparent"
                     android:src="@drawable/action_bar_edit_profile_accept_button"
                     android:visibility="invisible" />
@@ -70,24 +55,27 @@
                     android:id="@+id/ib_edit_status"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="2dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_alignBottom="@id/tv_profile_username"
+                    android:layout_toRightOf="@id/tv_profile_username"
                     android:background="@android:color/transparent"
                     android:src="@drawable/edit_button_gray_profile_status_update" />
-                
+    
                 <FrameLayout
 	                android:layout_width="175dp"
 	                android:layout_height="33dp"
 	                android:layout_marginBottom="10dp"
-	                android:layout_toRightOf="@id/tv_profile_status_title"
-	                android:layout_marginLeft="3dp">
+	                android:layout_marginLeft="-14dp"
+	                android:layout_alignLeft="@id/tv_profile_username"
+	                android:layout_below="@id/tv_profile_username">
 
 	                <EditText
 	                    android:id="@+id/et_profile_status"
 	                    android:layout_width="wrap_content"
 	                    android:layout_height="wrap_content"
 	                    android:lineSpacingExtra="2dp"
-	                    android:maxLines="3"
+	                    android:maxLength="37"
+	                    android:maxLines="1"
 	                    android:text="@string/profile_status"
 	                    android:textSize="14sp"
 	                    android:visibility="invisible" />
@@ -99,11 +87,11 @@
 	                    android:lineSpacingExtra="2dp"
 	                    android:layout_marginTop="4dp"
 	                    android:layout_marginLeft="12dp"
-	                    android:maxLines="3"
-	                    android:text="@string/profile_status" >
+	                    android:maxLines="1"
+	                    android:maxLength="37"
+	                    android:text="@string/profile_status">
                 	</TextView>
             	</FrameLayout>
-			</RelativeLayout>
        </RelativeLayout>
    </RelativeLayout>
 
@@ -136,9 +124,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey_subtitle"
+                android:gravity="center_vertical|center_horizontal"
                 android:background="@drawable/profile_sections_background"
-                android:gravity="center_horizontal"
-                android:paddingTop="5dp"
                 android:text="@string/profile_close_family_title"
                 android:textSize="20sp" />
 
