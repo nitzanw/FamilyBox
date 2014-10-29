@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
@@ -152,21 +154,62 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 					android.R.color.transparent));	
 		}
 		
-		mProfileDetailsAdapter = new ProfileDetailsAdapter(getActivity(),
-				mCurrentUserDetails.getUserProfileDetails());
-		mProfileDetailsList.setAdapter(mProfileDetailsAdapter);
+		new AsyncTask<Void, Void, Void>() {
+			private ProfileFragment frag;
+			
+			@Override
+			protected Void doInBackground(Void... params) {
+				frag.mProfileDetailsAdapter = 
+						new ProfileDetailsAdapter(getActivity(),
+						frag.mCurrentUserDetails.getUserProfileDetails());
+				return null;
+			}
+			
+			protected void onPostExecute(Void result) {
+				frag.mProfileDetailsList.setAdapter(frag.mProfileDetailsAdapter);
+			};
+			
+			private AsyncTask<Void, Void, Void> init(ProfileFragment frag) {
+				this.frag = frag;
+				return this;
+			}
+			
+		}.init(this).execute();
 	}
 
 	private void initFamilyListView() {
-		mFamilyListAdapter = new ProfileFamilyListAdapter(this.getActivity(),
-				mFamilyMembersList, mCurrentUserDetails);
-		for (int i = 0; i < mFamilyListAdapter.getCount(); i++) {
-			View v = mFamilyListAdapter.getView(i, null, (ViewGroup) getView());
-			v.setTag(ITEM_TYPE, MEMBER_ITEM_TYPE);
-			v.setTag(ITEM_POS, i);
-			v.setOnClickListener(this);
-			mFamilyListHolder.addView(v);
-		}
+		new AsyncTask<Void, View, Void>() {
+			private ProfileFragment frag;
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				frag.mFamilyListAdapter = new ProfileFamilyListAdapter(
+						frag.getActivity(), frag.mFamilyMembersList, 
+						frag.mCurrentUserDetails);
+				
+				for (int i = 0; i < frag.mFamilyListAdapter.getCount(); i++) {
+					View v = frag.mFamilyListAdapter.getView(
+							i, null, (ViewGroup) getView());
+					v.setTag(ITEM_TYPE, MEMBER_ITEM_TYPE);
+					v.setTag(ITEM_POS, i);
+					v.setOnClickListener(frag);
+					publishProgress(v);
+				}
+				
+				return null;
+			}
+			
+			protected void onProgressUpdate(View... v) {
+				frag.mFamilyListHolder.addView(v[0]);
+			};
+			
+			
+			private AsyncTask<Void, View, Void> init(ProfileFragment frag) {
+				this.frag = frag;
+				return this;
+			}
+			
+		}.init(this).execute();
 	}
 
 	@Override
