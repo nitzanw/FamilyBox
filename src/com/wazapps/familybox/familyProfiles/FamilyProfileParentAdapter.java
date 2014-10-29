@@ -1,12 +1,6 @@
 package com.wazapps.familybox.familyProfiles;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.profiles.FamilyMemberDetails;
-import com.wazapps.familybox.util.LogUtils;
-import com.wazapps.familybox.util.RoundedImageView;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
@@ -14,8 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.profiles.FamilyMemberDetails;
+import com.wazapps.familybox.util.RoundedImageView;
 
 public class FamilyProfileParentAdapter extends BaseAdapter {
 

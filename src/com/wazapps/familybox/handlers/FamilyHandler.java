@@ -1,9 +1,5 @@
 package com.wazapps.familybox.handlers;
 
-import android.app.Activity;
-import android.view.Gravity;
-import android.widget.Toast;
-
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -12,8 +8,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.wazapps.familybox.splashAndLogin.LoginActivity;
-import com.wazapps.familybox.util.LogUtils;
 
 public class FamilyHandler {
 	public static final String FAMILY_CLASS_NAME = "Family";

@@ -1,13 +1,13 @@
 package com.wazapps.familybox.newsfeed;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.TabsFragment;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.TabsFragment;
 
 public class NewsFeedTabsFragment extends TabsFragment {
 

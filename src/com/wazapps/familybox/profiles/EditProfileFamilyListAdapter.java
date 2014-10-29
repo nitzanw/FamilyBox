@@ -1,21 +1,16 @@
 package com.wazapps.familybox.profiles;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.util.RoundedImageView;
-
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.wazapps.familybox.R;
 
 public class EditProfileFamilyListAdapter extends AbstractFamilyListAdapter
 		implements OnClickListener {

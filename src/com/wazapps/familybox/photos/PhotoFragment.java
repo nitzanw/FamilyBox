@@ -1,24 +1,14 @@
 package com.wazapps.familybox.photos;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
-import com.wazapps.familybox.util.LogUtils;
-import com.wazapps.familybox.util.OnSwipeTouchListener;
-
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.LogUtils;
 
 public class PhotoFragment extends Fragment {
 

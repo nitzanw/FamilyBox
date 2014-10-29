@@ -1,11 +1,13 @@
 package com.wazapps.familybox.familyTree;
 
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+
 import com.wazapps.familybox.familyProfiles.FamilyProfileScreenActivity;
 import com.wazapps.familybox.photos.AlbumItem;
 

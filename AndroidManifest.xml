@@ -80,6 +80,12 @@
             android:configChanges="keyboardHidden|screenSize"
             android:screenOrientation="portrait" >
         </activity>
+                <activity
+            android:name="com.wazapps.familybox.util.MultiImageChooserActivity"
+            android:configChanges="keyboardHidden|screenSize"
+            android:screenOrientation="portrait" >
+            
+        </activity>
     </application>
 
 </manifest>

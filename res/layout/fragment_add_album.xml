@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="@drawable/new_album_screen_background" >
 
@@ -55,7 +55,7 @@
         android:textAlignment="gravity" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_add_album_share_with_btn"
         android:layout_marginTop="13dp"
@@ -64,7 +64,7 @@
         <HorizontalScrollView
             android:layout_marginTop="7dp"
             android:id="@+id/hsv_album_section"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="7dp"
             android:layout_above="@+id/tv_add_photos_btn" >
@@ -73,7 +73,6 @@
                 android:id="@+id/ll_add_album_photos_input_section"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
                 android:orientation="vertical" >
 
                 <LinearLayout

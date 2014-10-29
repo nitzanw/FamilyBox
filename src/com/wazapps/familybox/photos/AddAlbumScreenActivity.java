@@ -1,5 +1,6 @@
 package com.wazapps.familybox.photos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +10,7 @@ import com.wazapps.familybox.photos.AddAlbumFragment.AddAlbumScreenCallback;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.DateChooserCallback;
 import com.wazapps.familybox.util.AbstractScreenActivity;
+import com.wazapps.familybox.util.MultiImageChooserActivity;
 
 public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 		AddAlbumScreenCallback, DateChooserCallback {
@@ -55,5 +57,27 @@ public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 
 		getMenuInflater().inflate(R.menu.menu_accept, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			if (requestCode == AddAlbumFragment.PHOTO_CHOOSER) {
+				AddAlbumFragment frag = (AddAlbumFragment) getSupportFragmentManager()
+						.findFragmentById(R.id.fragment_container);
+				if (frag != null) {
+					frag.setPhotosToUpload(data
+							.getIntegerArrayListExtra(MultiImageChooserActivity.MULTIPLE_FILE_IDS));
+				}
+			}else if(requestCode == AddAlbumFragment.PHOTO_CHOOSER_ADDITION){
+				AddAlbumFragment frag = (AddAlbumFragment) getSupportFragmentManager()
+						.findFragmentById(R.id.fragment_container);
+				if (frag != null) {
+					frag.addPhotosToUpload(data
+							.getIntegerArrayListExtra(MultiImageChooserActivity.MULTIPLE_FILE_IDS));
+				}
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 }

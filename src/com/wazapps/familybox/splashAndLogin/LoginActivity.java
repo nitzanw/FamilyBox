@@ -4,6 +4,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
+import android.widget.Toast;
+
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
@@ -30,21 +40,6 @@ import com.wazapps.familybox.splashAndLogin.GenderSignupDialogFragment.GenderCho
 import com.wazapps.familybox.splashAndLogin.MemberQueryFragment.QueryAnswerHandlerCallback;
 import com.wazapps.familybox.splashAndLogin.StartFragment.StartScreenCallback;
 import com.wazapps.familybox.util.LogUtils;
-
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.view.Gravity;
-import android.widget.Toast;
 
 public class LoginActivity extends FragmentActivity implements
 		StartScreenCallback, DateChooserCallback, GenderChooserCallback,

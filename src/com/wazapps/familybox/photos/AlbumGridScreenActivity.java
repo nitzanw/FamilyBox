@@ -2,17 +2,12 @@ package com.wazapps.familybox.photos;
 
 import java.util.Arrays;
 
+import android.os.Bundle;
+import android.os.Parcelable;
+
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.familyTree.FamiliesListItem;
 import com.wazapps.familybox.util.AbstractScreenActivity;
-import com.wazapps.familybox.util.LogUtils;
-
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.v4.app.FragmentActivity;
-import android.text.style.ParagraphStyle;
-import android.view.MenuItem;
 
 public class AlbumGridScreenActivity extends AbstractScreenActivity{
 

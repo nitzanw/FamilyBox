@@ -4,21 +4,14 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.photos.AlbumGridScreenActivity;
-import com.wazapps.familybox.photos.AlbumItem;
-import com.wazapps.familybox.photos.PhotoGridFragment;
-import com.wazapps.familybox.photos.PhotoItem;
 import com.wazapps.familybox.util.SectionAdapter;
 
 public class BasicFamilliesListAdapter extends SectionAdapter{

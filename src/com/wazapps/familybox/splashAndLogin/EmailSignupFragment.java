@@ -2,9 +2,6 @@ package com.wazapps.familybox.splashAndLogin;
 
 import java.util.Arrays;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.util.RoundedImageView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -21,6 +18,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.RoundedImageView;
 
 public class EmailSignupFragment extends Fragment implements OnClickListener,
 		OnFocusChangeListener {

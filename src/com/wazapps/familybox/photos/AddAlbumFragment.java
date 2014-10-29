@@ -2,31 +2,31 @@ package com.wazapps.familybox.photos;
 
 import java.util.ArrayList;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
-
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.MultiImageChooserActivity;
+
 public class AddAlbumFragment extends Fragment implements OnClickListener,
 		OnFocusChangeListener {
 	public static final String ADD_ALBUM_FRAG = "add album fragment";
+	protected static final int PHOTO_CHOOSER = 0;
+	protected static final int PHOTO_CHOOSER_ADDITION = 1;
 	private ViewGroup rootView;
 	private EditText mAlbumName;
 	private EditText mAlbumDate;
@@ -38,6 +38,7 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 	private AddPhotoAdapter mAdapter;
 	private LinearLayout mPhotosInputSectionRow1;
 	private LinearLayout mPhotosInputSectionRow2;
+	private ArrayList<Integer> currentSelectedPhotos;
 
 	public interface AddAlbumScreenCallback {
 		public void openDateInputDialog();
@@ -104,27 +105,22 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 			bimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 		} else if (v.getId() == R.id.tv_add_album_share_with_btn) {
 			ShareWithDialogFragment shareWith = new ShareWithDialogFragment();
-			shareWith.show(getChildFragmentManager(), ShareWithDialogFragment.SHARE_W_DIALOG_FRAG);
+			shareWith.show(getChildFragmentManager(),
+					ShareWithDialogFragment.SHARE_W_DIALOG_FRAG);
 		} else if (v.getId() == R.id.rl_add_photos_btn_empty) {
-			// TODO get real data:
-			ArrayList<String> urlPhotoList = new ArrayList<String>();
-			urlPhotoList.add("");
-			urlPhotoList.add("");
-			urlPhotoList.add("");
-			urlPhotoList.add("");
-			mAdapter = new AddPhotoAdapter(getActivity(), urlPhotoList);
-			for (int i = 0; i < urlPhotoList.size(); i++) {
-				if (i % 2 == 0) {
-					mPhotosInputSectionRow1.addView(mAdapter.getView(i, null,
-							(ViewGroup) getView()));
-				} else {
-					mPhotosInputSectionRow2.addView(mAdapter.getView(i, null,
-							(ViewGroup) getView()));
-				}
-			}
+			Intent getPhotos = new Intent(getActivity(),
+					MultiImageChooserActivity.class);
+			getPhotos.putExtra(MultiImageChooserActivity.COL_WIDTH_KEY, 200);
+			getActivity().startActivityForResult(getPhotos, PHOTO_CHOOSER);
+
 			mAddPhotosEmpty.setVisibility(View.INVISIBLE);
 			mAddPhotoBtn.setVisibility(View.VISIBLE);
 		} else if (v.getId() == R.id.tv_add_photos_btn) {
+			Intent getPhotos = new Intent(getActivity(),
+					MultiImageChooserActivity.class);
+			getPhotos.putExtra(MultiImageChooserActivity.COL_WIDTH_KEY, 200);
+			getActivity().startActivityForResult(getPhotos,
+					PHOTO_CHOOSER_ADDITION);
 		}
 
 	}
@@ -143,5 +139,46 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 			bimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 		}
 
+	}
+
+	public void setPhotosToUpload(ArrayList<Integer> integerArrayListExtra) {
+		currentSelectedPhotos = integerArrayListExtra;
+		mAdapter = new AddPhotoAdapter(getActivity(), integerArrayListExtra);
+
+		for (int i = 0; i < integerArrayListExtra.size(); i++) {
+			if (i % 2 == 0) {
+				mPhotosInputSectionRow2.addView(mAdapter.getView(i, null,
+						(ViewGroup) getView()));
+			} else {
+				mPhotosInputSectionRow1.addView(mAdapter.getView(i, null,
+						(ViewGroup) getView()));
+			}
+		}
+
+	}
+
+	public void addPhotosToUpload(ArrayList<Integer> integerArrayList) {
+		if (!integerArrayList.isEmpty()) {
+			int currentSize = currentSelectedPhotos.size();
+			// if the added photo id's are not already uploading, add it to the
+			// list
+			for (Integer i : integerArrayList) {
+				if (!currentSelectedPhotos.contains(i)) {
+					currentSelectedPhotos.add(i);
+				}
+			}
+
+			mAdapter.updateData(currentSelectedPhotos);
+			//add the added photos to the view
+			for (int i = currentSize; i < currentSelectedPhotos.size(); i++) {
+				if (i % 2 == 0) {
+					mPhotosInputSectionRow2.addView(mAdapter.getView(i, null,
+							(ViewGroup) getView()));
+				} else {
+					mPhotosInputSectionRow1.addView(mAdapter.getView(i, null,
+							(ViewGroup) getView()));
+				}
+			}
+		}
 	}
 }

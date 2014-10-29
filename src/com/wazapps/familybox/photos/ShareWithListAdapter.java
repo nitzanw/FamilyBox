@@ -2,21 +2,17 @@ package com.wazapps.familybox.photos;
 
 import java.util.ArrayList;
 
-import com.wazapps.familybox.R;
-
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.wazapps.familybox.R;
 
 public class ShareWithListAdapter extends BaseAdapter implements
 		OnCheckedChangeListener {

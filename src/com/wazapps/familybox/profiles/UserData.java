@@ -2,12 +2,16 @@ package com.wazapps.familybox.profiles;
 
 import java.util.Arrays;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.wazapps.familybox.handlers.UserHandler;
-import com.wazapps.familybox.photos.PhotoItem;
 import com.wazapps.familybox.util.LogUtils;
 
 import android.graphics.Bitmap;

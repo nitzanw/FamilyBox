@@ -1,19 +1,9 @@
 package com.wazapps.familybox.photos;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.profiles.EditProfileFragment;
-import com.wazapps.familybox.profiles.FamilyMemberDetails;
-import com.wazapps.familybox.util.LogUtils;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
@@ -21,15 +11,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.wazapps.familybox.R;
 
 public class PhotoPagerFragment extends Fragment implements OnClickListener {
 	protected static final String PHOTO_FIRST_POS = "first photo pos";

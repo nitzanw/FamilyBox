@@ -2,35 +2,29 @@ package com.wazapps.familybox.profiles;
 
 import java.util.ArrayList;
 
-import com.wazapps.familybox.R;
-import com.wazapps.familybox.splashAndLogin.EmailLoginDialogueFragment.EmailLoginScreenCallback;
-import com.wazapps.familybox.util.LogUtils;
-import com.wazapps.familybox.util.RoundedImageView;
-
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View.OnClickListener;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.SearchView.OnQueryTextListener;
+
+import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.LogUtils;
+import com.wazapps.familybox.util.RoundedImageView;
 
 public class ProfileFragment extends Fragment implements OnClickListener {
 	public static final String PROFILE_FRAG = "profile fragment";

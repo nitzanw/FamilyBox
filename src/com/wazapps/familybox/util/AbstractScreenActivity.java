@@ -1,9 +1,10 @@
 package com.wazapps.familybox.util;
 
-import com.wazapps.familybox.R;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
+
+import com.wazapps.familybox.R;
 
 abstract public class AbstractScreenActivity extends FragmentActivity{
 	@Override

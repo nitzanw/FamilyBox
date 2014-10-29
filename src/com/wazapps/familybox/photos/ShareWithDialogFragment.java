@@ -3,8 +3,6 @@ package com.wazapps.familybox.photos;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.wazapps.familybox.R;
-
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -13,10 +11,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import com.wazapps.familybox.R;
 
 public class ShareWithDialogFragment extends DialogFragment implements
 		OnClickListener {

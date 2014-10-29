@@ -1,8 +1,8 @@
 package com.wazapps.familybox;
 
-import com.parse.Parse;
-
 import android.app.Application;
+
+import com.parse.Parse;
 
 public class FamilyBoxApplication extends Application {
 	private static final String appId = "hFLXtlIwku3PGYy0ezKYQf67sRCamG1IvNToz22q";
