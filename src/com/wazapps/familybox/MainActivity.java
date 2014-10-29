@@ -325,14 +325,25 @@ public class MainActivity extends FragmentActivity implements
 				
 				@Override
 				public void done(Bundle data, Exception e) {
-					ProfileFragment profileFrag = new ProfileFragment();
-					profileFrag.setArguments(activity.getProfileArgsTemp());
-					FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-					ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
-					ft.replace(R.id.fragment_container, profileFrag,
-							ProfileFragment.PROFILE_FRAG);
-					ft.commit();
-					activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
+					//if data was retrieved successfully
+					if (e == null) {
+						ProfileFragment profileFrag = new ProfileFragment();
+						profileFrag.setArguments(activity.getProfileArgsTemp());
+//						profileFrag.setArguments(data);
+						FragmentTransaction ft = 
+								getSupportFragmentManager().beginTransaction();
+						ft.setCustomAnimations(R.anim.fade_in_fast, 
+								R.anim.fade_out_fast);
+						ft.replace(R.id.fragment_container, profileFrag,
+								ProfileFragment.PROFILE_FRAG);
+						ft.commit();
+						activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
+						
+					} else {
+						//TODO: handle error
+						LogUtils.logError("MainActivity", e.getMessage());
+						activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
+					}
 				}
 				
 				private GetDataCallback init(MainActivity activity) {
