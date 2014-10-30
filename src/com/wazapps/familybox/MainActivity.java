@@ -104,23 +104,6 @@ public class MainActivity extends FragmentActivity implements
 		overridePendingTransition(R.anim.enter, R.anim.exit);
 		userHandler = new UserHandler();
 	}
-	
-	public void testFunction() {
-		ParseUser user = ParseUser.getCurrentUser();
-		String familyId = user.getString(UserHandler.FAMILY_KEY);
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("Family");
-		query.fromLocalDatastore();
-		try {
-			ParseObject family = query.get(familyId);
-			family.fetchFromLocalDatastore();
-			ParseUser arie = family.getParseUser(FamilyHandler.FATHER_KEY);
-			arie.fetchFromLocalDatastore();
-			Toast.makeText(this, arie.getString(UserHandler.FIRST_NAME_KEY), Toast.LENGTH_SHORT).show();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	public void initDrawer() {
 		// Generate title

@@ -166,27 +166,20 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	private void initProfileDetailsViews() {
-		String userName = InputHandler.capitalizeFullname(
-				mCurrentUserDetails.getName(), 
-				mCurrentUserDetails.getLastName());
-		String status = mCurrentUserDetails.getStatus();
-		Bitmap profilePic = mCurrentUserDetails.getprofilePhoto();
-		
-		mUserName.setText(userName);
-		mUserStatus.setText(status);
-		mUserStatusEdit.setText(status);
-		if (profilePic != null) {
-			mUserPhoto.setImageBitmap(profilePic);
-			mUserPhoto.setBackgroundColor(getResources().getColor(
-					android.R.color.transparent));	
-		}
-		
+	private void initProfileDetailsViews() {		
 		new AsyncTask<Void, Void, Void>() {
 			private ProfileFragment frag;
+			String userName, status;
+			Bitmap profilePic = null;
 			
 			@Override
 			protected Void doInBackground(Void... params) {
+				userName = InputHandler.capitalizeFullname(
+						frag.mCurrentUserDetails.getName(), 
+						frag.mCurrentUserDetails.getLastName());
+				status = frag.mCurrentUserDetails.getStatus();
+				profilePic = frag.mCurrentUserDetails.getprofilePhoto();
+				
 				frag.mProfileDetailsAdapter = 
 						new ProfileDetailsAdapter(getActivity(),
 						frag.mCurrentUserDetails.getUserProfileDetails());
@@ -195,6 +188,14 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			
 			protected void onPostExecute(Void result) {
 				frag.mProfileDetailsList.setAdapter(frag.mProfileDetailsAdapter);
+				frag.mUserName.setText(userName);
+				frag.mUserStatus.setText(status);
+				frag.mUserStatusEdit.setText(status);
+				if (profilePic != null) {
+					frag.mUserPhoto.setImageBitmap(profilePic);
+					frag.mUserPhoto.setBackgroundColor(getResources().getColor(
+							android.R.color.transparent));	
+				}
 			};
 			
 			private AsyncTask<Void, Void, Void> init(ProfileFragment frag) {
