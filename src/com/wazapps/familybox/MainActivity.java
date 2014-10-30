@@ -440,6 +440,8 @@ public class MainActivity extends FragmentActivity implements
 		ProfileFragment profileFrag = new ProfileFragment();
 		profileFrag.setArguments(args);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.setCustomAnimations(R.anim.enter, R.anim.exit,
+				R.anim.enter_reverse, R.anim.exit_reverse);
 		ft.add(R.id.fragment_container, profileFrag,
 				ProfileFragment.PROFILE_FRAG).addToBackStack(null);
 		ft.commit();
