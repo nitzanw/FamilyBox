@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"  >
 
    <RelativeLayout
         android:id="@+id/ll_profile_upper"
@@ -18,6 +18,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/profile_background"/>
+           
+           <ImageView 
+               android:id="@+id/iv_profile_image_effect"
+               android:layout_height="match_parent"
+               android:layout_width="160dp"
+               android:layout_marginLeft="-10dp"
+               />
            
            <com.wazapps.familybox.util.RoundedImageView
                 android:id="@+id/riv_profile_image"
@@ -142,7 +149,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal"
+                    android:animateLayoutChanges="true" >
                 </LinearLayout>
             </HorizontalScrollView>
         </LinearLayout>

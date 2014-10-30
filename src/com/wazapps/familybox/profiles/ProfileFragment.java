@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -17,9 +18,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -29,6 +36,7 @@ import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
+import com.wazapps.familybox.util.WaveDrawable;
 
 public class ProfileFragment extends Fragment implements OnClickListener {
 	public static final String PROFILE_FRAG = "profile fragment";
@@ -115,8 +123,28 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			initProfileDetailsViews();
 			initFamilyListView();
 		}
+		
+		initAnimations();
 
 		return root;
+	}
+	
+	private void initAnimations() {
+		Animation pulse = AnimationUtils.loadAnimation(getActivity(), 
+				R.anim.pulse_slow);
+		pulse.setInterpolator(new AccelerateInterpolator(3));		
+		ImageView animationBackground = 
+				(ImageView) root.findViewById(R.id.iv_profile_image_effect);
+		
+		WaveDrawable waveDrawable = new WaveDrawable(
+				Color.WHITE, 200, 3000);
+		animationBackground.setBackgroundDrawable(waveDrawable);
+		Interpolator interpolator = 
+				new AccelerateDecelerateInterpolator();
+		
+		mUserPhoto.startAnimation(pulse);
+		waveDrawable.setWaveInterpolator(interpolator);
+		waveDrawable.startAnimation();
 	}
 
 	@Override
