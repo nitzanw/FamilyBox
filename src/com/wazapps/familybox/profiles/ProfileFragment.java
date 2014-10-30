@@ -133,9 +133,15 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		mUserStatus = (TextView) root.findViewById(R.id.tv_profile_status);
 		mUserStatusEdit = (EditText) root.findViewById(R.id.et_profile_status);
 		mEditStatusbtn = (ImageButton) root.findViewById(R.id.ib_edit_status);
-		mEditStatusbtn.setOnClickListener(this);
 		mSubmitStatus = (ImageButton) root.findViewById(R.id.ib_submit_status);
-		mSubmitStatus.setOnClickListener(this);
+		if (mIsLocalProfile) {
+			mEditStatusbtn.setOnClickListener(this);			
+			mSubmitStatus.setOnClickListener(this);
+		} else {
+			mEditStatusbtn.setVisibility(View.INVISIBLE);
+			mSubmitStatus.setVisibility(View.INVISIBLE);
+		}
+		
 		mUserPhoto = (RoundedImageView) root
 				.findViewById(R.id.riv_profile_image);
 		
@@ -207,6 +213,16 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			mCurrentUser = (UserData) profileArgs
 					.getParcelable(MEMBER_ITEM);
 			mIsLocalProfile = profileArgs.getBoolean(LOCAL_PROFILE);
+			
+			if (!mIsLocalProfile) {
+				ParseUser loggedUser = ParseUser.getCurrentUser();
+				//if we got here not through myProfile button
+				//check if this is the user's profile page
+				if (loggedUser != null) {
+					mIsLocalProfile = (loggedUser.getObjectId()
+							.equals(mCurrentUser.getUserId()));
+				}
+			}
 			setHasOptionsMenu(true);
 		}
 
