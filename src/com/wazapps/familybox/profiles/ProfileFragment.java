@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
@@ -235,6 +236,15 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			
 			protected void onProgressUpdate(View... v) {
 				frag.mFamilyListHolder.addView(v[0]);
+			};
+			
+			protected void onPostExecute(Void result) {
+				if (frag.mFamilyMembersList.length == 0) {
+					RelativeLayout emptyText = (RelativeLayout) 
+							frag.getActivity()
+							.findViewById(R.id.rl_family_members_list_empty);
+					emptyText.setVisibility(View.VISIBLE);
+				}
 			};
 			
 			
