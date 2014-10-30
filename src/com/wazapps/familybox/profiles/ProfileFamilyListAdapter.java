@@ -30,7 +30,7 @@ public class ProfileFamilyListAdapter extends AbstractFamilyListAdapter {
 
 		case 2:
 			if (position == 0)
-				v.setPadding(180, 0, 0, 0);
+				v.setPadding(175, 0, 0, 0);
 			else
 				v.setPadding(10, 0, 0, 0);
 			break;
