@@ -66,6 +66,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	private EditText mUserStatusEdit;
 	private ImageButton mEditStatusbtn;
 	private ImageButton mSubmitStatus;
+	private Animation statusJump = null;
 	AddProfileFragmentListener addProfileCallback = null;
 	UpdateProfileStatus updateProfileStatusCallback = null;
 
@@ -145,6 +146,10 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		mUserPhoto.startAnimation(pulse);
 		waveDrawable.setWaveInterpolator(interpolator);
 		waveDrawable.startAnimation();
+		
+		statusJump = AnimationUtils.loadAnimation(getActivity(), 
+				R.anim.pulse_once);
+		statusJump.setInterpolator(new AccelerateDecelerateInterpolator());
 	}
 
 	@Override
@@ -249,9 +254,11 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			mUserStatusEdit.setText(mUserStatus.getText());
 			mUserStatusEdit.setVisibility(View.VISIBLE);
 			mUserStatus.setVisibility(View.INVISIBLE);
+			mUserStatusEdit.startAnimation(statusJump);
 		} else if ((v.getId() == R.id.ib_submit_status)) {
 			mEditStatusbtn.setVisibility(View.VISIBLE);
 			mSubmitStatus.setVisibility(View.INVISIBLE);
+			mUserStatus.startAnimation(statusJump);
 			String oldStatus = mUserStatus.getText().toString();
 			String newStatus = mUserStatusEdit.getText().toString();
 			if (!oldStatus.equals(newStatus)) {

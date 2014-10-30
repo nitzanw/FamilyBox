@@ -34,6 +34,8 @@ public class StartFragment extends Fragment implements OnClickListener {
 	private View root;
 	private StartScreenCallback loginCB = null;
 	private LinearLayout progressSpinner;
+	private Button emailLoginButton, fbLoginButton, signupButton;
+	private Animation buttonPress = null;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -57,11 +59,11 @@ public class StartFragment extends Fragment implements OnClickListener {
 		progressSpinner = (LinearLayout) root
 				.findViewById(R.id.ll_progress_spinner);
 	
-		Button emailLoginButton = (Button) root
+		emailLoginButton = (Button) root
 				.findViewById(R.id.button_login_email);
-		Button fbLoginButton = (Button) root
+		fbLoginButton = (Button) root
 				.findViewById(R.id.button_login_facebook);
-		Button signupButton = (Button) root.findViewById(R.id.button_signup);
+		signupButton = (Button) root.findViewById(R.id.button_signup);
 
 		emailLoginButton.setOnClickListener(this);
 		fbLoginButton.setOnClickListener(this);
@@ -83,20 +85,27 @@ public class StartFragment extends Fragment implements OnClickListener {
 		Interpolator interpolator = new AccelerateDecelerateInterpolator();
 		waveDrawable.setWaveInterpolator(interpolator);
 		waveDrawable.startAnimation();
+		
+		buttonPress = AnimationUtils.loadAnimation(getActivity(), 
+				R.anim.pulse_once);
+		buttonPress.setInterpolator(new AccelerateDecelerateInterpolator());
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case id.button_login_email:
+			emailLoginButton.startAnimation(buttonPress);
 			this.loginCB.openEmailLogin();
 			break;
 
 		case id.button_signup:
+			signupButton.startAnimation(buttonPress);
 			this.loginCB.openSignup();
 			break;
 
 		case id.button_login_facebook:
+			fbLoginButton.startAnimation(buttonPress);
 			this.loginCB.openFacebookLogin();
 			break;
 

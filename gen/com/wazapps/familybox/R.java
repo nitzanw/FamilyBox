@@ -19,8 +19,9 @@ public final class R {
         public static final int pop_enter=0x7f040007;
         public static final int pop_exit=0x7f040008;
         public static final int pulse=0x7f040009;
-        public static final int pulse_slow=0x7f04000a;
-        public static final int pulse_strong=0x7f04000b;
+        public static final int pulse_once=0x7f04000a;
+        public static final int pulse_slow=0x7f04000b;
+        public static final int pulse_strong=0x7f04000c;
     }
     public static final class attr {
         /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
