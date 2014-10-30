@@ -30,6 +30,7 @@ import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.ProfileFragment.UpdateProfileStatus;
 import com.wazapps.familybox.profiles.UserData;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
+import com.wazapps.familybox.profiles.UserData.DownloadCallback;
 import com.wazapps.familybox.splashAndLogin.ChangePasswordDialogFragment;
 import com.wazapps.familybox.splashAndLogin.LoginActivity;
 import com.wazapps.familybox.util.JSONParser;
@@ -88,12 +89,9 @@ public class MainActivity extends FragmentActivity implements
 	int[] icon;
 	
 	//cached user data variables and handlers
-	private UserHandler userHandler = null;
 	private ParseUser currentUser = null;
 	private UserData userData = null;
 	private ParseObject currentFamily = null;
-	private ArrayList<ParseUser> familyMembers = null;
-	private ArrayList<UserData> familyMembersData = null;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -102,7 +100,6 @@ public class MainActivity extends FragmentActivity implements
 		selectItem(mPosition);
 		getActionBar().setTitle(getString(R.string.news_feed_title));
 		overridePendingTransition(R.anim.enter, R.anim.exit);
-		userHandler = new UserHandler();
 	}
 
 	public void initDrawer() {
@@ -306,13 +303,17 @@ public class MainActivity extends FragmentActivity implements
 		switch (position) {
 		
 		case MY_PROFILE_POS:
-			getProfileData(new GetDataCallback() {
+			fetchProfileLocalData(new MainActivityCallback() {
 				MainActivity activity;
 				
 				@Override
-				public void done(Bundle data, Exception e) {
-					//if data was retrieved successfully
+				public void done(Exception e) {
 					if (e == null) {
+						Bundle data = new Bundle();
+						data.putBoolean(ProfileFragment.LOCAL_PROFILE, true);
+						data.putParcelable(ProfileFragment.MEMBER_ITEM, 
+								activity.userData);
+						
 						ProfileFragment profileFrag = new ProfileFragment();
 						profileFrag.setArguments(data);
 						FragmentTransaction ft = 
@@ -329,9 +330,10 @@ public class MainActivity extends FragmentActivity implements
 						LogUtils.logError("MainActivity", e.getMessage());
 						activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
 					}
+					
 				}
 				
-				private GetDataCallback init(MainActivity activity) {
+				private MainActivityCallback init(MainActivity activity) {
 					this.activity = activity;
 					return this;
 				}
@@ -442,46 +444,16 @@ public class MainActivity extends FragmentActivity implements
 				ProfileFragment.PROFILE_FRAG).addToBackStack(null);
 		ft.commit();
 	}
-	
-	private void getProfileData(final GetDataCallback callbackFunc) {
-		fetchProfileLocalData(new MainActivityCallback() {
-			private MainActivity activity;
-			
-			@Override
-			public void done(Exception e) {
-				
-				//if data fetching has failed
-				if (e != null) {
-					callbackFunc.done(null, e);
-					return;
-				}
-				
-				Bundle data = new Bundle();
-				data.putParcelable(ProfileFragment.MEMBER_ITEM, 
-						activity.userData);
-				data.putParcelableArray(ProfileFragment.FAMILY_MEMBER_LIST, 
-						activity.familyMembersData.toArray(new UserData
-								[activity.familyMembersData.size()]));
-				callbackFunc.done(data, null);
-			}
-			
-			private MainActivityCallback init(MainActivity activity) {
-				this.activity = activity;
-				return this;
-			}
-		}.init(this));
-	}
-	
+		
 	public void fetchProfileLocalData (
 			final MainActivityCallback callbackFunc) {
-		//if data has already been fetched before
-		if ((currentUser != null) && (currentFamily != null) && 
-				(familyMembers != null) && (familyMembersData != null) && 
-				(userData != null)) {
+		//if profile data has already been fetched before
+		if (currentUser != null && userData != null) {
 			callbackFunc.done(null);
+			return;
 		}
 		
-		//else - start fetching data
+		//else start fetching profile data
 		currentUser = ParseUser.getCurrentUser();
 		
 		//if no user is logged in
@@ -489,67 +461,35 @@ public class MainActivity extends FragmentActivity implements
 			callbackFunc.done(new Exception("no user is logged in"));
 		}
 		
-		String famildId = currentUser.getString(UserHandler.FAMILY_KEY);
-		ParseQuery<ParseObject> familyQuery = 
-				ParseQuery.getQuery(FamilyHandler.FAMILY_CLASS_NAME);
-		familyQuery.fromLocalDatastore();
-		//fetch the user's family from local datastore
-		familyQuery.getInBackground(famildId, new GetCallback<ParseObject>() {
-			MainActivity activity;
-			
-			@Override
-			public void done(ParseObject family, ParseException e) {
-				//if query fetching failed
-				if (e != null) {
-					callbackFunc.done(e);
-					return;
-				}
-				
-				//else if query fetching succeeded
-				//fetch family members from local datastore
-				String userId = activity.currentUser.getObjectId();
-				activity.familyMembers = new ArrayList<ParseUser>();
-				activity.familyMembersData = new ArrayList<UserData>();
-				activity.userData = new UserData(activity.currentUser, UserData.ROLE_UNDEFINED);
-				activity.userData.downloadProfilePicSync(activity.currentUser);
-				activity.currentFamily = family;
-				activity.userHandler.fetchFamilyMembersLocally (
-						activity.familyMembers, 
-						activity.familyMembersData, 
-						activity.currentFamily, userId, 
-						new FamilyMembersFetchCallback() {
+		currentUser.fetchFromLocalDatastoreInBackground (
+				new GetCallback<ParseUser>() {
+					MainActivity activity;
+					
+					@Override
+					public void done(ParseUser user, ParseException e) {
+						//if data fetching failed
+						if (e != null) {
+							callbackFunc.done(e);
+							return;
+						}
+						
+						activity.userData = new UserData(activity.currentUser, 
+								UserData.ROLE_UNDEFINED);
+						
+						activity.userData.downloadProfilePicAsync(
+								activity.currentUser, new DownloadCallback() {
 							
 							@Override
 							public void done(ParseException e) {
-								
-								//if family members data fetching has failed
-								if (e != null) {
-									callbackFunc.done(e);
-									return;
-								}
-								
-								//get the user's role in the family
-								try {
-									String userRole = activity.userHandler
-											.getUserRole(activity.currentUser, 
-											activity.currentFamily, false);
-									activity.userData.setRole(userRole);
-								} 
-								
-								catch (Exception roleError) {
-									callbackFunc.done(roleError);
-									return;
-								}
-								
-								callbackFunc.done(null);
+								callbackFunc.done(e);
 							}
 						});
-			}
-			
-			private GetCallback<ParseObject> init(MainActivity activity) {
-				this.activity = activity;
-				return this;
-			}
+					}
+					
+					private GetCallback<ParseUser> init(MainActivity activity) {
+						this.activity = activity;
+						return this;
+					}
 		}.init(this));
 	}
 

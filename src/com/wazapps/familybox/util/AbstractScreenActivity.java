@@ -25,10 +25,6 @@ abstract public class AbstractScreenActivity extends FragmentActivity{
 	}
 
 	private void initActionBar() {
-//		getActionBar().setIcon(
-//				getResources().getDrawable(
-//						R.drawable.action_bar_fc_icon_with_arrow));
-
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 

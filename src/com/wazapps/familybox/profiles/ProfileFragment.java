@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,19 +28,37 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.InputHandler;
+import com.wazapps.familybox.handlers.UserHandler;
+import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 import com.wazapps.familybox.util.WaveDrawable;
 
 public class ProfileFragment extends Fragment implements OnClickListener {
+	private abstract class ProfileFragmentCallback {
+		public abstract void done(Exception e);
+	}
+	
+	private abstract class MembersFetchCallback extends GetCallback<ParseObject> {
+		public abstract MembersFetchCallback init(ProfileFragment frag, 
+				boolean fetchOffline, ProfileFragmentCallback fetchCallbackFunc);
+	}
+
 	public static final String PROFILE_FRAG = "profile fragment";
 	public static final String MEMBER_ITEM = "member item";
+	public static final String LOCAL_PROFILE = "local profile";
 	public static final String FAMILY_MEMBER_LIST = "family member list";
 	public static final String PROFILE_DATA = "profile data";
 	private static final String MEMBER_ITEM_TYPE = "family member item";
@@ -51,10 +68,16 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 
 	private ProfileFamilyListAdapter mFamilyListAdapter;
 	private ProfileDetailsAdapter mProfileDetailsAdapter;
+	private UserHandler userHandler = null;
 	
 	//the fragment's profile data
-	private UserData[] mFamilyMembersList;
-	private UserData mCurrentUserDetails;
+	protected UserData mCurrentUser;
+	protected ArrayList<ParseUser> mFamilyMembers = null;
+	protected ArrayList<UserData> mFamilyMembersData = null;
+	protected boolean mIsLocalProfile;
+	
+	//the fragment's callback functions
+	protected MembersFetchCallback membersFetchCallback = null;
 
 	//the fragment's views
 	private View root;
@@ -115,19 +138,36 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		mSubmitStatus.setOnClickListener(this);
 		mUserPhoto = (RoundedImageView) root
 				.findViewById(R.id.riv_profile_image);
+		
 		// Clear the listView's top highlight scrolling effect
 		int glowDrawableId = root.getResources().getIdentifier(
 				"overscroll_glow", "drawable", "android");
 		Drawable androidGlow = root.getResources().getDrawable(glowDrawableId);
 		androidGlow.setColorFilter(R.color.orange_fb, Mode.CLEAR);
-
-		if (mFamilyMembersList != null) {
-			initProfileDetailsViews();
-			initFamilyListView();
-		}
-		
 		initAnimations();
-
+		
+		//inflate profile data into the screen
+		initProfileDetailsViews();
+		
+		//fetch family members data and inflate it
+		fetchFamilyData(mIsLocalProfile, true, 
+				new ProfileFragmentCallback() {
+			
+			@Override
+			public void done(Exception e) {
+				if (e == null) {
+					initFamilyListView();					
+				} 
+				
+				else {
+					LogUtils.logError("ProfileFragment", e.getMessage());
+					RelativeLayout emptyText = (RelativeLayout) getActivity()
+							.findViewById(R.id.rl_family_members_list_empty);
+					emptyText.setVisibility(View.VISIBLE);	
+				}
+			}
+		});
+		
 		return root;
 	}
 	
@@ -156,13 +196,17 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		userHandler = new UserHandler();
+		mFamilyMembers = new ArrayList<ParseUser>();
+		mFamilyMembersData = new ArrayList<UserData>();
+		initCallbackFuncs();
+		
 		Bundle profileArgs = getArguments();
 		if (profileArgs != null) {
 			// get the data for the profile
-			mFamilyMembersList = (UserData[]) profileArgs
-					.getParcelableArray(FAMILY_MEMBER_LIST);
-			mCurrentUserDetails = (UserData) profileArgs
+			mCurrentUser = (UserData) profileArgs
 					.getParcelable(MEMBER_ITEM);
+			mIsLocalProfile = profileArgs.getBoolean(LOCAL_PROFILE);
 			setHasOptionsMenu(true);
 		}
 
@@ -171,6 +215,76 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 					"profile arguments did not pass");
 		}
 	}
+	
+	private void initCallbackFuncs() {
+		//in charge if handling the retrieved members data
+		this.membersFetchCallback = new MembersFetchCallback(){
+			boolean fetchOffline;
+			ProfileFragmentCallback callbackFunc;
+			ProfileFragment frag;
+			
+			@Override
+			public void done(ParseObject family, ParseException e) {
+				final ParseObject currFamily = family;
+				//if query fetching failed
+				if (e != null) {
+					callbackFunc.done(e);
+					return;
+				}
+				
+				FamilyMembersFetchCallback fetchCallback = 
+						new FamilyMembersFetchCallback() {
+					@Override
+					public void done(ParseException e) {
+						//if family members data fetching has failed
+						if (e != null) {
+							callbackFunc.done(e);
+							return;
+						}
+						
+						//get the user's role in the family
+						try {
+							String userRole = frag.userHandler.getUserRole(
+									frag.mCurrentUser, currFamily, false);
+							frag.mCurrentUser.setRole(userRole);
+						} 
+						
+						catch (Exception roleError) {
+							callbackFunc.done(roleError);
+							return;
+						}
+						
+						callbackFunc.done(null);
+					}
+				};
+				
+				String userId = frag.mCurrentUser.getUserId();
+				//if members are cached in local data store 
+				//then fetch them from it
+				if (fetchOffline) {
+					frag.userHandler.fetchFamilyMembersLocally(
+							frag.mFamilyMembers, frag.mFamilyMembersData, 
+							family, userId, false, fetchCallback);
+				} 
+				
+				//else - fetch from parse servers
+				else {
+					frag.userHandler.fetchFamilyMembers(
+							frag.mFamilyMembers, frag.mFamilyMembersData, 
+							family, userId, false, fetchCallback);
+				}
+			}
+			
+			public MembersFetchCallback init(ProfileFragment frag, 
+					boolean fetchOffline, ProfileFragmentCallback callbackFunc) {
+				this.frag = frag;
+				this.fetchOffline = fetchOffline;
+				this.callbackFunc = callbackFunc;
+				return this;
+			}
+		};
+	}
+	
 
 	private void initProfileDetailsViews() {		
 		new AsyncTask<Void, Void, Void>() {
@@ -181,14 +295,14 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			@Override
 			protected Void doInBackground(Void... params) {
 				userName = InputHandler.capitalizeFullname(
-						frag.mCurrentUserDetails.getName(), 
-						frag.mCurrentUserDetails.getLastName());
-				status = frag.mCurrentUserDetails.getStatus();
-				profilePic = frag.mCurrentUserDetails.getprofilePhoto();
+						frag.mCurrentUser.getName(), 
+						frag.mCurrentUser.getLastName());
+				status = frag.mCurrentUser.getStatus();
+				profilePic = frag.mCurrentUser.getprofilePhoto();
 				
 				frag.mProfileDetailsAdapter = 
 						new ProfileDetailsAdapter(getActivity(),
-						frag.mCurrentUserDetails.getUserProfileDetails());
+						frag.mCurrentUser.getUserProfileDetails());
 				return null;
 			}
 			
@@ -211,7 +325,29 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			
 		}.init(this).execute();
 	}
-
+	
+	private void fetchFamilyData(
+			boolean isFromLocalDB, boolean isCurrFamily,
+			final ProfileFragmentCallback callbackFunc) {
+		//fetch the user's family from online source or local datatore
+		//if currFamily is true - fetch the user's current family
+		//otherwise fetch previous family.
+		String familyId = isCurrFamily? mCurrentUser.getFamilyId() : 
+			mCurrentUser.getPrevFamilyId();
+		ParseQuery<ParseObject> familyQuery = 
+				ParseQuery.getQuery(FamilyHandler.FAMILY_CLASS_NAME);
+		
+		//if the family members are cached in the local datastore 
+		//then do an offline query
+		if (isFromLocalDB) {
+			familyQuery.fromLocalDatastore();			
+		}
+		
+		//start fetching the members
+		familyQuery.getInBackground(familyId, 
+				membersFetchCallback.init(this, isFromLocalDB, callbackFunc));
+	}
+	
 	private void initFamilyListView() {
 		new AsyncTask<Void, View, Void>() {
 			private ProfileFragment frag;
@@ -219,8 +355,9 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			@Override
 			protected Void doInBackground(Void... params) {
 				frag.mFamilyListAdapter = new ProfileFamilyListAdapter(
-						frag.getActivity(), frag.mFamilyMembersList, 
-						frag.mCurrentUserDetails);
+						frag.getActivity(), frag.mFamilyMembersData.toArray(
+								new UserData[frag.mFamilyMembersData.size()]), 
+						frag.mCurrentUser);
 				
 				for (int i = 0; i < frag.mFamilyListAdapter.getCount(); i++) {
 					View v = frag.mFamilyListAdapter.getView(
@@ -239,14 +376,13 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			};
 			
 			protected void onPostExecute(Void result) {
-				if (frag.mFamilyMembersList.length == 0) {
+				if (frag.mFamilyMembersData.size() == 0) {
 					RelativeLayout emptyText = (RelativeLayout) 
 							frag.getActivity()
 							.findViewById(R.id.rl_family_members_list_empty);
 					emptyText.setVisibility(View.VISIBLE);
 				}
 			};
-			
 			
 			private AsyncTask<Void, View, Void> init(ProfileFragment frag) {
 				this.frag = frag;
@@ -281,17 +417,15 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			mUserStatus.setVisibility(View.VISIBLE);
 		} 
 		
-//		else {
-//			Bundle args = new Bundle();
-//			int pos = (Integer) v.getTag(ITEM_POS); // get the current item
-//													// position
-//													// in family list
-//			FamilyMemberDetails[] familyMembers = createFamilyList(pos);
-//			FamilyMemberDetails clickedUserDetails = mFamilyMembersList[pos];
-//			args.putParcelable(MEMBER_ITEM, clickedUserDetails);
-//			args.putParcelableArray(FAMILY_MEMBER_LIST, familyMembers);
-//			addProfileCallback.addProfileFragment(args);
-//		}
+		else {
+			Bundle args = new Bundle();
+			//get the current item position in family members list
+			int pos = (Integer) v.getTag(ITEM_POS); 
+			UserData clickedUserDetails = mFamilyMembersData.get(pos);
+			args.putParcelable(MEMBER_ITEM, clickedUserDetails);
+			args.putBoolean(LOCAL_PROFILE, false);
+			addProfileCallback.addProfileFragment(args);
+		}
 	}
 
 	@Override
@@ -299,7 +433,6 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		if (menu.findItem(R.id.action_edit) == null) {
 			inflater.inflate(R.menu.menu_edit_action, menu);
 		}
-
 	}
 
 	@Override

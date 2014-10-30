@@ -47,7 +47,6 @@ public class EditProfileFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		LogUtils.logError("ROFL", "LOL!!!");
 
 		Bundle args = getArguments();
 		if (args != null) {
