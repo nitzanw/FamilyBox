@@ -24,9 +24,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.InputHandler;
+import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
@@ -37,6 +42,10 @@ implements OnClickListener, OnFocusChangeListener {
 	public interface EditProfileCallback {
 		public void openBirthdayDialog();
 		public void openPhonePhotoBrowsing();
+	}
+	
+	public abstract class PrevFamilyQueryCallback {
+		public abstract void done(Exception e);
 	}
 
 	public static final String EDIT_PROFILE_FRAG = "edit profile fragment";
@@ -61,10 +70,25 @@ implements OnClickListener, OnFocusChangeListener {
 	private UserData mCurrentUserData;
 	private ParseUser mCurrentUser;
 	String profilePictureName;
+	private boolean pictureUpdated = false;
 
 	private EditProfileFamilyListAdapter mFamilyListAdapter;
 	private EditProfileCallback editCallback;
+	private PrevFamilyQueryCallback familyQueryCallback = null;
 
+	private void initCallbackFunctions() {
+		this.familyQueryCallback = new PrevFamilyQueryCallback() {
+			@Override
+			public void done(Exception e) {
+				if (e == null) {
+					mCurrentUser.saveEventually();								
+				}							
+				
+				getActivity().finish();	
+			}
+		};
+	}
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -81,6 +105,7 @@ implements OnClickListener, OnFocusChangeListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
+		initCallbackFunctions();
 		userHandler = new UserHandler();
 		mCurrentUser = ParseUser.getCurrentUser();
 		if (mCurrentUser == null) {
@@ -93,6 +118,7 @@ implements OnClickListener, OnFocusChangeListener {
 		mFamilyMembersData = new ArrayList<UserData>();	
 		setHasOptionsMenu(true);
 	}
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -185,16 +211,114 @@ implements OnClickListener, OnFocusChangeListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_accept) {
-			getActivity().finish();
+			handleUserEdit();			
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void handleUserEdit() {
+		boolean detailsUpdated = false;
+		boolean prevFamilyUpdated = false;
+		
+		String nickname = mNickname.getText().toString()
+				.toLowerCase().trim();
+		String prevLastName = mPreviousFamilyName.getText().toString()
+				.toLowerCase().trim();
+		String middleName = mMiddleName.getText().toString()
+				.toLowerCase().trim();
+		String phoneNumber = mPhoneNumber.getText().toString().trim();
+		String birthday = mBirthday.getText().toString();
+		String address = mAddress.getText().toString().toLowerCase().trim();
+		
+		if (!mCurrentUserData.getNickname().equals(nickname)) {
+			detailsUpdated = true;
+			mCurrentUser.put(UserHandler.NICKNAME_KEY, nickname);
+		}
+		
+		if (!mCurrentUserData.getPreviousLastName().equals(prevLastName)) {
+			detailsUpdated = true;
+			prevFamilyUpdated = true;
+			mCurrentUser.put(UserHandler.PREV_LAST_NAME_KEY, prevLastName);
+		}
+		
+		if (!mCurrentUserData.getMiddleName().equals(middleName)) {
+			detailsUpdated = true;
+			mCurrentUser.put(UserHandler.MIDDLE_NAME_KEY, middleName);
+		}
+		
+		if (!mCurrentUserData.getPhoneNumber().equals(phoneNumber)) {
+			detailsUpdated = true;
+			mCurrentUser.put(UserHandler.PHONE_NUMBER_KEY, phoneNumber);
+		}
+		
+		if (!mCurrentUserData.getBirthday().equals(birthday)) {
+			detailsUpdated = true;
+			mCurrentUser.put(UserHandler.BIRTHDATE_KEY, birthday);
+		}
+		
+		if (!mCurrentUserData.getAddress().equals(address)) {
+			detailsUpdated = true;
+			mCurrentUser.put(UserHandler.ADDRESS_KEY, address);
+		}
+		
+		//if a new photo was uploaded
+		if (pictureUpdated) {
+			ParseFile profilePic = new ParseFile(
+					profilePictureName, profilePictureData);
+			
+			profilePic.saveInBackground(new SaveCallback() {
+				EditProfileFragment frag;
+				ParseFile profilePic;
+				boolean prevFamilyUpdated;
+				
+				@Override
+				public void done(ParseException e) {
+					if (e == null) {
+						frag.mCurrentUser.put(
+								UserHandler.PROFILE_PICTURE_KEY, 
+								profilePic);
+					} 
+					
+					handleFamilyquery(prevFamilyUpdated, 
+							frag.familyQueryCallback);					
+				}
+				
+				private SaveCallback init(EditProfileFragment frag, 
+						ParseFile profilePic, boolean prevFamilyUpdated) {
+					this.frag = frag;
+					this.profilePic = profilePic;
+					this.prevFamilyUpdated = prevFamilyUpdated;
+					return this;
+				}
+			}.init(this, profilePic, prevFamilyUpdated));
+		} 
+		
+		//if no new photo was uploaded but details were updated
+		else if (detailsUpdated) {
+			handleFamilyquery(prevFamilyUpdated, familyQueryCallback);
+		} 
+		
+		//otherwise - if no new data was updated
+		else {
+			getActivity().finish();
+		}
+	}
+	
+	public void handleFamilyquery(boolean prevFamilyUpdated, 
+			PrevFamilyQueryCallback callbackFunc) {
+		if (!prevFamilyUpdated) {
+			callbackFunc.done(null);			
+		} else {
+			
+		}
+	}
+	
+
 	public void setDate(String date) {
 		mBirthday.setText(date);
 	}
-
+	
 	public void setProfileImage(Bitmap bitmap, byte[] fileData, 
 			String filename) {
 		mEditImage.setImageBitmap(bitmap);
@@ -202,6 +326,7 @@ implements OnClickListener, OnFocusChangeListener {
 				android.R.color.transparent));	
 		profilePictureData = Arrays.copyOf(fileData, fileData.length);
 		profilePictureName = filename;
+		pictureUpdated = true;
 	}
 
 	@Override
@@ -239,6 +364,5 @@ implements OnClickListener, OnFocusChangeListener {
 		default:
 			break;
 		}
-
 	}
 }

@@ -11,6 +11,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,8 +64,8 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 	public interface AddAlbumScreenCallback {
 		public void openDateInputDialog();
 
-		public void uploadPhotosToAlbum(ParseObject album,
-				ArrayList<String> photoUrls);
+		public void uploadPhotosToAlbum(String albumName, String albumDate,
+				String albumDesc, ArrayList<String> photoUrls);
 	}
 
 	@Override
@@ -144,25 +146,17 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 
 	}
 
+
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_accept) {
 			// upload the album to the server
 			if (checkFields() == 0) {
-				ParseObject album = new ParseObject(PhotoHandler.ALBUM);
 
-				ParseUser currentUser = ParseUser.getCurrentUser();
-				if (currentUser != null) {
-					album.put(PhotoHandler.ALBUM_FAMILY_KEY,
-							currentUser.get(UserHandler.FAMILY_KEY));
-				}
-				album.put(PhotoHandler.ALBUM_NAME, mAlbumName.getText()
-						.toString());
-				album.put(PhotoHandler.ALBUM_DATE, mAlbumDate.getText()
-						.toString());
-				album.put(PhotoHandler.ALBUM_DESCRIPTION, mAlbumDesc.getText()
-						.toString());
-				addAlbumCallback.uploadPhotosToAlbum(album, photoUrls);
+				addAlbumCallback.uploadPhotosToAlbum(mAlbumName.getText()
+						.toString(), mAlbumDate.getText().toString(),
+						mAlbumDesc.getText().toString(), photoUrls);
 				getActivity().finish();
 			}
 
@@ -247,33 +241,6 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 						(ViewGroup) getView()));
 			}
 		}
-
-	}
-
-	public void createNewAlbum(String albumName, String date, String description) {
-		// if (album == null) {
-		// album = new ParseObject(PhotoHandler.ALBUM);
-		// }
-		// ParseUser currentUser = ParseUser.getCurrentUser();
-		// if (currentUser != null) {
-		// album.put(PhotoHandler.ALBUM_FAMILY_KEY,
-		// currentUser.get(UserHandler.FAMILY_KEY));
-		// }
-		// album.put(PhotoHandler.ALBUM_NAME, albumName);
-		// album.put(PhotoHandler.ALBUM_DATE, date);
-		// album.put(PhotoHandler.ALBUM_DESCRIPTION, description);
-		// album.saveInBackground(new SaveCallback() {
-		//
-		// @Override
-		// public void done(ParseException e) {
-		// if (e == null) {
-		//
-		//
-		// } else {
-		// createToast(e.toString());
-		// }
-		// }
-		// });
 
 	}
 

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.TabsFragment;
 import com.wazapps.familybox.familyTree.FamiliesListItem;
@@ -75,7 +76,8 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 
 			Intent addAlbum = new Intent(getActivity(),
 					AddAlbumScreenActivity.class);
-			getActivity().startActivity(addAlbum);
+			getActivity().startActivityForResult(addAlbum,
+					MainActivity.ADD_ALBUM_SCREEN_ACTIVITY);
 
 			return true;
 		}

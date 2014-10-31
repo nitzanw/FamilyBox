@@ -7,13 +7,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.parse.ParseObject;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.photos.AddAlbumFragment.AddAlbumScreenCallback;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.DateChooserCallback;
 import com.wazapps.familybox.util.AbstractScreenActivity;
-import com.wazapps.familybox.util.MultiImageChooserActivity;
 
 public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 		AddAlbumScreenCallback, DateChooserCallback {
@@ -45,8 +44,6 @@ public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 		}
 	}
 
-
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -54,12 +51,22 @@ public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 		return super.onCreateOptionsMenu(menu);
 	}
 
-//	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return ((AddAlbumFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.fragment_container))
+				.onOptionsItemSelected(item);
+
+	}
 
 	@Override
-	public void uploadPhotosToAlbum(ParseObject album,
-			ArrayList<String> photoUrls) {
-	
-		
+	public void uploadPhotosToAlbum(String albumName, String albumDate,
+			String albumDesc, ArrayList<String> photoUrls) {
+		Intent photoIntent = new Intent();
+		photoIntent.putExtra(PhotoHandler.ALBUM_NAME, albumName);
+		photoIntent.putExtra(PhotoHandler.ALBUM_DATE, albumDate);
+		photoIntent.putExtra(PhotoHandler.ALBUM_DESCRIPTION, albumDesc);
+		photoIntent.putExtra(PhotoHandler.PHOTO_URLS, photoUrls);
+		setResult(RESULT_OK, photoIntent);
 	}
 }

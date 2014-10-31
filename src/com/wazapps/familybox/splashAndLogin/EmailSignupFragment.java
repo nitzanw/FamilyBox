@@ -195,8 +195,8 @@ public class EmailSignupFragment extends Fragment implements OnClickListener,
 		uploadImage.setImageDrawable(d);
 	}
 
-	public void setProfileImage(Bitmap fileBitmap, byte[] fileData,
-			String filename) {
+	public void setProfileImage(Bitmap fileBitmap, 
+			byte[] fileData, String filename) {
 		uploadImage.setImageBitmap(fileBitmap);
 		uploadImage.setBackgroundColor(getResources().getColor(
 				android.R.color.transparent));

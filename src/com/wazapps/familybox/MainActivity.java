@@ -1,5 +1,6 @@
 package com.wazapps.familybox;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -9,13 +10,16 @@ import org.json.JSONObject;
 import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SignUpCallback;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.familyTree.FamiliesListFragment;
 import com.wazapps.familybox.handlers.FamilyHandler;
+import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
 import com.wazapps.familybox.newsfeed.NewsFeedTabsFragment;
@@ -27,11 +31,11 @@ import com.wazapps.familybox.photos.PhotoItem;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.ProfileDetails;
 import com.wazapps.familybox.profiles.ProfileFragment;
-import com.wazapps.familybox.profiles.ProfileFragment.UpdateProfileStatus;
 import com.wazapps.familybox.profiles.UserData;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 import com.wazapps.familybox.profiles.UserData.DownloadCallback;
 import com.wazapps.familybox.splashAndLogin.ChangePasswordDialogFragment;
+import com.wazapps.familybox.splashAndLogin.EmailSignupFragment;
 import com.wazapps.familybox.splashAndLogin.LoginActivity;
 import com.wazapps.familybox.util.JSONParser;
 import com.wazapps.familybox.util.LogUtils;
@@ -39,6 +43,8 @@ import com.wazapps.familybox.util.MenuListAdapter;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -58,15 +64,17 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
-		AddProfileFragmentListener, UpdateProfileStatus {
-	
+		AddProfileFragmentListener {
+
 	public static abstract class MainActivityCallback {
 		public abstract void done(Exception e);
 	}
-	
+
 	public static abstract class GetDataCallback {
 		public abstract void done(Bundle data, Exception e);
 	}
+
+	public static final int ADD_ALBUM_SCREEN_ACTIVITY = 5;
 
 	public static final int MY_PROFILE_POS = 0;
 	public static final int MY_FAMILY_PROFILE_POS = 1;
@@ -87,11 +95,15 @@ public class MainActivity extends FragmentActivity implements
 	String[] title;
 	String[] subtitle;
 	int[] icon;
-	
-	//cached user data variables and handlers
+
+	// cached user data variables and handlers
 	private ParseUser currentUser = null;
 	private UserData userData = null;
 	private ParseObject currentFamily = null;
+
+	private int photoToUploadNum;
+
+	private int upLoadPhotoCounter;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -216,7 +228,8 @@ public class MainActivity extends FragmentActivity implements
 				ParseUser.logOut();
 				ParseUser.unpinAllInBackground("UserFamilyMembers");
 				ParseObject.unpinAllInBackground("UserFamily");
-				Intent logoutIntent = new Intent(MainActivity.this, LoginActivity.class);
+				Intent logoutIntent = new Intent(MainActivity.this,
+						LoginActivity.class);
 				logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
 				startActivity(logoutIntent);
 				finish();
@@ -301,67 +314,70 @@ public class MainActivity extends FragmentActivity implements
 	public void selectItem(int position) {
 		mPosition = position;
 		switch (position) {
-		
+
 		case MY_PROFILE_POS:
 			fetchProfileLocalData(new MainActivityCallback() {
 				MainActivity activity;
-				
+
 				@Override
 				public void done(Exception e) {
 					if (e == null) {
 						Bundle data = new Bundle();
-						data.putParcelable(ProfileFragment.MEMBER_ITEM, 
-								activity.userData);
-						
+						data.putBoolean(ProfileFragment.USER_PROFILE, true);
+
 						ProfileFragment profileFrag = new ProfileFragment();
 						profileFrag.setArguments(data);
-						FragmentTransaction ft = 
-								getSupportFragmentManager().beginTransaction();
-						ft.setCustomAnimations(R.anim.fade_in_fast, 
+						FragmentTransaction ft = getSupportFragmentManager()
+								.beginTransaction();
+						ft.setCustomAnimations(R.anim.fade_in_fast,
 								R.anim.fade_out_fast);
 						ft.replace(R.id.fragment_container, profileFrag,
 								ProfileFragment.PROFILE_FRAG);
 						ft.commit();
-						activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
-						
+						activity.mDrawerLayout
+								.closeDrawer(activity.mDrawerList);
+
 					} else {
-						//TODO: handle error
+						// TODO: handle error
 						LogUtils.logError("MainActivity", e.getMessage());
-						activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
+						activity.mDrawerLayout
+								.closeDrawer(activity.mDrawerList);
 					}
-					
+
 				}
-				
+
 				private MainActivityCallback init(MainActivity activity) {
 					this.activity = activity;
 					return this;
 				}
 			}.init(this));
-			
+
 			break;
-			
-			
+
 		case MY_FAMILY_PROFILE_POS:
-			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			FragmentTransaction ft = getSupportFragmentManager()
+					.beginTransaction();
 			ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 			ft.replace(R.id.fragment_container, new FamilyProfileFragment(),
 					FamilyProfileFragment.FAMILY_PROFILE_FRAG);
 			ft.commit();
 			this.mDrawerLayout.closeDrawer(this.mDrawerList);
-			
+
 			break;
 		case FAMILY_TREE_POS:
-			FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+			FragmentTransaction ft2 = getSupportFragmentManager()
+					.beginTransaction();
 			ft2.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 			ft2.replace(R.id.fragment_container, new FamiliesListFragment(),
 					FamiliesListFragment.FAMILY_TREE_FRAG);
 			ft2.commit();
 			this.mDrawerLayout.closeDrawer(this.mDrawerList);
-			
+
 			break;
 
 		case PHOTOS_POS:
-			FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
+			FragmentTransaction ft3 = getSupportFragmentManager()
+					.beginTransaction();
 			ft3.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 			ft3.replace(R.id.fragment_container, new PhotoAlbumsTabsFragment(),
 					PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG);
@@ -371,7 +387,8 @@ public class MainActivity extends FragmentActivity implements
 			break;
 
 		case NEWS_POS:
-			FragmentTransaction ft4 = getSupportFragmentManager().beginTransaction();
+			FragmentTransaction ft4 = getSupportFragmentManager()
+					.beginTransaction();
 			ft4.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 			NewsFeedTabsFragment newsTabs = new NewsFeedTabsFragment();
 			Bundle args = new Bundle();
@@ -383,15 +400,16 @@ public class MainActivity extends FragmentActivity implements
 					NewsFeedTabsFragment.NEW_FEED_TAB_FRAG);
 			ft4.commit();
 			this.mDrawerLayout.closeDrawer(this.mDrawerList);
-			
+
 			break;
 
 		case EXPAND_NETWORK_POS:
-			FragmentTransaction ft5 = getSupportFragmentManager().beginTransaction();
+			FragmentTransaction ft5 = getSupportFragmentManager()
+					.beginTransaction();
 			ft5.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 			this.mDrawerLayout.closeDrawer(this.mDrawerList);
 			ft5.commit();
-			
+
 			break;
 		}
 	}
@@ -439,95 +457,171 @@ public class MainActivity extends FragmentActivity implements
 		ProfileFragment profileFrag = new ProfileFragment();
 		profileFrag.setArguments(args);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.setCustomAnimations(R.anim.enter, R.anim.exit,
-				R.anim.enter_reverse, R.anim.fade_out_fast);
+		ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.enter_reverse,
+				R.anim.fade_out_fast);
 		ft.add(R.id.fragment_container, profileFrag,
 				ProfileFragment.PROFILE_FRAG).addToBackStack(null);
 		ft.commit();
 	}
-		
-	public void fetchProfileLocalData (
-			final MainActivityCallback callbackFunc) {
-		//if profile data has already been fetched before
+
+	public void fetchProfileLocalData(final MainActivityCallback callbackFunc) {
+		// if profile data has already been fetched before
 		if (currentUser != null && userData != null) {
 			callbackFunc.done(null);
 			return;
 		}
-		
-		//else start fetching profile data
+
+		// else start fetching profile data
 		currentUser = ParseUser.getCurrentUser();
-		
-		//if no user is logged in
+
+		// if no user is logged in
 		if (currentUser == null) {
 			callbackFunc.done(new Exception("no user is logged in"));
 		}
-		
-		currentUser.fetchFromLocalDatastoreInBackground (
-				new GetCallback<ParseUser>() {
-					MainActivity activity;
-					
+
+		currentUser
+				.fetchFromLocalDatastoreInBackground(new GetCallback<ParseUser>() {
 					@Override
 					public void done(ParseUser user, ParseException e) {
-						//if data fetching failed
-						if (e != null) {
-							callbackFunc.done(e);
-							return;
-						}
-						
-						activity.userData = new UserData(activity.currentUser, 
-								UserData.ROLE_UNDEFINED);
-						
-						activity.userData.downloadProfilePicAsync(
-								activity.currentUser, new DownloadCallback() {
-							
-							@Override
-							public void done(ParseException e) {
-								callbackFunc.done(e);
-							}
-						});
+						callbackFunc.done(e);
 					}
-					
-					private GetCallback<ParseUser> init(MainActivity activity) {
-						this.activity = activity;
-						return this;
-					}
-		}.init(this));
+				});
 	}
 
 	@Override
-	public void updateProfileStatus(String status) {
-		final String oldStatus = this.userData.getStatus();
-		
-		this.userData.setStatus(status);
-		this.currentUser.put(UserHandler.STATUS_KEY, status);
-		this.currentUser.saveEventually(new SaveCallback() {
-			private MainActivity activity;
-			
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == ADD_ALBUM_SCREEN_ACTIVITY && resultCode == RESULT_OK) {
+			String albumName = data.getStringExtra(PhotoHandler.ALBUM_NAME);
+			String albumDate = data.getStringExtra(PhotoHandler.ALBUM_DATE);
+			String albumDesc = data
+					.getStringExtra(PhotoHandler.ALBUM_DESCRIPTION);
+			ArrayList<String> photoUrls = data
+					.getStringArrayListExtra(PhotoHandler.PHOTO_URLS);
+
+			uploadAlbum(albumName, albumDate, albumDesc, photoUrls);
+		}
+	}
+
+	private void uploadAlbum(String albumName, String albumDate,
+			String albumDesc, ArrayList<String> photoUrls) {
+
+		ParseObject album = new ParseObject(PhotoHandler.ALBUM);
+		if (currentUser == null) {
+			currentUser = ParseUser.getCurrentUser();
+		}
+
+		album.put(PhotoHandler.ALBUM_FAMILY_KEY,
+				currentUser.get(UserHandler.FAMILY_KEY));
+
+		album.put(PhotoHandler.ALBUM_NAME, albumName);
+		album.put(PhotoHandler.ALBUM_DATE, albumDate);
+		album.put(PhotoHandler.ALBUM_DESCRIPTION, albumDesc);
+		album.saveInBackground(new SaveCallback() {
+			FragmentActivity activity = null;
+			ParseObject album = null;
+			ArrayList<String> photoUrls = null;
+
 			@Override
 			public void done(ParseException e) {
-				//if saving succeeded notify user of status update
 				if (e == null) {
-					Toast toast = Toast.makeText(activity, 
-							"Status updated", Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-					toast.show();
-				} 
-				
-				else {
-					LogUtils.logError("MainActivity", e.getMessage());
-					activity.userData.setStatus(oldStatus);
-					Toast toast = Toast.makeText(activity, 
-							"Failed to update status", 
-							Toast.LENGTH_SHORT);
+					((MainActivity) activity).uploadPhotosToAlbum(album,
+							photoUrls);
+				} else {
+					Toast toast = Toast.makeText(getApplicationContext(),
+							getString(R.string.add_album_err_not_uploaded)
+									+ " " + e.toString(), Toast.LENGTH_LONG);
 					toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 					toast.show();
 				}
 			}
-			
-			private SaveCallback init(MainActivity activity) {
+
+			SaveCallback init(FragmentActivity activity, ParseObject album,
+					ArrayList<String> photoUrls) {
 				this.activity = activity;
+				this.album = album;
+				this.photoUrls = photoUrls;
 				return this;
 			}
-		}.init(this));
+
+		}.init(this, album, photoUrls));
+
+	}
+
+	protected void uploadPhotosToAlbum(ParseObject album,
+			ArrayList<String> photoUrls) {
+		photoToUploadNum = photoUrls.size();
+		for (int i = 0; i < photoToUploadNum; i++) {
+			Uri currImageURI = Uri.parse(photoUrls.get(i));
+
+			File file = new File(PhotoHandler.getRealPathFromURI(this,
+					currImageURI));
+
+			if (file.exists()) {
+				Bitmap myBitmap = PhotoHandler.getImageBitmapFromFile(file);
+				byte[] fileData = PhotoHandler
+						.createDownsampledPictureData(myBitmap);
+
+				ParseObject photoItem = new ParseObject("PhotoItem");
+				photoItem.put("caption", "");
+				photoItem.put("album", album.getObjectId());
+
+				ParseFile photoFile = new ParseFile(file.getName(), fileData);
+				photoFile.saveInBackground(new SaveCallback() {
+					private ParseObject album, photoItem;
+					private ParseFile photoFile;
+					private FragmentActivity activity;
+
+					@Override
+					public void done(ParseException e) {
+						if (e == null) {
+							photoItem.put("photo", photoFile);
+							photoItem.saveEventually(new SaveCallback() {
+								private FragmentActivity activity;
+
+								@Override
+								public void done(ParseException e) {
+									((MainActivity) activity)
+											.incrementAlbumCounter();
+								}
+
+								SaveCallback init(FragmentActivity activity) {
+									this.activity = activity;
+									return this;
+								}
+
+							}.init(activity));
+						} else {
+							LogUtils.logError(getLocalClassName(),
+									"something went wrong with the album uplaod "
+											+ e.getMessage());
+						}
+					}
+
+					private SaveCallback init(FragmentActivity activity,
+							ParseObject album, ParseFile albumPic,
+							ParseObject photoItem) {
+						this.activity = activity;
+						this.album = album;
+						this.photoFile = albumPic;
+						this.photoItem = photoItem;
+						return this;
+					}
+				}.init(this, album, photoFile, photoItem));
+
+			}
+		}
+	}
+
+	synchronized protected void incrementAlbumCounter() {
+		upLoadPhotoCounter++;
+		// if the number of uploaded photos is equal to the number of photos
+		// user selected - show a toast
+		if (upLoadPhotoCounter == photoToUploadNum) {
+			Toast toast = Toast.makeText(getApplicationContext(),
+					getString(R.string.add_album_success), Toast.LENGTH_LONG);
+
+			toast.show();
+		}
+
 	}
 }
