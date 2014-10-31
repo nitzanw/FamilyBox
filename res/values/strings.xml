@@ -23,6 +23,7 @@
     <string name="profile_details_birthday">Birthday</string>
     <string name="profile_details_birthday_data">19 October 1987</string>
     <string name="profile_close_family_title">Close Family</string>
+    <string name="profile_family_members_empty">No Family members =(</string>
     <string name="edit_profile_change_photo">Change photo</string>
     <string name="edit_profile_name">Name</string>
     <string name="edit_profile_nickname">Nickname</string>

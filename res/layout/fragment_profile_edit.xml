@@ -22,10 +22,10 @@
 
         <com.wazapps.familybox.util.RoundedImageView
             android:id="@+id/riv_edit_profile_change_pic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
             android:layout_marginLeft="29dp"
-            android:background="@drawable/profile_pic"
+            android:background="@drawable/profile_elipse"
             android:cropToPadding="true"
             android:scaleType="centerCrop" />
     </FrameLayout>
@@ -55,14 +55,6 @@
                 android:paddingBottom="13dp"
                 android:textColor="@color/gray_signup_input_fields"
                 android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="12.3dp"
-                android:paddingTop="6dp"
-                android:text="@string/edit_profile_name"
-                android:textSize="12sp" />
         </FrameLayout>
 
         <FrameLayout
@@ -77,13 +69,6 @@
                 android:enabled="false"
                 android:paddingBottom="13dp"
                 android:textColor="@color/gray_signup_input_fields"
-                android:textSize="12sp" />
-             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="12.3dp"
-                android:paddingTop="6dp"
-                android:text="@string/edit_profile_last_name"
                 android:textSize="12sp" />
         </FrameLayout>
     </LinearLayout>

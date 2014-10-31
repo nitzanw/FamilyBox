@@ -310,7 +310,6 @@ public class MainActivity extends FragmentActivity implements
 				public void done(Exception e) {
 					if (e == null) {
 						Bundle data = new Bundle();
-						data.putBoolean(ProfileFragment.LOCAL_PROFILE, true);
 						data.putParcelable(ProfileFragment.MEMBER_ITEM, 
 								activity.userData);
 						

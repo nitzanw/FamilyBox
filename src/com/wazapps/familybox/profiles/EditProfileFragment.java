@@ -1,32 +1,46 @@
 package com.wazapps.familybox.profiles;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.parse.ParseUser;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.InputHandler;
+import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 
-public class EditProfileFragment extends Fragment {
-	public static final String EDIT_PROFILE_FRAG = "edit profile fragment";
+public class EditProfileFragment extends Fragment 
+implements OnClickListener, OnFocusChangeListener {
 
-	public static final String EDIT_FAMILY_MEMBER_LIST = 
-			ProfileFragment.FAMILY_MEMBER_LIST;
-	public static final String EDIT_MEMBER_ITEM = 
-			ProfileFragment.MEMBER_ITEM;
-	public static final String EDIT_PROFILE_DATA = 
-			"edit profile data";
+	public interface EditProfileCallback {
+		public void openBirthdayDialog();
+		public void openPhonePhotoBrowsing();
+	}
+
+	public static final String EDIT_PROFILE_FRAG = "edit profile fragment";
+	public static final String EDIT_PROFILE_DATA = "edit profile data";
 
 	private View root;
 	private RoundedImageView mEditImage;
@@ -38,36 +52,46 @@ public class EditProfileFragment extends Fragment {
 	private EditText mPhoneNumber;
 	private EditText mBirthday;
 	private EditText mAddress;
-	private UserData[] mFamilyMembersList;
-	private UserData mCurrentUserDetails;
+	private LinearLayout mFamilyListHolder;
+	private UserHandler userHandler;
+
+	private ArrayList<UserData> mFamilyMembersData = null;
+	private ArrayList<ParseUser> mFamilyMembers = null;
+	private byte[] profilePictureData = null;
+	private UserData mCurrentUserData;
+	private ParseUser mCurrentUser;
+	String profilePictureName;
 
 	private EditProfileFamilyListAdapter mFamilyListAdapter;
-	private LinearLayout mFamilyListHolder;
+	private EditProfileCallback editCallback;
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			this.editCallback = (EditProfileCallback) getActivity();
+		}
+
+		catch (ClassCastException e) {
+			Log.e(getTag(), "the activity does not implement "
+					+ "EditProfileCallback interface");
+		}
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		Bundle args = getArguments();
-		if (args != null) {
-			Parcelable[] memberList = (Parcelable[]) args
-					.getParcelableArray(EditProfileFragment
-							.EDIT_FAMILY_MEMBER_LIST);
-
-			mFamilyMembersList = new UserData[memberList.length];
-			System.arraycopy(memberList, 0, mFamilyMembersList, 0, 
-					memberList.length);
-			
-			mCurrentUserDetails = (UserData) args
-					.getParcelable(EDIT_MEMBER_ITEM);
-			
-			setHasOptionsMenu(true);
-		} 
-		
-		else {
-			LogUtils.logWarning(getTag(), 
-					"argument didn't pass correctly");
+		super.onCreate(savedInstanceState);	
+		userHandler = new UserHandler();
+		mCurrentUser = ParseUser.getCurrentUser();
+		if (mCurrentUser == null) {
+			//TODO: handle error
 		}
+
+		mCurrentUserData = new UserData(mCurrentUser, UserData.ROLE_UNDEFINED);
+		mCurrentUserData.downloadProfilePicSync(mCurrentUser);
+		mFamilyMembers = new ArrayList<ParseUser>();
+		mFamilyMembersData = new ArrayList<UserData>();	
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -95,6 +119,7 @@ public class EditProfileFragment extends Fragment {
 				root.findViewById(R.id.et_edit_profile_address);
 		mFamilyListHolder = (LinearLayout) root
 				.findViewById(R.id.ll_family_members_list_holder);
+
 		initViews();
 		initFamilyListView();
 		return root;
@@ -102,7 +127,10 @@ public class EditProfileFragment extends Fragment {
 
 	private void initFamilyListView() {
 		mFamilyListAdapter = new EditProfileFamilyListAdapter(
-				this.getActivity(), mFamilyMembersList, mCurrentUserDetails);
+				this.getActivity(), mFamilyMembersData.toArray(
+						new UserData[mFamilyMembersData.size()]), 
+						mCurrentUserData);
+
 		for (int i = 0; i < mFamilyListAdapter.getCount(); i++) {
 			View v = mFamilyListAdapter.getView(i, null, (ViewGroup) getView());
 			mFamilyListHolder.addView(v);
@@ -110,22 +138,22 @@ public class EditProfileFragment extends Fragment {
 	}
 
 	private void initViews() {
-		if (mCurrentUserDetails != null) {
+		if (mCurrentUserData != null) {
 			String firstName = InputHandler
-					.capitalizeName(mCurrentUserDetails.getName());
+					.capitalizeName(mCurrentUserData.getName());
 			String lastName = InputHandler
-					.capitalizeName(mCurrentUserDetails.getLastName());
+					.capitalizeName(mCurrentUserData.getLastName());
 			String nickName = InputHandler
-					.capitalizeName(mCurrentUserDetails.getNickname());
+					.capitalizeName(mCurrentUserData.getNickname());
 			String prevLastName = InputHandler
-					.capitalizeName(mCurrentUserDetails.getPreviousLastName());
+					.capitalizeName(mCurrentUserData.getPreviousLastName());
 			String middleName = InputHandler
-					.capitalizeName(mCurrentUserDetails.getMiddleName());
-			String phoneNumber = mCurrentUserDetails.getPhoneNumber();
-			String birthday = mCurrentUserDetails.getBirthday();
-			String address = mCurrentUserDetails.getAddress();
-			Bitmap photo = mCurrentUserDetails.getprofilePhoto();
-			
+					.capitalizeName(mCurrentUserData.getMiddleName());
+			String phoneNumber = mCurrentUserData.getPhoneNumber();
+			String birthday = mCurrentUserData.getBirthday();
+			String address = mCurrentUserData.getAddress();
+			Bitmap photo = mCurrentUserData.getprofilePhoto();
+
 			mName.setText(firstName);
 			mCurrentFamilyName.setText(lastName);
 			mNickname.setText(nickName);
@@ -133,13 +161,17 @@ public class EditProfileFragment extends Fragment {
 			mMiddleName.setText(middleName);
 			mPhoneNumber.setText(phoneNumber);
 			mBirthday.setText(birthday);
+			mBirthday.setOnClickListener(this);
+			mBirthday.setOnFocusChangeListener(this);
 			mAddress.setText(address);
-			
+
 			if (photo != null) {
 				mEditImage.setImageBitmap(photo);
 				mEditImage.setBackgroundColor(getResources().getColor(
 						android.R.color.transparent));	
 			}
+
+			mEditImage.setOnClickListener(this);
 		}
 	}
 
@@ -159,4 +191,54 @@ public class EditProfileFragment extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void setDate(String date) {
+		mBirthday.setText(date);
+	}
+
+	public void setProfileImage(Bitmap bitmap, byte[] fileData, 
+			String filename) {
+		mEditImage.setImageBitmap(bitmap);
+		mEditImage.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));	
+		profilePictureData = Arrays.copyOf(fileData, fileData.length);
+		profilePictureName = filename;
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.et_edit_birthday:
+			editCallback.openBirthdayDialog();
+			InputMethodManager bimm = (InputMethodManager) getActivity()
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			bimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+			break;
+
+		case R.id.riv_edit_profile_change_pic:
+			editCallback.openPhonePhotoBrowsing();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onFocusChange(View v, boolean hasFocus) {
+		switch (v.getId()) {
+		case R.id.et_edit_birthday:
+			if (hasFocus) {
+				editCallback.openBirthdayDialog();
+				InputMethodManager bimm = (InputMethodManager) getActivity()
+						.getSystemService(Context.INPUT_METHOD_SERVICE);
+				bimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+			}
+
+			break;
+
+		default:
+			break;
+		}
+
+	}
 }
