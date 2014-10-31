@@ -27,7 +27,6 @@ import com.wazapps.familybox.photos.PhotoItem;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.ProfileDetails;
 import com.wazapps.familybox.profiles.ProfileFragment;
-import com.wazapps.familybox.profiles.ProfileFragment.UpdateProfileStatus;
 import com.wazapps.familybox.profiles.UserData;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 import com.wazapps.familybox.profiles.UserData.DownloadCallback;
@@ -58,7 +57,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
-		AddProfileFragmentListener, UpdateProfileStatus {
+		AddProfileFragmentListener {
 	
 	public static abstract class MainActivityCallback {
 		public abstract void done(Exception e);
@@ -310,8 +309,8 @@ public class MainActivity extends FragmentActivity implements
 				public void done(Exception e) {
 					if (e == null) {
 						Bundle data = new Bundle();
-						data.putParcelable(ProfileFragment.MEMBER_ITEM, 
-								activity.userData);
+						data.putBoolean(ProfileFragment.USER_PROFILE, 
+								true);
 						
 						ProfileFragment profileFrag = new ProfileFragment();
 						profileFrag.setArguments(data);
@@ -464,70 +463,10 @@ public class MainActivity extends FragmentActivity implements
 		
 		currentUser.fetchFromLocalDatastoreInBackground (
 				new GetCallback<ParseUser>() {
-					MainActivity activity;
-					
 					@Override
 					public void done(ParseUser user, ParseException e) {
-						//if data fetching failed
-						if (e != null) {
-							callbackFunc.done(e);
-							return;
-						}
-						
-						activity.userData = new UserData(activity.currentUser, 
-								UserData.ROLE_UNDEFINED);
-						
-						activity.userData.downloadProfilePicAsync(
-								activity.currentUser, new DownloadCallback() {
-							
-							@Override
-							public void done(ParseException e) {
-								callbackFunc.done(e);
-							}
-						});
+						callbackFunc.done(e);
 					}
-					
-					private GetCallback<ParseUser> init(MainActivity activity) {
-						this.activity = activity;
-						return this;
-					}
-		}.init(this));
-	}
-
-	@Override
-	public void updateProfileStatus(String status) {
-		final String oldStatus = this.userData.getStatus();
-		
-		this.userData.setStatus(status);
-		this.currentUser.put(UserHandler.STATUS_KEY, status);
-		this.currentUser.saveEventually(new SaveCallback() {
-			private MainActivity activity;
-			
-			@Override
-			public void done(ParseException e) {
-				//if saving succeeded notify user of status update
-				if (e == null) {
-					Toast toast = Toast.makeText(activity, 
-							"Status updated", Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-					toast.show();
-				} 
-				
-				else {
-					LogUtils.logError("MainActivity", e.getMessage());
-					activity.userData.setStatus(oldStatus);
-					Toast toast = Toast.makeText(activity, 
-							"Failed to update status", 
-							Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-					toast.show();
-				}
-			}
-			
-			private SaveCallback init(MainActivity activity) {
-				this.activity = activity;
-				return this;
-			}
-		}.init(this));
+		});
 	}
 }

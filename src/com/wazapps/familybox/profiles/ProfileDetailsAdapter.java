@@ -59,8 +59,7 @@ public class ProfileDetailsAdapter extends BaseAdapter {
 		detailsTitle.setText(title);
 		detailsContents.setText(data);	
 		
-		//if this is the details title
-		if (position == 0) {
+		if (position == 0 && title.equals("Details")) {
 			Drawable background = activity.getResources()
 					.getDrawable(R.drawable.profile_sections_background);
 			detailsTitle.setBackground(background);

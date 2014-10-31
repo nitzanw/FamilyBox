@@ -12,6 +12,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,18 +33,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
+import com.wazapps.familybox.splashAndLogin.LoginActivity;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 import com.wazapps.familybox.util.WaveDrawable;
@@ -62,6 +67,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	public static final String MEMBER_ITEM = "member item";
 	public static final String FAMILY_MEMBER_LIST = "family member list";
 	public static final String PROFILE_DATA = "profile data";
+	public static final String USER_PROFILE = "user profile";
 	private static final String MEMBER_ITEM_TYPE = "family member item";
 
 	private static final int ITEM_TYPE = R.string.type;
@@ -75,7 +81,8 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	protected UserData mCurrentUser;
 	protected ArrayList<ParseUser> mFamilyMembers = null;
 	protected ArrayList<UserData> mFamilyMembersData = null;
-	protected boolean mIsLocalProfile;
+	protected boolean mIsUserProfile;
+	protected ParseUser loggedUser;
 	
 	//the fragment's callback functions
 	protected MembersFetchCallback membersFetchCallback = null;
@@ -94,14 +101,9 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	private ImageButton mSubmitStatus;
 	private Animation statusJump = null;
 	AddProfileFragmentListener addProfileCallback = null;
-	UpdateProfileStatus updateProfileStatusCallback = null;
 
 	public interface AddProfileFragmentListener {
 		void addProfileFragment(Bundle args);
-	}
-	
-	public interface UpdateProfileStatus {
-		void updateProfileStatus(String status);
 	}
 	
 	private void initCallbackFuncs() {
@@ -180,14 +182,12 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		super.onAttach(activity);
 		try {
 			addProfileCallback = (AddProfileFragmentListener) getActivity();
-			updateProfileStatusCallback = (UpdateProfileStatus) getActivity();
 		}
 
 		catch (ClassCastException e) {
 			LogUtils.logError("ProfileFragment", 
 					"Activity should implement " +
-					"AddProfileFragmentListener interface" +
-					"and UpdateProfileStatus interface");
+					"AddProfileFragmentListener interface");
 		}
 	}
 	
@@ -195,34 +195,30 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		userHandler = new UserHandler();
-		mFamilyMembers = new ArrayList<ParseUser>();
-		mFamilyMembersData = new ArrayList<UserData>();
 		initCallbackFuncs();
+		loggedUser = ParseUser.getCurrentUser();
+		if (loggedUser == null) {
+			//TODO: handle error
+			LogUtils.logWarning(getTag(), 
+					"user is not logged in!");
+		}
 		
 		Bundle profileArgs = getArguments();
 		if (profileArgs != null) {
+			mIsUserProfile = profileArgs.getBoolean(USER_PROFILE);
 			// get the data for the profile
-			mCurrentUser = (UserData) profileArgs
-					.getParcelable(MEMBER_ITEM);
-			
-			//check if this profile is the user's profile.
-			//(used to indicate wheter to load data from cache
-			//or from server)
-			ParseUser loggedUser = ParseUser.getCurrentUser();
-			if (loggedUser != null) {
-				mIsLocalProfile = (loggedUser.getObjectId()
-						.equals(mCurrentUser.getUserId()));
-			} else {
-				mIsLocalProfile = false;
-			}
-			
-			setHasOptionsMenu(true);
+			if (profileArgs.containsKey(MEMBER_ITEM)) {
+				mCurrentUser = (UserData) profileArgs
+						.getParcelable(MEMBER_ITEM);				
+			}	
 		}
 
 		else {
 			LogUtils.logWarning(getTag(), 
 					"profile arguments did not pass");
 		}
+		
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -237,12 +233,13 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 
 		mUserName = (TextView) root.findViewById(R.id.tv_profile_username);
 		mUserStatus = (TextView) root.findViewById(R.id.tv_profile_status);
+		mUserPhoto = (RoundedImageView) root.findViewById(R.id.riv_profile_image);
 		mUserStatusEdit = (EditText) root.findViewById(R.id.et_profile_status);
 		mEditStatusbtn = (ImageButton) root.findViewById(R.id.ib_edit_status);
 		mSubmitStatus = (ImageButton) root.findViewById(R.id.ib_submit_status);
 		spinner = (RelativeLayout) root.findViewById(R.id.rl_family_members_list_spinner);
 		
-		if (mIsLocalProfile) {
+		if (mIsUserProfile) {
 			mEditStatusbtn.setOnClickListener(this);			
 			mSubmitStatus.setOnClickListener(this);
 		} else {
@@ -251,21 +248,41 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			spinner.setVisibility(View.VISIBLE);
 		}
 		
-		mUserPhoto = (RoundedImageView) root
-				.findViewById(R.id.riv_profile_image);
-		
 		// Clear the listView's top highlight scrolling effect
 		int glowDrawableId = root.getResources().getIdentifier(
 				"overscroll_glow", "drawable", "android");
 		Drawable androidGlow = root.getResources().getDrawable(glowDrawableId);
 		androidGlow.setColorFilter(R.color.orange_fb, Mode.CLEAR);
 		initAnimations();
+		return root;
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		mFamilyMembers = new ArrayList<ParseUser>();
+		mFamilyMembersData = new ArrayList<UserData>();
 		
+		//if this is the user's profile - 
+		//load its data manually from local datastore
+		if (mIsUserProfile) {
+			//refetch loggedUser just to be sure
+			loggedUser = ParseUser.getCurrentUser();
+			if (loggedUser == null) {
+				//TODO: handle error
+			} 
+			
+			else {
+				mCurrentUser = new UserData(loggedUser, 
+						UserData.ROLE_UNDEFINED);				
+			}
+		}
+
 		//inflate profile data into the screen
 		initProfileDetailsViews();
 		
 		//fetch family members data and inflate it
-		fetchFamilyData(mIsLocalProfile, true, 
+		fetchFamilyData(mIsUserProfile, true, 
 				new ProfileFragmentCallback() {
 			
 			@Override
@@ -275,6 +292,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 					initFamilyListView();					
 				} 
 				
+				//if an error happened - inflate error text onscreen
 				else {
 					LogUtils.logError("ProfileFragment", e.getMessage());
 					RelativeLayout errorTextLayout = (RelativeLayout) getActivity()
@@ -286,30 +304,6 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 				}
 			}
 		});
-		
-		return root;
-	}
-	
-	private void initAnimations() {
-		Animation pulse = AnimationUtils.loadAnimation(getActivity(), 
-				R.anim.pulse_slow);
-		pulse.setInterpolator(new AccelerateInterpolator(3));		
-		ImageView animationBackground = 
-				(ImageView) root.findViewById(R.id.iv_profile_image_effect);
-		
-		WaveDrawable waveDrawable = new WaveDrawable(
-				Color.WHITE, 200, 3000);
-		animationBackground.setBackgroundDrawable(waveDrawable);
-		Interpolator interpolator = 
-				new AccelerateDecelerateInterpolator();
-		
-		mUserPhoto.startAnimation(pulse);
-		waveDrawable.setWaveInterpolator(interpolator);
-		waveDrawable.startAnimation();
-		
-		statusJump = AnimationUtils.loadAnimation(getActivity(), 
-				R.anim.pulse_once);
-		statusJump.setInterpolator(new AccelerateDecelerateInterpolator());
 	}
 
 	private void initProfileDetailsViews() {		
@@ -324,6 +318,9 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 						frag.mCurrentUser.getName(), 
 						frag.mCurrentUser.getLastName());
 				status = frag.mCurrentUser.getStatus();
+				if (frag.mIsUserProfile) {
+					frag.mCurrentUser.downloadProfilePicSync(loggedUser);
+				}
 				profilePic = frag.mCurrentUser.getprofilePhoto();
 				
 				frag.mProfileDetailsAdapter = 
@@ -376,6 +373,8 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	}
 	
 	private void initFamilyListView() {
+		mFamilyListHolder.removeAllViews();
+		
 		new AsyncTask<Void, View, Void>() {
 			private ProfileFragment frag;
 
@@ -432,14 +431,42 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			mEditStatusbtn.setVisibility(View.VISIBLE);
 			mSubmitStatus.setVisibility(View.INVISIBLE);
 			mUserStatus.startAnimation(statusJump);
-			String oldStatus = mUserStatus.getText().toString();
-			String newStatus = mUserStatusEdit.getText().toString();
+			final String oldStatus = mUserStatus.getText().toString();
+			final String newStatus = mUserStatusEdit.getText().toString();
 			if (!oldStatus.equals(newStatus)) {
 				mUserStatus.setText(mUserStatusEdit.getText().toString());
-				updateProfileStatusCallback.updateProfileStatus(newStatus);
+				loggedUser.put(UserHandler.STATUS_KEY, newStatus);
+				loggedUser.saveEventually(new SaveCallback() {
+					FragmentActivity activity;
+					
+					@Override
+					public void done(ParseException e) {
+						if (e == null) {
+							Toast toast = Toast.makeText(activity, 
+									"Status updated", Toast.LENGTH_SHORT);
+							toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+							toast.show();
+						} 
+						
+						else {
+							LogUtils.logError("FragmentActivity", 
+									e.getMessage());
+							Toast toast = Toast.makeText(activity, 
+									"Failed to update status", 
+									Toast.LENGTH_SHORT);
+							
+							toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+							toast.show();
+						}
+					}
+					
+					private SaveCallback init(FragmentActivity activity) {
+						this.activity = activity;
+						return this;
+					}
+				}.init(getActivity()));
 			}
-			
-			
+						
 			mUserStatusEdit.setVisibility(View.INVISIBLE);
 			mUserStatus.setVisibility(View.VISIBLE);
 		} 
@@ -449,7 +476,13 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			//get the current item position in family members list
 			int pos = (Integer) v.getTag(ITEM_POS); 
 			UserData clickedUserDetails = mFamilyMembersData.get(pos);
-			args.putParcelable(MEMBER_ITEM, clickedUserDetails);
+			boolean isUserProfile = (clickedUserDetails.getUserId()
+					.equals(loggedUser.getObjectId()));
+			args.putBoolean(USER_PROFILE, isUserProfile);
+			if (!isUserProfile) {
+				args.putParcelable(MEMBER_ITEM, clickedUserDetails);				
+			}
+			
 			addProfileCallback.addProfileFragment(args);
 		}
 	}
@@ -470,5 +503,27 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void initAnimations() {
+		Animation pulse = AnimationUtils.loadAnimation(getActivity(), 
+				R.anim.pulse_slow);
+		pulse.setInterpolator(new AccelerateInterpolator(3));		
+		ImageView animationBackground = 
+				(ImageView) root.findViewById(R.id.iv_profile_image_effect);
+		
+		WaveDrawable waveDrawable = new WaveDrawable(
+				Color.WHITE, 200, 3000);
+		animationBackground.setBackgroundDrawable(waveDrawable);
+		Interpolator interpolator = 
+				new AccelerateDecelerateInterpolator();
+		
+		mUserPhoto.startAnimation(pulse);
+		waveDrawable.setWaveInterpolator(interpolator);
+		waveDrawable.startAnimation();
+		
+		statusJump = AnimationUtils.loadAnimation(getActivity(), 
+				R.anim.pulse_once);
+		statusJump.setInterpolator(new AccelerateDecelerateInterpolator());
 	}
 }

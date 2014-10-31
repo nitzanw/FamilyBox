@@ -24,7 +24,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.UserHandler;
@@ -61,6 +63,7 @@ implements OnClickListener, OnFocusChangeListener {
 	private UserData mCurrentUserData;
 	private ParseUser mCurrentUser;
 	String profilePictureName;
+	private boolean pictureUpdated = false;
 
 	private EditProfileFamilyListAdapter mFamilyListAdapter;
 	private EditProfileCallback editCallback;
@@ -185,16 +188,72 @@ implements OnClickListener, OnFocusChangeListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_accept) {
-			getActivity().finish();
+			boolean prevFamilyUpdated = handleUserEdit();
+			
+			if (!prevFamilyUpdated) {
+				getActivity().finish();				
+			} else {
+				
+			}
+			
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	private boolean handleUserEdit() {
+		boolean detailsUpdated = false;
+		boolean prevFamilyUpdated = false;
+		
+		String nickname = mNickname.getText().toString().toLowerCase().trim();
+		String prevLastName = mPreviousFamilyName.getText().toString().toLowerCase().trim();
+		String middleName = mMiddleName.getText().toString().toLowerCase().trim();
+		String phoneNumber = mPhoneNumber.getText().toString().trim();
+		String birthday = mBirthday.getText().toString();
+		String address = mAddress.getText().toString().toLowerCase().trim();
+		
+		if (!mCurrentUserData.getNickname().equals(nickname)) {
+			detailsUpdated = true;
+			mCurrentUser.put(UserHandler.NICKNAME_KEY, nickname);
+		}
+		
+		if (!mCurrentUserData.getPreviousLastName().equals(prevLastName)) {
+			detailsUpdated = true;
+			prevFamilyUpdated = true;
+			mCurrentUser.put(UserHandler.PREV_LAST_NAME_KEY, prevLastName);
+		}
+		
+		if (!mCurrentUserData.getMiddleName().equals(middleName)) {
+			detailsUpdated = true;
+			mCurrentUser.put(UserHandler.MIDDLE_NAME_KEY, middleName);
+		}
+		
+		if (!mCurrentUserData.getPhoneNumber().equals(phoneNumber)) {
+			detailsUpdated = true;
+			mCurrentUser.put(UserHandler.PHONE_NUMBER_KEY, phoneNumber);
+		}
+		
+		if (!mCurrentUserData.getBirthday().equals(birthday)) {
+			detailsUpdated = true;
+			mCurrentUser.put(UserHandler.BIRTHDATE_KEY, birthday);
+		}
+		
+		if (!mCurrentUserData.getAddress().equals(address)) {
+			detailsUpdated = true;
+			mCurrentUser.put(UserHandler.ADDRESS_KEY, address);
+		}
+		
+		if (detailsUpdated) {
+			mCurrentUser.saveEventually();
+		}
+		
+		return prevFamilyUpdated;
+	}
+
 	public void setDate(String date) {
 		mBirthday.setText(date);
 	}
-
+	
 	public void setProfileImage(Bitmap bitmap, byte[] fileData, 
 			String filename) {
 		mEditImage.setImageBitmap(bitmap);
@@ -202,6 +261,7 @@ implements OnClickListener, OnFocusChangeListener {
 				android.R.color.transparent));	
 		profilePictureData = Arrays.copyOf(fileData, fileData.length);
 		profilePictureName = filename;
+		pictureUpdated = true;
 	}
 
 	@Override
@@ -239,6 +299,5 @@ implements OnClickListener, OnFocusChangeListener {
 		default:
 			break;
 		}
-
 	}
 }
