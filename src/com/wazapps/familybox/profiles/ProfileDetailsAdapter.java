@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.LogUtils;
 
 public class ProfileDetailsAdapter extends BaseAdapter {
 	private Activity activity;
@@ -57,7 +59,12 @@ public class ProfileDetailsAdapter extends BaseAdapter {
 		String data = details.getDetailContents();
 		
 		detailsTitle.setText(title);
-		detailsContents.setText(data);	
+		detailsTitle.setBackground(null);
+		detailsTitle.setTextSize(14);
+		detailsContents.setText(data);
+		detailsContents.setVisibility(View.VISIBLE);
+		detailsTitle.setGravity(Gravity.NO_GRAVITY);
+		detailsTitle.setPadding(0, 0, 0, 0);
 		
 		if (position == 0 && title.equals("Details")) {
 			Drawable background = activity.getResources()
