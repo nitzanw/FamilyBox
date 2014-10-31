@@ -100,6 +100,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	private ImageButton mEditStatusbtn;
 	private ImageButton mSubmitStatus;
 	private Animation statusJump = null;
+	private MenuItem editButton;
 	AddProfileFragmentListener addProfileCallback = null;
 
 	public interface AddProfileFragmentListener {
@@ -488,8 +489,9 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (menu.findItem(R.id.action_edit) == null) {
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) { 
+		editButton = menu.findItem(R.id.action_edit);
+		if (editButton == null) {
 			inflater.inflate(R.menu.menu_edit_action, menu);
 		}
 	}
