@@ -31,6 +31,9 @@ public class UserHandler {
 	public static String PROFILE_PICTURE_KEY = "profilePic";
 	public static String FAMILY_KEY = "family";
 	public static String PREV_FAMILY_KEY = "prevFamily";
+	public static String STATUS_KEY = "status";
+	public static String EMAIL_KEY = "email";
+	
 	public static String GENDER_MALE = "male";
 	
 	public static String MY_MEMBERS_LOCAL_KEY = "MyMembers";
@@ -40,13 +43,13 @@ public class UserHandler {
 	}
 	
 	private class AsyncLocalFamilyMemberFetch extends AsyncFamilyMemberFetch {
-		private String userId;
 		
 		public AsyncLocalFamilyMemberFetch(ArrayList<ParseUser> familyMembers,
 				ArrayList<UserData> familyMembersDetails, String userId, 
-				ParseObject family, FamilyMembersFetchCallback callbackFunc) {
-			super(familyMembers, familyMembersDetails, family, callbackFunc);
-			this.userId = userId;
+				ParseObject family, boolean includeUser, 
+				FamilyMembersFetchCallback callbackFunc) {
+			super(familyMembers, familyMembersDetails, 
+					userId, family, includeUser, callbackFunc);
 		}
 		
 		@Override
@@ -57,7 +60,7 @@ public class UserHandler {
 				if (family.has(FamilyHandler.UNDEFINED_KEY)) {
 					ParseUser undef = family.getParseUser(FamilyHandler.UNDEFINED_KEY);
 					undef.fetchFromLocalDatastore();
-					if (!undef.getObjectId().equals(userId)) {
+					if (includeUser || !undef.getObjectId().equals(userId)) {
 						UserData memberDetails = new UserData(undef, 
 								UserData.ROLE_UNDEFINED);
 						memberDetails.downloadProfilePicSync(undef);
@@ -69,7 +72,7 @@ public class UserHandler {
 				if (family.has(FamilyHandler.FATHER_KEY)) {
 					ParseUser father = family.getParseUser(FamilyHandler.FATHER_KEY);
 					father.fetchFromLocalDatastore();
-					if (!father.getObjectId().equals(userId)) {
+					if (includeUser || !father.getObjectId().equals(userId)) {
 						UserData memberDetails = new UserData(father, UserData.ROLE_PARENT);
 						memberDetails.downloadProfilePicSync(father);
 						familyMembers.add(father);
@@ -80,8 +83,9 @@ public class UserHandler {
 				if (family.has(FamilyHandler.MOTHER_KEY)) {
 					ParseUser mother = family.getParseUser(FamilyHandler.MOTHER_KEY);
 					mother.fetchFromLocalDatastore();
-					if (!mother.getObjectId().equals(userId)) {
-						UserData memberDetails = new UserData(mother, UserData.ROLE_PARENT);
+					if (includeUser || !mother.getObjectId().equals(userId)) {
+						UserData memberDetails = 
+								new UserData(mother, UserData.ROLE_PARENT);
 						memberDetails.downloadProfilePicSync(mother);
 						familyMembers.add(mother);
 						familyMembersDetails.add(memberDetails);						
@@ -95,7 +99,7 @@ public class UserHandler {
 							children.getQuery().fromLocalDatastore().find();
 					for (ParseUser child : childrenList) {
 						child.fetchFromLocalDatastore();
-						if (!child.getObjectId().equals(userId)) {
+						if (includeUser || !child.getObjectId().equals(userId)) {
 							UserData memberDetails = 
 									new UserData(child, UserData.ROLE_CHILD);
 							memberDetails.downloadProfilePicSync(child);
@@ -120,13 +124,18 @@ public class UserHandler {
 		protected ArrayList<UserData> familyMembersDetails;
 		protected ParseObject family;
 		protected FamilyMembersFetchCallback callbackFunc;
+		protected String userId;
+		protected boolean includeUser;
 		
 		public AsyncFamilyMemberFetch(ArrayList<ParseUser> familyMembers, 
-				ArrayList<UserData> familyMembersDetails, 
-				ParseObject family, FamilyMembersFetchCallback callbackFunc) {
+				ArrayList<UserData> familyMembersDetails, String userId,
+				ParseObject family, boolean includeUser, 
+				FamilyMembersFetchCallback callbackFunc) {
 			this.familyMembers = familyMembers;
 			this.familyMembersDetails = familyMembersDetails;
+			this.userId = userId;
 			this.family = family;
+			this.includeUser = includeUser;
 			this.callbackFunc = callbackFunc;
 		}
 		
@@ -138,34 +147,34 @@ public class UserHandler {
 				if (family.has(FamilyHandler.UNDEFINED_KEY)) {
 					ParseUser undef = family.getParseUser(FamilyHandler.UNDEFINED_KEY);
 					undef.fetchIfNeeded();
-					UserData memberDetails = 
-							new UserData(undef, 
-									UserData.ROLE_UNDEFINED);
-					memberDetails.downloadProfilePicSync(undef);
-					familyMembers.add(undef);
-					familyMembersDetails.add(memberDetails);
+					if (includeUser || !undef.getObjectId().equals(userId)) {
+						UserData memberDetails = new UserData(undef, UserData.ROLE_UNDEFINED);
+						memberDetails.downloadProfilePicSync(undef);
+						familyMembers.add(undef);
+						familyMembersDetails.add(memberDetails);						
+					}
 				}
 				
 				if (family.has(FamilyHandler.FATHER_KEY)) {
 					ParseUser father = family.getParseUser(FamilyHandler.FATHER_KEY);
 					father.fetchIfNeeded();
-					UserData memberDetails = 
-							new UserData(father, 
-									UserData.ROLE_PARENT);
-					memberDetails.downloadProfilePicSync(father);
-					familyMembers.add(father);
-					familyMembersDetails.add(memberDetails);
+					if (includeUser || !father.getObjectId().equals(userId)) {
+						UserData memberDetails = new UserData(father, UserData.ROLE_PARENT);
+						memberDetails.downloadProfilePicSync(father);
+						familyMembers.add(father);
+						familyMembersDetails.add(memberDetails);						
+					}
 				}
 				
 				if (family.has(FamilyHandler.MOTHER_KEY)) {
 					ParseUser mother = family.getParseUser(FamilyHandler.MOTHER_KEY);
 					mother.fetchIfNeeded();
-					UserData memberDetails = 
-							new UserData(mother, 
-									UserData.ROLE_PARENT);
-					memberDetails.downloadProfilePicSync(mother);
-					familyMembers.add(mother);
-					familyMembersDetails.add(memberDetails);
+					if (includeUser || !mother.getObjectId().equals(userId)) {
+						UserData memberDetails = new UserData(mother, UserData.ROLE_PARENT);
+						memberDetails.downloadProfilePicSync(mother);
+						familyMembers.add(mother);
+						familyMembersDetails.add(memberDetails);						
+					}
 				}
 				
 				if (family.has(FamilyHandler.CHILDREN_KEY)) {
@@ -174,12 +183,12 @@ public class UserHandler {
 					List<ParseUser> childrenList = children.getQuery().find();
 					for (ParseUser child : childrenList) {
 						child.fetchIfNeeded();
-						UserData memberDetails = 
-								new UserData(child, 
-										UserData.ROLE_CHILD);
-						memberDetails.downloadProfilePicSync(child);
-						familyMembers.add(child);
-						familyMembersDetails.add(memberDetails);
+						if (includeUser || !child.getObjectId().equals(userId)) {
+							UserData memberDetails = new UserData(child, UserData.ROLE_CHILD);
+							memberDetails.downloadProfilePicSync(child);
+							familyMembers.add(child);
+							familyMembersDetails.add(memberDetails);							
+						}
 					}
 				}
 			} 
@@ -215,6 +224,8 @@ public class UserHandler {
 		user.put(PHONE_NUMBER_KEY, "");
 		user.put(NETWORK_KEY, "1"); //TODO: replace with real network object ID
 		user.put(QUOTES_KEY, "");
+		user.put(PREV_FAMILY_KEY, "");
+		user.put(STATUS_KEY, "Just joined Familybox :)");
 		user.put(PASS_QUERY_KEY, false);
 		
 		//upload profile picture to server and link it to user
@@ -251,16 +262,22 @@ public class UserHandler {
 	
 	public void fetchFamilyMembers(ArrayList<ParseUser> familyMembers, 
 			ArrayList<UserData> familyMembersDetails, 
-			ParseObject family, FamilyMembersFetchCallback callbackFunc) {
+			ParseObject family, String userId, boolean includeUser,
+			FamilyMembersFetchCallback callbackFunc) {
+		
 		new AsyncFamilyMemberFetch(familyMembers, 
-				familyMembersDetails, family, callbackFunc).execute();
+				familyMembersDetails, userId, family, 
+				includeUser, callbackFunc).execute();
 	}
 	
 	public void fetchFamilyMembersLocally(ArrayList<ParseUser> familyMembers, 
 			ArrayList<UserData> familyMembersDetails, ParseObject family,
-			String userId, FamilyMembersFetchCallback callbackFunc) {
+			String userId, boolean includeUser, 
+			FamilyMembersFetchCallback callbackFunc) {
+		
 		new AsyncLocalFamilyMemberFetch(familyMembers, 
-				familyMembersDetails, userId, family, callbackFunc).execute();
+				familyMembersDetails, userId, family, 
+				includeUser, callbackFunc).execute();
 	}
 	
 	/**
@@ -272,16 +289,12 @@ public class UserHandler {
 	 * is for the user's current family or previous family.
 	 * @throws Exception 
 	 */
-	public String getUserRole(ParseUser user, ParseObject family, 
+	public String getUserRole(UserData user, ParseObject family, 
 			boolean isPrevFamily) throws Exception {
 		ParseUser familyMember;
-		String familyKey = (isPrevFamily)? PREV_FAMILY_KEY : FAMILY_KEY;
-		if (!user.containsKey(familyKey)) {
-			throw new Exception("user does not contain family key");
-		}
-		
-		String userFamilyId = user.getString(familyKey);
-		String userId = user.getObjectId();
+		String userFamilyId = isPrevFamily? 
+				user.getPrevFamilyId() : user.getFamilyId();
+		String userId = user.getUserId();
 		String familyId = family.getObjectId();
 		if (!familyId.equals(userFamilyId)) {
 			throw new Exception("user does not belong to this family");

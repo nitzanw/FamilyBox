@@ -1,5 +1,6 @@
 package com.wazapps.familybox.profiles;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.util.LogUtils;
 
@@ -30,7 +32,7 @@ public class UserData implements Parcelable {
 	
 	private String userId, networkId, firstName, lastName, role, nickname,
 			previousLastName, middleName, phoneNumber, birthday, 
-			address, gender, quotes;
+			address, gender, quotes, status, famildId, prevFamilyId, email;
 	private byte[] profilePic;
 
 	public static final Parcelable.Creator<FamilyMemberDetails> CREATOR = 
@@ -49,6 +51,7 @@ public class UserData implements Parcelable {
 			String firstName, String lastName, String role, String nickname,
 			String previousLastName, String middleName, String phoneNumber,
 			String birthday, String address, String gender, String quotes, 
+			String status, String familyId, String prevFamilyId, String email,
 			byte[] profilePic) {
 		this.userId = userId;
 		this.networkId = networkId;
@@ -63,6 +66,11 @@ public class UserData implements Parcelable {
 		this.address = address;
 		this.gender = gender;
 		this.quotes = quotes;
+		this.status = status;
+		this.famildId = familyId;
+		this.prevFamilyId = prevFamilyId;
+		this.email = email;
+		
 		if (profilePic != null) {
 			this.profilePic = Arrays.copyOf(profilePic, profilePic.length);			
 		} else {
@@ -84,6 +92,11 @@ public class UserData implements Parcelable {
 		this.address = details.readString();
 		this.gender = details.readString();
 		this.quotes = details.readString();
+		this.status = details.readString();
+		this.famildId = details.readString();
+		this.prevFamilyId = details.readString();
+		this.email = details.readString();
+		
 		int profilePicLength = details.readInt();
 		if (profilePicLength > 0) {
 			this.profilePic = new byte[profilePicLength];
@@ -93,20 +106,32 @@ public class UserData implements Parcelable {
 		}
 	}
 	
+	/**
+	 * Constructs a new UserData object from a ParseUser object.
+	 * assumes that the ParseUser has all dats fetched, otherwise
+	 * the results may be unexpected.
+	 * 
+	 * This constructor does not retrieve profile picture data, must
+	 * be done manually through dedicated methods in this class
+	 */
 	public UserData(ParseUser user, String role) {
 		this.userId = user.getObjectId();
-		this.networkId = user.getString("network");
-		this.firstName = user.getString("firstName");
-		this.lastName = user.getString("lastName");
+		this.networkId = user.getString(UserHandler.NETWORK_KEY);
+		this.firstName = user.getString(UserHandler.FIRST_NAME_KEY);
+		this.lastName = user.getString(UserHandler.LAST_NAME_KEY);
 		this.role = role;
-		this.nickname = user.getString("nickname");
-		this.previousLastName = user.getString("prevLastName");
-		this.middleName = user.getString("middleName");
-		this.phoneNumber = user.getString("phoneNumber");
-		this.birthday = user.getString("birthdate");
-		this.address = user.getString("address");
-		this.gender = user.getString("gender");
-		this.quotes = user.getString("quotes");
+		this.nickname = user.getString(UserHandler.NICKNAME_KEY);
+		this.previousLastName = user.getString(UserHandler.PREV_LAST_NAME_KEY);
+		this.middleName = user.getString(UserHandler.MIDDLE_NAME_KEY);
+		this.phoneNumber = user.getString(UserHandler.PHONE_NUMBER_KEY);
+		this.birthday = user.getString(UserHandler.BIRTHDATE_KEY);
+		this.address = user.getString(UserHandler.ADDRESS_KEY);
+		this.gender = user.getString(UserHandler.GENDER_KEY);
+		this.quotes = user.getString(UserHandler.QUOTES_KEY);
+		this.status = user.getString(UserHandler.STATUS_KEY);
+		this.famildId = user.getString(UserHandler.FAMILY_KEY);
+		this.prevFamilyId = user.getString(UserHandler.PREV_FAMILY_KEY);
+		this.email = user.getString(UserHandler.EMAIL_KEY);
 		this.profilePic = null; //set individualy through dedicated function
 	}
 	
@@ -165,18 +190,6 @@ public class UserData implements Parcelable {
 		return true;
 	}
 
-	public String getUserId() {
-		return this.userId;
-	}
-
-	public String getName() {
-		return this.firstName;
-	}
-
-	public String getRole() {
-		return this.role;
-	}
-
 	@Override
 	public int describeContents() {
 		return 0;
@@ -197,12 +210,29 @@ public class UserData implements Parcelable {
 		dest.writeString(this.address);
 		dest.writeString(this.gender);
 		dest.writeString(this.quotes);
+		dest.writeString(this.status);
+		dest.writeString(this.famildId);
+		dest.writeString(this.prevFamilyId);
+		dest.writeString(this.email);
+		
 		if (this.profilePic != null) {
 			dest.writeInt(this.profilePic.length);
 			dest.writeByteArray(this.profilePic);			
 		} else {
 			dest.writeInt(0);
 		}
+	}
+	
+	public String getUserId() {
+		return this.userId;
+	}
+
+	public String getName() {
+		return this.firstName;
+	}
+
+	public String getRole() {
+		return this.role;
 	}
 
 	public String getLastName() {
@@ -245,6 +275,22 @@ public class UserData implements Parcelable {
 		return quotes;
 	}
 	
+	public String getStatus() {
+		return status;
+	}
+	
+	public String getFamilyId() {
+		return famildId;
+	}
+	
+	public String getPrevFamilyId() {
+		return prevFamilyId;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	
 	public Bitmap getprofilePhoto() {
 		Bitmap bitmap = null;
 		if (this.profilePic != null) {
@@ -255,11 +301,64 @@ public class UserData implements Parcelable {
 		return bitmap;
 	}
 	
+	/**
+	 * Returns the user's data in the format of profileDetails array
+	 * this is used by the ProfileDetailsAdapter in the ProfileFragment
+	 * (profile screen)
+	 */
+	public ProfileDetails[] getUserProfileDetails() {
+		ArrayList<ProfileDetails> profileDetails = 
+				new ArrayList<ProfileDetails>();
+		profileDetails.add(new ProfileDetails("Details",""));
+		if (hasProperty(email))
+			profileDetails.add(new ProfileDetails("Email", email));
+		
+		if (hasProperty(nickname))
+			profileDetails.add(new ProfileDetails("Nickname", 
+					InputHandler.capitalizeName(nickname)));
+		
+		if (hasProperty(previousLastName))
+			profileDetails.add(new ProfileDetails("Previous family name", 
+					InputHandler.capitalizeName(previousLastName)));
+		
+		if (hasProperty(middleName))
+			profileDetails.add(new ProfileDetails("Middle name", 
+					InputHandler.capitalizeName(middleName)));
+		
+		if (hasProperty(phoneNumber))
+			profileDetails.add(new ProfileDetails("Phone number", phoneNumber));
+		
+		if (hasProperty(birthday))
+			profileDetails.add(new ProfileDetails("Birthdate", birthday));
+		
+		if (hasProperty(address))
+			profileDetails.add(new ProfileDetails("Address", address));
+		
+		if (hasProperty(gender))
+			profileDetails.add(new ProfileDetails("Gender", 
+					InputHandler.capitalizeName(gender)));
+		
+		if (hasProperty(quotes))
+			profileDetails.add(new ProfileDetails("Quote", quotes));
+		
+		return profileDetails.toArray(
+				new ProfileDetails[profileDetails.size()]);
+	}
+	
+	
 	public void setProfilePic(byte[] profilePic) {
 		this.profilePic = Arrays.copyOf(profilePic, profilePic.length);
 	}
 	
 	public void setRole(String role) {
 		this.role = role;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	private boolean hasProperty(String property) {
+		return (!property.equals(""));
 	}
 }

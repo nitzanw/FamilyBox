@@ -1,6 +1,7 @@
 package com.wazapps.familybox.profiles;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.InputHandler;
+import com.wazapps.familybox.util.RoundedImageView;
 
 public class EditProfileFamilyListAdapter extends AbstractFamilyListAdapter
 		implements OnClickListener {
@@ -22,14 +25,13 @@ public class EditProfileFamilyListAdapter extends AbstractFamilyListAdapter
 	private View focusedView;
 
 	public EditProfileFamilyListAdapter(FragmentActivity activity,
-			FamilyMemberDetails[] familyMembersList) {
-		super(activity, familyMembersList);
+			UserData[] familyMembersList, UserData userData) {
+		super(activity, familyMembersList, userData);
 
 	}
 
 	@Override
 	public View getInflatedView(ViewGroup parent) {
-
 		return linearInflater.inflate(R.layout.edit_family_members_list_item,
 				parent, false);
 	}
@@ -37,18 +39,30 @@ public class EditProfileFamilyListAdapter extends AbstractFamilyListAdapter
 	@Override
 	public void initMemberView(int position, View v) {
 		// TODO: add profile picture image handling
-		FamilyMemberDetails member = this.familyMembersList[position];
+		UserData member = this.familyMembersList[position];
 		TextView role = (TextView) v
 				.findViewById(R.id.tv_edit_close_family_role);
 
 		TextView name = (TextView) v
 				.findViewById(R.id.tv_close_family_member_name);
+		
+		RoundedImageView photo = (RoundedImageView) 
+				v.findViewById(R.id.riv_edit_profile_family_member);
+		
+		String memberName = InputHandler.capitalizeName(member.getName());
+		String memberRole = InputHandler.capitalizeName(member.getRole());
+		Bitmap memberPhoto = member.getprofilePhoto();
 
-		name.setText(member.getName());
-		role.setText(member.getRole());
+		name.setText(memberName);
+		role.setText(memberRole);
+		if (memberPhoto != null) {
+			photo.setImageBitmap(memberPhoto);
+			photo.setBackgroundColor(activity.getResources().getColor(
+					android.R.color.transparent));	
+		}
+		
 		v.setTag(POSITION, position);
 		v.setOnClickListener(this);
-
 	}
 
 	@Override

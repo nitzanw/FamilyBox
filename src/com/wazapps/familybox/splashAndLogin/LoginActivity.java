@@ -75,6 +75,7 @@ public class LoginActivity extends FragmentActivity implements
 	private FindCallback<ParseObject> familiesListFetchCallback = null;
 	private UserHandler.FamilyMembersFetchCallback familyMembersFetchCallback = null;
 	private LogInCallback loginCallback = null;
+	private GetCallback<ParseObject> loginFetchCallback = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -234,6 +235,64 @@ public class LoginActivity extends FragmentActivity implements
 				return this;
 			}
 		}.init(this);
+		
+		loginFetchCallback = new GetCallback<ParseObject>() {
+			final StartFragment startFrag = (StartFragment) 
+					getSupportFragmentManager()
+					.findFragmentByTag(TAG_LOGIN_SCR);
+			private LoginActivity activity;
+			
+			@Override
+			public void done(ParseObject family, ParseException e) {
+				//if query fetching has failed
+				if (e != null) {
+					activity.handleUserLoginError(e, "error in user login. " +
+							"please log in again", true, false);
+					
+					if (startFrag != null) {
+						startFrag.turnOffProgress();
+					}
+					
+					return;
+				}
+				
+				//if query fetching succeeded
+				activity.currentFamily = family;
+				activity.relatedFamilyMembers = new ArrayList<ParseUser>();
+				activity.relatedFamilyMemberDetails = new ArrayList<UserData>();	
+				activity.userHandler.fetchFamilyMembers (
+						activity.relatedFamilyMembers,
+						activity.relatedFamilyMemberDetails,
+						activity.currentFamily,
+						activity.currentUser.getObjectId(), true,
+						new FamilyMembersFetchCallback() {
+
+							@Override
+							public void done(ParseException e) {
+								if (e == null) {
+									activity.enterApp();
+									return;
+								}
+
+								else {
+									activity.handleUserLoginError(
+											e,"error in user login. " +
+											"please log in again", true, false);
+									
+									if (startFrag != null) {
+										startFrag.turnOffProgress();
+									}
+								}
+							}
+						});
+			}
+			
+			private GetCallback<ParseObject> init(LoginActivity activity) {
+				this.activity = activity;
+				return this;
+			}
+		}.init(this);
+		
 
 		// Handles the process of login in the user
 		// and caching relevant data
@@ -266,76 +325,17 @@ public class LoginActivity extends FragmentActivity implements
 								.getString(UserHandler.FAMILY_KEY);
 
 						// fetch the user's family for caching purposes
-						familyQuery.getInBackground(familyId,
-								new GetCallback<ParseObject>() {
-
-									@Override
-									public void done(ParseObject family,
-											ParseException e) {
-										if (e == null) {
-											loginActivity.currentFamily = family;
-
-											loginActivity.relatedFamilyMembers = new ArrayList<ParseUser>();
-
-											loginActivity.relatedFamilyMemberDetails = new ArrayList<UserData>();
-
-											loginActivity.userHandler
-													.fetchFamilyMembers(
-															loginActivity.relatedFamilyMembers,
-															loginActivity.relatedFamilyMemberDetails,
-															loginActivity.currentFamily,
-															new FamilyMembersFetchCallback() {
-
-																@Override
-																public void done(
-																		ParseException e) {
-																	if (e == null) {
-																		loginActivity
-																				.enterApp();
-																		return;
-																	}
-
-																	else {
-																		loginActivity
-																				.handleUserLoginError(
-																						e,
-																						"error in user login. "
-																								+ "please log in again",
-																						true,
-																						false);
-																		if (startFrag != null) {
-																			startFrag
-																					.turnOffProgress();
-																		}
-																	}
-																}
-															});
-										}
-
-										else {
-											loginActivity.handleUserLoginError(
-													e,
-													"error in user login. please "
-															+ "log in again",
-													true, false);
-											if (startFrag != null) {
-												startFrag.turnOffProgress();
-											}
-										}
-									}
-								});
+						familyQuery.getInBackground(familyId, loginFetchCallback);
 					}
 				}
 
 				// if login process failed
 				else {
-					loginActivity.handleUserLoginError(e, e.getMessage(),
-							false, false);
+					loginActivity.handleUserLoginError(e, e.getMessage(), false, false);
 					if (startFrag != null) {
 						startFrag.turnOffProgress();
 					}
 				}
-
 			}
 
 			private LogInCallback init(LoginActivity loginActivity) {
@@ -355,36 +355,33 @@ public class LoginActivity extends FragmentActivity implements
 
 			@Override
 			public void done(ParseException e) {
-				// if family pin succeeded
-				if (e == null) {
-					ParseUser.pinAllInBackground(PIN_USER_FAMILY_MEMBERS,
-							loginActivity.relatedFamilyMembers,
-							new SaveCallback() {
-								@Override
-								public void done(ParseException e) {
-									if (e == null) {
-										Intent intent = new Intent(
-												loginActivity,
-												MainActivity.class);
-										startActivity(intent);
-										loginActivity.finish();
-									}
-
-									else {
-										loginActivity.handleUserLoginError(e,
-												"error in user login. please log "
-														+ "in again", true,
-												true);
-									}
-								}
-							});
-				}
-
-				// if family pin failed
-				else {
+				//if family pin failed
+				if (e != null) {
 					loginActivity.handleUserLoginError(e, "error in user "
 							+ "login. please log in again", true, false);
+					return;
 				}
+				
+				// if family pin succeeded
+				ParseUser.pinAllInBackground(PIN_USER_FAMILY_MEMBERS,
+						loginActivity.relatedFamilyMembers, new SaveCallback() {
+					
+							@Override
+							public void done(ParseException e) {
+								if (e == null) {
+									Intent intent = 
+											new Intent(loginActivity, MainActivity.class);
+									startActivity(intent);
+									loginActivity.finish();
+								}
+	
+								else {
+									loginActivity.handleUserLoginError(e,
+											"error in user login. please log in again", 
+											true, true);
+								}
+							}
+						});
 			}
 
 			private SaveCallback init(LoginActivity loginActivity) {
@@ -544,6 +541,7 @@ public class LoginActivity extends FragmentActivity implements
 
 		userHandler.fetchFamilyMembers(relatedFamilyMembers,
 				relatedFamilyMemberDetails, currentFamily,
+				currentUser.getObjectId(), true, 
 				familyMembersFetchCallback);
 	}
 
