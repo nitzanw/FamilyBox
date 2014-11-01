@@ -3,23 +3,18 @@ package com.wazapps.familybox.familyProfiles;
 import java.util.Arrays;
 
 import android.content.Context;
-import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.support.v4.app.FragmentActivity;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.InputHandler;
+import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.UserData;
 import com.wazapps.familybox.util.RoundedImageView;
 
@@ -57,7 +52,7 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 
 		linearInflater = (LayoutInflater) activity
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+		
 		// recycling the view:
 		if (v == null) {
 			v = linearInflater.inflate(R.layout.family_profile_child_item,
@@ -69,12 +64,11 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 	}
 
 	private void initChildView(int position, View v) {
-		LinearLayout child = (LinearLayout) v.findViewById(R.id.ll_child);
 		UserData member = childrenList[position];
-		String memberName = InputHandler.capitalizeFullname(member.getName(),
-				member.getLastName());
+		String memberName = InputHandler.capitalizeFullname(
+				member.getName(), member.getLastName());
 		Bitmap memberPhoto = member.getprofilePhoto();
-
+		
 		TextView name = (TextView) v
 				.findViewById(R.id.tv_family_profile_child_name);
 		RoundedImageView image = (RoundedImageView) v
@@ -84,7 +78,7 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 		if (memberPhoto != null) {
 			image.setImageBitmap(memberPhoto);
 			image.setBackgroundColor(activity.getResources().getColor(
-					android.R.color.transparent));
+					android.R.color.transparent));	
 		}
 
 		ImageView connector1 = (ImageView) v
@@ -98,47 +92,37 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 		} else {
 			connector1.setVisibility(View.VISIBLE);
 		}
-
+		
 		if (position == childrenList.length - 1) {
 			connector2.setVisibility(View.GONE);
 		} else {
 			connector2.setVisibility(View.VISIBLE);
 		}
-		Display display = activity.getWindowManager().getDefaultDisplay();
-		Point size = new Point();
-		display.getSize(size);
-		int width = size.x;
-		int height = size.y;
-		child.measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-
-		int viewWidth = child.getMeasuredWidth();
-		Toast.makeText(activity, "the size" + viewWidth, Toast.LENGTH_LONG)
-				.show();
-
-		// add padding to first element according to
-		// the number of children in the list
+		
+		//add padding to first element according to 
+		//the number of children in the list
 		if (position == 0) {
 			switch (childrenList.length) {
 			case 1:
-				v.setPadding(width / 2 - viewWidth / 2, 0, 0, 0);
+				v.setPadding(300, 0, 0, 0);
 				break;
-
+				
 			case 2:
 				v.setPadding(175, 0, 0, 0);
 				break;
+				
 
 			default:
 				v.setPadding(51, 0, 0, 0);
 				break;
 			}
 		}
-
-		// add padding to last element (in case it is not the only element in
-		// list)
+		
+		//add padding to last element (in case it is not the only element in list)
 		if (position == childrenList.length - 1 && (childrenList.length > 1)) {
-			v.setPadding(0, 0, 45, 0);
+			v.setPadding(0, 0, 45, 0);				
 		}
-
+		
 		v.setTag(CHILD_POS, position);
 	}
 }
