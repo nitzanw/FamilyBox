@@ -10,8 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.familyTree.FamiliesListItem;
+import com.wazapps.familybox.handlers.PhotoHandler;
+import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.util.LogUtils;
 
 public class AlbumGridFragment extends Fragment {
@@ -19,10 +23,24 @@ public class AlbumGridFragment extends Fragment {
 	private View root;
 	private GridView mGridview;
 	AlbumGridAdapter mAdapter;
+	private ParseUser currentUser = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (currentUser == null) {
+			currentUser = ParseUser.getCurrentUser();
+		}
+        // Set up the Parse query to use in the adapter
+		AlbumGridAdapter.QueryFactory<Album> factory = new AlbumGridAdapter.QueryFactory<Album>() {
+            public ParseQuery<Album> create() {
+                ParseQuery<Album> query = ParseQuery.getQuery("Album");
+                query.whereEqualTo(PhotoHandler.ALBUM_FAMILY_KEY, currentUser.get(UserHandler.FAMILY_KEY));
+                query.orderByDescending("createdAt");
+                return query;
+            }
+        };
+        mAdapter = new AlbumGridAdapter(getActivity(), factory);
 	}
 
 	@Override
@@ -30,6 +48,7 @@ public class AlbumGridFragment extends Fragment {
 			Bundle savedInstanceState) {
 		root = inflater.inflate(R.layout.fragment_my_family, container, false);
 		mGridview = (GridView) root.findViewById(R.id.gv_my_family);
+		mGridview.setAdapter(mAdapter);
 		return root;
 	}
 
@@ -37,17 +56,17 @@ public class AlbumGridFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		
-		Bundle args = getArguments();
-		if (args != null) {
-			Parcelable[] parcelableArray = args.getParcelableArray(PhotoGridFragment.ALBUM_ITEM_LIST);
-			AlbumItem[] albumList = Arrays.copyOf(parcelableArray, parcelableArray.length, AlbumItem[].class);
-			String familyName = args.getString(FamiliesListItem.FAMILY_NAME);
-			handleActionbarTitle(familyName);
-			mAdapter = new AlbumGridAdapter(getActivity(), albumList);
-			mGridview.setAdapter(mAdapter);
-		} else {
-			LogUtils.logWarning(getTag(), "the args did not pass!!");
-		}
+//		Bundle args = getArguments();
+//		if (args != null) {
+//			Parcelable[] parcelableArray = args.getParcelableArray(PhotoGridFragment.ALBUM_ITEM_LIST);
+//			AlbumItem[] albumList = Arrays.copyOf(parcelableArray, parcelableArray.length, AlbumItem[].class);
+//			String familyName = args.getString(FamiliesListItem.FAMILY_NAME);
+//			handleActionbarTitle(familyName);
+//			mAdapter = new AlbumGridAdapter(getActivity(), albumList);
+//			mGridview.setAdapter(mAdapter);
+//		} else {
+//			LogUtils.logWarning(getTag(), "the args did not pass!!");
+//		}
 	}
 	
 	private void handleActionbarTitle(String familyName) {

@@ -5,7 +5,6 @@ import java.util.Arrays;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-//a class that hold all photo albums data
 public class AlbumItem implements Parcelable {
 	private String id;
 	private PhotoItem[] photoList;
@@ -37,10 +36,6 @@ public class AlbumItem implements Parcelable {
 		return photoList;
 	}
 
-	public void setPhotosUrls(PhotoItem[] photosUrls) {
-		this.photoList = photosUrls;
-	}
-
 	public String getAlbumName() {
 		return albumName;
 	}
@@ -55,6 +50,10 @@ public class AlbumItem implements Parcelable {
 
 	public void setAlbumDate(String albumDate) {
 		this.albumDate = albumDate;
+	}
+
+	public void setPhotosUrls(PhotoItem[] photosUrls) {
+		this.photoList = photosUrls;
 	}
 
 	@Override

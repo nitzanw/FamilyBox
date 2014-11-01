@@ -3,7 +3,7 @@
     android:id="@+id/fl_album_item"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/image6"
+    android:background="@drawable/stub"
     android:scaleType="centerCrop" >
 
     <ImageButton
@@ -30,5 +30,21 @@
         android:gravity="center"
         android:text="@string/album_date"
         android:textSize="12dp" />
+
+    <LinearLayout
+        android:id="@+id/ll_pb_album_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxHeight="90dp"
+            android:maxWidth="90dp"
+            android:minHeight="90dp"
+            android:minWidth="90dp" />
+    </LinearLayout>
 
 </FrameLayout>

@@ -3,6 +3,8 @@ package com.wazapps.familybox;
 import android.app.Application;
 
 import com.parse.Parse;
+import com.parse.ParseObject;
+import com.wazapps.familybox.photos.Album;
 
 public class FamilyBoxApplication extends Application {
 	private static final String appId = "hFLXtlIwku3PGYy0ezKYQf67sRCamG1IvNToz22q";
@@ -16,6 +18,7 @@ public class FamilyBoxApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		Parse.enableLocalDatastore(getApplicationContext());
+		ParseObject.registerSubclass(Album.class);
 		Parse.initialize(this, appId, clientKey);
 	}
 }
