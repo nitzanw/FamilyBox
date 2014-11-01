@@ -1,16 +1,18 @@
 package com.wazapps.familybox.photos;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.photos.AddAlbumFragment.AddAlbumScreenCallback;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.DateChooserCallback;
 import com.wazapps.familybox.util.AbstractScreenActivity;
-import com.wazapps.familybox.util.MultiImageChooserActivity;
 
 public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 		AddAlbumScreenCallback, DateChooserCallback {
@@ -43,16 +45,6 @@ public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_accept) {
-			// TODO upload the album to the server
-			finish();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		getMenuInflater().inflate(R.menu.menu_accept, menu);
@@ -60,24 +52,21 @@ public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			if (requestCode == AddAlbumFragment.PHOTO_CHOOSER) {
-				AddAlbumFragment frag = (AddAlbumFragment) getSupportFragmentManager()
-						.findFragmentById(R.id.fragment_container);
-				if (frag != null) {
-					frag.setPhotosToUpload(data
-							.getIntegerArrayListExtra(MultiImageChooserActivity.MULTIPLE_FILE_IDS));
-				}
-			}else if(requestCode == AddAlbumFragment.PHOTO_CHOOSER_ADDITION){
-				AddAlbumFragment frag = (AddAlbumFragment) getSupportFragmentManager()
-						.findFragmentById(R.id.fragment_container);
-				if (frag != null) {
-					frag.addPhotosToUpload(data
-							.getIntegerArrayListExtra(MultiImageChooserActivity.MULTIPLE_FILE_IDS));
-				}
-			}
-		}
-		super.onActivityResult(requestCode, resultCode, data);
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return ((AddAlbumFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.fragment_container))
+				.onOptionsItemSelected(item);
+
+	}
+
+	@Override
+	public void uploadPhotosToAlbum(String albumName, String albumDate,
+			String albumDesc, ArrayList<String> photoUrls) {
+		Intent photoIntent = new Intent();
+		photoIntent.putExtra(PhotoHandler.ALBUM_NAME, albumName);
+		photoIntent.putExtra(PhotoHandler.ALBUM_DATE, albumDate);
+		photoIntent.putExtra(PhotoHandler.ALBUM_DESCRIPTION, albumDesc);
+		photoIntent.putExtra(PhotoHandler.PHOTO_URLS, photoUrls);
+		setResult(RESULT_OK, photoIntent);
 	}
 }

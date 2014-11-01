@@ -7,8 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -16,10 +21,20 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.parse.SignUpCallback;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.PhotoHandler;
+import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.util.MultiImageChooserActivity;
 
 public class AddAlbumFragment extends Fragment implements OnClickListener,
@@ -27,6 +42,9 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 	public static final String ADD_ALBUM_FRAG = "add album fragment";
 	protected static final int PHOTO_CHOOSER = 0;
 	protected static final int PHOTO_CHOOSER_ADDITION = 1;
+	private static final int NAME_ERR = 1;
+	private static final int DATE_ERR = 10;
+	private static final int DESC_ERR = 100;
 	private ViewGroup rootView;
 	private EditText mAlbumName;
 	private EditText mAlbumDate;
@@ -39,9 +57,15 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 	private LinearLayout mPhotosInputSectionRow1;
 	private LinearLayout mPhotosInputSectionRow2;
 	private ArrayList<Integer> currentSelectedPhotos;
+	private ArrayList<String> photoUrls;
+
+	private ProgressBar mButtonProgress;
 
 	public interface AddAlbumScreenCallback {
 		public void openDateInputDialog();
+
+		public void uploadPhotosToAlbum(String albumName, String albumDate,
+				String albumDesc, ArrayList<String> photoUrls);
 	}
 
 	@Override
@@ -83,6 +107,8 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 				.findViewById(R.id.ll_input_section_row_2);
 		mAddPhotosEmpty = (RelativeLayout) rootView
 				.findViewById(R.id.rl_add_photos_btn_empty);
+		mButtonProgress = (ProgressBar) rootView
+				.findViewById(R.id.pb_empty_button);
 		mAddPhotosEmpty.setOnClickListener(this);
 		mAddPhotoBtn = (TextView) rootView.findViewById(R.id.tv_add_photos_btn);
 		mAddPhotoBtn.setOnClickListener(this);
@@ -108,13 +134,8 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 			shareWith.show(getChildFragmentManager(),
 					ShareWithDialogFragment.SHARE_W_DIALOG_FRAG);
 		} else if (v.getId() == R.id.rl_add_photos_btn_empty) {
-			Intent getPhotos = new Intent(getActivity(),
-					MultiImageChooserActivity.class);
-			getPhotos.putExtra(MultiImageChooserActivity.COL_WIDTH_KEY, 200);
-			getActivity().startActivityForResult(getPhotos, PHOTO_CHOOSER);
+			startPhotoPicker();
 
-			mAddPhotosEmpty.setVisibility(View.INVISIBLE);
-			mAddPhotoBtn.setVisibility(View.VISIBLE);
 		} else if (v.getId() == R.id.tv_add_photos_btn) {
 			Intent getPhotos = new Intent(getActivity(),
 					MultiImageChooserActivity.class);
@@ -122,6 +143,70 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 			getActivity().startActivityForResult(getPhotos,
 					PHOTO_CHOOSER_ADDITION);
 		}
+
+	}
+
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_accept) {
+			// upload the album to the server
+			if (checkFields() == 0) {
+
+				addAlbumCallback.uploadPhotosToAlbum(mAlbumName.getText()
+						.toString(), mAlbumDate.getText().toString(),
+						mAlbumDesc.getText().toString(), photoUrls);
+				getActivity().finish();
+			}
+
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	private int checkFields() {
+		int errType = 0;
+		if (TextUtils.isEmpty(mAlbumName.getText().toString())) {
+
+			errType += NAME_ERR;
+		}
+		if (TextUtils.isEmpty(mAlbumDate.getText().toString())) {
+			errType += DATE_ERR;
+		}
+		if (TextUtils.isEmpty(mAlbumDesc.getText().toString())) {
+			errType += DESC_ERR;
+		}
+
+		if (errType == NAME_ERR) {
+			createToast(R.string.add_album_err_no_name);
+		} else if (errType == DATE_ERR) {
+			createToast(R.string.add_album_err_no_date);
+		} else if (errType == DESC_ERR) {
+			createToast(R.string.add_album_err_no_description);
+		} else if (errType == 101) {
+			createToast(R.string.add_album_err_no_name_desc);
+		} else if (errType == 11) {
+			createToast(R.string.add_album_err_no_name_date);
+		} else if (errType == 111) {
+			createToast(R.string.add_album_err_no_fields);
+		}
+		return errType;
+
+	}
+
+	private void createToast(int resource) {
+		Toast toast = Toast.makeText(getActivity(), getString(resource),
+				Toast.LENGTH_LONG);
+		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+		toast.show();
+
+	}
+
+	private void createToast(String text) {
+		Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_LONG);
+		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+		toast.show();
 
 	}
 
@@ -142,6 +227,8 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 	}
 
 	public void setPhotosToUpload(ArrayList<Integer> integerArrayListExtra) {
+		mAddPhotosEmpty.setVisibility(View.INVISIBLE);
+		mAddPhotoBtn.setVisibility(View.VISIBLE);
 		currentSelectedPhotos = integerArrayListExtra;
 		mAdapter = new AddPhotoAdapter(getActivity(), integerArrayListExtra);
 
@@ -157,6 +244,14 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 
 	}
 
+	public void startPhotoPicker() {
+		mButtonProgress.setVisibility(View.INVISIBLE);
+		Intent getPhotos = new Intent(getActivity(),
+				MultiImageChooserActivity.class);
+		getPhotos.putExtra(MultiImageChooserActivity.COL_WIDTH_KEY, 200);
+		startActivityForResult(getPhotos, PHOTO_CHOOSER);
+	}
+
 	public void addPhotosToUpload(ArrayList<Integer> integerArrayList) {
 		if (!integerArrayList.isEmpty()) {
 			int currentSize = currentSelectedPhotos.size();
@@ -169,7 +264,7 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 			}
 
 			mAdapter.updateData(currentSelectedPhotos);
-			//add the added photos to the view
+			// add the added photos to the view
 			for (int i = currentSize; i < currentSelectedPhotos.size(); i++) {
 				if (i % 2 == 0) {
 					mPhotosInputSectionRow2.addView(mAdapter.getView(i, null,
@@ -177,6 +272,47 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 				} else {
 					mPhotosInputSectionRow1.addView(mAdapter.getView(i, null,
 							(ViewGroup) getView()));
+				}
+			}
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		ArrayList<Integer> selected = null;
+		if (resultCode == Activity.RESULT_OK) {
+			if (requestCode == AddAlbumFragment.PHOTO_CHOOSER) {
+				selected = data
+						.getIntegerArrayListExtra(MultiImageChooserActivity.MULTIPLE_FILE_IDS);
+				photoUrls = data
+						.getStringArrayListExtra(MultiImageChooserActivity.MULTIPLE_FILE_URL);
+				if (selected != null && !selected.isEmpty()) {
+					setPhotosToUpload(selected);
+				}
+			} else if (requestCode == AddAlbumFragment.PHOTO_CHOOSER_ADDITION) {
+				selected = data
+						.getIntegerArrayListExtra(MultiImageChooserActivity.MULTIPLE_FILE_IDS);
+				ArrayList<String> addedPhotoUrls = data
+						.getStringArrayListExtra(MultiImageChooserActivity.MULTIPLE_FILE_URL);
+				if (selected != null && !selected.isEmpty()) {
+					addPhotosToUpload(selected);
+				}
+				if (addedPhotoUrls != null) {
+					addPhotoUrls(addedPhotoUrls);
+				}
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private void addPhotoUrls(ArrayList<String> addedPhotoUrls) {
+		if (!addedPhotoUrls.isEmpty()) {
+
+			// if the added photo url are not already uploading, add it to the
+			// list
+			for (String s : addedPhotoUrls) {
+				if (!photoUrls.contains(s)) {
+					photoUrls.add(s);
 				}
 			}
 		}

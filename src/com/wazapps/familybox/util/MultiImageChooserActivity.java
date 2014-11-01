@@ -62,6 +62,7 @@ public class MultiImageChooserActivity extends FragmentActivity implements
 	private static final int CURSORLOADER_REAL = 1;
 	private static final String TOTAL_FILES = "total files";
 	public static final String MULTIPLE_FILE_IDS = "multiple file ids";
+	public static final String MULTIPLE_FILE_URL = "multiple file paths";
 	private static final int ID = R.string.id;
 	private Set<String> fileNames = new HashSet<String>();
 
@@ -232,12 +233,13 @@ public class MultiImageChooserActivity extends FragmentActivity implements
 			this.setResult(RESULT_CANCELED);
 		} else {
 
-			// ArrayList<String> al = new ArrayList<String>();
-			// al.addAll(fileNames);
+			ArrayList<String> photoUrls = new ArrayList<String>();
+			photoUrls.addAll(fileNames);
 			Bundle res = new Bundle();
 
 			List<Integer> al = new ArrayList<Integer>(photoIdList);
 
+			res.putStringArrayList(MULTIPLE_FILE_URL, photoUrls);
 			res.putIntegerArrayList(MULTIPLE_FILE_IDS, (ArrayList<Integer>) al);
 			if (imagecursor != null) {
 				res.putInt(TOTAL_FILES, imagecursor.getCount());
