@@ -2,11 +2,14 @@ package com.wazapps.familybox.photos;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 
@@ -34,6 +37,29 @@ public class PhotoGridFragment extends Fragment {
 		mGridview = (GridView) root.findViewById(R.id.gv_photo_album);
 		mProgress = (ProgressBar) root.findViewById(R.id.pb_photo_album);
 		mGridview.setAdapter(mAdapter);
+		mGridview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+//				Album album = mAdapter.getItem(position);
+//				openAlbum(album);
+				
+				
+				 Intent photoIntent = new Intent(getActivity(),
+				 PhotoPagerActivity.class);
+				//
+				// int photoPos = (Integer) v.getTag(PHOTO_POS);
+				 Bundle args = new Bundle();
+				 args.putInt(PhotoPagerFragment.PHOTO_FIRST_POS, position);
+
+				// args.putParcelableArray(PhotoPagerFragment.PHOTO_ITEM_LIST,
+				// photoItemsList);
+				// photoIntent.putExtra(PhotoPagerActivity.PHOTO_BUNDLE, args);
+				// activity.startActivity(photoIntent);
+
+			}
+		});
 		return root;
 
 	}

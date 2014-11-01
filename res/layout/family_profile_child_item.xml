@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_child"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="right"
@@ -37,6 +38,7 @@
                 android:id="@+id/tv_family_profile_child_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAlignment="gravity"
                 android:layout_below="@id/riv_family_profile_child"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="9dp"
@@ -50,8 +52,8 @@
             android:id="@+id/iv_family_profile_children_connector_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
             android:layout_marginLeft="-3dp"
+            android:layout_marginTop="30dp"
             android:src="@drawable/children_profile_pics_horizontal_connector" />
     </LinearLayout>
 
