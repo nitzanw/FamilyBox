@@ -158,5 +158,6 @@
     <string name="error_database">There was an error opening the images database. Please report the problem.</string>
     <string name="requesting_thumbnails">Requesting thumbnails, please be patient</string>
     <string name="id">id</string>
+    <string name="version">version:</string>
 
 </resources>

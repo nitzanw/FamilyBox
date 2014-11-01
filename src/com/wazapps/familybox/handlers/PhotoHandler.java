@@ -18,9 +18,10 @@ public class PhotoHandler {
 	public static final String ALBUM_DESCRIPTION = "albumDescription";
 	public static final String ALBUM = "Album";
 	public static final String ALBUM_FAMILY_KEY = "family";
-	public static final String ALBUM_PHOTO_NUM = "photoNumber";
+	public static final String ALBUM_COVER = "albumCover";
 
 	public static final String PHOTO_URLS = "photos urls";
+
 	/**
 	 * Used to decode real path from uri. used by the photo chooser.
 	 */

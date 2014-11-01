@@ -7,40 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.parse.DeleteCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
-import com.parse.SignUpCallback;
-import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
-import com.wazapps.familybox.familyTree.FamiliesListFragment;
-import com.wazapps.familybox.handlers.FamilyHandler;
-import com.wazapps.familybox.handlers.PhotoHandler;
-import com.wazapps.familybox.handlers.UserHandler;
-import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
-import com.wazapps.familybox.newsfeed.NewsFeedTabsFragment;
-import com.wazapps.familybox.newsfeed.NewsFragment;
-import com.wazapps.familybox.newsfeed.NewsItem;
-import com.wazapps.familybox.photos.AlbumItem;
-import com.wazapps.familybox.photos.PhotoAlbumsTabsFragment;
-import com.wazapps.familybox.photos.PhotoItem;
-import com.wazapps.familybox.profiles.FamilyMemberDetails;
-import com.wazapps.familybox.profiles.ProfileDetails;
-import com.wazapps.familybox.profiles.ProfileFragment;
-import com.wazapps.familybox.profiles.UserData;
-import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
-import com.wazapps.familybox.profiles.UserData.DownloadCallback;
-import com.wazapps.familybox.splashAndLogin.ChangePasswordDialogFragment;
-import com.wazapps.familybox.splashAndLogin.EmailSignupFragment;
-import com.wazapps.familybox.splashAndLogin.LoginActivity;
-import com.wazapps.familybox.util.JSONParser;
-import com.wazapps.familybox.util.LogUtils;
-import com.wazapps.familybox.util.MenuListAdapter;
-
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -62,6 +28,30 @@ import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
+import com.wazapps.familybox.familyTree.FamiliesListFragment;
+import com.wazapps.familybox.handlers.PhotoHandler;
+import com.wazapps.familybox.handlers.UserHandler;
+import com.wazapps.familybox.newsfeed.NewsFeedTabsFragment;
+import com.wazapps.familybox.newsfeed.NewsFragment;
+import com.wazapps.familybox.newsfeed.NewsItem;
+import com.wazapps.familybox.photos.PhotoAlbumsTabsFragment;
+import com.wazapps.familybox.profiles.ProfileFragment;
+import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
+import com.wazapps.familybox.profiles.UserData;
+import com.wazapps.familybox.splashAndLogin.ChangePasswordDialogFragment;
+import com.wazapps.familybox.splashAndLogin.LoginActivity;
+import com.wazapps.familybox.util.JSONParser;
+import com.wazapps.familybox.util.LogUtils;
+import com.wazapps.familybox.util.MenuListAdapter;
+import com.wazapps.familybox.util.AboutFragment;
 
 public class MainActivity extends FragmentActivity implements
 		AddProfileFragmentListener {
@@ -241,6 +231,9 @@ public class MainActivity extends FragmentActivity implements
 					ChangePasswordDialogFragment.CHANGE_PASSWORD_DIALOG_FRAG);
 		} else if (item.getItemId() == R.id.about) {
 
+			AboutFragment aboutFrag = new AboutFragment();
+			aboutFrag.show(getSupportFragmentManager(),
+					AboutFragment.ABOUT_DIALOG_FRAG);
 		}
 		// Handle your other action bar items...
 
@@ -576,20 +569,28 @@ public class MainActivity extends FragmentActivity implements
 						if (e == null) {
 							photoItem.put("photo", photoFile);
 							photoItem.saveEventually(new SaveCallback() {
+								private ParseObject album;
+								private ParseFile photoFile;
 								private FragmentActivity activity;
 
 								@Override
 								public void done(ParseException e) {
+									// add the cover photo to the album (if the
+									// counter is 0)
 									((MainActivity) activity)
-											.incrementAlbumCounter();
+											.incrementAlbumCounter(album,
+													photoFile);
 								}
 
-								SaveCallback init(FragmentActivity activity) {
+								SaveCallback init(FragmentActivity activity,
+										ParseObject album, ParseFile photoFile) {
 									this.activity = activity;
+									this.album = album;
+									this.photoFile = photoFile;
 									return this;
 								}
 
-							}.init(activity));
+							}.init(activity, album, photoFile));
 						} else {
 							LogUtils.logError(getLocalClassName(),
 									"something went wrong with the album uplaod "
@@ -612,7 +613,12 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	synchronized protected void incrementAlbumCounter() {
+	synchronized protected void incrementAlbumCounter(ParseObject album,
+			ParseFile coverFile) {
+		if (upLoadPhotoCounter == 0) {
+			album.put(PhotoHandler.ALBUM_COVER, coverFile);
+			album.saveEventually();
+		}
 		upLoadPhotoCounter++;
 		// if the number of uploaded photos is equal to the number of photos
 		// user selected - show a toast
