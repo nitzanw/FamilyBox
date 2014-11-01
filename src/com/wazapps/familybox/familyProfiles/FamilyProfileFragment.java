@@ -60,9 +60,10 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private TextView mFamilyTitle;
 	
 	//family data
-	private FamilyMemberDetails[] mParentsList, mChildrenList;
+	private FamilyMemberDetails[] mParentsList2, mChildrenList2;
 	private ArrayList<ParseUser> mFamilyMembers = null;
-	private ArrayList<UserData> mFamilyMembersData = null;
+	private ArrayList<UserData> mFamilyMembersData = null, 
+			mChildrenList = null, mParentsList = null;
 	private AlbumItem[] mAlbumList;
 	private UserHandler mUserhandler = null;
 	private boolean mIsUserFamily = false;
@@ -70,37 +71,13 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private ParseObject mCurrentFamily = null;
 	private String mFamilyId, mFamilyName;
 	
-	//callback functions
-	private FamilyMembersFetchCallback mFetchCallback = null;
-	
-	private void initCallbackFunctions() {
-		mFetchCallback = new FamilyMembersFetchCallback() {
-			FamilyProfileFragment frag;
-			
-			@Override
-			public void done(ParseException e) {
-				if (e != null) {
-					//todo: handle error
-					return;
-				}
-				
-				frag.initParentAndChildrenListData();
-			}
-			
-			private FamilyMembersFetchCallback init(FamilyProfileFragment frag) {
-				this.frag = frag;
-				return this;
-			}
-		}.init(this);
-	}
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mUserhandler = new UserHandler();
-		mLoggedUser = ParseUser.getCurrentUser();
 		mFamilyMembers = new ArrayList<ParseUser>();
 		mFamilyMembersData = new ArrayList<UserData>();
+		mLoggedUser = ParseUser.getCurrentUser();
 		
 		if (mLoggedUser == null) {
 			//TODO: handle error
@@ -155,7 +132,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		mFamilyName = InputHandler.capitalizeName(mFamilyName);
 		mFamilyTitle.setText(mFamilyName + " Family");
 		
-		FamilyHandler.getFamilyById(mFamilyId, 
+		FamilyHandler.getFamilyById(mFamilyId, true,
 				new GetCallback<ParseObject>() {
 			FamilyProfileFragment frag;
 			
@@ -171,14 +148,34 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 					frag.mUserhandler.fetchFamilyMembersLocally(
 							mFamilyMembers, mFamilyMembersData, 
 							mCurrentFamily, mLoggedUser.getObjectId(), 
-							true, frag.mFetchCallback);
+							true, new FamilyMembersFetchCallback() {
+								
+								@Override
+								public void done(ParseException e) {
+									if (e != null) {
+										//TODO: handle error
+									} else {
+										frag.initDataViews();
+									}
+								}
+							});
 				} 
 				
 				else {
 					frag.mUserhandler.fetchFamilyMembers(
 							mFamilyMembers, mFamilyMembersData, 
 							mCurrentFamily, mLoggedUser.getObjectId(),
-							true, frag.mFetchCallback);
+							true, new FamilyMembersFetchCallback() {
+								
+								@Override
+								public void done(ParseException e) {
+									if (e != null) {
+										//TODO: handle error
+									} else {
+										frag.initDataViews();
+									}
+								}
+							});
 				}
 			}
 			
@@ -187,43 +184,50 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 				return this;
 			}
 		}.init(this));
-
-		initParentAndChildrenListData();
-		initAlbumListData();
-		initViews();
+		
 		return root;
 	}
 
-	private void initViews() {
-		// init the children list view
-		mChildrenAdapter = new FamilyProfileChildAdapter(getActivity(), mChildrenList);
-		initChildrenLevelView();
-
-		//init the parents list view
-		mParentAdapter = new FamilyProfileParentAdapter(getActivity(), mParentsList);
-		initParentView(mParentLayoutRight, 0);
-		initParentView(mParentLayoutLeft, 1);
-
-		//init the albums list view
-		mAlbumsAdapter = new FamilyProfileAlbumAdapter(getActivity(), mAlbumList);
-		initAlbumsListView();
-
-		//init the family name title view
-		// maybe the family parents does not have the same family name 
-		//- hyphen them!
-		String familyName = mParentsList[0].getLastName();
-		if (!mParentsList[0].getLastName().equals(mParentsList[1].getLastName())) {
-			familyName += " - " + mParentsList[1].getLastName();
+	private void initDataViews() {
+		//init the data
+		mParentsList = new ArrayList<UserData>();
+		mChildrenList = new ArrayList<UserData>();
+		
+		for (UserData member : mFamilyMembersData) {
+			if (member.getRole().equals(UserData.ROLE_PARENT)) {
+				mParentsList.add(member);
+			} else {
+				mChildrenList.add(member);
+			}
 		}
-		familyName += " " + getString(R.string.family);
-		mFamilyTitle.setText(familyName);
+		
+		initParentsLevelView();
+		initChildrenLevelView();
+		initAlbumsListView();
 	}
 
-	/**
-	 * Initialize the children list view
-	 */
+	private void initParentsLevelView() {
+		//init the parents list view
+		mParentAdapter = new FamilyProfileParentAdapter(
+				getActivity(), mParentsList.toArray(
+						new UserData[mParentsList.size()]));
+		int mParentsListSize = mParentsList.size();
+		if (mParentsListSize > 0) {
+			initParentView(mParentLayoutRight, 0);			
+		}
+		
+		if (mParentsListSize > 1) {
+			initParentView(mParentLayoutLeft, 1);			
+		}
+	}
+	
 	private void initChildrenLevelView() {
-		for (int i = 0; i < mChildrenList.length; i++) {
+		// init the children list view
+		mChildrenAdapter = new FamilyProfileChildAdapter(
+				getActivity(), mChildrenList.toArray(
+						new UserData[mChildrenList.size()]));
+
+		for (int i = 0; i < mChildrenList.size(); i++) {
 			View v = mChildrenAdapter.getView(i, null, (ViewGroup) getView());
 			v.setTag(ITEM_TYPE, FAMILY_MEMBER_ITEM_TYPE);
 			v.setTag(FAMILY_MEMBER_TYPE, FAMILY_MEMBER_CHILD_TYPE);
@@ -232,11 +236,16 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 			mChildrenHolder.addView(v);
 		}
 	}
+	
 
 	/**
 	 * Initialize the albums list view
 	 */
 	private void initAlbumsListView() {
+		initAlbumListData();
+		mAlbumsAdapter = new FamilyProfileAlbumAdapter(
+				getActivity(), mAlbumList);
+		
 		for (int i = 0; i < mAlbumList.length; i++) {
 			View v = mAlbumsAdapter.getView(i, null, (ViewGroup) getView());
 			ImageButton album = ((ImageButton) v.findViewById(R.id.ib_album_image));
@@ -260,8 +269,6 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		v.setOnClickListener(this);
 		base.addView(v);
 	}
-
-	
 
 	@Override
 	public void onClick(View v) {
@@ -305,11 +312,11 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private FamilyMemberDetails getMemberItem(String type, int pos) {
 		//TODO: get real data and remove this function
 		if (FAMILY_MEMBER_PARENT_TYPE.equals(type)) {
-			return mParentsList[pos];
+			return mParentsList2[pos];
 		} 
 
 		else if (FAMILY_MEMBER_CHILD_TYPE.equals(type)) {
-			return mChildrenList[pos];
+			return mChildrenList2[pos];
 		} 
 
 		else {
@@ -328,26 +335,26 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		//TODO: add real data and remove this function
 		ArrayList<FamilyMemberDetails> familyMembers = new ArrayList<FamilyMemberDetails>();
 		if (FAMILY_MEMBER_PARENT_TYPE.equals(type)) {
-			for (int i = 0; i < mChildrenList.length; i++) {
-				familyMembers.add(mChildrenList[i]);
+			for (int i = 0; i < mChildrenList2.length; i++) {
+				familyMembers.add(mChildrenList2[i]);
 			}
 
-			for (int j = 0; j < mParentsList.length; j++) {
+			for (int j = 0; j < mParentsList2.length; j++) {
 				if (j != pos) {
-					familyMembers.add(mParentsList[j]);
+					familyMembers.add(mParentsList2[j]);
 				}
 			}
 		} 
 
 		else if (FAMILY_MEMBER_CHILD_TYPE.equals(type)) {
-			for (int i = 0; i < mChildrenList.length; i++) {
+			for (int i = 0; i < mChildrenList2.length; i++) {
 				if (i != pos) {
-					familyMembers.add(mChildrenList[i]);
+					familyMembers.add(mChildrenList2[i]);
 				}
 			}
 
-			for (int j = 0; j < mParentsList.length; j++) {
-				familyMembers.add(mParentsList[j]);
+			for (int j = 0; j < mParentsList2.length; j++) {
+				familyMembers.add(mParentsList2[j]);
 			}
 		} 
 
@@ -356,56 +363,6 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		}
 
 		return familyMembers;
-	}
-	
-	
-	// TODO remove this and add some real data
-		private void initParentAndChildrenListData() {
-		ProfileDetails[] profileDetailsData = { null, null, null, null };
-		profileDetailsData[0] = (new ProfileDetails("Address",
-				"K. yovel, mozkin st."));
-		profileDetailsData[1] = (new ProfileDetails("Birthday", "19.10.1987"));
-		profileDetailsData[2] = (new ProfileDetails("Previous Family Names",
-				"No previous family names"));
-		profileDetailsData[3] = (new ProfileDetails("Quotes",
-				"For every every there exists exists"));
-
-
-		FamilyMemberDetails dad = new FamilyMemberDetails("0", "1","",
-				getString(R.string.father_name), "Zohar",
-				getString(R.string.parent), "", "", "", "", "", "",
-				"m",profileDetailsData);
-		FamilyMemberDetails mom = new FamilyMemberDetails("1", "1","",
-				getString(R.string.mother_name), "Zohar",
-				getString(R.string.parent), "", "", "", "", "", "",
-				"f", profileDetailsData);
-		FamilyMemberDetails child1 = new FamilyMemberDetails("2", "1","",
-				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		FamilyMemberDetails child2 = new FamilyMemberDetails("3", "1","",
-				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		FamilyMemberDetails child3 = new FamilyMemberDetails("4", "1","",
-				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		
-		FamilyMemberDetails child4 = new FamilyMemberDetails("5", "1","",
-				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-		
-		FamilyMemberDetails child5 = new FamilyMemberDetails("6", "1","",
-				getString(R.string.name) + " 1", "Zohar",
-				getString(R.string.child), "", "", "", "", "", "",
-				"f",profileDetailsData);
-
-		FamilyMemberDetails[] localParentsList = { dad, mom };
-		FamilyMemberDetails[] localChildrenList = {child1, child2, child3, child4, child5};
-		mParentsList = localParentsList;
-		mChildrenList = localChildrenList;
 	}
 
 	private void initAlbumListData() {

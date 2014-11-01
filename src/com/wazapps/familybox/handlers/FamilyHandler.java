@@ -36,8 +36,11 @@ public class FamilyHandler {
 		query.findInBackground(callbackFunc);
 	}
 	
-	public static void getFamilyById(String familyId, GetCallback<ParseObject> callbackFunc) {
+	public static void getFamilyById(String familyId, boolean isUserFamily, GetCallback<ParseObject> callbackFunc) {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(FAMILY_CLASS_NAME);
+		if (isUserFamily) {
+			query.fromLocalDatastore();
+		}
 		query.getInBackground(familyId, callbackFunc);
 	}
 		
