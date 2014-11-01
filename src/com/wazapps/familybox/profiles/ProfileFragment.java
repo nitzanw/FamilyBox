@@ -27,6 +27,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -90,9 +91,11 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	//the fragment's views
 	private View root;
 	private LinearLayout mFamilyListHolder; 
-	private RelativeLayout spinner;
+	private RelativeLayout mSpinner, emptyText;
+	private HorizontalScrollView membersList;
 	private ListView mProfileDetailsList;
 	private TextView mUserName;
+	private TextView familyTitle;
 	private RoundedImageView mUserPhoto;
 	private MenuItem editItem;
 	private TextView mUserStatus;
@@ -101,6 +104,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	private ImageButton mSubmitStatus;
 	private Animation statusJump = null;
 	private MenuItem editButton;
+	private ImageButton mPrevFamilybutton, mCurrFamilybutton;
 	AddProfileFragmentListener addProfileCallback = null;
 
 	public interface AddProfileFragmentListener {
@@ -132,7 +136,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 							callbackFunc.done(e);
 							return;
 						}
-						
+												
 						//get the user's role in the family
 						try {
 							String userRole = frag.userHandler.getUserRole(
@@ -238,7 +242,14 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		mUserStatusEdit = (EditText) root.findViewById(R.id.et_profile_status);
 		mEditStatusbtn = (ImageButton) root.findViewById(R.id.ib_edit_status);
 		mSubmitStatus = (ImageButton) root.findViewById(R.id.ib_submit_status);
-		spinner = (RelativeLayout) root.findViewById(R.id.rl_family_members_list_spinner);
+		mSpinner = (RelativeLayout) root.findViewById(R.id.rl_family_members_list_spinner);
+		mPrevFamilybutton = (ImageButton) root.findViewById(R.id.ib_prev_family);
+		mCurrFamilybutton = (ImageButton) root.findViewById(R.id.ib_curr_family);
+		mPrevFamilybutton.setOnClickListener(this);
+		mCurrFamilybutton.setOnClickListener(this);
+		emptyText = (RelativeLayout) root.findViewById(R.id.rl_family_members_list_empty);
+		familyTitle = (TextView) root.findViewById(R.id.tv_close_family_title);
+		membersList = (HorizontalScrollView) root.findViewById(R.id.hsv_family_members_list);
 		
 		if (mIsUserProfile) {
 			mEditStatusbtn.setOnClickListener(this);			
@@ -246,7 +257,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 		} else {
 			mEditStatusbtn.setVisibility(View.INVISIBLE);
 			mSubmitStatus.setVisibility(View.INVISIBLE);
-			spinner.setVisibility(View.VISIBLE);
+			mSpinner.setVisibility(View.VISIBLE);
 		}
 		
 		// Clear the listView's top highlight scrolling effect
@@ -261,14 +272,13 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onStart() {
 		super.onStart();
-		mFamilyMembers = new ArrayList<ParseUser>();
-		mFamilyMembersData = new ArrayList<UserData>();
 		
 		//if this is the user's profile - 
 		//load its data manually from local datastore
 		if (mIsUserProfile) {
 			//refetch loggedUser just to be sure
 			loggedUser = ParseUser.getCurrentUser();
+			
 			if (loggedUser == null) {
 				//TODO: handle error
 			} 
@@ -279,6 +289,11 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			}
 		}
 
+		if (!mCurrentUser.getPrevFamilyId().equals("") 
+				&& !mCurrentUser.getPreviousLastName().equals("")) {
+			mPrevFamilybutton.setVisibility(View.VISIBLE);
+		}
+		
 		//inflate profile data into the screen
 		initProfileDetailsViews();
 		
@@ -289,7 +304,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			@Override
 			public void done(Exception e) {
 				if (e == null) {
-					spinner.setVisibility(View.GONE);
+					mSpinner.setVisibility(View.GONE);
 					initFamilyListView();					
 				} 
 				
@@ -353,11 +368,14 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	private void fetchFamilyData(
 			boolean isFromLocalDB, boolean isCurrFamily,
 			final ProfileFragmentCallback callbackFunc) {
+		mFamilyMembers = new ArrayList<ParseUser>();
+		mFamilyMembersData = new ArrayList<UserData>();
 		//fetch the user's family from online source or local datatore
 		//if currFamily is true - fetch the user's current family
 		//otherwise fetch previous family.
 		String familyId = isCurrFamily? mCurrentUser.getFamilyId() : 
 			mCurrentUser.getPrevFamilyId();
+		
 		ParseQuery<ParseObject> familyQuery = 
 				ParseQuery.getQuery(FamilyHandler.FAMILY_CLASS_NAME);
 		
@@ -375,6 +393,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	
 	private void initFamilyListView() {
 		mFamilyListHolder.removeAllViews();
+		membersList.setVisibility(View.VISIBLE);
 		
 		new AsyncTask<Void, View, Void>() {
 			private ProfileFragment frag;
@@ -404,10 +423,8 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			
 			protected void onPostExecute(Void result) {
 				if (frag.mFamilyMembersData.size() == 0) {
-					RelativeLayout emptyText = (RelativeLayout) 
-							frag.getActivity()
-							.findViewById(R.id.rl_family_members_list_empty);
-					emptyText.setVisibility(View.VISIBLE);
+					frag.emptyText.setVisibility(View.VISIBLE);
+					frag.membersList.setVisibility(View.GONE);
 				}
 			};
 			
@@ -421,14 +438,17 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.ib_edit_status) {
+		switch (v.getId()) {
+		case R.id.ib_edit_status:
 			mSubmitStatus.setVisibility(View.VISIBLE);
 			mEditStatusbtn.setVisibility(View.INVISIBLE);
 			mUserStatusEdit.setText(mUserStatus.getText());
 			mUserStatusEdit.setVisibility(View.VISIBLE);
 			mUserStatus.setVisibility(View.INVISIBLE);
 			mUserStatusEdit.startAnimation(statusJump);
-		} else if ((v.getId() == R.id.ib_submit_status)) {
+			break;
+			
+		case R.id.ib_submit_status:
 			mEditStatusbtn.setVisibility(View.VISIBLE);
 			mSubmitStatus.setVisibility(View.INVISIBLE);
 			mUserStatus.startAnimation(statusJump);
@@ -437,42 +457,119 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			if (!oldStatus.equals(newStatus)) {
 				mUserStatus.setText(mUserStatusEdit.getText().toString());
 				loggedUser.put(UserHandler.STATUS_KEY, newStatus);
-				loggedUser.saveEventually(new SaveCallback() {
-					FragmentActivity activity;
+				loggedUser.saveEventually(
+				new SaveCallback() {
+				FragmentActivity activity;
+				
+				@Override
+				public void done(ParseException e) {
+					if (e == null) {
+						Toast toast = Toast.makeText(activity, 
+								"Status updated", Toast.LENGTH_SHORT);
+						toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+						toast.show();
+					} 
 					
-					@Override
-					public void done(ParseException e) {
-						if (e == null) {
-							Toast toast = Toast.makeText(activity, 
-									"Status updated", Toast.LENGTH_SHORT);
-							toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-							toast.show();
-						} 
+					else {
+						LogUtils.logError("FragmentActivity", 
+								e.getMessage());
+						Toast toast = Toast.makeText(activity, 
+								"Failed to update status", 
+								Toast.LENGTH_SHORT);
 						
-						else {
-							LogUtils.logError("FragmentActivity", 
-									e.getMessage());
-							Toast toast = Toast.makeText(activity, 
-									"Failed to update status", 
-									Toast.LENGTH_SHORT);
-							
-							toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-							toast.show();
-						}
+						toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+						toast.show();
 					}
-					
-					private SaveCallback init(FragmentActivity activity) {
-						this.activity = activity;
-						return this;
-					}
-				}.init(getActivity()));
+				}
+				
+				private SaveCallback init(FragmentActivity activity) {
+					this.activity = activity;
+					return this;
+				}
+			}.init(getActivity()));
 			}
 						
 			mUserStatusEdit.setVisibility(View.INVISIBLE);
 			mUserStatus.setVisibility(View.VISIBLE);
-		} 
-		
-		else {
+			break;
+			
+		case R.id.ib_prev_family:
+			mSpinner.setVisibility(View.VISIBLE);
+			emptyText.setVisibility(View.GONE);
+			mPrevFamilybutton.setVisibility(View.INVISIBLE);
+			familyTitle.startAnimation(statusJump);
+			familyTitle.setText("Previous Family");
+			//re-init user data in case of data refresh
+			fetchFamilyData(false, false, new ProfileFragmentCallback() {
+				private ProfileFragment frag;
+
+				@Override
+				public void done(Exception e) {
+					if (e == null) {
+						frag.mSpinner.setVisibility(View.GONE);						
+						frag.mCurrFamilybutton.setVisibility(View.VISIBLE);
+						frag.initFamilyListView();						
+					}
+					
+					//if an error happened - inflate error text onscreen
+					else {
+						LogUtils.logError("ProfileFragment", e.getMessage());
+						TextView errorText = (TextView) emptyText.findViewById(R.id.tv_family_members_list_empty);
+						errorText.setText("Error in loading family members");
+						emptyText.setVisibility(View.VISIBLE);	
+					}
+				}
+				
+				private ProfileFragmentCallback init(ProfileFragment frag) {
+					this.frag = frag;
+					return this;
+				}
+			}.init(this));
+			break;
+			
+		case R.id.ib_curr_family:
+			if (!mIsUserProfile) {
+				mSpinner.setVisibility(View.VISIBLE);				
+			}
+			
+			emptyText.setVisibility(View.GONE);
+			mCurrFamilybutton.setVisibility(View.INVISIBLE);
+			familyTitle.startAnimation(statusJump);
+			familyTitle.setText("Close Family");
+			
+			//re-init user data in case of data refresh
+			fetchFamilyData(mIsUserProfile, true, 
+					new ProfileFragmentCallback() {
+				private ProfileFragment frag;
+
+				@Override
+				public void done(Exception e) {
+					if (e == null) {
+						frag.mSpinner.setVisibility(View.GONE);						
+						frag.mPrevFamilybutton.setVisibility(View.VISIBLE);
+						frag.initFamilyListView();						
+					}
+					
+					//if an error happened - inflate error text onscreen
+					else {
+						LogUtils.logError("ProfileFragment", e.getMessage());
+						TextView errorText = (TextView) emptyText.findViewById(
+								R.id.tv_family_members_list_empty);
+						errorText.setText("Error in loading family members");
+						emptyText.setVisibility(View.VISIBLE);	
+					}
+				}
+				
+				private ProfileFragmentCallback init(ProfileFragment frag) {
+					this.frag = frag;
+					return this;
+				}
+			}.init(this));
+			
+			break;
+
+		default:
+			//default case is user profile click
 			Bundle args = new Bundle();
 			//get the current item position in family members list
 			int pos = (Integer) v.getTag(ITEM_POS); 
@@ -485,6 +582,8 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			}
 			
 			addProfileCallback.addProfileFragment(args);
+			
+			break;
 		}
 	}
 	

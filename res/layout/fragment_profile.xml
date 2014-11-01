@@ -122,16 +122,45 @@
             android:layout_gravity="center_horizontal|bottom"
             android:background="@android:color/background_light"
             android:orientation="vertical">
+            <RelativeLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/profile_sections_background"
+                android:animateLayoutChanges="true">
 
             <TextView
                 android:id="@+id/tv_close_family_title"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:textColor="@color/grey_subtitle"
-                android:gravity="center_vertical|center_horizontal"
-                android:background="@drawable/profile_sections_background"
+                android:gravity="center_vertical"
                 android:text="@string/profile_close_family_title"
                 android:textSize="20sp" />
+                        	              
+            <ImageButton android:src="@drawable/arrow_icon_right"
+                android:id="@+id/ib_prev_family"
+                android:visibility="invisible"
+                android:background="@android:color/transparent"
+                android:layout_toRightOf="@id/tv_close_family_title"               
+                android:layout_width="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="60dp"              
+                android:layout_height="25dp"/>
+            
+            <ImageButton android:src="@drawable/arrow_icon_left"
+                android:id="@+id/ib_curr_family"
+                android:visibility="invisible"
+                android:background="@android:color/transparent"
+                android:layout_toLeftOf="@id/tv_close_family_title"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_alignParentLeft="true"   
+                android:layout_marginRight="60dp"           
+                android:layout_height="25dp"/>
+                      
+            </RelativeLayout>
             
             <RelativeLayout 
                 android:id="@+id/rl_family_members_list_spinner"
