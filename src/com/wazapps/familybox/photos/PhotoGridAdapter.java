@@ -13,6 +13,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQueryAdapter;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.LogUtils;
 
 public class PhotoGridAdapter extends ParseQueryAdapter<PhotoItem_ex> {
 
@@ -29,7 +30,7 @@ public class PhotoGridAdapter extends ParseQueryAdapter<PhotoItem_ex> {
 	public View getItemView(PhotoItem_ex photoItem, View view, ViewGroup parent) {
 		ViewHolder holder;
 		if (view == null) {
-			view = inflater.inflate(R.layout.album_item, parent, false);
+			view = inflater.inflate(R.layout.image_item, parent, false);
 			holder = new ViewHolder();
 			holder.image = (ImageView) view
 					.findViewById(R.id.iv_photo_in_album);
@@ -52,10 +53,16 @@ public class PhotoGridAdapter extends ParseQueryAdapter<PhotoItem_ex> {
 
 				@Override
 				public void done(byte[] data, ParseException e) {
-					Bitmap bitmap = null;
-					bitmap = BitmapFactory
-							.decodeByteArray(data, 0, data.length);
-					image.setImageBitmap(bitmap);
+					if (e == null) {
+						Bitmap bitmap = null;
+						bitmap = BitmapFactory.decodeByteArray(data, 0,
+								data.length);
+
+						image.setImageBitmap(bitmap);
+
+					} else {
+						LogUtils.logError(getClass().getName(), e.getMessage());
+					}
 				}
 
 				GetDataCallback init(ImageView image) {

@@ -1,11 +1,12 @@
 package com.wazapps.familybox.photos;
 
+import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
+@ParseClassName("PhotoItem")
 public class PhotoItem_ex extends ParseObject {// implements Parcelable {
 	public String getCaption() {
 		return getString("caption");
@@ -21,6 +22,11 @@ public class PhotoItem_ex extends ParseObject {// implements Parcelable {
 	
 	public void setPhotoFile(ParseFile photo) {
 		put("photo", photo);
+	}
+
+	public void setAlbum(String objectId) {
+		put("album", objectId);
+		
 	}
 
 	// public String getDate() {

@@ -60,7 +60,7 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		this.tabHost.addTab(
 				tabHost.newTabSpec(FAVORITES).setIndicator(
 						makeTabIndicator(R.string.photos_tab_favorites)),
-				PhotoGridFragment.class, args);
+						AlbumGridFragment.class, args);
 
 		return this.tabHost;
 	}

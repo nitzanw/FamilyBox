@@ -83,26 +83,27 @@ public class AlbumGridFragment extends Fragment implements OnClickListener {
 				.setOnClickListener(this);
 		mProgress = (ProgressBar) root.findViewById(R.id.pb_myfamily);
 		mGridview.setAdapter(mAdapter);
-		mGridview.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Album album = mAdapter.getItem(position);
-				openAlbum(album);
-
-			}
-		});
+//		mGridview.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				Album album = mAdapter.getItem(position);
+//				openAlbum(album);
+//
+//			}
+//		});
 		return root;
 	}
 
-	protected void openAlbum(Album album) {
-		Intent i = new Intent(getActivity(), PhotoAlbumScreenActivity.class);
-		Bundle args = new Bundle();
-		args.putSerializable(PhotoGridFragment.ALBUM_ITEM, album);
-		i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
-		startActivity(i);
-	}
+//	protected void openAlbum(Album album) {
+//		
+//		Intent i = new Intent(getActivity(), PhotoAlbumScreenActivity.class);
+//		Bundle args = new Bundle();
+//		args.putSerializable(PhotoGridFragment.ALBUM_ITEM, album);
+//		i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
+//		startActivity(i);
+//	}
 
 	private void handleActionbarTitle(String familyName) {
 		// if (getActivity() instanceof PhotoAlbumsActivity) {

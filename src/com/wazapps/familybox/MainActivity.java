@@ -44,6 +44,7 @@ import com.wazapps.familybox.newsfeed.NewsFragment;
 import com.wazapps.familybox.newsfeed.NewsItem;
 import com.wazapps.familybox.photos.Album;
 import com.wazapps.familybox.photos.PhotoAlbumsTabsFragment;
+import com.wazapps.familybox.photos.PhotoItem_ex;
 import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 import com.wazapps.familybox.profiles.UserData;
@@ -210,30 +211,20 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		if (item.getItemId() == R.id.logout) {
-			ParseUser currUser = ParseUser.getCurrentUser();
-			if (currUser != null) {
-				ParseUser.logOut();
-				ParseUser.unpinAllInBackground("UserFamilyMembers");
-				ParseObject.unpinAllInBackground("UserFamily");
-				Intent logoutIntent = new Intent(MainActivity.this,
-						LoginActivity.class);
-				logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
-				startActivity(logoutIntent);
-				finish();
-			}
-		} else if (item.getItemId() == R.id.password) {
+			logUserOut();
+		}
 
+		else if (item.getItemId() == R.id.password) {
 			ChangePasswordDialogFragment changePw = new ChangePasswordDialogFragment();
 			changePw.show(getSupportFragmentManager(),
 					ChangePasswordDialogFragment.CHANGE_PASSWORD_DIALOG_FRAG);
-		} else if (item.getItemId() == R.id.about) {
+		}
 
+		else if (item.getItemId() == R.id.about) {
 			AboutFragment aboutFrag = new AboutFragment();
 			aboutFrag.show(getSupportFragmentManager(),
 					AboutFragment.ABOUT_DIALOG_FRAG);
 		}
-		// Handle your other action bar items...
-
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -328,10 +319,15 @@ public class MainActivity extends FragmentActivity implements
 								.closeDrawer(activity.mDrawerList);
 
 					} else {
-						// TODO: handle error
 						LogUtils.logError("MainActivity", e.getMessage());
 						activity.mDrawerLayout
 								.closeDrawer(activity.mDrawerList);
+
+						Toast.makeText(getApplicationContext(),
+								"connection error. log in again",
+								Toast.LENGTH_SHORT).show();
+
+						logUserOut();
 					}
 
 				}
@@ -345,15 +341,21 @@ public class MainActivity extends FragmentActivity implements
 			break;
 
 		case MY_FAMILY_PROFILE_POS:
+			Bundle data = new Bundle();
+			data.putBoolean(FamilyProfileFragment.USER_FAMILY, true);
+			FamilyProfileFragment frag = new FamilyProfileFragment();
+			frag.setArguments(data);
+
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
 			ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
-			ft.replace(R.id.fragment_container, new FamilyProfileFragment(),
+			ft.replace(R.id.fragment_container, frag,
 					FamilyProfileFragment.FAMILY_PROFILE_FRAG);
 			ft.commit();
 			this.mDrawerLayout.closeDrawer(this.mDrawerList);
 
 			break;
+
 		case FAMILY_TREE_POS:
 			FragmentTransaction ft2 = getSupportFragmentManager()
 					.beginTransaction();
@@ -546,25 +548,24 @@ public class MainActivity extends FragmentActivity implements
 				byte[] fileData = PhotoHandler
 						.createDownsampledPictureData(myBitmap);
 
-				ParseObject photoItem = new ParseObject("PhotoItem");
-				photoItem.put("caption", "");
-				photoItem.put("album", album.getObjectId());
+				PhotoItem_ex photoItem = new PhotoItem_ex();
+				photoItem.setCaption("");
+				photoItem.setAlbum(album.getObjectId());
 
 				ParseFile photoFile = new ParseFile(file.getName(), fileData);
 				photoFile.saveInBackground(new SaveCallback() {
-					private ParseObject photoItem;
+					private PhotoItem_ex photoItem;
 					private Album album;
 					private ParseFile photoFile;
-					private FragmentActivity activity;
+					
 
 					@Override
 					public void done(ParseException e) {
 						if (e == null) {
-							photoItem.put("photo", photoFile);
+							photoItem.setPhotoFile(photoFile);
 							photoItem.saveEventually(new SaveCallback() {
 								private Album album;
 								private ParseFile photoFile;
-								private FragmentActivity activity;
 
 								@Override
 								public void done(ParseException e) {
@@ -574,15 +575,15 @@ public class MainActivity extends FragmentActivity implements
 									album.incrementAlbumCounter(photoFile);
 								}
 
-								SaveCallback init(FragmentActivity activity,
-										Album album, ParseFile photoFile) {
-									this.activity = activity;
+								SaveCallback init(Album album,
+										ParseFile photoFile) {
+
 									this.album = album;
 									this.photoFile = photoFile;
 									return this;
 								}
 
-							}.init(activity, album, photoFile));
+							}.init(album, photoFile));
 						} else {
 							LogUtils.logError(getLocalClassName(),
 									"something went wrong with the album uplaod "
@@ -592,8 +593,7 @@ public class MainActivity extends FragmentActivity implements
 
 					private SaveCallback init(FragmentActivity activity,
 							Album album, ParseFile albumPic,
-							ParseObject photoItem) {
-						this.activity = activity;
+							PhotoItem_ex photoItem) {
 						this.album = album;
 						this.photoFile = albumPic;
 						this.photoItem = photoItem;
@@ -603,5 +603,19 @@ public class MainActivity extends FragmentActivity implements
 
 			}
 		}
+	}
+
+	public void logUserOut() {
+		ParseUser currUser = ParseUser.getCurrentUser();
+		if (currUser != null) {
+			ParseUser.logOut();
+			ParseUser.unpinAllInBackground("UserFamilyMembers");
+			ParseObject.unpinAllInBackground("UserFamily");
+		}
+
+		Intent logoutIntent = new Intent(MainActivity.this, LoginActivity.class);
+		logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
+		startActivity(logoutIntent);
+		finish();
 	}
 }

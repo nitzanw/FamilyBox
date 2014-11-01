@@ -582,7 +582,6 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			}
 			
 			addProfileCallback.addProfileFragment(args);
-			
 			break;
 		}
 	}

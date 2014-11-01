@@ -1,13 +1,17 @@
 package com.wazapps.familybox.photos;
 
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.util.LogUtils;
@@ -16,10 +20,11 @@ public class PhotoGridFragment extends Fragment {
 	public static final String PHOTO_ALBUM_SCREEN_FRAG = "photo album screen fragment";
 	public static final String ALBUM_ITEM = "album item";
 	public static final String ALBUM_ITEM_LIST = "album items list";
+	protected static final String ALBUM_ITEM_ID = "album id";
 	private View root;
 	private GridView mGridview;
-	private Album album;
-	private PhotoGridAdapter mAdpter;
+	private PhotoGridAdapter mAdapter;
+	private ProgressBar mProgress;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,6 +32,8 @@ public class PhotoGridFragment extends Fragment {
 		root = inflater.inflate(R.layout.fragment_photo_album_screen,
 				container, false);
 		mGridview = (GridView) root.findViewById(R.id.gv_photo_album);
+		mProgress = (ProgressBar) root.findViewById(R.id.pb_photo_album);
+		mGridview.setAdapter(mAdapter);
 		return root;
 
 	}
@@ -36,21 +43,34 @@ public class PhotoGridFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
-			album = (Album) args.getSerializable(ALBUM_ITEM);
+			final String albumId = args.getString(ALBUM_ITEM_ID);
 			// Set up the Parse query to use in the adapter
 			PhotoGridAdapter.QueryFactory<PhotoItem_ex> factory = new PhotoGridAdapter.QueryFactory<PhotoItem_ex>() {
 				public ParseQuery<PhotoItem_ex> create() {
 					ParseQuery<PhotoItem_ex> query = ParseQuery
 							.getQuery("PhotoItem");
-					query.whereEqualTo(PhotoHandler.ALBUM_KEY,
-							album.getAlbumId());
+					query.whereEqualTo(PhotoHandler.ALBUM_KEY, albumId);
 
 					return query;
 				}
 			};
 
-			mAdpter = new PhotoGridAdapter(getActivity(), factory);
-			mGridview.setAdapter(mAdpter);
+			mAdapter = new PhotoGridAdapter(getActivity(), factory);
+			mAdapter.addOnQueryLoadListener(new OnQueryLoadListener<PhotoItem_ex>() {
+				public void onLoading() {
+					// Trigger "loading" UI
+					mProgress.setVisibility(View.VISIBLE);
+				}
+
+				@Override
+				public void onLoaded(List<PhotoItem_ex> objects, Exception e) {
+					if (e == null) {
+						mProgress.setVisibility(View.INVISIBLE);
+						mGridview.setVisibility(View.VISIBLE);
+					}
+				}
+
+			});
 			handleActionbarTitle();
 		} else {
 			LogUtils.logWarning(getTag(), "these are no valid arguments!");

@@ -1,11 +1,14 @@
 package com.wazapps.familybox.photos;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -20,13 +23,15 @@ import com.wazapps.familybox.R;
 
 public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 
-
+	private static final int ALBUM_ITEM = R.string.album_title;
 	LayoutInflater inflater;
+	private Context context;
 
 	public AlbumGridAdapter(Context context,
 			ParseQueryAdapter.QueryFactory<Album> queryFactory) {
 		super(context, queryFactory);
-		inflater = (LayoutInflater) context
+		this.context = context;
+		this.inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -43,11 +48,13 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 			holder.dateAlbum = (TextView) view.findViewById(R.id.tv_album_date);
 			holder.albumFrame = (ImageButton) view
 					.findViewById(R.id.ib_album_image);
+			holder.albumFrame = (ImageButton) view.findViewById(R.id.ib_album_image);
 
 			view.setTag(holder);
 		} else {
 			holder = (ViewHolder) view.getTag();
 		}
+		
 
 		TextView titleAlbum = holder.titleAlbum;
 		titleAlbum.setText(album.getAlbumName());
@@ -57,6 +64,22 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 
 		FrameLayout imageAlbum = holder.imageAlbum;
 		setCoverPhoto(album.getAlbumCover(), imageAlbum);
+		
+		ImageButton albumFrame = holder.albumFrame;
+		albumFrame.setTag(ALBUM_ITEM,album);
+		// Listen for GridView Item Click
+		albumFrame.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(context, PhotoAlbumScreenActivity.class);
+				Bundle args = new Bundle();
+				Album album = (Album) v.getTag(ALBUM_ITEM);
+				args.putString(PhotoGridFragment.ALBUM_ITEM_ID, album.getObjectId());
+				i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
+				context.startActivity(i);
+			}
+		});
 
 		return view;
 	}
@@ -89,7 +112,7 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 
 			}.init(imageAlbum));
 
-		}else{
+		} else {
 			LinearLayout progress = (LinearLayout) imageAlbum
 					.findViewById(R.id.ll_pb_album_cover);
 			progress.setVisibility(View.INVISIBLE);
@@ -101,6 +124,8 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 		TextView titleAlbum;
 		TextView dateAlbum;
 		ImageButton albumFrame;
+
+		
 	}
 }
 
