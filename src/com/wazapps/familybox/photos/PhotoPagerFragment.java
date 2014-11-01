@@ -25,6 +25,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 	protected static final String PHOTO_FIRST_POS = "first photo pos";
 	protected static final String PHOTO_ITEM_LIST = "photo list";
 	protected static final String PHOTO_PAGER_FRAG = "photo pager dialog";
+	protected static final String PHOTO_ALBUM_ID = "photo album id";
 	static ViewPager mPager;
 	private View root;
 	private PhotoPagerAdapter mAdapter;
@@ -38,6 +39,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 	private ImageView mAcceptEdit;
 	private EditText mImageEditCaption;
 	private boolean onPageScrollStateChanged = false;
+	private String albumId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,10 +48,11 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 		Bundle args = getArguments();
 		if (args != null) {
 
-			Parcelable[] ps = (Parcelable[]) args
-					.getParcelableArray(PHOTO_ITEM_LIST);
-			photoList = new PhotoItem[ps.length];
-			System.arraycopy(ps, 0, photoList, 0, ps.length);
+//			Parcelable[] ps = (Parcelable[]) args
+//					.getParcelableArray(PHOTO_ITEM_LIST);
+//			photoList = new PhotoItem[ps.length];
+//			System.arraycopy(ps, 0, photoList, 0, ps.length);
+			albumId = args.getString(PHOTO_ALBUM_ID);
 			currentPosition = args.getInt(PHOTO_FIRST_POS);
 		}
 		mAdapter = new PhotoPagerAdapter(getChildFragmentManager(), photoList);

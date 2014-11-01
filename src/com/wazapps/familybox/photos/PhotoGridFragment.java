@@ -28,6 +28,7 @@ public class PhotoGridFragment extends Fragment {
 	private GridView mGridview;
 	private PhotoGridAdapter mAdapter;
 	private ProgressBar mProgress;
+	private String albumId;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,11 +53,11 @@ public class PhotoGridFragment extends Fragment {
 				// int photoPos = (Integer) v.getTag(PHOTO_POS);
 				 Bundle args = new Bundle();
 				 args.putInt(PhotoPagerFragment.PHOTO_FIRST_POS, position);
-
+				 args.putString(PhotoPagerFragment.PHOTO_ALBUM_ID, albumId);
 				// args.putParcelableArray(PhotoPagerFragment.PHOTO_ITEM_LIST,
 				// photoItemsList);
-				// photoIntent.putExtra(PhotoPagerActivity.PHOTO_BUNDLE, args);
-				// activity.startActivity(photoIntent);
+				 photoIntent.putExtra(PhotoPagerActivity.PHOTO_BUNDLE, args);
+				 startActivity(photoIntent);
 
 			}
 		});
@@ -69,7 +70,7 @@ public class PhotoGridFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
-			final String albumId = args.getString(ALBUM_ITEM_ID);
+			albumId = args.getString(ALBUM_ITEM_ID);
 			// Set up the Parse query to use in the adapter
 			PhotoGridAdapter.QueryFactory<PhotoItem_ex> factory = new PhotoGridAdapter.QueryFactory<PhotoItem_ex>() {
 				public ParseQuery<PhotoItem_ex> create() {
