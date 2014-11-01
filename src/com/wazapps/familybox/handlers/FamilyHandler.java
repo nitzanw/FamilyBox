@@ -37,7 +37,8 @@ public class FamilyHandler {
 	}
 		
 	public static void createNewFamilyForUser(ParseUser user,
-			ParseObject newFamily, final SaveCallback callbackFunc) {
+			final boolean isCurrentFamily, ParseObject newFamily, 
+			final SaveCallback callbackFunc) {
 		user.fetchInBackground(new GetCallback<ParseUser>() {
 			private ParseObject newFamily;
 			
@@ -46,7 +47,9 @@ public class FamilyHandler {
 				
 				//if data fetching was successful
 				if (e == null) {
-					String familyName = user.getString(UserHandler.LAST_NAME_KEY);
+					String familyName = (isCurrentFamily)?
+							user.getString(UserHandler.LAST_NAME_KEY) :
+							user.getString(UserHandler.PREV_LAST_NAME_KEY);
 					newFamily.put(NAME_KEY, familyName);
 					newFamily.put(NETWORK_KEY, user.getString(NETWORK_KEY));
 					newFamily.put(UNDEFINED_KEY, user);
@@ -57,11 +60,22 @@ public class FamilyHandler {
 						@Override
 						public void done(ParseException e) {
 							if (e == null) {
-								user.put(UserHandler.FAMILY_KEY, 
-										newFamily.getObjectId());
-								user.put(UserHandler.PASS_QUERY_KEY, true);
+								if (isCurrentFamily) {
+									user.put(UserHandler.FAMILY_KEY, 
+											newFamily.getObjectId());									
+								} else {
+									user.put(UserHandler.PREV_FAMILY_KEY, 
+											newFamily.getObjectId());
+								}
+								
+								if (isCurrentFamily) {
+									user.put(UserHandler.PASS_QUERY_KEY, true);									
+								}
+								
 								user.saveInBackground(callbackFunc);								
-							} else {
+							} 
+							
+							else {
 								callbackFunc.done(e);
 							}
 						}
@@ -90,7 +104,8 @@ public class FamilyHandler {
 	public static void updateUsersAndFamilyRelation(ParseUser currentUser, 
 			ParseUser currentFamilyMember, ParseObject currentFamily, 
 			String relation, boolean isMemberUndefined, boolean isUserMale, 
-			boolean isMemberMale, final SaveCallback callbackFunc) {
+			boolean isMemberMale, boolean isCurrentFamily,
+			final SaveCallback callbackFunc) {
 		if (relation.equals(RELATION_FATHER) 
 				|| relation.equals(RELATION_MOTHER)) {
 			ParseRelation<ParseUser> children = 
@@ -147,8 +162,14 @@ public class FamilyHandler {
 			}
 		}
 		
-		currentUser.put(UserHandler.PASS_QUERY_KEY, true);
-		currentUser.put(UserHandler.FAMILY_KEY, currentFamily.getObjectId());
+		if (isCurrentFamily) {
+			currentUser.put(UserHandler.PASS_QUERY_KEY, true);
+			currentUser.put(UserHandler.FAMILY_KEY, currentFamily.getObjectId());			
+		} 
+		
+		else {
+			currentUser.put(UserHandler.PREV_FAMILY_KEY, currentFamily.getObjectId());
+		}
 		
 		currentFamily.saveInBackground(new SaveCallback() {
 			private ParseUser currentUser;

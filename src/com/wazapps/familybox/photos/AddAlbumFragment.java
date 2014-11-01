@@ -45,6 +45,7 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 	private static final int NAME_ERR = 1;
 	private static final int DATE_ERR = 10;
 	private static final int DESC_ERR = 100;
+	private static final int PHOTOS_ERR = 1000;
 	private ViewGroup rootView;
 	private EditText mAlbumName;
 	private EditText mAlbumDate;
@@ -58,8 +59,6 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 	private LinearLayout mPhotosInputSectionRow2;
 	private ArrayList<Integer> currentSelectedPhotos;
 	private ArrayList<String> photoUrls;
-
-	private ProgressBar mButtonProgress;
 
 	public interface AddAlbumScreenCallback {
 		public void openDateInputDialog();
@@ -107,8 +106,7 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 				.findViewById(R.id.ll_input_section_row_2);
 		mAddPhotosEmpty = (RelativeLayout) rootView
 				.findViewById(R.id.rl_add_photos_btn_empty);
-		mButtonProgress = (ProgressBar) rootView
-				.findViewById(R.id.pb_empty_button);
+
 		mAddPhotosEmpty.setOnClickListener(this);
 		mAddPhotoBtn = (TextView) rootView.findViewById(R.id.tv_add_photos_btn);
 		mAddPhotoBtn.setOnClickListener(this);
@@ -134,19 +132,12 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 			shareWith.show(getChildFragmentManager(),
 					ShareWithDialogFragment.SHARE_W_DIALOG_FRAG);
 		} else if (v.getId() == R.id.rl_add_photos_btn_empty) {
-			startPhotoPicker();
+			startPhotoPicker(PHOTO_CHOOSER);
 
 		} else if (v.getId() == R.id.tv_add_photos_btn) {
-			Intent getPhotos = new Intent(getActivity(),
-					MultiImageChooserActivity.class);
-			getPhotos.putExtra(MultiImageChooserActivity.COL_WIDTH_KEY, 200);
-			getActivity().startActivityForResult(getPhotos,
-					PHOTO_CHOOSER_ADDITION);
+			startPhotoPicker(PHOTO_CHOOSER_ADDITION);
 		}
-
 	}
-
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -177,6 +168,9 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 		if (TextUtils.isEmpty(mAlbumDesc.getText().toString())) {
 			errType += DESC_ERR;
 		}
+		if (photoUrls == null || photoUrls.isEmpty()) {
+			errType += PHOTOS_ERR;
+		}
 
 		if (errType == NAME_ERR) {
 			createToast(R.string.add_album_err_no_name);
@@ -190,6 +184,9 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 			createToast(R.string.add_album_err_no_name_date);
 		} else if (errType == 111) {
 			createToast(R.string.add_album_err_no_fields);
+		} else if (errType >= 1000) {
+			createToast(R.string.add_album_err_no_photos);
+
 		}
 		return errType;
 
@@ -244,12 +241,11 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 
 	}
 
-	public void startPhotoPicker() {
-		mButtonProgress.setVisibility(View.INVISIBLE);
+	public void startPhotoPicker(int requestCode) {
 		Intent getPhotos = new Intent(getActivity(),
 				MultiImageChooserActivity.class);
 		getPhotos.putExtra(MultiImageChooserActivity.COL_WIDTH_KEY, 200);
-		startActivityForResult(getPhotos, PHOTO_CHOOSER);
+		startActivityForResult(getPhotos, requestCode);
 	}
 
 	public void addPhotosToUpload(ArrayList<Integer> integerArrayList) {

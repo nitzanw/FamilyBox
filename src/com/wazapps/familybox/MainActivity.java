@@ -42,6 +42,7 @@ import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.newsfeed.NewsFeedTabsFragment;
 import com.wazapps.familybox.newsfeed.NewsFragment;
 import com.wazapps.familybox.newsfeed.NewsItem;
+import com.wazapps.familybox.photos.Album;
 import com.wazapps.familybox.photos.PhotoAlbumsTabsFragment;
 import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
@@ -90,10 +91,6 @@ public class MainActivity extends FragmentActivity implements
 	private ParseUser currentUser = null;
 	private UserData userData = null;
 	private ParseObject currentFamily = null;
-
-	private int photoToUploadNum;
-
-	private int upLoadPhotoCounter;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -498,20 +495,17 @@ public class MainActivity extends FragmentActivity implements
 	private void uploadAlbum(String albumName, String albumDate,
 			String albumDesc, ArrayList<String> photoUrls) {
 
-		ParseObject album = new ParseObject(PhotoHandler.ALBUM);
+		Album album = new Album(this, photoUrls.size());
 		if (currentUser == null) {
 			currentUser = ParseUser.getCurrentUser();
 		}
-
-		album.put(PhotoHandler.ALBUM_FAMILY_KEY,
-				currentUser.get(UserHandler.FAMILY_KEY));
-
-		album.put(PhotoHandler.ALBUM_NAME, albumName);
-		album.put(PhotoHandler.ALBUM_DATE, albumDate);
-		album.put(PhotoHandler.ALBUM_DESCRIPTION, albumDesc);
+		album.setFamily((String) currentUser.get(UserHandler.FAMILY_KEY));
+		album.setAlbumName(albumName);
+		album.setAlbumDate(albumDate);
+		album.setAlbumDescription(albumDesc);
 		album.saveInBackground(new SaveCallback() {
 			FragmentActivity activity = null;
-			ParseObject album = null;
+			Album album = null;
 			ArrayList<String> photoUrls = null;
 
 			@Override
@@ -528,7 +522,7 @@ public class MainActivity extends FragmentActivity implements
 				}
 			}
 
-			SaveCallback init(FragmentActivity activity, ParseObject album,
+			SaveCallback init(FragmentActivity activity, Album album,
 					ArrayList<String> photoUrls) {
 				this.activity = activity;
 				this.album = album;
@@ -540,10 +534,8 @@ public class MainActivity extends FragmentActivity implements
 
 	}
 
-	protected void uploadPhotosToAlbum(ParseObject album,
-			ArrayList<String> photoUrls) {
-		photoToUploadNum = photoUrls.size();
-		for (int i = 0; i < photoToUploadNum; i++) {
+	protected void uploadPhotosToAlbum(Album album, ArrayList<String> photoUrls) {
+		for (int i = 0; i < photoUrls.size(); i++) {
 			Uri currImageURI = Uri.parse(photoUrls.get(i));
 
 			File file = new File(PhotoHandler.getRealPathFromURI(this,
@@ -560,7 +552,8 @@ public class MainActivity extends FragmentActivity implements
 
 				ParseFile photoFile = new ParseFile(file.getName(), fileData);
 				photoFile.saveInBackground(new SaveCallback() {
-					private ParseObject album, photoItem;
+					private ParseObject photoItem;
+					private Album album;
 					private ParseFile photoFile;
 					private FragmentActivity activity;
 
@@ -569,7 +562,7 @@ public class MainActivity extends FragmentActivity implements
 						if (e == null) {
 							photoItem.put("photo", photoFile);
 							photoItem.saveEventually(new SaveCallback() {
-								private ParseObject album;
+								private Album album;
 								private ParseFile photoFile;
 								private FragmentActivity activity;
 
@@ -577,13 +570,12 @@ public class MainActivity extends FragmentActivity implements
 								public void done(ParseException e) {
 									// add the cover photo to the album (if the
 									// counter is 0)
-									((MainActivity) activity)
-											.incrementAlbumCounter(album,
-													photoFile);
+
+									album.incrementAlbumCounter(photoFile);
 								}
 
 								SaveCallback init(FragmentActivity activity,
-										ParseObject album, ParseFile photoFile) {
+										Album album, ParseFile photoFile) {
 									this.activity = activity;
 									this.album = album;
 									this.photoFile = photoFile;
@@ -599,7 +591,7 @@ public class MainActivity extends FragmentActivity implements
 					}
 
 					private SaveCallback init(FragmentActivity activity,
-							ParseObject album, ParseFile albumPic,
+							Album album, ParseFile albumPic,
 							ParseObject photoItem) {
 						this.activity = activity;
 						this.album = album;
@@ -611,23 +603,5 @@ public class MainActivity extends FragmentActivity implements
 
 			}
 		}
-	}
-
-	synchronized protected void incrementAlbumCounter(ParseObject album,
-			ParseFile coverFile) {
-		if (upLoadPhotoCounter == 0) {
-			album.put(PhotoHandler.ALBUM_COVER, coverFile);
-			album.saveEventually();
-		}
-		upLoadPhotoCounter++;
-		// if the number of uploaded photos is equal to the number of photos
-		// user selected - show a toast
-		if (upLoadPhotoCounter == photoToUploadNum) {
-			Toast toast = Toast.makeText(getApplicationContext(),
-					getString(R.string.add_album_success), Toast.LENGTH_LONG);
-
-			toast.show();
-		}
-
 	}
 }

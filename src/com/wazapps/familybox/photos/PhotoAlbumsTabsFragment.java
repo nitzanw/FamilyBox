@@ -114,4 +114,10 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		return args;
 	}
 
+	public static void refreshMyFamilyAlbums() {
+		tabHost.setCurrentTab(2);
+		tabHost.setCurrentTab(0);
+		
+	}
+
 }

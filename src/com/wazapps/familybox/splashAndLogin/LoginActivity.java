@@ -135,8 +135,8 @@ public class LoginActivity extends FragmentActivity implements
 					String userFamilyName = loginActivity.currentUser
 							.getString(UserHandler.LAST_NAME_KEY);
 
-					FamilyHandler.fetchRelatedFamilies(userFamilyName,
-							userNetwork,
+					FamilyHandler.fetchRelatedFamilies(
+							userFamilyName, userNetwork,
 							loginActivity.familiesListFetchCallback);
 				}
 
@@ -213,7 +213,8 @@ public class LoginActivity extends FragmentActivity implements
 
 		// opens the family members query fragment after fetching
 		// the family members data
-		familyMembersFetchCallback = new UserHandler.FamilyMembersFetchCallback() {
+		familyMembersFetchCallback = 
+				new UserHandler.FamilyMembersFetchCallback() {
 			private LoginActivity loginActivity;
 
 			@Override
@@ -528,8 +529,8 @@ public class LoginActivity extends FragmentActivity implements
 		if (familyQueryIndex >= relatedFamilies.size()) {
 			currentFamily = new ParseObject(FamilyHandler.FAMILY_CLASS_NAME);
 			relatedFamilyMembers = new ArrayList<ParseUser>();
-			FamilyHandler.createNewFamilyForUser(currentUser, currentFamily,
-					familyCreationCallback);
+			FamilyHandler.createNewFamilyForUser(currentUser, true,
+					currentFamily, familyCreationCallback);
 			return;
 		}
 
@@ -615,7 +616,7 @@ public class LoginActivity extends FragmentActivity implements
 		FamilyHandler.updateUsersAndFamilyRelation(currentUser,
 				currentFamilyMember, currentFamily, relation,
 				isMemberUndefined, isUserMale, isMemberMale,
-				new SaveCallback() {
+				true, new SaveCallback() {
 					private LoginActivity loginActivity;
 
 					@Override
@@ -692,8 +693,9 @@ public class LoginActivity extends FragmentActivity implements
 						args.putParcelableArray(
 								FamilyQueryFragment.QUERY_FAMILIES_LIST,
 								relatedFamilyMembers
-										.toArray(new UserData[relatedFamilyMemberDetails
-												.size()]));
+								.toArray(new UserData[relatedFamilyMemberDetails
+								.size()]));
+						args.putBoolean(FamilyQueryFragment.CURRENT_FAMILY, true);
 
 						FamilyQueryFragment familyQueryFrag = new FamilyQueryFragment();
 						familyQueryFrag.setArguments(args);

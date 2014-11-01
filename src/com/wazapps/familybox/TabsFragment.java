@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public class TabsFragment extends Fragment {
 
-	protected FragmentTabHost tabHost;
+	protected static FragmentTabHost tabHost;
 	int currentPosition = -1;
 
 	protected ActionBar actionBar;

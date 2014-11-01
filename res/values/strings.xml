@@ -151,6 +151,7 @@
     <string name="add_album_err_no_name_desc">Please enter album name and description</string>
     <string name="add_album_err_no_date_desc">Please enter album date and description</string>
     <string name="add_album_err_no_fields">You did not fill any fields</string>
+    <string name="add_album_err_no_photos">Please choose photos to upload</string>
     <string name="add_album_err_not_uploaded">You\'re album was not uploaded due to:</string>
     <string name="add_album_success">All photos were successfully uploaded</string>
     <string name="multi_app_name">MultiImageChooser</string>

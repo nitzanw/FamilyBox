@@ -10,26 +10,11 @@
         android:id="@+id/iv_add_album_item"
         android:layout_width="125dp"
         android:layout_height="125dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:background="@drawable/photo_stub"
         android:scaleType="centerCrop" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
-        android:layout_alignStart="@+id/iv_add_album_item"
-        android:layout_below="@+id/iv_add_album_item"
-        android:text="@string/add_album_uploading"
-        android:textSize="10sp" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/iv_add_album_item"
-        android:layout_below="@+id/iv_add_album_item"
-        android:layout_marginTop="5.5dp"
-        android:src="@drawable/upload_progress_bar_0_percent" />
+   
 
 </RelativeLayout>

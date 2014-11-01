@@ -66,10 +66,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/tv_add_photos_btn"
-            android:layout_marginBottom="7dp"
-            android:layout_marginTop="7dp" >
+            android:layout_marginBottom="19dp"
+           >
 
             <LinearLayout
+                
+                android:layout_gravity="center_vertical"
                 android:id="@+id/ll_add_album_photos_input_section"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -128,14 +130,6 @@
                 android:text="@string/add_album_add_photos_empty"
                 android:textAlignment="center" />
 
-            <ProgressBar
-                android:id="@+id/pb_empty_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:visibility="invisible" />
         </RelativeLayout>
     </RelativeLayout>
 

@@ -28,6 +28,7 @@ public class AlbumGridFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LogUtils.logTemp(getClass().getName(), "in the on create!");
 		if (currentUser == null) {
 			currentUser = ParseUser.getCurrentUser();
 		}
@@ -55,18 +56,7 @@ public class AlbumGridFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-//		Bundle args = getArguments();
-//		if (args != null) {
-//			Parcelable[] parcelableArray = args.getParcelableArray(PhotoGridFragment.ALBUM_ITEM_LIST);
-//			AlbumItem[] albumList = Arrays.copyOf(parcelableArray, parcelableArray.length, AlbumItem[].class);
-//			String familyName = args.getString(FamiliesListItem.FAMILY_NAME);
-//			handleActionbarTitle(familyName);
-//			mAdapter = new AlbumGridAdapter(getActivity(), albumList);
-//			mGridview.setAdapter(mAdapter);
-//		} else {
-//			LogUtils.logWarning(getTag(), "the args did not pass!!");
-//		}
+
 	}
 	
 	private void handleActionbarTitle(String familyName) {

@@ -81,7 +81,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	protected UserData mCurrentUser;
 	protected ArrayList<ParseUser> mFamilyMembers = null;
 	protected ArrayList<UserData> mFamilyMembersData = null;
-	protected boolean mIsUserProfile;
+	protected boolean mIsUserProfile = true;
 	protected ParseUser loggedUser;
 	
 	//the fragment's callback functions
@@ -487,13 +487,22 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			addProfileCallback.addProfileFragment(args);
 		}
 	}
+	
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		editButton = menu.findItem(R.id.action_edit);
+		if (!mIsUserProfile) {
+			editButton.setVisible(false);
+		} else {
+			editButton.setVisible(true);
+		}
+	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) { 
 		editButton = menu.findItem(R.id.action_edit);
-		if (editButton == null) {
+		if (editButton == null)
 			inflater.inflate(R.menu.menu_edit_action, menu);
-		}
 	}
 
 	@Override

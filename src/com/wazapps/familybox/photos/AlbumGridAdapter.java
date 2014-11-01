@@ -1,20 +1,12 @@
 package com.wazapps.familybox.photos;
 
-import java.util.Arrays;
-
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -28,16 +20,14 @@ import com.wazapps.familybox.R;
 
 public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 
-	private static final int ALBUM_ITEM_POS = R.string.photos_tab_my_family;
-	// Declare Variables
-	Activity activity;
-	LayoutInflater inflater;
 
-	// AlbumItem[] albumList;
+	LayoutInflater inflater;
 
 	public AlbumGridAdapter(Context context,
 			ParseQueryAdapter.QueryFactory<Album> queryFactory) {
 		super(context, queryFactory);
+		inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
@@ -58,16 +48,15 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 		} else {
 			holder = (ViewHolder) view.getTag();
 		}
-		
+
 		TextView titleAlbum = holder.titleAlbum;
 		titleAlbum.setText(album.getAlbumName());
-		
+
 		TextView dateAlbum = holder.dateAlbum;
 		dateAlbum.setText(album.getAlbumDate());
-		
+
 		FrameLayout imageAlbum = holder.imageAlbum;
 		setCoverPhoto(album.getAlbumCover(), imageAlbum);
-
 
 		return view;
 	}
@@ -100,6 +89,10 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 
 			}.init(imageAlbum));
 
+		}else{
+			LinearLayout progress = (LinearLayout) imageAlbum
+					.findViewById(R.id.ll_pb_album_cover);
+			progress.setVisibility(View.INVISIBLE);
 		}
 	}
 
