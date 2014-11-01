@@ -144,6 +144,8 @@
     <string name="add_album_done">Done</string>
     <string name="add_album_title">Add New Album</string>
     <string name="add_album_share_w_dialog">Share with:</string>
+    <string name="my_family_album_empty">You\'re family doesn\'t have any albums yet =(</string>
+    <string name="my_family_album_empty_add_album">Click here to add an album</string>
     <string name="add_album_err_no_description">Please enter album description</string>
     <string name="add_album_err_no_date">Please enter album date</string>
     <string name="add_album_err_no_name">Please enter album name</string>

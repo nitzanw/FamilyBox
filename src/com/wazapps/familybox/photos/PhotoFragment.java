@@ -15,7 +15,7 @@ public class PhotoFragment extends Fragment {
 	protected static final String PHOTO_DIALOG_FRAG = "photo dialog fragment";
 	protected static final String PHOTO_ITEM = "photo item";
 	private View root;
-	private PhotoItem photoItem;
+	private PhotoItem_ex photoItem;
 	private ImageView mImage;
 
 	
@@ -38,7 +38,7 @@ public class PhotoFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
-			photoItem = (PhotoItem) args.getParcelable(PHOTO_ITEM);
+			photoItem = (PhotoItem_ex) args.getParcelable(PHOTO_ITEM);
 			// TODO load image
 			// mImage.setBackground(((PhotoItem)photoList.get(firstPhotoIndex)).getUrl());
 

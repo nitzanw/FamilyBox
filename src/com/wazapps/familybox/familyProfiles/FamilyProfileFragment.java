@@ -18,6 +18,7 @@ import com.wazapps.familybox.photos.AlbumItem;
 import com.wazapps.familybox.photos.PhotoAlbumScreenActivity;
 import com.wazapps.familybox.photos.PhotoGridFragment;
 import com.wazapps.familybox.photos.PhotoItem;
+import com.wazapps.familybox.photos.PhotoItem_ex;
 import com.wazapps.familybox.profiles.FamilyMemberDetails;
 import com.wazapps.familybox.profiles.ProfileDetails;
 import com.wazapps.familybox.profiles.ProfileFragment;

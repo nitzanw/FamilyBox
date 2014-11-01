@@ -21,6 +21,7 @@ public class PhotoHandler {
 	public static final String ALBUM_COVER = "albumCover";
 
 	public static final String PHOTO_URLS = "photos urls";
+	public static final String ALBUM_KEY = "album";
 
 	/**
 	 * Used to decode real path from uri. used by the photo chooser.

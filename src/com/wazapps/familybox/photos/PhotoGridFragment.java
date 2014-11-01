@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.parse.ParseQuery;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.util.LogUtils;
 
 public class PhotoGridFragment extends Fragment {
@@ -16,7 +18,7 @@ public class PhotoGridFragment extends Fragment {
 	public static final String ALBUM_ITEM_LIST = "album items list";
 	private View root;
 	private GridView mGridview;
-	private AlbumItem albumItem;
+	private Album album;
 	private PhotoGridAdapter mAdpter;
 
 	@Override
@@ -30,25 +32,36 @@ public class PhotoGridFragment extends Fragment {
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
-			albumItem = args.getParcelable(ALBUM_ITEM);
-			PhotoItem[] photoList = albumItem.getPhotosList();
-			mAdpter = new PhotoGridAdapter(getActivity(), photoList);
+			album = (Album) args.getSerializable(ALBUM_ITEM);
+			// Set up the Parse query to use in the adapter
+			PhotoGridAdapter.QueryFactory<PhotoItem_ex> factory = new PhotoGridAdapter.QueryFactory<PhotoItem_ex>() {
+				public ParseQuery<PhotoItem_ex> create() {
+					ParseQuery<PhotoItem_ex> query = ParseQuery
+							.getQuery("PhotoItem");
+					query.whereEqualTo(PhotoHandler.ALBUM_KEY,
+							album.getAlbumId());
+
+					return query;
+				}
+			};
+
+			mAdpter = new PhotoGridAdapter(getActivity(), factory);
 			mGridview.setAdapter(mAdpter);
 			handleActionbarTitle();
 		} else {
 			LogUtils.logWarning(getTag(), "these are no valid arguments!");
 		}
 	}
-	
+
 	private void handleActionbarTitle() {
-//		if (getActivity() instanceof PhotoAlbumsActivity) {
-//			getActivity().getActionBar().setTitle("Photo Albums");
-//		} else {
-//			getActivity().getActionBar().setTitle(albumItem.getAlbumName());
-//		}
+		// if (getActivity() instanceof PhotoAlbumsActivity) {
+		// getActivity().getActionBar().setTitle("Photo Albums");
+		// } else {
+		// getActivity().getActionBar().setTitle(albumItem.getAlbumName());
+		// }
 	}
 }

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.familybox.wazapps.familybox.MyFamilyFragment">
+    tools:context="com.familybox.wazapps.familybox.MyFamilyFragment" >
 
     <GridView
         android:id="@+id/gv_my_family"
@@ -14,7 +14,54 @@
         android:horizontalSpacing="2dp"
         android:numColumns="2"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="2dp" >
+        android:verticalSpacing="2dp"
+        android:visibility="gone" >
     </GridView>
+
+    <ProgressBar
+        android:id="@+id/pb_myfamily"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_myfamily_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/tree_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/news_feed_empty"
+            android:textColor="@color/gray_dialog_text_color"
+            android:textSize="25dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="@string/my_family_album_empty"
+            android:textAlignment="gravity"
+            android:textColor="@color/gray_dialog_text_color" />
+
+        <Button
+            android:id="@+id/my_family_album_empty_click"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@android:color/transparent"
+            android:text="@string/my_family_album_empty_add_album" />
+    </LinearLayout>
 
 </RelativeLayout>

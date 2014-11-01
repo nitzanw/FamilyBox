@@ -1,5 +1,7 @@
 package com.wazapps.familybox.photos;
 
+import java.io.Serializable;
+
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
@@ -13,7 +15,7 @@ import com.wazapps.familybox.R;
 
 //a class that hold all photo albums data
 @ParseClassName("Album")
-public class Album extends ParseObject {
+public class Album extends ParseObject implements Serializable{
 
 	int photoListSize;
 	private int upLoadPhotoCounter;
@@ -28,6 +30,10 @@ public class Album extends ParseObject {
 		this.photoListSize = photoListSize;
 	}
 
+	public String getAlbumId() {
+		return getString("objectId");
+	}
+	
 	public String getAlbumFamily() {
 		return getString("family");
 	}

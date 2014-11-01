@@ -22,7 +22,7 @@ public class AlbumItem implements Parcelable {
 	public AlbumItem(Parcel source) {
 		this.id = source.readString();
 		Parcelable[] parcelableArray = source
-				.readParcelableArray(PhotoItem.class.getClassLoader());
+				.readParcelableArray(PhotoItem_ex.class.getClassLoader());
 		this.photoList = null;
 		if (parcelableArray != null) {
 			this.photoList = Arrays.copyOf(parcelableArray,

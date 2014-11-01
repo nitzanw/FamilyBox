@@ -6,9 +6,8 @@
     android:layout_height="116dp">
     <ImageView
         android:id="@+id/iv_photo_in_album"
-        android:src="@drawable/example_image_1"
+        android:src="@drawable/stub"
         android:scaleType="centerCrop"
-        android:layout_centerInParent="true"
         android:layout_width="116dp"
         android:layout_height="116dp" />
 

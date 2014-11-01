@@ -3,8 +3,7 @@ package com.wazapps.familybox.photos;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class PhotoItem implements Parcelable {
-
+public class PhotoItem implements Parcelable{
 	public String getDate() {
 		return date;
 	}
@@ -68,5 +67,4 @@ public class PhotoItem implements Parcelable {
 		dest.writeString(this.caption);
 
 	}
-
 }
