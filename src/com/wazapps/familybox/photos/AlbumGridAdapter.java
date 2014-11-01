@@ -75,8 +75,10 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 				Intent i = new Intent(context, PhotoAlbumScreenActivity.class);
 				Bundle args = new Bundle();
 				Album album = (Album) v.getTag(ALBUM_ITEM);
+				args.putInt(PhotoGridFragment.ALBUM_PHOTO_COUNT, album.getAlbumPhotoCount());
 				args.putString(PhotoGridFragment.ALBUM_ITEM_ID, album.getObjectId());
 				i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
+				
 				context.startActivity(i);
 			}
 		});

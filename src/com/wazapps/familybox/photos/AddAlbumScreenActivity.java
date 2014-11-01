@@ -45,21 +45,6 @@ public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		getMenuInflater().inflate(R.menu.menu_accept, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return ((AddAlbumFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.fragment_container))
-				.onOptionsItemSelected(item);
-
-	}
-
-	@Override
 	public void uploadPhotosToAlbum(String albumName, String albumDate,
 			String albumDesc, ArrayList<String> photoUrls) {
 		Intent photoIntent = new Intent();
