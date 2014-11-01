@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.InputHandler;
@@ -43,6 +44,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	private RoundedImageView mProfilePic;
 	private UserData mCurrentUser;
 	private UserData[] mFamilyList;
+	private boolean mIsCurrentFamily;
 	private TextView mFragTitle, mFragMsg, mFragMembers;
 	private LinearLayout mFamilyMembersHolder, mLoadingSpinner;
 	private FamilyQueryMemberListAdapter mFamilyListAdapter;
@@ -50,6 +52,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	
 	public static final String QUERY_FAMILIES_LIST = "query families list";
 	public static final String MEMBER_ITEM = "member item";
+	public static final String CURRENT_FAMILY = "is current family";
 	
 	public interface QueryHandlerCallback {
 		public void handleFamilyQuery();
@@ -118,6 +121,7 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 		if (args != null) {
 			mFamilyList = (UserData[]) args.getParcelableArray(QUERY_FAMILIES_LIST);	
 			mCurrentUser = args.getParcelable(MEMBER_ITEM);
+			mIsCurrentFamily = args.getBoolean(CURRENT_FAMILY);
 		} else {
 			LogUtils.logWarning(getTag(), "family query arguments did not pass");
 		}
@@ -127,12 +131,18 @@ public class FamilyQueryFragment extends Fragment implements OnClickListener {
 	public void onResume() {
 		super.onResume();
 		String firstName = mCurrentUser.getName();
-		String lastName = mCurrentUser.getLastName();
+		String lastName = (mIsCurrentFamily)? mCurrentUser.getLastName() :
+			mCurrentUser.getPreviousLastName();
 		Bitmap profilePic = mCurrentUser.getprofilePhoto();
 		firstName = InputHandler.capitalizeName(firstName);
 		lastName = InputHandler.capitalizeName(lastName);
-		mFragTitle.setText("Hi " + firstName + "!");
-		mFragMsg.setText("Your family name is " + lastName + ",");
+		
+		String titleMsg = (mIsCurrentFamily)? "Hi " : "Hey again ";
+		String secTitleMsg = (mIsCurrentFamily)? "Your family name is " 
+				: "Your previous family name is ";
+		
+		mFragTitle.setText(titleMsg + firstName + "!");
+		mFragMsg.setText(secTitleMsg + lastName + ",");
 		if (mFamilyList.length == 1) {
 			mFragMembers.setText("Is this your family member?");
 		}

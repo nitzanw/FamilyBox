@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:enabled="false"
                 android:paddingBottom="13dp"
-                android:textColor="@color/gray_signup_input_fields"
+                android:textColor="@color/black_overlay"
                 android:textSize="12sp" />
         </FrameLayout>
 
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:enabled="false"
                 android:paddingBottom="13dp"
-                android:textColor="@color/gray_signup_input_fields"
+                android:textColor="@color/black_overlay"
                 android:textSize="12sp" />
         </FrameLayout>
     </LinearLayout>
@@ -84,7 +84,7 @@
         android:hint="@string/edit_profile_nickname"
         android:inputType="textPersonName"
         android:paddingBottom="13dp"
-        android:textColor="@color/gray_signup_input_fields"
+        android:textColor="@color/black_overlay"
         android:textSize="12sp" />
 
     <LinearLayout
@@ -106,7 +106,7 @@
             android:hint="@string/edit_profile_previous_last_name"
             android:inputType="textPersonName"
             android:paddingBottom="13dp"
-            android:textColor="@color/gray_signup_input_fields"
+            android:textColor="@color/black_overlay"
             android:textSize="12sp" />
 
         <EditText
@@ -117,7 +117,7 @@
             android:hint="@string/edit_profile_middle_name"
             android:inputType="textPersonName"
             android:paddingBottom="13dp"
-            android:textColor="@color/gray_signup_input_fields"
+            android:textColor="@color/black_overlay"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -141,7 +141,7 @@
             android:hint="@string/edit_profile_phone_number"
             android:inputType="phone"
             android:paddingBottom="13dp"
-            android:textColor="@color/gray_signup_input_fields"
+            android:textColor="@color/black_overlay"
             android:textSize="12sp" />
 
         <EditText
@@ -152,7 +152,7 @@
             android:hint="@string/edit_profile_birthday"
             android:inputType="date"
             android:paddingBottom="13dp"
-            android:textColor="@color/gray_signup_input_fields"
+            android:textColor="@color/black_overlay"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -167,7 +167,7 @@
         android:hint="@string/edit_profile_address"
         android:inputType="textPostalAddress"
         android:paddingBottom="13dp"
-        android:textColor="@color/gray_signup_input_fields"
+        android:textColor="@color/black_overlay"
         android:textSize="12sp" />
 
     <TextView
@@ -201,4 +201,20 @@
         </LinearLayout>
     </HorizontalScrollView>
 
+    <LinearLayout 
+        android:id="@+id/ll_edit_progress_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="horizontal">
+        
+        <ProgressBar
+            android:id="@+id/pb_edit_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    
 </RelativeLayout>

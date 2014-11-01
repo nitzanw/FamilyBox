@@ -2,10 +2,12 @@ package com.wazapps.familybox.profiles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -24,15 +26,19 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
+import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
+import com.wazapps.familybox.profiles.EditProfileScreenActivity.PrevFamilyQueryCallback;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 
@@ -42,10 +48,8 @@ implements OnClickListener, OnFocusChangeListener {
 	public interface EditProfileCallback {
 		public void openBirthdayDialog();
 		public void openPhonePhotoBrowsing();
-	}
-	
-	public abstract class PrevFamilyQueryCallback {
-		public abstract void done(Exception e);
+		public void updateProfile(boolean prevFamilyUpdated, 
+				ParseUser user);
 	}
 
 	public static final String EDIT_PROFILE_FRAG = "edit profile fragment";
@@ -61,34 +65,21 @@ implements OnClickListener, OnFocusChangeListener {
 	private EditText mPhoneNumber;
 	private EditText mBirthday;
 	private EditText mAddress;
-	private LinearLayout mFamilyListHolder;
+	private LinearLayout mFamilyListHolder, mEditProfileProgress;
 	private UserHandler userHandler;
 
+	//user data fields
 	private ArrayList<UserData> mFamilyMembersData = null;
 	private ArrayList<ParseUser> mFamilyMembers = null;
-	private byte[] profilePictureData = null;
-	private UserData mCurrentUserData;
 	private ParseUser mCurrentUser;
+	private UserData mCurrentUserData;
 	String profilePictureName;
+	private byte[] profilePictureData = null;
 	private boolean pictureUpdated = false;
 
 	private EditProfileFamilyListAdapter mFamilyListAdapter;
 	private EditProfileCallback editCallback;
-	private PrevFamilyQueryCallback familyQueryCallback = null;
 
-	private void initCallbackFunctions() {
-		this.familyQueryCallback = new PrevFamilyQueryCallback() {
-			@Override
-			public void done(Exception e) {
-				if (e == null) {
-					mCurrentUser.saveEventually();								
-				}							
-				
-				getActivity().finish();	
-			}
-		};
-	}
-	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -105,7 +96,6 @@ implements OnClickListener, OnFocusChangeListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
-		initCallbackFunctions();
 		userHandler = new UserHandler();
 		mCurrentUser = ParseUser.getCurrentUser();
 		if (mCurrentUser == null) {
@@ -118,7 +108,7 @@ implements OnClickListener, OnFocusChangeListener {
 		mFamilyMembersData = new ArrayList<UserData>();	
 		setHasOptionsMenu(true);
 	}
-	
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -145,6 +135,9 @@ implements OnClickListener, OnFocusChangeListener {
 				root.findViewById(R.id.et_edit_profile_address);
 		mFamilyListHolder = (LinearLayout) root
 				.findViewById(R.id.ll_family_members_list_holder);
+		mEditProfileProgress = (LinearLayout) root
+				.findViewById(R.id.ll_edit_progress_spinner);
+		
 
 		initViews();
 		initFamilyListView();
@@ -180,10 +173,17 @@ implements OnClickListener, OnFocusChangeListener {
 			String address = mCurrentUserData.getAddress();
 			Bitmap photo = mCurrentUserData.getprofilePhoto();
 
+			int disabledColor = getResources().getColor(R.color.orange_fb);
 			mName.setText(firstName);
+			mName.setTextColor(disabledColor);
 			mCurrentFamilyName.setText(lastName);
+			mCurrentFamilyName.setTextColor(disabledColor);
 			mNickname.setText(nickName);
 			mPreviousFamilyName.setText(prevLastName);
+			if (!prevLastName.equals("")) {
+				mPreviousFamilyName.setEnabled(false);
+				mPreviousFamilyName.setTextColor(disabledColor);
+			}
 			mMiddleName.setText(middleName);
 			mPhoneNumber.setText(phoneNumber);
 			mBirthday.setText(birthday);
@@ -220,7 +220,7 @@ implements OnClickListener, OnFocusChangeListener {
 	private void handleUserEdit() {
 		boolean detailsUpdated = false;
 		boolean prevFamilyUpdated = false;
-		
+
 		String nickname = mNickname.getText().toString()
 				.toLowerCase().trim();
 		String prevLastName = mPreviousFamilyName.getText().toString()
@@ -230,48 +230,49 @@ implements OnClickListener, OnFocusChangeListener {
 		String phoneNumber = mPhoneNumber.getText().toString().trim();
 		String birthday = mBirthday.getText().toString();
 		String address = mAddress.getText().toString().toLowerCase().trim();
-		
+
 		if (!mCurrentUserData.getNickname().equals(nickname)) {
 			detailsUpdated = true;
 			mCurrentUser.put(UserHandler.NICKNAME_KEY, nickname);
 		}
-		
+
 		if (!mCurrentUserData.getPreviousLastName().equals(prevLastName)) {
 			detailsUpdated = true;
 			prevFamilyUpdated = true;
 			mCurrentUser.put(UserHandler.PREV_LAST_NAME_KEY, prevLastName);
 		}
-		
+
 		if (!mCurrentUserData.getMiddleName().equals(middleName)) {
 			detailsUpdated = true;
 			mCurrentUser.put(UserHandler.MIDDLE_NAME_KEY, middleName);
 		}
-		
+
 		if (!mCurrentUserData.getPhoneNumber().equals(phoneNumber)) {
 			detailsUpdated = true;
 			mCurrentUser.put(UserHandler.PHONE_NUMBER_KEY, phoneNumber);
 		}
-		
+
 		if (!mCurrentUserData.getBirthday().equals(birthday)) {
 			detailsUpdated = true;
 			mCurrentUser.put(UserHandler.BIRTHDATE_KEY, birthday);
 		}
-		
+
 		if (!mCurrentUserData.getAddress().equals(address)) {
 			detailsUpdated = true;
 			mCurrentUser.put(UserHandler.ADDRESS_KEY, address);
 		}
-		
+
 		//if a new photo was uploaded
 		if (pictureUpdated) {
 			ParseFile profilePic = new ParseFile(
 					profilePictureName, profilePictureData);
-			
+
 			profilePic.saveInBackground(new SaveCallback() {
 				EditProfileFragment frag;
 				ParseFile profilePic;
 				boolean prevFamilyUpdated;
-				
+				boolean detailsUpdated;
+
 				@Override
 				public void done(ParseException e) {
 					if (e == null) {
@@ -280,45 +281,44 @@ implements OnClickListener, OnFocusChangeListener {
 								profilePic);
 					} 
 					
-					handleFamilyquery(prevFamilyUpdated, 
-							frag.familyQueryCallback);					
+					if (detailsUpdated) {
+						frag.editCallback.updateProfile(prevFamilyUpdated, 
+								frag.mCurrentUser);				
+					} 
+					
+					else {
+						getActivity().finish();
+					}
 				}
-				
+
 				private SaveCallback init(EditProfileFragment frag, 
-						ParseFile profilePic, boolean prevFamilyUpdated) {
+						ParseFile profilePic, boolean prevFamilyUpdated,
+						boolean detailsUpdated) {
 					this.frag = frag;
 					this.profilePic = profilePic;
 					this.prevFamilyUpdated = prevFamilyUpdated;
+					this.detailsUpdated = detailsUpdated;
 					return this;
 				}
-			}.init(this, profilePic, prevFamilyUpdated));
+			}.init(this, profilePic, prevFamilyUpdated, detailsUpdated));
 		} 
-		
+
 		//if no new photo was uploaded but details were updated
 		else if (detailsUpdated) {
-			handleFamilyquery(prevFamilyUpdated, familyQueryCallback);
+			editCallback.updateProfile(prevFamilyUpdated, mCurrentUser);
 		} 
-		
+
 		//otherwise - if no new data was updated
 		else {
 			getActivity().finish();
 		}
 	}
 	
-	public void handleFamilyquery(boolean prevFamilyUpdated, 
-			PrevFamilyQueryCallback callbackFunc) {
-		if (!prevFamilyUpdated) {
-			callbackFunc.done(null);			
-		} else {
-			
-		}
-	}
 	
-
 	public void setDate(String date) {
 		mBirthday.setText(date);
 	}
-	
+
 	public void setProfileImage(Bitmap bitmap, byte[] fileData, 
 			String filename) {
 		mEditImage.setImageBitmap(bitmap);
@@ -364,5 +364,13 @@ implements OnClickListener, OnFocusChangeListener {
 		default:
 			break;
 		}
+	}
+	
+	public void turnOnProgress() {
+		mEditProfileProgress.setVisibility(View.VISIBLE);
+	}
+	
+	public void turnOffProgress() {
+		mEditProfileProgress.setVisibility(View.GONE);
 	}
 }

@@ -151,10 +151,6 @@ public class EmailSignupFragment extends Fragment implements OnClickListener,
 			pwContent = password.getText().toString().trim();
 			pwConfirmContent = passwordConfirm.getText().toString().trim();
 
-			// TODO: set a method for clearing problematic text fields (probably
-			// using
-			// exceptions or function return value
-
 			signupCallback.signUp(firstNameContent, lastNameContent,
 					emailContent, birthdayContent, genderContent, pwContent,
 					pwConfirmContent, profilePictureData, profilePictureName);
