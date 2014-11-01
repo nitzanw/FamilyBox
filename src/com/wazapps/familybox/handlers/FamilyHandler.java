@@ -35,6 +35,11 @@ public class FamilyHandler {
 		query.whereEqualTo(NETWORK_KEY, networkId);
 		query.findInBackground(callbackFunc);
 	}
+	
+	public static void getFamilyById(String familyId, GetCallback<ParseObject> callbackFunc) {
+		ParseQuery<ParseObject> query = ParseQuery.getQuery(FAMILY_CLASS_NAME);
+		query.getInBackground(familyId, callbackFunc);
+	}
 		
 	public static void createNewFamilyForUser(ParseUser user,
 			final boolean isCurrentFamily, ParseObject newFamily, 

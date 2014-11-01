@@ -210,30 +210,20 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		if (item.getItemId() == R.id.logout) {
-			ParseUser currUser = ParseUser.getCurrentUser();
-			if (currUser != null) {
-				ParseUser.logOut();
-				ParseUser.unpinAllInBackground("UserFamilyMembers");
-				ParseObject.unpinAllInBackground("UserFamily");
-				Intent logoutIntent = new Intent(MainActivity.this,
-						LoginActivity.class);
-				logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
-				startActivity(logoutIntent);
-				finish();
-			}
-		} else if (item.getItemId() == R.id.password) {
-
+			logUserOut();
+		} 
+		
+		else if (item.getItemId() == R.id.password) {
 			ChangePasswordDialogFragment changePw = new ChangePasswordDialogFragment();
 			changePw.show(getSupportFragmentManager(),
 					ChangePasswordDialogFragment.CHANGE_PASSWORD_DIALOG_FRAG);
-		} else if (item.getItemId() == R.id.about) {
-
+		} 
+		
+		else if (item.getItemId() == R.id.about) {
 			AboutFragment aboutFrag = new AboutFragment();
 			aboutFrag.show(getSupportFragmentManager(),
 					AboutFragment.ABOUT_DIALOG_FRAG);
 		}
-		// Handle your other action bar items...
-
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -328,10 +318,15 @@ public class MainActivity extends FragmentActivity implements
 								.closeDrawer(activity.mDrawerList);
 
 					} else {
-						// TODO: handle error
 						LogUtils.logError("MainActivity", e.getMessage());
 						activity.mDrawerLayout
 								.closeDrawer(activity.mDrawerList);
+						
+						Toast.makeText(getApplicationContext(), 
+								"connection error. log in again", 
+								Toast.LENGTH_SHORT).show();
+						
+						logUserOut();
 					}
 
 				}
@@ -345,15 +340,20 @@ public class MainActivity extends FragmentActivity implements
 			break;
 
 		case MY_FAMILY_PROFILE_POS:
-			FragmentTransaction ft = getSupportFragmentManager()
-					.beginTransaction();
+			Bundle data = new Bundle();
+			data.putBoolean(FamilyProfileFragment.USER_FAMILY, true);
+			FamilyProfileFragment frag = new FamilyProfileFragment();
+			frag.setArguments(data);
+		
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 			ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
-			ft.replace(R.id.fragment_container, new FamilyProfileFragment(),
+			ft.replace(R.id.fragment_container, frag,
 					FamilyProfileFragment.FAMILY_PROFILE_FRAG);
 			ft.commit();
 			this.mDrawerLayout.closeDrawer(this.mDrawerList);
-
+			
 			break;
+			
 		case FAMILY_TREE_POS:
 			FragmentTransaction ft2 = getSupportFragmentManager()
 					.beginTransaction();
@@ -603,5 +603,20 @@ public class MainActivity extends FragmentActivity implements
 
 			}
 		}
+	}
+	
+	public void logUserOut() {
+		ParseUser currUser = ParseUser.getCurrentUser();
+		if (currUser != null) {
+			ParseUser.logOut();			
+			ParseUser.unpinAllInBackground("UserFamilyMembers");
+			ParseObject.unpinAllInBackground("UserFamily");
+		}	
+			
+			Intent logoutIntent = new Intent(MainActivity.this,
+					LoginActivity.class);
+			logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
+			startActivity(logoutIntent);
+			finish();
 	}
 }
