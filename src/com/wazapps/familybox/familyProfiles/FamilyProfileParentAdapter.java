@@ -32,19 +32,16 @@ public class FamilyProfileParentAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-
 		return parentList.length;
 	}
 
 	@Override
 	public Object getItem(int position) {
-
 		return parentList[position];
 	}
 
 	@Override
 	public long getItemId(int position) {
-
 		return Long.valueOf(parentList[position].getUserId());
 	}
 
@@ -62,7 +59,6 @@ public class FamilyProfileParentAdapter extends BaseAdapter {
 		}
 
 		initParentView(position, v);
-
 		return v;
 	}
 

@@ -4,10 +4,13 @@ import java.util.Arrays;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.support.v4.app.FragmentActivity;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -80,40 +83,29 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 			image.setBackgroundColor(activity.getResources().getColor(
 					android.R.color.transparent));	
 		}
-
-		ImageView connector1 = (ImageView) v
-				.findViewById(R.id.iv_family_profile_children_connector_1);
-		ImageView connector2 = (ImageView) v
-				.findViewById(R.id.iv_family_profile_children_connector_2);
-
-		// remove the connectors according to the position in the list
-		if (position == 0) {
-			connector1.setVisibility(View.GONE);
-		} else {
-			connector1.setVisibility(View.VISIBLE);
-		}
 		
-		if (position == childrenList.length - 1) {
-			connector2.setVisibility(View.GONE);
-		} else {
-			connector2.setVisibility(View.VISIBLE);
-		}
+		Display display = activity.getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int width = size.x;
 		
+		v.measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		int viewWidth = v.getMeasuredWidth();
 		//add padding to first element according to 
 		//the number of children in the list
 		if (position == 0) {
 			switch (childrenList.length) {
 			case 1:
-				v.setPadding(300, 0, 0, 0);
+				v.setPadding((width / 2) - (viewWidth/2), 0, 0, 0);
 				break;
 				
 			case 2:
-				v.setPadding(175, 0, 0, 0);
+				v.setPadding((width / 3) - (viewWidth/3), 0, 0, 0);
 				break;
 				
 
 			default:
-				v.setPadding(51, 0, 0, 0);
+				v.setPadding((width / 5) - (viewWidth/2) + (width / 62), 0, 0, 0);
 				break;
 			}
 		}

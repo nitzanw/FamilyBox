@@ -3,6 +3,7 @@ package com.wazapps.familybox.familyProfiles;
 import java.util.ArrayList;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,13 +11,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.InputHandler;
@@ -33,6 +37,7 @@ import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.ProfileScreenActivity;
 import com.wazapps.familybox.profiles.UserData;
 import com.wazapps.familybox.util.LogUtils;
+import com.wazapps.familybox.util.RoundedImageView;
 
 public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private static final int ITEM_TYPE = R.string.type;
@@ -51,16 +56,22 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private static final String FAMILY_ID = "family id";
 	private static final String FAMILY_NAME = "family name";
 
+	//fragment views
 	private View root;
+	private LinearLayout mParentLayoutRight, mParentLayoutLeft, mParentLayoutCenter; 
+	private LinearLayout mPhotoAlbumsHolder, mChildrenHolder;
+	private RelativeLayout mSingleMember;
+	private TextView mFamilyTitle, mFamilyParentsTitle, mFamilyChildrenTitle;
+	private RoundedImageView mSingleMemberPhoto;
+	private TextView mSingleMemberName;
+	private ImageView noChildrenCover;
+	
+	//adapters
 	private FamilyProfileParentAdapter mParentAdapter;
-	private LinearLayout mParentLayoutRight, mParentLayoutLeft, 
-							mPhotoAlbumsHolder, mChildrenHolder;
 	private FamilyProfileChildAdapter mChildrenAdapter;
 	private FamilyProfileAlbumAdapter mAlbumsAdapter;
-	private TextView mFamilyTitle;
 	
-	//family data
-	private FamilyMemberDetails[] mParentsList2, mChildrenList2;
+	//family profile data
 	private ArrayList<ParseUser> mFamilyMembers = null;
 	private ArrayList<UserData> mFamilyMembersData = null, 
 			mChildrenList = null, mParentsList = null;
@@ -70,6 +81,9 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private ParseUser mLoggedUser = null;
 	private ParseObject mCurrentFamily = null;
 	private String mFamilyId, mFamilyName;
+	private FamilyMemberDetails[] mParentsList2;
+	private FamilyMemberDetails[] mChildrenList2;
+	private ImageView noParentsCover;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -117,12 +131,37 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 
 		mParentLayoutLeft = (LinearLayout) root
 				.findViewById(R.id.ll_family_profile_parent_left);
+		
+		mParentLayoutCenter = (LinearLayout) root
+				.findViewById(R.id.ll_family_profile_parent_center);
 
 		mChildrenHolder = (LinearLayout) root
 				.findViewById(R.id.ll_family_profile_children_holder);
 
 		mPhotoAlbumsHolder = (LinearLayout) root
 				.findViewById(R.id.ll_family_profile_album_holder);
+		
+		mSingleMember = (RelativeLayout) root
+				.findViewById(R.id.rl_family_profile_single_member);
+		
+		mSingleMemberPhoto = (RoundedImageView) root
+				.findViewById(R.id.riv_family_profile_single_member_pic);
+		
+		mSingleMemberName = (TextView) root
+				.findViewById(R.id.tv_family_profile_single_member_name);
+		
+		mFamilyParentsTitle = (TextView) root
+				.findViewById(R.id.tv_family_profile_parents);
+		
+		mFamilyChildrenTitle = (TextView) root
+				.findViewById(R.id.tv_family_profile_children);
+		
+		noChildrenCover = (ImageView) root
+				.findViewById(R.id.iv_family_profile_no_children);
+		
+		noParentsCover = (ImageView) root
+				.findViewById(R.id.iv_family_profile_no_parents);
+		
 		
 		if (mIsUserFamily) {
 			mFamilyId = mLoggedUser.getString(UserHandler.FAMILY_KEY);
@@ -193,17 +232,42 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		mParentsList = new ArrayList<UserData>();
 		mChildrenList = new ArrayList<UserData>();
 		
-		for (UserData member : mFamilyMembersData) {
-			if (member.getRole().equals(UserData.ROLE_PARENT)) {
-				mParentsList.add(member);
-			} else {
-				mChildrenList.add(member);
-			}
+		if (mFamilyMembersData.size() == 1) {
+			initSingleMemberView();
 		}
 		
-		initParentsLevelView();
-		initChildrenLevelView();
-		initAlbumsListView();
+		else {
+			for (UserData member : mFamilyMembersData) {
+				if (member.getRole().equals(UserData.ROLE_PARENT)) {
+					mParentsList.add(member);
+				} else {
+					mChildrenList.add(member);
+				}
+			}
+			
+			initParentsLevelView();
+			initChildrenLevelView();
+		}
+		
+		initAlbumsListView();			
+	}
+	
+	private void initSingleMemberView() {
+		mSingleMember.setVisibility(View.VISIBLE);
+		UserData member = mFamilyMembersData.get(0);
+		Bitmap photo = member.getprofilePhoto();
+		String name = InputHandler.capitalizeName(member.getName());
+		
+		mSingleMemberName.setText(name + 
+				" is the only member of this family");
+		
+		if (photo != null) {
+			mSingleMemberPhoto.setImageBitmap(photo);
+			mSingleMemberPhoto.setBackgroundColor(getResources().getColor(
+					android.R.color.transparent));	
+		}
+		
+		mSingleMemberPhoto.setOnClickListener(this);
 	}
 
 	private void initParentsLevelView() {
@@ -212,16 +276,42 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 				getActivity(), mParentsList.toArray(
 						new UserData[mParentsList.size()]));
 		int mParentsListSize = mParentsList.size();
-		if (mParentsListSize > 0) {
-			initParentView(mParentLayoutRight, 0);			
-		}
-		
-		if (mParentsListSize > 1) {
+		if (mParentsListSize == 0) {
+			mFamilyParentsTitle.setVisibility(View.GONE);
+			noParentsCover.setVisibility(View.VISIBLE);
+		} else if (mParentsListSize == 1) {
+			mParentLayoutCenter.setVisibility(View.VISIBLE);
+			mParentLayoutLeft.setVisibility(View.GONE);
+			mParentLayoutRight.setVisibility(View.GONE);
+			initParentView(mParentLayoutCenter, 0);	
+		} else {
+			initParentView(mParentLayoutRight, 0);
 			initParentView(mParentLayoutLeft, 1);			
 		}
 	}
 	
+	/**
+	 * Initialize the parent's view
+	 * @param base - the holder view
+	 * @param position - the parent's position (left / right)
+	 */
+	private void initParentView(LinearLayout base, int position) {
+		View v = mParentAdapter.getView(position, null, (ViewGroup) getView());
+		v.setTag(ITEM_TYPE, FAMILY_MEMBER_ITEM_TYPE);
+		v.setTag(FAMILY_MEMBER_TYPE, FAMILY_MEMBER_PARENT_TYPE);
+		v.setTag(ITEM_POS, position);
+		v.setOnClickListener(this);
+		base.addView(v);
+	}
+	
 	private void initChildrenLevelView() {
+		//if the family does not have any child members
+		if (mChildrenList.size() == 0) {
+			mFamilyChildrenTitle.setVisibility(View.GONE);
+			noChildrenCover.setVisibility(View.VISIBLE);
+			return;
+		} 
+		
 		// init the children list view
 		mChildrenAdapter = new FamilyProfileChildAdapter(
 				getActivity(), mChildrenList.toArray(
@@ -256,40 +346,22 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	/**
-	 * Initialize the parent's view
-	 * @param base - the holder view
-	 * @param position - the parent's position (left / right)
-	 */
-	private void initParentView(LinearLayout base, int position) {
-		View v = mParentAdapter.getView(position, null, (ViewGroup) getView());
-		v.setTag(ITEM_TYPE, FAMILY_MEMBER_ITEM_TYPE);
-		v.setTag(FAMILY_MEMBER_TYPE, FAMILY_MEMBER_PARENT_TYPE);
-		v.setTag(ITEM_POS, position);
-		v.setOnClickListener(this);
-		base.addView(v);
-	}
-
 	@Override
 	public void onClick(View v) {
 		//if the currently clicked item is a family member profile
 		if (FAMILY_MEMBER_ITEM_TYPE.equals(v.getTag(ITEM_TYPE))) {
-			Intent profileIntent = new Intent(getActivity(),
-					ProfileScreenActivity.class);
 			Bundle args = new Bundle();
 			int pos = (Integer) v.getTag(ITEM_POS); 
-			//get family members list and currently clicked member
-			//TODO: get real data and remove these
-			ArrayList<FamilyMemberDetails> familyMembers = 
-					createFamilyList(pos, (String) v.getTag(FAMILY_MEMBER_TYPE));
-
-			FamilyMemberDetails clickedUserDetails = 
-					getMemberItem((String) v.getTag(FAMILY_MEMBER_TYPE), pos);
-
-			args.putParcelable(ProfileFragment.MEMBER_ITEM, clickedUserDetails);			
-			args.putParcelableArrayList(ProfileScreenActivity.FAMILY_MEMBER_ARRAY_LIST, familyMembers);
-			profileIntent.putExtra(ProfileFragment.PROFILE_DATA, args);
-			getActivity().startActivity(profileIntent);
+			UserData clickedMember = getMemberItem((String) 
+					v.getTag(FAMILY_MEMBER_TYPE), pos);
+			if (clickedMember.getUserId().equals(mLoggedUser.getObjectId())) {
+				args.putBoolean(ProfileFragment.USER_PROFILE, true);				
+			} else {
+				args.putBoolean(ProfileFragment.USER_PROFILE, false);
+				args.putParcelable(ProfileFragment.MEMBER_ITEM, clickedMember);
+			}
+			MainActivity activity = (MainActivity) getActivity();
+			activity.addProfileFragment(args);
 		} 
 
 		//if the currently clicked item is a photo album
@@ -306,63 +378,19 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	/**
-	 * This will be removed
-	 */
-	private FamilyMemberDetails getMemberItem(String type, int pos) {
-		//TODO: get real data and remove this function
+	private UserData getMemberItem(String type, int pos) {
 		if (FAMILY_MEMBER_PARENT_TYPE.equals(type)) {
-			return mParentsList2[pos];
+			return mParentsList.get(pos);
 		} 
 
 		else if (FAMILY_MEMBER_CHILD_TYPE.equals(type)) {
-			return mChildrenList2[pos];
+			return mChildrenList.get(pos);
 		} 
 
 		else {
 			LogUtils.logWarning(getTag(), "bad family member type entered");
 			return null;
 		}
-	}
-
-	/**
-	 * This will be removed
-	 * @param pos
-	 * @param type
-	 * @return
-	 */
-	private ArrayList<FamilyMemberDetails> createFamilyList(int pos, String type) {
-		//TODO: add real data and remove this function
-		ArrayList<FamilyMemberDetails> familyMembers = new ArrayList<FamilyMemberDetails>();
-		if (FAMILY_MEMBER_PARENT_TYPE.equals(type)) {
-			for (int i = 0; i < mChildrenList2.length; i++) {
-				familyMembers.add(mChildrenList2[i]);
-			}
-
-			for (int j = 0; j < mParentsList2.length; j++) {
-				if (j != pos) {
-					familyMembers.add(mParentsList2[j]);
-				}
-			}
-		} 
-
-		else if (FAMILY_MEMBER_CHILD_TYPE.equals(type)) {
-			for (int i = 0; i < mChildrenList2.length; i++) {
-				if (i != pos) {
-					familyMembers.add(mChildrenList2[i]);
-				}
-			}
-
-			for (int j = 0; j < mParentsList2.length; j++) {
-				familyMembers.add(mParentsList2[j]);
-			}
-		} 
-
-		else {
-			LogUtils.logWarning(getTag(), "bad family member type entered");
-		}
-
-		return familyMembers;
 	}
 
 	private void initAlbumListData() {
