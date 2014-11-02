@@ -1,9 +1,11 @@
 package com.wazapps.familybox.photos;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
 import com.wazapps.familybox.util.LogUtils;
 
 public class PhotoFragment extends Fragment {
@@ -25,6 +28,15 @@ public class PhotoFragment extends Fragment {
 	private View root;
 	private ImageView mImage;
 	private String photoItemId;
+	private String caption = "";
+
+
+
+	// @Override
+	// public void onResume() {
+	// super.onResume();
+	// captionCallback.setCaption(caption);
+	// }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +59,8 @@ public class PhotoFragment extends Fragment {
 						@Override
 						public void done(PhotoItem_ex object, ParseException e) {
 							if (e == null) {
+//								caption = object.getCaption();
+//								captionCallback.setCaption(object.getCaption(), object.getObjectId());
 								ParseFile photoFile = object.getPhotoFile();
 
 								if (photoFile != null) {
@@ -77,7 +91,6 @@ public class PhotoFragment extends Fragment {
 
 		return root;
 	}
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

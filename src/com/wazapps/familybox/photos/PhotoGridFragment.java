@@ -55,15 +55,18 @@ public class PhotoGridFragment extends Fragment {
 				// int photoPos = (Integer) v.getTag(PHOTO_POS);
 				Bundle args = new Bundle();
 				args.putInt(PhotoPagerFragment.PHOTO_FIRST_POS, position);
-				args.putString(PhotoPagerFragment.PHOTO_ID,
-						mAdapter.getItem(position).getObjectId());
+
 				ArrayList<String> photoItemsIdList = new ArrayList<String>();
+				ArrayList<String> photoItemsCaptionList = new ArrayList<String>();
 				for (int i = 0; i < albumSize; i++) {
 					photoItemsIdList.add(mAdapter.getItem(i).getObjectId());
+					photoItemsCaptionList.add(mAdapter.getItem(i).getCaption());
 				}
-				args.putString(PhotoPagerFragment.PHOTO_ALBUM_ID, albumId);
+				
 				args.putStringArrayList(PhotoPagerFragment.PHOTO_ITEM_LIST,
 						photoItemsIdList);
+				args.putStringArrayList(PhotoPagerFragment.PHOTO_ITEM_CAPTION_LIST,
+						photoItemsCaptionList);
 				photoIntent.putExtra(PhotoPagerActivity.PHOTO_BUNDLE, args);
 				startActivity(photoIntent);
 
