@@ -15,9 +15,9 @@ import com.wazapps.familybox.R;
 
 //a class that hold all photo albums data
 @ParseClassName("Album")
-public class Album extends ParseObject{
+public class Album extends ParseObject {
 
-	int photoListSize;
+	private int photoListSize;
 	private int upLoadPhotoCounter;
 	private Context context;
 
@@ -30,9 +30,16 @@ public class Album extends ParseObject{
 		this.photoListSize = photoListSize;
 	}
 
-	
 	public String getAlbumFamily() {
 		return getString("family");
+	}
+
+	public int getAlbumPhotoCount() {
+		return getInt("albumPhotoCount");
+	}
+
+	public void setAlbumPhotoCount(int albumPhotoCount) {
+		put("albumPhotoCount", albumPhotoCount);
 	}
 
 	public String getAlbumName() {
@@ -101,4 +108,6 @@ public class Album extends ParseObject{
 			toast.show();
 		}
 	}
+
+
 }

@@ -1,5 +1,7 @@
 package com.wazapps.familybox.photos;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -19,16 +21,22 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.LogUtils;
 
 public class PhotoPagerFragment extends Fragment implements OnClickListener {
 	protected static final String PHOTO_FIRST_POS = "first photo pos";
 	protected static final String PHOTO_ITEM_LIST = "photo list";
 	protected static final String PHOTO_PAGER_FRAG = "photo pager dialog";
+	protected static final String PHOTO_ALBUM_ID = "photo album id";
+	protected static final String PHOTO_ID = "photo id";
 	static ViewPager mPager;
 	private View root;
 	private PhotoPagerAdapter mAdapter;
-	private PhotoItem[] photoList;
+
 	private int currentPosition;
 	private RelativeLayout mImageFrame;
 	private TextView mImageCaption;
@@ -38,6 +46,9 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 	private ImageView mAcceptEdit;
 	private EditText mImageEditCaption;
 	private boolean onPageScrollStateChanged = false;
+	private String albumId;
+	private String firstPhotoId;
+	private ArrayList<String> photoIdList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,15 +56,18 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 
 		Bundle args = getArguments();
 		if (args != null) {
-
-			Parcelable[] ps = (Parcelable[]) args
-					.getParcelableArray(PHOTO_ITEM_LIST);
-			photoList = new PhotoItem[ps.length];
-			System.arraycopy(ps, 0, photoList, 0, ps.length);
+			photoIdList = args.getStringArrayList(PHOTO_ITEM_LIST);
+			albumId = args.getString(PHOTO_ALBUM_ID);
+			firstPhotoId = args.getString(PHOTO_ID);
 			currentPosition = args.getInt(PHOTO_FIRST_POS);
-		}
-		mAdapter = new PhotoPagerAdapter(getChildFragmentManager(), photoList);
 
+		}
+		if (!photoIdList.isEmpty()) {
+			mAdapter = new PhotoPagerAdapter(getChildFragmentManager(),
+					photoIdList);
+		} else {
+			LogUtils.logError(getTag(), "the photo id list is empty!!!");
+		}
 	}
 
 	@Override
@@ -72,9 +86,41 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 
 			@Override
 			public void onPageScrolled(int position, float arg1, int arg2) {
-				currentPosition = position;
-				mImageCaption.setText(photoList[currentPosition].getCaption());
-
+//				currentPosition = position;
+//				ParseQuery<PhotoItem_ex> query = ParseQuery
+//						.getQuery(PhotoItem_ex.class);
+//
+//				query.getInBackground(photoIdList.get(position),
+//						new GetCallback<PhotoItem_ex>() {
+//
+//							@Override
+//							public void done(PhotoItem_ex object,
+//									ParseException e) {
+//								if (null == e) {
+//									object.fetchIfNeededInBackground(new GetCallback<PhotoItem_ex>() {
+//
+//										@Override
+//										public void done(PhotoItem_ex object,
+//												ParseException e) {
+//											if (e == null) {
+//												if (object.getObjectId() == photoIdList
+//														.get(currentPosition)) {
+//													mImageCaption.setText(object
+//															.getCaption());
+//												}
+//											} else {
+//												LogUtils.logError(getTag(),
+//														e.getMessage());
+//											}
+//
+//										}
+//									});
+//								} else {
+//									LogUtils.logError(getTag(), e.getMessage());
+//								}
+//
+//							}
+//						});
 			}
 
 			@Override
@@ -127,9 +173,24 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 		makeFrameDisappear(3000);
 		mImageEditCaption = (EditText) root
 				.findViewById(R.id.et_image_caption_edit);
-		mImageEditCaption.setText(photoList[currentPosition].getCaption());
 		mImageCaption = (TextView) root.findViewById(R.id.tv_image_caption);
-		mImageCaption.setText(photoList[currentPosition].getCaption());
+
+		// set the image caption
+		ParseQuery<PhotoItem_ex> query = ParseQuery
+				.getQuery(PhotoItem_ex.class);
+		query.getInBackground(photoIdList.get(currentPosition),
+				new GetCallback<PhotoItem_ex>() {
+
+					@Override
+					public void done(PhotoItem_ex object, ParseException e) {
+						if (e == null) {
+							mImageCaption.setText(object.getCaption());
+							mImageEditCaption.setText(object.getCaption());
+						} else {
+							LogUtils.logError(getTag(), e.getMessage());
+						}
+					}
+				});
 
 		return root;
 	}
@@ -170,13 +231,26 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (R.id.ib_right_arrow == v.getId()) {
-			if (currentPosition == photoList.length - 1) {
+			if (currentPosition == photoIdList.size() - 1) {
 				return;
 			} else {
 				currentPosition++;
 			}
 			mPager.setCurrentItem(currentPosition);
-			mImageCaption.setText(photoList[currentPosition].getCaption());
+
+			ParseQuery<PhotoItem_ex> query = ParseQuery
+					.getQuery(PhotoItem_ex.class);
+			query.getInBackground(photoIdList.get(currentPosition),
+					new GetCallback<PhotoItem_ex>() {
+
+						@Override
+						public void done(PhotoItem_ex object, ParseException e) {
+							// TODO Auto-generated method stub
+							mImageCaption.setText(object.getCaption());
+
+						}
+					});
+
 		} else if (R.id.ib_left_arrow == v.getId()) {
 			if (currentPosition == 0) {
 				return;
@@ -184,7 +258,18 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 				currentPosition--;
 			}
 			mPager.setCurrentItem(currentPosition);
-			mImageCaption.setText(photoList[currentPosition].getCaption());
+			ParseQuery<PhotoItem_ex> query = ParseQuery
+					.getQuery(PhotoItem_ex.class);
+			query.getInBackground(photoIdList.get(currentPosition),
+					new GetCallback<PhotoItem_ex>() {
+
+						@Override
+						public void done(PhotoItem_ex object, ParseException e) {
+							// TODO Auto-generated method stub
+							mImageCaption.setText(object.getCaption());
+
+						}
+					});
 		} else if (R.id.iv_favorite_icon == v.getId()) {
 			// TODO add to favorite album
 
@@ -200,7 +285,27 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			String text = mImageEditCaption.getText().toString();
 			if (!TextUtils.isEmpty(text)) {
 
-				photoList[currentPosition].setCaption(text);
+				ParseQuery<PhotoItem_ex> query = ParseQuery
+						.getQuery(PhotoItem_ex.class);
+				query.getInBackground(photoIdList.get(currentPosition),
+						new GetCallback<PhotoItem_ex>() {
+
+							private String text;
+
+							@Override
+							public void done(PhotoItem_ex object,
+									ParseException e) {
+								// TODO Auto-generated method stub
+								mImageCaption.setText(object.getCaption());
+								object.setObjectId(text);
+							}
+
+							GetCallback<PhotoItem_ex> init(String text) {
+								this.text = text;
+								return this;
+							}
+						}.init(text));
+
 				mImageCaption.setText(text);
 			}
 			mEditButton.setVisibility(View.VISIBLE);

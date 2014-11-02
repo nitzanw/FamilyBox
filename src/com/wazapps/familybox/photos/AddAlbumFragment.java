@@ -83,10 +83,17 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		setHasOptionsMenu(true);
 		rootView = (ViewGroup) inflater.inflate(R.layout.fragment_add_album,
 				null);
 		initViews();
 		return rootView;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_accept, menu);
+
 	}
 
 	private void initViews() {

@@ -501,6 +501,7 @@ public class MainActivity extends FragmentActivity implements
 		if (currentUser == null) {
 			currentUser = ParseUser.getCurrentUser();
 		}
+		album.setAlbumPhotoCount(photoUrls.size());
 		album.setFamily((String) currentUser.get(UserHandler.FAMILY_KEY));
 		album.setAlbumName(albumName);
 		album.setAlbumDate(albumDate);

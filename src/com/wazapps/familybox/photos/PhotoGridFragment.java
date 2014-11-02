@@ -1,5 +1,6 @@
 package com.wazapps.familybox.photos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
@@ -24,10 +25,13 @@ public class PhotoGridFragment extends Fragment {
 	public static final String ALBUM_ITEM = "album item";
 	public static final String ALBUM_ITEM_LIST = "album items list";
 	protected static final String ALBUM_ITEM_ID = "album id";
+	protected static final String ALBUM_PHOTO_COUNT = "album photo count";
 	private View root;
 	private GridView mGridview;
 	private PhotoGridAdapter mAdapter;
 	private ProgressBar mProgress;
+	private String albumId;
+	private int albumSize;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,21 +46,26 @@ public class PhotoGridFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-//				Album album = mAdapter.getItem(position);
-//				openAlbum(album);
-				
-				
-				 Intent photoIntent = new Intent(getActivity(),
-				 PhotoPagerActivity.class);
+				// Album album = mAdapter.getItem(position);
+				// openAlbum(album);
+
+				Intent photoIntent = new Intent(getActivity(),
+						PhotoPagerActivity.class);
 				//
 				// int photoPos = (Integer) v.getTag(PHOTO_POS);
-				 Bundle args = new Bundle();
-				 args.putInt(PhotoPagerFragment.PHOTO_FIRST_POS, position);
-
-				// args.putParcelableArray(PhotoPagerFragment.PHOTO_ITEM_LIST,
-				// photoItemsList);
-				// photoIntent.putExtra(PhotoPagerActivity.PHOTO_BUNDLE, args);
-				// activity.startActivity(photoIntent);
+				Bundle args = new Bundle();
+				args.putInt(PhotoPagerFragment.PHOTO_FIRST_POS, position);
+				args.putString(PhotoPagerFragment.PHOTO_ID,
+						mAdapter.getItem(position).getObjectId());
+				ArrayList<String> photoItemsIdList = new ArrayList<String>();
+				for (int i = 0; i < albumSize; i++) {
+					photoItemsIdList.add(mAdapter.getItem(i).getObjectId());
+				}
+				args.putString(PhotoPagerFragment.PHOTO_ALBUM_ID, albumId);
+				args.putStringArrayList(PhotoPagerFragment.PHOTO_ITEM_LIST,
+						photoItemsIdList);
+				photoIntent.putExtra(PhotoPagerActivity.PHOTO_BUNDLE, args);
+				startActivity(photoIntent);
 
 			}
 		});
@@ -69,7 +78,8 @@ public class PhotoGridFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
-			final String albumId = args.getString(ALBUM_ITEM_ID);
+			albumSize = args.getInt(ALBUM_PHOTO_COUNT);
+			albumId = args.getString(ALBUM_ITEM_ID);
 			// Set up the Parse query to use in the adapter
 			PhotoGridAdapter.QueryFactory<PhotoItem_ex> factory = new PhotoGridAdapter.QueryFactory<PhotoItem_ex>() {
 				public ParseQuery<PhotoItem_ex> create() {

@@ -1,6 +1,6 @@
 package com.wazapps.familybox.photos;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,22 +8,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class PhotoPagerAdapter extends FragmentStatePagerAdapter {
-	
 
+	private ArrayList<String> photoIdList;
 
-	private PhotoItem[] photoList;
-
-	public PhotoPagerAdapter(FragmentManager fm, PhotoItem[] photoList) {
+	public PhotoPagerAdapter(FragmentManager fm, ArrayList<String> photoIdList) {
 		super(fm);
-		this.photoList = Arrays.copyOf(photoList, photoList.length,
-				PhotoItem[].class);
+		this.photoIdList = photoIdList;
 	}
 
 	@Override
 	public Fragment getItem(int position) {
 		PhotoFragment photo = new PhotoFragment();
 		Bundle args = new Bundle();
-		args.putParcelable(PhotoFragment.PHOTO_ITEM, photoList[position]);
+		args.putString(PhotoFragment.PHOTO_ITEM_ID, photoIdList.get(position));
 		photo.setArguments(args);
 		return photo;
 	}
@@ -31,6 +28,6 @@ public class PhotoPagerAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public int getCount() {
 
-		return photoList.length;
+		return photoIdList.size();
 	}
 }
