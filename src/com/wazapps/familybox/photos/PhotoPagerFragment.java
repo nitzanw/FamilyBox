@@ -24,7 +24,10 @@ import android.widget.TextView;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
+import com.parse.ParseUser;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.util.LogUtils;
 
@@ -50,6 +53,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 
 	private ArrayList<String> photoIdList;
 	private ArrayList<String> photoCaptionList;
+	private Object mSource;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 
 		Bundle args = getArguments();
 		if (args != null) {
+			mSource = args.get(PhotoGridFragment.ALBUM_SRC);
 			photoIdList = args.getStringArrayList(PHOTO_ITEM_LIST);
 			photoCaptionList = args.getStringArrayList(PHOTO_ITEM_CAPTION_LIST);
 			currentPosition = args.getInt(PHOTO_FIRST_POS);
@@ -126,8 +131,13 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 
 		root.findViewById(R.id.ib_right_arrow).setOnClickListener(this);
 		root.findViewById(R.id.ib_left_arrow).setOnClickListener(this);
-		root.findViewById(R.id.iv_favorite_icon).setOnClickListener(this);
 		root.findViewById(R.id.iv_share_icon).setOnClickListener(this);
+		if (AlbumGridFragment.ALBUM_GRID_FRAGMENT.equals(mSource)) {
+			root.findViewById(R.id.iv_favorite_icon).setOnClickListener(this);
+		} else if (PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG
+				.equals(mSource)) {
+			root.findViewById(R.id.iv_favorite_icon).setVisibility(View.GONE);
+		}
 		root.findViewById(R.id.iv_back_icon).setOnClickListener(this);
 
 		mEditButton = (ImageView) root.findViewById(R.id.iv_image_edit_caption);
@@ -220,7 +230,25 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			// }
 			// });
 		} else if (R.id.iv_favorite_icon == v.getId()) {
-			// TODO add to favorite album
+			ParseQuery<PhotoItem_ex> query = ParseQuery
+					.getQuery(PhotoItem_ex.class);
+			query.getInBackground(photoIdList.get(currentPosition),
+					new GetCallback<PhotoItem_ex>() {
+
+						@Override
+						public void done(PhotoItem_ex object, ParseException e) {
+							if (e == null) {
+								ParseUser user = ParseUser.getCurrentUser();
+								ParseRelation<ParseObject> relation = user
+										.getRelation("favorites");
+								relation.add(object);
+								user.saveInBackground();
+							} else {
+								LogUtils.logError(getTag(),
+										"bad image callback " + e.getMessage());
+							}
+						}
+					});
 
 		} else if (R.id.iv_share_icon == v.getId()) {
 
