@@ -2,13 +2,19 @@ package com.wazapps.familybox.familyProfiles;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -36,6 +42,7 @@ import com.wazapps.familybox.profiles.ProfileDetails;
 import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.ProfileScreenActivity;
 import com.wazapps.familybox.profiles.UserData;
+import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 
@@ -53,23 +60,25 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private static final String ALBUM_ITEM_TYPE = "album item";
 	public static final String FAMILY_PROFILE_DATA = "family profile data";
 	public static final String FAMILY_PROFILE_FRAG = "family profile fragment";
-	private static final String FAMILY_ID = "family id";
-	private static final String FAMILY_NAME = "family name";
+	public static final String FAMILY_ID = "family id";
+	public static final String FAMILY_NAME = "family name";
 
 	//fragment views
 	private View root;
 	private LinearLayout mParentLayoutRight, mParentLayoutLeft, mParentLayoutCenter; 
 	private LinearLayout mPhotoAlbumsHolder, mChildrenHolder;
+	private LinearLayout mChildrenSpinner, mParentsSpinner;
 	private RelativeLayout mSingleMember;
 	private TextView mFamilyTitle, mFamilyParentsTitle, mFamilyChildrenTitle;
 	private RoundedImageView mSingleMemberPhoto;
 	private TextView mSingleMemberName;
 	private ImageView noChildrenCover;
 	
-	//adapters
+	//adapters and data handlers
 	private FamilyProfileParentAdapter mParentAdapter;
 	private FamilyProfileChildAdapter mChildrenAdapter;
 	private FamilyProfileAlbumAdapter mAlbumsAdapter;
+	private AddProfileFragmentListener profileFragmentAdder;
 	
 	//family profile data
 	private ArrayList<ParseUser> mFamilyMembers = null;
@@ -81,9 +90,26 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private ParseUser mLoggedUser = null;
 	private ParseObject mCurrentFamily = null;
 	private String mFamilyId, mFamilyName;
-	private FamilyMemberDetails[] mParentsList2;
-	private FamilyMemberDetails[] mChildrenList2;
 	private ImageView noParentsCover;
+	private Animation textJump;
+	
+	public interface AddFamilyProfileFragmentListener {
+		public void addFamilyProfileFragment(Bundle args);
+	}
+
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try { 
+			profileFragmentAdder = (AddProfileFragmentListener) getActivity();
+		} 
+		
+		catch (ClassCastException e) {
+			Log.e(getTag(), "the activity does not implement "
+					+ "AddProfileFragmentListener interface");
+		}
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +134,12 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 			if (args.containsKey(FAMILY_NAME)) {
 				mFamilyName = args.getString(FAMILY_NAME);
 			}
+			
+			if (mIsUserFamily) {
+				mFamilyId = mLoggedUser.getString(UserHandler.FAMILY_KEY);
+				mFamilyName = mLoggedUser.getString(UserHandler.LAST_NAME_KEY);
+			} 
+			
 		} 
 		
 		else {
@@ -152,9 +184,11 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		
 		mFamilyParentsTitle = (TextView) root
 				.findViewById(R.id.tv_family_profile_parents);
+		mFamilyParentsTitle.setVisibility(View.GONE);
 		
 		mFamilyChildrenTitle = (TextView) root
 				.findViewById(R.id.tv_family_profile_children);
+		mFamilyChildrenTitle.setVisibility(View.GONE);
 		
 		noChildrenCover = (ImageView) root
 				.findViewById(R.id.iv_family_profile_no_children);
@@ -162,11 +196,11 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		noParentsCover = (ImageView) root
 				.findViewById(R.id.iv_family_profile_no_parents);
 		
+		mChildrenSpinner = (LinearLayout) root
+				.findViewById(R.id.ll_family_profile_children_load_spinner);
 		
-		if (mIsUserFamily) {
-			mFamilyId = mLoggedUser.getString(UserHandler.FAMILY_KEY);
-			mFamilyName = mLoggedUser.getString(UserHandler.LAST_NAME_KEY);
-		} 
+		mParentsSpinner = (LinearLayout) root
+				.findViewById(R.id.ll_family_profile_parents_load_spinner);
 		
 		mFamilyName = InputHandler.capitalizeName(mFamilyName);
 		mFamilyTitle.setText(mFamilyName + " Family");
@@ -194,7 +228,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 									if (e != null) {
 										//TODO: handle error
 									} else {
-										frag.initDataViews();
+										frag.initMembersViews();
 									}
 								}
 							});
@@ -211,7 +245,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 									if (e != null) {
 										//TODO: handle error
 									} else {
-										frag.initDataViews();
+										frag.initMembersViews();
 									}
 								}
 							});
@@ -224,10 +258,18 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 			}
 		}.init(this));
 		
+		initAnimations();
+		initAlbumsListView();	
 		return root;
 	}
+	
+	private void initAnimations() {
+		textJump = AnimationUtils.loadAnimation(getActivity(), 
+				R.anim.pulse_once);
+		textJump.setInterpolator(new AccelerateDecelerateInterpolator());
+	}
 
-	private void initDataViews() {
+	private void initMembersViews() {
 		//init the data
 		mParentsList = new ArrayList<UserData>();
 		mChildrenList = new ArrayList<UserData>();
@@ -237,23 +279,38 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		}
 		
 		else {
-			for (UserData member : mFamilyMembersData) {
-				if (member.getRole().equals(UserData.ROLE_PARENT)) {
-					mParentsList.add(member);
-				} else {
-					mChildrenList.add(member);
+			new AsyncTask<Void, Void, Void>() {
+				FamilyProfileFragment frag;
+				
+				@Override
+				protected Void doInBackground(Void... params) {
+					for (UserData member : mFamilyMembersData) {
+						if (member.getRole().equals(UserData.ROLE_PARENT)) {
+							mParentsList.add(member);
+						} else {
+							mChildrenList.add(member);
+						}
+					}
+					return null;
 				}
-			}
-			
-			initParentsLevelView();
-			initChildrenLevelView();
+				
+				@Override
+				protected void onPostExecute(Void result) {
+					super.onPostExecute(result);
+					initParentsLevelView();
+					initChildrenLevelView();
+				}
+				
+				private AsyncTask<Void, Void, Void> 
+				init(FamilyProfileFragment frag) {
+					this.frag = frag;
+					return this;
+				}
+			}.init(this).execute();
 		}
-		
-		initAlbumsListView();			
 	}
 	
 	private void initSingleMemberView() {
-		mSingleMember.setVisibility(View.VISIBLE);
 		UserData member = mFamilyMembersData.get(0);
 		Bitmap photo = member.getprofilePhoto();
 		String name = InputHandler.capitalizeName(member.getName());
@@ -267,50 +324,116 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 					android.R.color.transparent));	
 		}
 		
+		mChildrenSpinner.setVisibility(View.GONE);
+		mParentsSpinner.setVisibility(View.GONE);
+		mSingleMember.setVisibility(View.VISIBLE);
 		mSingleMemberPhoto.setOnClickListener(this);
 	}
 
-	private void initParentsLevelView() {
-		//init the parents list view
-		mParentAdapter = new FamilyProfileParentAdapter(
-				getActivity(), mParentsList.toArray(
-						new UserData[mParentsList.size()]));
-		int mParentsListSize = mParentsList.size();
-		if (mParentsListSize == 0) {
-			mFamilyParentsTitle.setVisibility(View.GONE);
-			noParentsCover.setVisibility(View.VISIBLE);
-		} else if (mParentsListSize == 1) {
-			mParentLayoutCenter.setVisibility(View.VISIBLE);
-			mParentLayoutLeft.setVisibility(View.GONE);
-			mParentLayoutRight.setVisibility(View.GONE);
-			initParentView(mParentLayoutCenter, 0);	
-		} else {
-			initParentView(mParentLayoutRight, 0);
-			initParentView(mParentLayoutLeft, 1);			
-		}
-	}
-	
-	/**
-	 * Initialize the parent's view
-	 * @param base - the holder view
-	 * @param position - the parent's position (left / right)
-	 */
-	private void initParentView(LinearLayout base, int position) {
-		View v = mParentAdapter.getView(position, null, (ViewGroup) getView());
-		v.setTag(ITEM_TYPE, FAMILY_MEMBER_ITEM_TYPE);
-		v.setTag(FAMILY_MEMBER_TYPE, FAMILY_MEMBER_PARENT_TYPE);
-		v.setTag(ITEM_POS, position);
-		v.setOnClickListener(this);
-		base.addView(v);
+	private void initParentsLevelView() {	
+		new AsyncTask<Void, Object, int[]>() {
+			class ParentViewData {
+				public LinearLayout holder;
+				public View v;
+				
+				public ParentViewData(LinearLayout holder, View v) {
+					this.holder = holder;
+					this.v = v;
+				}
+			}
+			
+			FamilyProfileFragment frag;
+			
+			@Override
+			protected int[] doInBackground(Void... params) {
+				frag.mParentAdapter = new FamilyProfileParentAdapter(
+						getActivity(), frag.mParentsList.toArray(
+								new UserData[frag.mParentsList.size()]));
+				int mParentsListSize = frag.mParentsList.size();
+				int[] size = {mParentsListSize};
+				
+				if (mParentsListSize == 0) {
+					return size;
+				}
+				
+				else if (mParentsListSize == 1) {
+					View v = initParentView(0);
+					ParentViewData data = 
+							new ParentViewData(frag.mParentLayoutCenter, v);
+					publishProgress(data);
+				} 
+				
+				else {
+					View parentView1 = initParentView(0);
+					View parentView2 = initParentView(1);
+					ParentViewData data1 = new ParentViewData(
+							frag.mParentLayoutRight, parentView1);
+					publishProgress(data1);
+					ParentViewData data2 = new ParentViewData(
+							frag.mParentLayoutLeft, parentView2);
+					publishProgress(data2);
+				}
+				
+				return size;
+			}
+			
+			@Override
+			protected void onProgressUpdate(Object... viewData) {
+				super.onProgressUpdate(viewData);
+				ParentViewData data = (ParentViewData) viewData[0];
+				data.holder.addView(data.v);
+			}
+			
+			@Override
+			protected void onPostExecute(int[] result) {
+				super.onPostExecute(result);
+				int parentsNum = result[0];
+				frag.mParentsSpinner.setVisibility(View.GONE);
+				if (parentsNum == 0) {
+					frag.noParentsCover.setVisibility(View.VISIBLE);
+				}
+				
+				else if (parentsNum == 1) {
+					frag.mFamilyParentsTitle.setVisibility(View.VISIBLE);
+					frag.mParentLayoutCenter.setVisibility(View.VISIBLE);
+					frag.mParentLayoutLeft.setVisibility(View.GONE);
+					frag.mParentLayoutRight.setVisibility(View.GONE);
+				} 
+				
+				else {
+					frag.mFamilyParentsTitle.setVisibility(View.VISIBLE);
+				}
+			}
+			
+			private AsyncTask<Void, Object, int[]> 
+			init(FamilyProfileFragment frag) {
+				this.frag = frag;
+				return this;
+			}	
+			
+			private View initParentView(int position) {
+				View v = mParentAdapter.getView(position, null, 
+						(ViewGroup) getView());
+				v.setTag(ITEM_TYPE, FAMILY_MEMBER_ITEM_TYPE);
+				v.setTag(FAMILY_MEMBER_TYPE, FAMILY_MEMBER_PARENT_TYPE);
+				v.setTag(ITEM_POS, position);
+				v.setOnClickListener(frag);
+				return v;
+			}
+		}.init(this).execute();
 	}
 	
 	private void initChildrenLevelView() {
 		//if the family does not have any child members
+		mChildrenSpinner.setVisibility(View.GONE);
 		if (mChildrenList.size() == 0) {
 			mFamilyChildrenTitle.setVisibility(View.GONE);
 			noChildrenCover.setVisibility(View.VISIBLE);
 			return;
-		} 
+		} else {
+			mFamilyChildrenTitle.setVisibility(View.VISIBLE);
+			mFamilyChildrenTitle.startAnimation(textJump);
+		}
 		
 		// init the children list view
 		mChildrenAdapter = new FamilyProfileChildAdapter(
@@ -354,14 +477,18 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 			int pos = (Integer) v.getTag(ITEM_POS); 
 			UserData clickedMember = getMemberItem((String) 
 					v.getTag(FAMILY_MEMBER_TYPE), pos);
+			
+			//if the user clicked is the currently logged user
 			if (clickedMember.getUserId().equals(mLoggedUser.getObjectId())) {
 				args.putBoolean(ProfileFragment.USER_PROFILE, true);				
-			} else {
+			} 
+			
+			else {
 				args.putBoolean(ProfileFragment.USER_PROFILE, false);
 				args.putParcelable(ProfileFragment.MEMBER_ITEM, clickedMember);
 			}
-			MainActivity activity = (MainActivity) getActivity();
-			activity.addProfileFragment(args);
+			
+			profileFragmentAdder.addProfileFragment(args);
 		} 
 
 		//if the currently clicked item is a photo album

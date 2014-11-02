@@ -68,8 +68,7 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 
 	private void initChildView(int position, View v) {
 		UserData member = childrenList[position];
-		String memberName = InputHandler.capitalizeFullname(
-				member.getName(), member.getLastName());
+		String memberName = InputHandler.capitalizeName(member.getName());
 		Bitmap memberPhoto = member.getprofilePhoto();
 		
 		TextView name = (TextView) v
@@ -100,7 +99,7 @@ public class FamilyProfileChildAdapter extends BaseAdapter {
 				break;
 				
 			case 2:
-				v.setPadding((width / 3) - (viewWidth/3), 0, 0, 0);
+				v.setPadding((width / 3) - (viewWidth/3) - (viewWidth/20), 0, 0, 0);
 				break;
 				
 

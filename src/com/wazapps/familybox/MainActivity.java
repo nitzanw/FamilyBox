@@ -36,6 +36,7 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
+import com.wazapps.familybox.familyProfiles.FamilyProfileFragment.AddFamilyProfileFragmentListener;
 import com.wazapps.familybox.familyTree.FamiliesListFragment;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
@@ -56,7 +57,7 @@ import com.wazapps.familybox.util.MenuListAdapter;
 import com.wazapps.familybox.util.AboutFragment;
 
 public class MainActivity extends FragmentActivity implements
-		AddProfileFragmentListener {
+		AddProfileFragmentListener, AddFamilyProfileFragmentListener {
 
 	public static abstract class MainActivityCallback {
 		public abstract void done(Exception e);
@@ -452,6 +453,18 @@ public class MainActivity extends FragmentActivity implements
 		ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.enter_reverse,
 				R.anim.fade_out_fast);
 		ft.add(R.id.fragment_container, profileFrag,
+				ProfileFragment.PROFILE_FRAG).addToBackStack(null);
+		ft.commit();
+	}
+	
+	@Override
+	public void addFamilyProfileFragment(Bundle args) {
+		FamilyProfileFragment familyProfileFrag = new FamilyProfileFragment();
+		familyProfileFrag.setArguments(args);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.enter_reverse,
+				R.anim.fade_out_fast);
+		ft.add(R.id.fragment_container, familyProfileFrag,
 				ProfileFragment.PROFILE_FRAG).addToBackStack(null);
 		ft.commit();
 	}

@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -44,6 +45,8 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
+import com.wazapps.familybox.familyProfiles.FamilyProfileFragment.AddFamilyProfileFragmentListener;
 import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.UserHandler;
@@ -53,7 +56,8 @@ import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 import com.wazapps.familybox.util.WaveDrawable;
 
-public class ProfileFragment extends Fragment implements OnClickListener {
+public class ProfileFragment extends Fragment 
+implements OnClickListener, OnLongClickListener {
 	private abstract class ProfileFragmentCallback {
 		public abstract void done(Exception e);
 	}
@@ -106,6 +110,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	private MenuItem editButton;
 	private ImageButton mPrevFamilybutton, mCurrFamilybutton;
 	AddProfileFragmentListener addProfileCallback = null;
+	AddFamilyProfileFragmentListener addFamilyProfileCallback = null;
 
 	public interface AddProfileFragmentListener {
 		void addProfileFragment(Bundle args);
@@ -186,13 +191,17 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			addProfileCallback = (AddProfileFragmentListener) getActivity();
+			addProfileCallback = (AddProfileFragmentListener) 
+					getActivity();
+			addFamilyProfileCallback = (AddFamilyProfileFragmentListener) 
+					getActivity();
 		}
 
 		catch (ClassCastException e) {
 			LogUtils.logError("ProfileFragment", 
 					"Activity should implement " +
-					"AddProfileFragmentListener interface");
+					"AddProfileFragmentListener and" +
+					"AddFamilyProfileFragmentListener interfaces");
 		}
 	}
 	
@@ -411,6 +420,7 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 					v.setTag(ITEM_TYPE, MEMBER_ITEM_TYPE);
 					v.setTag(ITEM_POS, i);
 					v.setOnClickListener(frag);
+					v.setOnLongClickListener(frag);
 					publishProgress(v);
 				}
 				
@@ -583,6 +593,32 @@ public class ProfileFragment extends Fragment implements OnClickListener {
 			
 			addProfileCallback.addProfileFragment(args);
 			break;
+		}
+	}
+	
+
+	@Override
+	public boolean onLongClick(View v) {
+		if (MEMBER_ITEM_TYPE.equals(v.getTag(ITEM_TYPE))) {
+			Bundle args = new Bundle();
+			int pos = (Integer) v.getTag(ITEM_POS);
+			UserData clickedUserDetails = mFamilyMembersData.get(pos);
+			boolean isUserProfile = (clickedUserDetails.getUserId()
+					.equals(loggedUser.getObjectId()));
+			args.putBoolean(FamilyProfileFragment.USER_FAMILY, isUserProfile);
+			if (!isUserProfile) {
+				args.putString(FamilyProfileFragment.FAMILY_ID, 
+						clickedUserDetails.getFamilyId());
+				args.putString(FamilyProfileFragment.FAMILY_NAME, 
+						clickedUserDetails.getLastName());
+			}
+			
+			addFamilyProfileCallback.addFamilyProfileFragment(args);
+			return true;
+		} 
+		
+		else {
+			return false;			
 		}
 	}
 	

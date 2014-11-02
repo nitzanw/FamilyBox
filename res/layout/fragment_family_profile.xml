@@ -2,6 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    
+    <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:background="@color/white_cream_ab"
+     android:orientation="vertical" />
 
     <TextView
         android:id="@+id/tv_family_profile_title"
@@ -18,7 +24,8 @@
         android:layout_height="307dp"
         android:background="@drawable/background_edit_profile" 
         android:layout_below="@id/tv_family_profile_title"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:animateLayoutChanges="true">
 
     
         <LinearLayout
@@ -26,7 +33,8 @@
             android:layout_width="match_parent"
             android:layout_height="310dp"
             android:gravity="center"
-            android:orientation="horizontal" >
+            android:orientation="horizontal" 
+            android:animateLayoutChanges="true">
 
             <LinearLayout
                 android:id="@+id/ll_family_profile_parent_left"
@@ -35,7 +43,8 @@
                 android:layout_height="90dp"
                 android:layout_marginBottom="68dp"
                 android:gravity="center_horizontal"
-                android:orientation="vertical" />
+                android:orientation="vertical" 
+                android:animateLayoutChanges="true"/>
             
              <LinearLayout
                 android:id="@+id/ll_family_profile_parent_center"
@@ -44,7 +53,8 @@
                 android:layout_marginBottom="68dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical" 
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:animateLayoutChanges="true"/>
 
             <LinearLayout
                 android:id="@+id/ll_family_profile_parent_right"
@@ -53,11 +63,13 @@
                 android:layout_height="90dp"
                 android:layout_marginBottom="68dp"
                 android:gravity="center_horizontal"
-                android:orientation="vertical" />
+                android:orientation="vertical" 
+                android:animateLayoutChanges="true"/>
         </LinearLayout>
         
         <TextView
         android:id="@+id/tv_family_profile_parents"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/ll_family_profile_parents"
@@ -67,16 +79,33 @@
         android:layout_marginTop="8dp"
         android:text="@string/parents"
         android:textSize="17sp" />
-
+        
+		<LinearLayout 
+    	android:id="@+id/ll_family_profile_parents_load_spinner"
+    	android:layout_width="match_parent"
+    	android:layout_height="115dp"
+	    android:background="@color/white_cream_ab"
+	    android:alpha="0.9"
+	    android:gravity="center"
+	    android:orientation="horizontal">
+    
+    		<ProgressBar
+        		android:id="@+id/pb_parents_spinner"
+	        	android:layout_width="wrap_content"
+	       	 	android:layout_height="wrap_content" />
+	    </LinearLayout>
+              
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/ll_family_profile_parents"
             android:layout_marginBottom="18dp"
-            android:orientation="vertical" >
+            android:orientation="vertical" 
+            android:animateLayoutChanges="true">
 
             <TextView
                 android:id="@+id/tv_family_profile_children"
+                android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -97,10 +126,28 @@
                     android:id="@+id/ll_family_profile_children_holder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal"
+                    android:animateLayoutChanges="true" >
                 </LinearLayout>
             </HorizontalScrollView>
         </LinearLayout>
+        
+        <LinearLayout 
+		        android:id="@+id/ll_family_profile_children_load_spinner"
+		        android:layout_width="match_parent"
+		        android:layout_height="115dp"
+		        android:layout_alignBottom="@id/ll_family_profile_parents"
+		        android:layout_marginBottom="18dp"
+		        android:background="@color/white_cream_ab"
+		        android:alpha="0.9"
+		        android:gravity="center"
+		        android:orientation="horizontal">
+		        
+		        <ProgressBar
+		            android:id="@+id/pb_children_spinner"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content" />
+	    </LinearLayout>
         
         <ImageView android:src="@drawable/profile_background"
             android:id="@+id/iv_family_profile_no_children"
@@ -150,14 +197,15 @@
                 android:id="@+id/ll_family_profile_album_holder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:animateLayoutChanges="true" >
             </LinearLayout>
         </HorizontalScrollView>
     </RelativeLayout>
     
     <RelativeLayout 
     android:id="@+id/rl_family_profile_single_member"
-    android:background="@color/white_cream_ab"
+    android:background="@drawable/background_edit_profile"
     android:layout_below="@id/tv_family_profile_title"
     android:layout_above="@id/rl_family_profile_albums"
     android:layout_height="fill_parent"
@@ -179,8 +227,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:textSize="15sp"
-        android:layout_below="@id/riv_family_profile_single_member_pic"
-        android:text="Only Gal is in this family"/>               
+        android:layout_below="@id/riv_family_profile_single_member_pic"/>               
 	</RelativeLayout>
 
 </RelativeLayout>
