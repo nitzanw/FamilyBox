@@ -86,7 +86,6 @@ public class AlbumGridFragment extends Fragment implements OnClickListener {
 		return root;
 	}
 
-
 	private void handleActionbarTitle(String familyName) {
 		// if (getActivity() instanceof PhotoAlbumsActivity) {
 		// getActivity().getActionBar().setTitle("Photo Albums");

@@ -41,28 +41,29 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		Bundle args = makeTempData();
 		ViewGroup rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_photo_album_store_tabs, null);
-		this.tabHost = (FragmentTabHost) rootView
+		PhotoAlbumsTabsFragment.tabHost = (FragmentTabHost) rootView
 				.findViewById(android.R.id.tabhost);
-		this.tabHost.setup(getActivity(), getChildFragmentManager(),
+		PhotoAlbumsTabsFragment.tabHost.setup(getActivity(), getChildFragmentManager(),
 				R.id.realtabcontent);
 
 		// add tabs to the tabs storage
-		this.tabHost.addTab(
-				this.tabHost.newTabSpec(MY_FAMILY).setIndicator(
+		TabsFragment.tabHost.addTab(
+				TabsFragment.tabHost.newTabSpec(MY_FAMILY).setIndicator(
 						makeTabIndicator(R.string.photos_tab_my_family)),
 				AlbumGridFragment.class, args);
 
-		this.tabHost.addTab(
-				this.tabHost.newTabSpec(SHARED_ALBUM).setIndicator(
+		TabsFragment.tabHost.addTab(
+				TabsFragment.tabHost.newTabSpec(SHARED_ALBUM).setIndicator(
 						makeTabIndicator(R.string.photos_tab_shared_album)),
 				SharedAlbumFragment.class, args);
 
-		this.tabHost.addTab(
+		args.putString(PhotoGridFragment.ALBUM_SRC, PHOTO_ALBUM_TABS_FRAG);
+		TabsFragment.tabHost.addTab(
 				tabHost.newTabSpec(FAVORITES).setIndicator(
 						makeTabIndicator(R.string.photos_tab_favorites)),
-						AlbumGridFragment.class, args);
+						PhotoGridFragment.class, args);
 
-		return this.tabHost;
+		return TabsFragment.tabHost;
 	}
 
 	@Override

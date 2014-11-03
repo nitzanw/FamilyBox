@@ -749,6 +749,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int personal_welcome_profile_pic=0x7f070037;
         public static final int personal_welcome_title=0x7f070036;
         public static final int photo_albums=0x7f070063;
+        public static final int photo_hint=0x7f0700a1;
         public static final int photos_tab_favorites=0x7f070062;
         public static final int photos_tab_my_family=0x7f070060;
         public static final int photos_tab_shared_album=0x7f070061;

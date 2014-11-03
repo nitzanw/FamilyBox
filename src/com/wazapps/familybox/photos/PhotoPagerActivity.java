@@ -25,5 +25,4 @@ public class PhotoPagerActivity extends FragmentActivity{
 						PhotoPagerFragment.PHOTO_PAGER_FRAG).commit();
 		
 	}
-
 }

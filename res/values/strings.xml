@@ -162,5 +162,6 @@
     <string name="requesting_thumbnails">Requesting thumbnails, please be patient</string>
     <string name="id">id</string>
     <string name="version">version:</string>
+    <string name="photo_hint">Add your caption here!</string>
 
 </resources>
