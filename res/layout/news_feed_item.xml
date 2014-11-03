@@ -3,23 +3,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="16dp">
-
-    <ImageView
-        android:id="@+id/iv_news_feed_item_user_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+    android:paddingBottom="16dp"
+    android:animateLayoutChanges="true">   
+    
+    <com.wazapps.familybox.util.RoundedImageView
+        android:id="@+id/riv_news_feed_item_user_image"
+        android:scaleType="centerCrop"
+        android:cropToPadding="true"
+        android:visibility="invisible"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/profile_pic_elipse" />
-
+        android:background="@drawable/profile_pic_elipse" />
+  
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="20dp"
-        android:layout_toRightOf="@id/iv_news_feed_item_user_image"
+        android:layout_toRightOf="@id/riv_news_feed_item_user_image"
         android:orientation="vertical">
 
         <LinearLayout
@@ -40,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:text="(you)"
+                android:visibility="invisible"
                 android:textColor="@color/gray_news_feed_item"
                 android:textSize="13sp" />
         </LinearLayout>

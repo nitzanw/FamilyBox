@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.wazapps.familybox.newsfeed.NewsItem;
 import com.wazapps.familybox.photos.Album;
 import com.wazapps.familybox.photos.PhotoItem_ex;
 
@@ -21,6 +22,7 @@ public class FamilyBoxApplication extends Application {
 		Parse.enableLocalDatastore(getApplicationContext());
 		ParseObject.registerSubclass(Album.class);
 		ParseObject.registerSubclass(PhotoItem_ex.class);
+		ParseObject.registerSubclass(NewsItem.class);
 		Parse.initialize(this, appId, clientKey);
 	}
 }

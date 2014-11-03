@@ -49,6 +49,7 @@ import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
+import com.wazapps.familybox.newsfeed.NewsItem;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.RoundedImageView;
 import com.wazapps.familybox.util.WaveDrawable;
@@ -469,16 +470,25 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 					@Override
 					public void done(ParseException e) {
 						if (e == null) {
-							Toast toast = Toast.makeText(activity,
+							Toast toast = Toast.makeText(activity.getApplicationContext(),
 									"Status updated", Toast.LENGTH_SHORT);
 							toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 							toast.show();
+							
+							NewsItem statusUpdate = new NewsItem();
+							statusUpdate.setNetworkId(mCurrentUser.getNetworkId());
+							statusUpdate.setContent("Updated status: '" + 
+							loggedUser.getString(UserHandler.STATUS_KEY) + "'");
+							statusUpdate.setUser(loggedUser);
+							statusUpdate.setUserFirstName(mCurrentUser.getName());
+							statusUpdate.setUserLastName(mCurrentUser.getLastName());
+							statusUpdate.saveEventually();
 						}
 
 						else {
 							LogUtils.logError("FragmentActivity",
 									e.getMessage());
-							Toast toast = Toast.makeText(activity,
+							Toast toast = Toast.makeText(activity.getApplicationContext(),
 									"Failed to update status",
 									Toast.LENGTH_SHORT);
 

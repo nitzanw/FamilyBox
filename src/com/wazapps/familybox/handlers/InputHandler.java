@@ -1,6 +1,9 @@
 package com.wazapps.familybox.handlers;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -207,5 +210,18 @@ public class InputHandler {
 		}
 		
 		return options;
+	}
+	
+	
+	public static String formatDate(Date date) {
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		String formattedDate = df.format(date);
+		return formattedDate;
+	}
+	
+	public static String formatTime(Date date) {
+		DateFormat df = new SimpleDateFormat("HH:mm");
+		String formattedTime = df.format(date);
+		return formattedTime;
 	}
 }

@@ -30,6 +30,7 @@ import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
+import com.wazapps.familybox.newsfeed.NewsItem;
 import com.wazapps.familybox.profiles.UserData;
 import com.wazapps.familybox.profiles.UserData.DownloadCallback;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.DateChooserCallback;
@@ -129,14 +130,26 @@ public class LoginActivity extends FragmentActivity implements
 			public void done(ParseException e) {
 				// if sign up succeeded - fetch all families
 				// that might be related to user
+				//also - add news item mentioning that user
+				//has joined the network
 				if (e == null) {
 					String userNetwork = loginActivity.currentUser
 							.getString(UserHandler.NETWORK_KEY);
-					String userFamilyName = loginActivity.currentUser
+					String userFirstName = loginActivity.currentUser
+							.getString(UserHandler.FIRST_NAME_KEY);
+					String userLastName = loginActivity.currentUser
 							.getString(UserHandler.LAST_NAME_KEY);
+					
+					NewsItem userJoin = new NewsItem();
+					userJoin.setNetworkId(userNetwork);
+					userJoin.setContent("Joined the family network");
+					userJoin.setUser(currentUser);
+					userJoin.setUserFirstName(userFirstName);
+					userJoin.setUserLastName(userLastName);
+					userJoin.saveEventually();
 
 					FamilyHandler.fetchRelatedFamilies(
-							userFamilyName, userNetwork,
+							userLastName, userNetwork,
 							loginActivity.familiesListFetchCallback);
 				}
 
@@ -401,14 +414,11 @@ public class LoginActivity extends FragmentActivity implements
 	@Override
 	public void openFacebookLogin() {
 		// right now we are not going to implement this feature
-		// Toast toast = Toast.makeText(this,
-		// "This feature is not yet available"
-		// , Toast.LENGTH_SHORT);
-		// toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-		// toast.show();
-		Intent intent = new Intent(this, MainActivity.class);
-		startActivity(intent);
-		finish();
+		 Toast toast = Toast.makeText(this,
+		 "This feature is not yet available"
+		 , Toast.LENGTH_SHORT);
+		 toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+		 toast.show();
 	}
 
 	@Override

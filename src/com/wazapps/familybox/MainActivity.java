@@ -44,7 +44,7 @@ import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.newsfeed.NewsFeedTabsFragment;
 import com.wazapps.familybox.newsfeed.NewsFragment;
-import com.wazapps.familybox.newsfeed.NewsItem;
+import com.wazapps.familybox.newsfeed.NewsItemToRemove;
 import com.wazapps.familybox.photos.Album;
 import com.wazapps.familybox.photos.PhotoAlbumsTabsFragment;
 import com.wazapps.familybox.photos.PhotoItem_ex;
@@ -423,7 +423,7 @@ public class MainActivity extends FragmentActivity implements
 		if (jsonStr == null)
 			return;
 
-		ArrayList<NewsItem> newsPosts = new ArrayList<NewsItem>();
+		ArrayList<NewsItemToRemove> newsPosts = new ArrayList<NewsItemToRemove>();
 		try {
 			jsonObj = new JSONObject(jsonStr);
 			jsonArr = jsonObj.getJSONArray("news_posts");
@@ -439,7 +439,7 @@ public class MainActivity extends FragmentActivity implements
 					extraInfo.add(extraItems.getString(j));
 				}
 
-				NewsItem postItem = new NewsItem(userid, postid, actionType,
+				NewsItemToRemove postItem = new NewsItemToRemove(userid, postid, actionType,
 						extraInfo);
 				newsPosts.add(postItem);
 			}

@@ -25,6 +25,7 @@ import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
+import com.wazapps.familybox.newsfeed.NewsItem;
 import com.wazapps.familybox.profiles.EditProfileFragment.EditProfileCallback;
 import com.wazapps.familybox.profiles.UserData.DownloadCallback;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment;
@@ -88,7 +89,15 @@ public class EditProfileScreenActivity extends AbstractScreenActivity
 								toast.show();
 							}
 						}
-					});					
+					});		
+					
+					NewsItem userUpdate = new NewsItem();
+					userUpdate.setNetworkId(mCurrentUser.getString(UserHandler.NETWORK_KEY));
+					userUpdate.setContent("Updated profile details");
+					userUpdate.setUser(mCurrentUser);
+					userUpdate.setUserFirstName(mCurrentUser.getString(UserHandler.FIRST_NAME_KEY));
+					userUpdate.setUserLastName(mCurrentUser.getString(UserHandler.LAST_NAME_KEY));
+					userUpdate.saveEventually();
 				} 
 				
 				else {
