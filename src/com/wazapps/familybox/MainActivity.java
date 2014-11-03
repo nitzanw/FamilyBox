@@ -33,6 +33,8 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
@@ -40,6 +42,7 @@ import com.wazapps.familybox.familyProfiles.FamilyProfileFragment.AddFamilyProfi
 import com.wazapps.familybox.familyTree.BasicFamilliesListAdapter;
 import com.wazapps.familybox.familyTree.BasicFamilyListFragment;
 import com.wazapps.familybox.familyTree.FamiliesListFragment;
+import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.newsfeed.NewsFeedTabsFragment;
@@ -321,7 +324,7 @@ public class MainActivity extends FragmentActivity implements
 
 					} else {
 						LogUtils.logError("MainActivity", e.getMessage());
-	
+
 						Toast.makeText(getApplicationContext(),
 								"connection error. log in again",
 								Toast.LENGTH_SHORT).show();
@@ -343,22 +346,26 @@ public class MainActivity extends FragmentActivity implements
 		case MY_FAMILY_PROFILE_POS:
 			fetchProfileLocalData(new MainActivityCallback() {
 				MainActivity activity;
+
 				@Override
 				public void done(Exception e) {
 					if (e == null) {
 						Bundle data = new Bundle();
-						data.putBoolean(FamilyProfileFragment.USER_FAMILY, false);
-						data.putString(FamilyProfileFragment.FAMILY_NAME, 
-								currentUser.getString(UserHandler.LAST_NAME_KEY));
-						data.putString(FamilyProfileFragment.FAMILY_ID, 
+						data.putBoolean(FamilyProfileFragment.USER_FAMILY,
+								false);
+						data.putString(FamilyProfileFragment.FAMILY_NAME,
+								currentUser
+										.getString(UserHandler.LAST_NAME_KEY));
+						data.putString(FamilyProfileFragment.FAMILY_ID,
 								currentUser.getString(UserHandler.FAMILY_KEY));
-						
+
 						FamilyProfileFragment frag = new FamilyProfileFragment();
 						frag.setArguments(data);
 
 						FragmentTransaction ft = getSupportFragmentManager()
 								.beginTransaction();
-						ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
+						ft.setCustomAnimations(R.anim.fade_in_fast,
+								R.anim.fade_out_fast);
 						ft.replace(R.id.fragment_container, frag,
 								FamilyProfileFragment.FAMILY_PROFILE_FRAG);
 						ft.commit();
@@ -369,28 +376,28 @@ public class MainActivity extends FragmentActivity implements
 								"connection error. log in again",
 								Toast.LENGTH_SHORT).show();
 						logUserOut();
-					}					
+					}
 				}
-				
+
 				private MainActivityCallback init(MainActivity activity) {
 					this.activity = activity;
 					return this;
 				}
 			}.init(this));
-			
+
 			mDrawerLayout.closeDrawer(mDrawerList);
 			break;
 
 		case FAMILY_TREE_POS:
 			Bundle familyTreeArgs = new Bundle();
-			familyTreeArgs.putBoolean(BasicFamilyListFragment.IS_FAMILY_TREE, true);
+			familyTreeArgs.putBoolean(BasicFamilyListFragment.IS_FAMILY_TREE,
+					true);
 			FamiliesListFragment familyTreeFragment = new FamiliesListFragment();
 			familyTreeFragment.setArguments(familyTreeArgs);
-			
+
 			FragmentTransaction ft2 = getSupportFragmentManager()
 					.beginTransaction();
-			ft2.setCustomAnimations(R.anim.fade_in_fast, 
-					R.anim.fade_out_fast);
+			ft2.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 			ft2.replace(R.id.fragment_container, familyTreeFragment,
 					FamiliesListFragment.FAMILY_TREE_FRAG);
 			ft2.commit();
@@ -462,8 +469,8 @@ public class MainActivity extends FragmentActivity implements
 					extraInfo.add(extraItems.getString(j));
 				}
 
-				NewsItemToRemove postItem = new NewsItemToRemove(userid, postid, actionType,
-						extraInfo);
+				NewsItemToRemove postItem = new NewsItemToRemove(userid,
+						postid, actionType, extraInfo);
 				newsPosts.add(postItem);
 			}
 			args.putParcelableArrayList(NewsFragment.NEWS_ITEM_LIST, newsPosts);
@@ -486,7 +493,7 @@ public class MainActivity extends FragmentActivity implements
 				ProfileFragment.PROFILE_FRAG).addToBackStack(null);
 		ft.commit();
 	}
-	
+
 	@Override
 	public void addFamilyProfileFragment(Bundle args) {
 		FamilyProfileFragment familyProfileFrag = new FamilyProfileFragment();
@@ -532,18 +539,47 @@ public class MainActivity extends FragmentActivity implements
 					.getStringExtra(PhotoHandler.ALBUM_DESCRIPTION);
 			ArrayList<String> photoUrls = data
 					.getStringArrayListExtra(PhotoHandler.PHOTO_URLS);
+			ArrayList<String> shareWith = data
+					.getStringArrayListExtra(PhotoHandler.SHARE_WITH);
 
-			uploadAlbum(albumName, albumDate, albumDesc, photoUrls);
+			uploadAlbum(albumName, albumDate, albumDesc, photoUrls, shareWith);
+		}
+	}
+
+	private void setAlbumShareWithList(final Album album,
+			ArrayList<String> shareWithList) {
+		for (String familyid : shareWithList) {
+			ParseQuery<ParseObject> query = ParseQuery
+					.getQuery(FamilyHandler.FAMILY_CLASS_NAME);
+			query.getInBackground(familyid, new GetCallback<ParseObject>() {
+
+				@Override
+				public void done(ParseObject object, ParseException e) {
+					if (e == null) {
+						ParseRelation<ParseObject> relation = album
+								.getRelation("shareWithFamily");
+						relation.add(object);
+						album.saveEventually();
+					} else {
+						LogUtils.logError(
+								"main activity - setAlbumShareWithList",
+								"didn't load family");
+					}
+				}
+			});
 		}
 	}
 
 	private void uploadAlbum(String albumName, String albumDate,
-			String albumDesc, ArrayList<String> photoUrls) {
+			String albumDesc, ArrayList<String> photoUrls,
+			final ArrayList<String> shareWith) {
 
 		Album album = new Album(this, photoUrls.size());
 		if (currentUser == null) {
 			currentUser = ParseUser.getCurrentUser();
 		}
+
+
 		album.setAlbumPhotoCount(photoUrls.size());
 		album.setFamily((String) currentUser.get(UserHandler.FAMILY_KEY));
 		album.setAlbumName(albumName);
@@ -557,6 +593,7 @@ public class MainActivity extends FragmentActivity implements
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
+					setAlbumShareWithList(album, shareWith);
 					((MainActivity) activity).uploadPhotosToAlbum(album,
 							photoUrls);
 				} else {
@@ -601,7 +638,6 @@ public class MainActivity extends FragmentActivity implements
 					private PhotoItem_ex photoItem;
 					private Album album;
 					private ParseFile photoFile;
-					
 
 					@Override
 					public void done(ParseException e) {

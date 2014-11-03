@@ -198,17 +198,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			}
 			mPager.setCurrentItem(currentPosition);
 			mImageCaption.setText(photoCaptionList.get(currentPosition));
-			// ParseQuery<PhotoItem_ex> query = ParseQuery
-			// .getQuery(PhotoItem_ex.class);
-			// query.getInBackground(photoIdList.get(currentPosition),
-			// new GetCallback<PhotoItem_ex>() {
-			//
-			// @Override
-			// public void done(PhotoItem_ex object, ParseException e) {
-			// mImageCaption.setText(object.getCaption());
-			//
-			// }
-			// });
+
 
 		} else if (R.id.ib_left_arrow == v.getId()) {
 			if (currentPosition == 0) {
@@ -218,17 +208,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			}
 			mPager.setCurrentItem(currentPosition);
 			mImageCaption.setText(photoCaptionList.get(currentPosition));
-			// ParseQuery<PhotoItem_ex> query = ParseQuery
-			// .getQuery(PhotoItem_ex.class);
-			// query.getInBackground(photoIdList.get(currentPosition),
-			// new GetCallback<PhotoItem_ex>() {
-			//
-			// @Override
-			// public void done(PhotoItem_ex object, ParseException e) {
-			// mImageCaption.setText(object.getCaption());
-			//
-			// }
-			// });
+
 		} else if (R.id.iv_favorite_icon == v.getId()) {
 			ParseQuery<PhotoItem_ex> query = ParseQuery
 					.getQuery(PhotoItem_ex.class);

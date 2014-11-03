@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,10 @@ import android.widget.TextView;
 
 import com.parse.ParseObject;
 import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.familyTree.FamiliesListItem;
+import com.wazapps.familybox.handlers.UserHandler;
 
 public class ShareWithListAdapter extends ParseQueryAdapter<ParseObject>
 		implements OnCheckedChangeListener {
@@ -45,6 +48,8 @@ public class ShareWithListAdapter extends ParseQueryAdapter<ParseObject>
 	@Override
 	public View getItemView(ParseObject familyObj, View view, ViewGroup parent) {
 		FamiliesListItem family = new FamiliesListItem(familyObj);
+
+
 		ViewHolder holder;
 		if (view == null) {
 			view = inflater.inflate(R.layout.share_w_item, parent, false);
@@ -66,40 +71,6 @@ public class ShareWithListAdapter extends ParseQueryAdapter<ParseObject>
 
 		return view;
 	}
-
-	// @Override
-	// public int getCount() {
-	// return familyNames.size();
-	// }
-
-	// @Override
-	// public Object getItem(int position) {
-	//
-	// return familyNames.get(position);
-	// }
-
-	// @Override
-	// public long getItemId(int arg0) {
-	// return 0;
-	// }
-	//
-	// @Override
-	// public View getView(final int position, View view, ViewGroup parent) {
-	// View vi = view;
-	// if (vi == null) {
-	// vi = inflater.inflate(R.layout.share_w_item, null);
-	//
-	// }
-	//
-	// TextView familyName = (TextView) vi
-	// .findViewById(R.id.tv_families_list_item_name);
-	// familyName.setText(familyNames.get(position));
-	// CheckBox checkBox = (CheckBox) vi
-	// .findViewById(R.id.cb_families_list_item_check_box);
-	// checkBox.setOnCheckedChangeListener(this);
-	//
-	// return vi;
-	// }
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

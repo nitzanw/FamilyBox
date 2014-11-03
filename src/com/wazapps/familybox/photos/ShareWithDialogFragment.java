@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.PhotoHandler;
@@ -69,6 +70,7 @@ public class ShareWithDialogFragment extends DialogFragment implements
 			public ParseQuery<ParseObject> create() {
 				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
 						FamilyHandler.FAMILY_CLASS_NAME);
+				query.whereNotEqualTo("objectId", ParseUser.getCurrentUser().get(UserHandler.FAMILY_KEY));
 				return query;
 			}
 		};
