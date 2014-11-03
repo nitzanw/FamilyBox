@@ -32,6 +32,7 @@ public class PhotoGridFragment extends Fragment {
 	protected static final String ALBUM_ITEM_ID = "album id";
 	protected static final String ALBUM_PHOTO_COUNT = "album photo count";
 	protected static final String ALBUM_SRC = "album source";
+	protected static final String ALBUM_NAME = "album name";
 	private View root;
 	private GridView mGridview;
 	private PhotoGridAdapter mAdapter;
@@ -65,7 +66,7 @@ public class PhotoGridFragment extends Fragment {
 
 				ArrayList<String> photoItemsIdList = new ArrayList<String>();
 				ArrayList<String> photoItemsCaptionList = new ArrayList<String>();
-				if(albumSize == -1){
+				if (albumSize == -1) {
 					albumSize = mAdapter.getCount();
 				}
 				for (int i = 0; i < albumSize; i++) {
@@ -95,7 +96,7 @@ public class PhotoGridFragment extends Fragment {
 		if (args != null) {
 			if (AlbumGridFragment.ALBUM_GRID_FRAGMENT.equals(args
 					.getString(ALBUM_SRC))) {
-				
+				handleActionbarTitle(args.getString(ALBUM_NAME));
 				albumSize = args.getInt(ALBUM_PHOTO_COUNT);
 				albumId = args.getString(ALBUM_ITEM_ID);
 				// Set up the Parse query to use in the adapter
@@ -114,10 +115,9 @@ public class PhotoGridFragment extends Fragment {
 			} else if (PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG
 					.equals(args.getString(ALBUM_SRC))) {
 				mAdapter = new PhotoGridAdapter(getActivity());
-				
+
 			}
-			mSource = args
-					.getString(ALBUM_SRC);
+			mSource = args.getString(ALBUM_SRC);
 			mAdapter.addOnQueryLoadListener(new OnQueryLoadListener<PhotoItem_ex>() {
 				public void onLoading() {
 					// Trigger "loading" UI
@@ -133,17 +133,14 @@ public class PhotoGridFragment extends Fragment {
 				}
 
 			});
-			handleActionbarTitle();
+			
 		} else {
 			LogUtils.logWarning(getTag(), "these are no valid arguments!");
 		}
 	}
 
-	private void handleActionbarTitle() {
-		// if (getActivity() instanceof PhotoAlbumsActivity) {
-		// getActivity().getActionBar().setTitle("Photo Albums");
-		// } else {
-		// getActivity().getActionBar().setTitle(albumItem.getAlbumName());
-		// }
+	private void handleActionbarTitle(String albumName) {
+
+		getActivity().getActionBar().setTitle(albumName);
 	}
 }
