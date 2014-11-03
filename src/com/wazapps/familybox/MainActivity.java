@@ -318,14 +318,10 @@ public class MainActivity extends FragmentActivity implements
 						ft.replace(R.id.fragment_container, profileFrag,
 								ProfileFragment.PROFILE_FRAG);
 						ft.commit();
-						activity.mDrawerLayout
-								.closeDrawer(activity.mDrawerList);
 
 					} else {
 						LogUtils.logError("MainActivity", e.getMessage());
-						activity.mDrawerLayout
-								.closeDrawer(activity.mDrawerList);
-
+	
 						Toast.makeText(getApplicationContext(),
 								"connection error. log in again",
 								Toast.LENGTH_SHORT).show();
@@ -341,21 +337,48 @@ public class MainActivity extends FragmentActivity implements
 				}
 			}.init(this));
 
+			mDrawerLayout.closeDrawer(mDrawerList);
 			break;
 
 		case MY_FAMILY_PROFILE_POS:
-			Bundle data = new Bundle();
-			data.putBoolean(FamilyProfileFragment.USER_FAMILY, true);
-			FamilyProfileFragment frag = new FamilyProfileFragment();
-			frag.setArguments(data);
+			fetchProfileLocalData(new MainActivityCallback() {
+				MainActivity activity;
+				@Override
+				public void done(Exception e) {
+					if (e == null) {
+						Bundle data = new Bundle();
+						data.putBoolean(FamilyProfileFragment.USER_FAMILY, false);
+						data.putString(FamilyProfileFragment.FAMILY_NAME, 
+								currentUser.getString(UserHandler.LAST_NAME_KEY));
+						data.putString(FamilyProfileFragment.FAMILY_ID, 
+								currentUser.getString(UserHandler.FAMILY_KEY));
+						
+						FamilyProfileFragment frag = new FamilyProfileFragment();
+						frag.setArguments(data);
 
-			FragmentTransaction ft = getSupportFragmentManager()
-					.beginTransaction();
-			ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
-			ft.replace(R.id.fragment_container, frag,
-					FamilyProfileFragment.FAMILY_PROFILE_FRAG);
-			ft.commit();
-			this.mDrawerLayout.closeDrawer(this.mDrawerList);
+						FragmentTransaction ft = getSupportFragmentManager()
+								.beginTransaction();
+						ft.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
+						ft.replace(R.id.fragment_container, frag,
+								FamilyProfileFragment.FAMILY_PROFILE_FRAG);
+						ft.commit();
+					} else {
+						LogUtils.logError("MainActivity", e.getMessage());
+
+						Toast.makeText(getApplicationContext(),
+								"connection error. log in again",
+								Toast.LENGTH_SHORT).show();
+						logUserOut();
+					}					
+				}
+				
+				private MainActivityCallback init(MainActivity activity) {
+					this.activity = activity;
+					return this;
+				}
+			}.init(this));
+			
+			mDrawerLayout.closeDrawer(mDrawerList);
 			break;
 
 		case FAMILY_TREE_POS:
