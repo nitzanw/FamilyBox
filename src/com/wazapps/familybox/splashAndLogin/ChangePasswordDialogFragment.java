@@ -10,8 +10,13 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.LogUtils;
 
 public class ChangePasswordDialogFragment extends DialogFragment implements
 		OnClickListener {
@@ -49,9 +54,54 @@ public class ChangePasswordDialogFragment extends DialogFragment implements
 	public void onClick(View v) {
 		if (v.getId() == R.id.ib_change_pw_exit) {
 			dismiss();
-		} else if (v.getId() == R.id.ib_change_pw) {
-			// TODO change password here
+		} 
+		
+		else if (v.getId() == R.id.ib_change_pw) {
+			ParseUser loggedUser = ParseUser.getCurrentUser();
+			if (loggedUser == null) {
+				Toast.makeText(getActivity().getApplicationContext(), 
+						"Error changing password", Toast.LENGTH_SHORT).show();
+				dismiss();
+			}
+			
+			else {
+				String currPwd = mCurrentPw.getText().toString().trim(), 
+						newPwd = mNewPw.getText().toString().trim(), 
+						confirmPwd = mConfirmtPw.getText().toString().trim();
+				if (currPwd.isEmpty() || newPwd.isEmpty() || confirmPwd.isEmpty()) {
+					Toast.makeText(getActivity().getApplicationContext(), 
+							"You must fill all fields", Toast.LENGTH_LONG).show();
+					return;
+				} 
+				
+				if (!newPwd.equals(confirmPwd)) {
+					Toast.makeText(getActivity().getApplicationContext(), 
+							"Password and Password confirm do not match", Toast.LENGTH_LONG).show();
+					return;
+				}
+				
+				loggedUser.setPassword(newPwd);
+				loggedUser.saveInBackground(new SaveCallback() {
+					
+					@Override
+					public void done(ParseException e) {
+						if (e == null) {
+							Toast.makeText(getActivity().getApplicationContext(), 
+									"Password changed successfully", Toast.LENGTH_LONG).show();
+							dismiss();
+						} 
+						
+						else {
+							Toast.makeText(getActivity().getApplicationContext(), 
+									"Error in changing password", Toast.LENGTH_LONG).show();
+							LogUtils.logError("ChangePasswordDialogFragment", e.getMessage());
+							dismiss();
+						}						
+					}
+				});
+				
+				
+			}
 		}
-
 	}
 }
