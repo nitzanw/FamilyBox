@@ -3,7 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_families_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true" >
+    
+    <LinearLayout 
+        android:id="@+id/ll_families_list_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_cream_ab"
+        android:orientation="horizontal"
+        android:gravity="center">
+        
+        <ProgressBar
+    	android:id="@+id/pb_family_list_spinner"
+       	android:layout_width="wrap_content"
+      	android:layout_height="wrap_content" />        
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_families_list_empty"
@@ -11,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
+        android:visibility="invisible"
         android:orientation="vertical" >
 
         <ImageView

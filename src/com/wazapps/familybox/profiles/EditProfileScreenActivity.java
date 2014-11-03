@@ -177,10 +177,10 @@ public class EditProfileScreenActivity extends AbstractScreenActivity
 		
 		if (!prevFamilyUpdated) {
 			queryCallback.done(null);
+			return;
 		} 
 		
 		editFrag.turnOnProgress(); //start loading spinner
-		getActionBar().hide();
 		
 		String familyName = mCurrentUser
 				.getString(UserHandler.PREV_LAST_NAME_KEY);

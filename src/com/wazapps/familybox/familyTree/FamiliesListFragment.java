@@ -4,32 +4,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.familyProfiles.FamilyProfileScreenActivity;
-import com.wazapps.familybox.photos.AlbumItem;
 
 public class FamiliesListFragment extends BasicFamilyListFragment {
 	public static final String FAMILY_TREE_FRAG = "family tree fragment";
 	FamiliesListAdapter familiesListAdapater;
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		familiesListAdapater = new FamiliesListAdapter(getActivity(),
-				familiesListData);
-		familiesList.setAdapter(familiesListAdapater);
-
-	}
-
-	@Override
 	protected void createOnClickOperation(View v) {
-		Intent familyAlbumsIntent = new Intent(getActivity(),
-				FamilyProfileScreenActivity.class);
-		AlbumItem[] albumList = { null, null, null, null, null, null };
+		FamiliesListItem clickedFamily = (FamiliesListItem) 
+				v.getTag(BasicFamilyListFragment.FAMILT_ITEM);
 		Bundle args = new Bundle();
-		args.putParcelableArray("test1", albumList);
-		familyAlbumsIntent.putExtra("test2", args);
-		getActivity().startActivity(familyAlbumsIntent);
+		args.putBoolean(FamilyProfileFragment.USER_FAMILY, false);
+		args.putString(FamilyProfileFragment.FAMILY_ID, 
+				clickedFamily.getFamilyId());
+		args.putString(FamilyProfileFragment.FAMILY_NAME, 
+				clickedFamily.getFamilyName());
 		
+		Intent familyProfileIntent = new Intent(getActivity(), 
+				FamilyProfileScreenActivity.class);
+		familyProfileIntent.putExtra(
+				FamilyProfileScreenActivity.FAMILY_PROFILE_ARGS, args);
+		getActivity().startActivity(familyProfileIntent);
 	}
-
 }

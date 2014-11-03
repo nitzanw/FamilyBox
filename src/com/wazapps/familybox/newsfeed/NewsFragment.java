@@ -33,8 +33,10 @@ public class NewsFragment extends Fragment{
 			Bundle savedInstanceState) {
 		root = inflater.inflate(R.layout.fragment_news_feed, container, false);
 		
-		TextView emptyText = (TextView)root.findViewById(R.id.news_feed_empty_click);
-		LinearLayout emptyLayout = (LinearLayout) root.findViewById(R.id.ll_news_feed_empty);
+		TextView emptyText = (TextView) 
+				root.findViewById(R.id.news_feed_empty_click);
+		LinearLayout emptyLayout = (LinearLayout) 
+				root.findViewById(R.id.ll_news_feed_empty);
 		emptyLayout.setVisibility(View.INVISIBLE);
 		this.newsList = (ListView) root.findViewById(R.id.news_posts_list);
 		this.newsList.setVisibility(View.VISIBLE);

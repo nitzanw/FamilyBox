@@ -76,6 +76,7 @@ implements OnClickListener, OnFocusChangeListener {
 	String profilePictureName;
 	private byte[] profilePictureData = null;
 	private boolean pictureUpdated = false;
+	private boolean isProgressOn = false;
 
 	private EditProfileFamilyListAdapter mFamilyListAdapter;
 	private EditProfileCallback editCallback;
@@ -264,6 +265,7 @@ implements OnClickListener, OnFocusChangeListener {
 
 		//if a new photo was uploaded
 		if (pictureUpdated) {
+			turnOnProgress();
 			ParseFile profilePic = new ParseFile(
 					profilePictureName, profilePictureData);
 
@@ -271,7 +273,6 @@ implements OnClickListener, OnFocusChangeListener {
 				EditProfileFragment frag;
 				ParseFile profilePic;
 				boolean prevFamilyUpdated;
-				boolean detailsUpdated;
 
 				@Override
 				public void done(ParseException e) {
@@ -281,26 +282,18 @@ implements OnClickListener, OnFocusChangeListener {
 								profilePic);
 					} 
 					
-					if (detailsUpdated) {
-						frag.editCallback.updateProfile(prevFamilyUpdated, 
-								frag.mCurrentUser);				
-					} 
-					
-					else {
-						getActivity().finish();
-					}
+					frag.editCallback.updateProfile(prevFamilyUpdated, 
+							frag.mCurrentUser);				
 				}
 
 				private SaveCallback init(EditProfileFragment frag, 
-						ParseFile profilePic, boolean prevFamilyUpdated,
-						boolean detailsUpdated) {
+						ParseFile profilePic, boolean prevFamilyUpdated) {
 					this.frag = frag;
 					this.profilePic = profilePic;
 					this.prevFamilyUpdated = prevFamilyUpdated;
-					this.detailsUpdated = detailsUpdated;
 					return this;
 				}
-			}.init(this, profilePic, prevFamilyUpdated, detailsUpdated));
+			}.init(this, profilePic, prevFamilyUpdated));
 		} 
 
 		//if no new photo was uploaded but details were updated
@@ -367,10 +360,16 @@ implements OnClickListener, OnFocusChangeListener {
 	}
 	
 	public void turnOnProgress() {
-		mEditProfileProgress.setVisibility(View.VISIBLE);
+		if (!isProgressOn) {
+			mEditProfileProgress.setVisibility(View.VISIBLE);
+			isProgressOn = true;
+		}
 	}
 	
 	public void turnOffProgress() {
-		mEditProfileProgress.setVisibility(View.GONE);
+		if (isProgressOn) {
+			mEditProfileProgress.setVisibility(View.GONE);
+			isProgressOn = false;
+		}
 	}
 }

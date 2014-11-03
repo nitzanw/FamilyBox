@@ -37,6 +37,8 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment.AddFamilyProfileFragmentListener;
+import com.wazapps.familybox.familyTree.BasicFamilliesListAdapter;
+import com.wazapps.familybox.familyTree.BasicFamilyListFragment;
 import com.wazapps.familybox.familyTree.FamiliesListFragment;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
@@ -354,14 +356,19 @@ public class MainActivity extends FragmentActivity implements
 					FamilyProfileFragment.FAMILY_PROFILE_FRAG);
 			ft.commit();
 			this.mDrawerLayout.closeDrawer(this.mDrawerList);
-
 			break;
 
 		case FAMILY_TREE_POS:
+			Bundle familyTreeArgs = new Bundle();
+			familyTreeArgs.putBoolean(BasicFamilyListFragment.IS_FAMILY_TREE, true);
+			FamiliesListFragment familyTreeFragment = new FamiliesListFragment();
+			familyTreeFragment.setArguments(familyTreeArgs);
+			
 			FragmentTransaction ft2 = getSupportFragmentManager()
 					.beginTransaction();
-			ft2.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
-			ft2.replace(R.id.fragment_container, new FamiliesListFragment(),
+			ft2.setCustomAnimations(R.anim.fade_in_fast, 
+					R.anim.fade_out_fast);
+			ft2.replace(R.id.fragment_container, familyTreeFragment,
 					FamiliesListFragment.FAMILY_TREE_FRAG);
 			ft2.commit();
 			this.mDrawerLayout.closeDrawer(this.mDrawerList);
