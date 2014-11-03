@@ -78,6 +78,7 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 				args.putInt(PhotoGridFragment.ALBUM_PHOTO_COUNT, album.getAlbumPhotoCount());
 				args.putString(PhotoGridFragment.ALBUM_ITEM_ID, album.getObjectId());
 				args.putString(PhotoGridFragment.ALBUM_SRC, AlbumGridFragment.ALBUM_GRID_FRAGMENT);
+				args.putString(PhotoGridFragment.ALBUM_NAME, album.getAlbumName());
 				i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
 				
 				context.startActivity(i);
