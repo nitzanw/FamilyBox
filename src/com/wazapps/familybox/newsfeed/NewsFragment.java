@@ -11,10 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 
 public class NewsFragment extends Fragment{
@@ -24,6 +26,7 @@ public class NewsFragment extends Fragment{
 	private ArrayList<NewsItem> newsPosts;
 	private NewsAdapter newsAdapter;
 	private ListView newsList;
+	private LinearLayout noNewsView;
 	private ParseUser loggedUser;
 	
 	@Override
@@ -52,10 +55,12 @@ public class NewsFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		root = inflater.inflate(R.layout.fragment_news_feed, 
-				container, false);
+		root = inflater.inflate(R.layout.fragment_news_feed, container, false);
 		newsList = (ListView) root.findViewById(R.id.news_posts_list);
+		noNewsView = (LinearLayout) root.findViewById(R.id.ll_news_feed_empty);
+		newsList.setEmptyView(noNewsView);
 		newsList.setAdapter(newsAdapter);
+		
 		return root;
 	}
 }
