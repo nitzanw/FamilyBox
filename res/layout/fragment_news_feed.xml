@@ -8,41 +8,8 @@
         android:id="@+id/news_posts_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"></ListView>
+        android:background="@color/white_cream_ab"></ListView>
 
-    <LinearLayout
-        android:id="@+id/ll_news_feed_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_gravity="center">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/tree_icon" />
-        <TextView
-            android:layout_marginTop="12dp"
-            android:textSize="25dp"
-            android:text="@string/news_feed_empty"
-            android:textColor="@color/gray_dialog_text_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-           android:textAlignment="gravity"
-            android:layout_marginTop="3dp"
-            android:textColor="@color/gray_dialog_text_color"
-            android:text="@string/news_feed_empty_explain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:layout_marginTop="50dp"
-            android:id="@+id/news_feed_empty_click"
-            android:text="@string/news_feed_empty_click_here"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+    
 
 </FrameLayout>

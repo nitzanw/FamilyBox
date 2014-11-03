@@ -1,72 +1,72 @@
 package com.wazapps.familybox.newsfeed;
 
-import java.util.ArrayList;
+import java.util.Date;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
-public class NewsItem implements Parcelable{
-	private String usid;
-	private long postid;
-	private String actionType;
-	private ArrayList<String> extra_info;
+@ParseClassName("NewsItem")
+public class NewsItem extends ParseObject{
+	private static final String NEWS_CONTENT = "content";
+	private static final String NETWORK_ID = "networkId";
+	private static final String USER = "user";
+	private static final String USER_FIRST_NAME = "userFirstName";
+	private static final String USER_LAST_NAME = "userLastName";
 	
-	public static final Parcelable.Creator<NewsItem> CREATOR = 
-			new Parcelable.Creator<NewsItem>() {
-		
-		public NewsItem createFromParcel(Parcel source) {
-			return new NewsItem(source);
-		}
-
-		public NewsItem[] newArray(int size) {
-			return new NewsItem[size];
-		}
-	};
-
-	public NewsItem(String usid, long postid, String actionType, 
-			ArrayList<String> extra_info) {
-		this.usid = usid;
-		this.postid = postid;
-		this.actionType = actionType;
-		this.extra_info = new ArrayList<String>();
-		for (String item : extra_info) {
-			this.extra_info.add(item);
-		}
+	
+	public String getContent() {
+		return getString(NEWS_CONTENT);
 	}
 	
-	public NewsItem(Parcel newsPost) {
-		this.usid = newsPost.readString();
-		this.postid = newsPost.readLong();
-		this.actionType = newsPost.readString();
-		newsPost.readStringList(this.extra_info);
+	
+	public String networkId() {
+		return getString(NETWORK_ID);
 	}
-
-	@Override
-	public int describeContents() {		
-		return 0;
+	
+	public String getUserFirstName() {
+		return getString(USER_FIRST_NAME);
 	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(this.usid);
-		dest.writeLong(postid);
-		dest.writeString(this.actionType);
-		dest.writeStringList(this.extra_info);
+	
+	public String getUserLastName() {
+		return getString(USER_LAST_NAME);
 	}
-
-	public String getUsid() {
-		return usid;
+	
+	public String getUserFullName() {
+		return getString(USER_FIRST_NAME) + 
+				" " + getString(USER_LAST_NAME);
 	}
-
-	public long getPostid() {
-		return postid;
+	
+	public ParseUser getUser() {
+		return getParseUser(USER);
 	}
-
-	public String getActionType() {
-		return actionType;
+	
+	public Date getDate() {
+		return getCreatedAt();
 	}
-
-	public ArrayList<String> getExtra_info() {
-		return extra_info;
-	}	
+	
+	public void setContent(String content) {
+		put(NEWS_CONTENT, content);
+	}
+	
+	public void setUser(ParseUser user) {
+		put(USER, user);
+	}
+	
+	public void setUserFirstName(String firstName) {
+		put(USER_FIRST_NAME, firstName);
+	}
+	
+	public void setUserLastName(String lastName) {
+		put(USER_LAST_NAME, lastName);
+	}
+	
+	public void setNetworkId(String networkId) {
+		put(NETWORK_ID, networkId);
+	}
+	
+	public static ParseQuery<NewsItem> getQuery() {
+        return ParseQuery.getQuery(NewsItem.class);
+    }
 }

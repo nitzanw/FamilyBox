@@ -11,76 +11,51 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.UserHandler;
 
 public class NewsFragment extends Fragment{
-	
 	public static final String NEWS_ITEM_LIST = "news item list";
+	
 	private View root;
 	private ArrayList<NewsItem> newsPosts;
 	private NewsAdapter newsAdapter;
 	private ListView newsList;
+	private ParseUser loggedUser;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle args = getArguments();
-		if(args != null){
-			newsPosts = args.getParcelableArrayList(NEWS_ITEM_LIST);
+		loggedUser = ParseUser.getCurrentUser();
+		if (loggedUser == null) {
+			//TODO: handle error
 		}
+		
+        // Set up the Parse query to use in the adapter
+        ParseQueryAdapter.QueryFactory<NewsItem> factory = 
+        		new ParseQueryAdapter.QueryFactory<NewsItem>() {
+            public ParseQuery<NewsItem> create() {
+                ParseQuery<NewsItem> query = NewsItem.getQuery();
+                query.whereEqualTo("networkId", 
+                		loggedUser.get(UserHandler.NETWORK_KEY));
+                query.orderByDescending("createdAt");
+                return query;
+            }
+        };
+        
+        newsAdapter = new NewsAdapter(getActivity(), factory);        		
 	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		root = inflater.inflate(R.layout.fragment_news_feed, container, false);
-		
-		TextView emptyText = (TextView) 
-				root.findViewById(R.id.news_feed_empty_click);
-		LinearLayout emptyLayout = (LinearLayout) 
-				root.findViewById(R.id.ll_news_feed_empty);
-		emptyLayout.setVisibility(View.INVISIBLE);
-		this.newsList = (ListView) root.findViewById(R.id.news_posts_list);
-		this.newsList.setVisibility(View.VISIBLE);
-		this.newsAdapter = new NewsAdapter(this.getActivity(), this.newsPosts);
-		this.newsList.setAdapter(this.newsAdapter);
-		
+		root = inflater.inflate(R.layout.fragment_news_feed, 
+				container, false);
+		newsList = (ListView) root.findViewById(R.id.news_posts_list);
+		newsList.setAdapter(newsAdapter);
 		return root;
 	}
-
-
-	
-//	private void updateNewsPosts() {
-//		String jsonStr = null;
-//		JSONObject jsonObj = null;
-//		JSONArray jsonArr = null;
-//		
-//		jsonStr = JSONParser.loadJSONFromAsset(getActivity(), "familyBox.json");
-//		if (jsonStr == null) return;
-//		
-//		try {
-//			jsonObj = new JSONObject(jsonStr);
-//			jsonArr = jsonObj.getJSONArray("news_posts");
-//			for (int i=0; i<jsonArr.length(); i++) {
-//				JSONObject post = jsonArr.getJSONObject(i);
-//				
-//				String userid = post.getString("user_id");
-//				long postid = post.getLong("post_id");
-//				String actionType =  post.getString("action_type");
-//				ArrayList<String> extraInfo = new ArrayList<String>();
-//				JSONArray extraItems = post.getJSONArray("extra_info");
-//				for (int j=0; j<extraItems.length(); j++) {
-//					extraInfo.add(extraItems.getString(j));
-//				}
-//				
-//				NewsItem postItem = new NewsItem(userid, postid, actionType, extraInfo);
-//				this.newsPosts.add(postItem);
-//			}
-//			
-//			
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//			return;
-//		}	
-//		
-//		this.newsAdapter.notifyDataSetChanged();
-//	}
 }
