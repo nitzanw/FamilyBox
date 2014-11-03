@@ -95,8 +95,7 @@ public abstract class BasicFamilyListFragment extends Fragment {
 		ParseQuery<ParseObject> familiesQuery = 
 				ParseQuery.getQuery(FamilyHandler.FAMILY_CLASS_NAME);
 		familiesQuery.whereEqualTo(FamilyHandler.NETWORK_KEY, 
-				loggedUser.getString(UserHandler.NETWORK_KEY));
-		familiesQuery.selectKeys(Arrays.asList(FamilyHandler.NAME_KEY));
+				loggedUser.getString(UserHandler.NETWORK_KEY));		
 		familiesQuery.findInBackground(new FindCallback<ParseObject>() {
 			BasicFamilyListFragment frag;
 			
