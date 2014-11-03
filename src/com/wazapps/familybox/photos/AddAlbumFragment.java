@@ -59,12 +59,14 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 	private LinearLayout mPhotosInputSectionRow2;
 	private ArrayList<Integer> currentSelectedPhotos;
 	private ArrayList<String> photoUrls;
+	private ArrayList<String> shareWithList = new ArrayList<String>();
 
 	public interface AddAlbumScreenCallback {
 		public void openDateInputDialog();
 
 		public void uploadPhotosToAlbum(String albumName, String albumDate,
-				String albumDesc, ArrayList<String> photoUrls);
+				String albumDesc, ArrayList<String> photoUrls,
+				ArrayList<String> shareWithList);
 	}
 
 	@Override
@@ -154,7 +156,8 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 
 				addAlbumCallback.uploadPhotosToAlbum(mAlbumName.getText()
 						.toString(), mAlbumDate.getText().toString(),
-						mAlbumDesc.getText().toString(), photoUrls);
+						mAlbumDesc.getText().toString(), photoUrls,
+						shareWithList);
 				getActivity().finish();
 			}
 
@@ -319,5 +322,10 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 				}
 			}
 		}
+	}
+
+	public void setSharedWithList(ArrayList<String> shareWithList) {
+		this.shareWithList = shareWithList;
+
 	}
 }

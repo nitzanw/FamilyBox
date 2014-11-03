@@ -3,8 +3,12 @@ package com.wazapps.familybox.photos;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.xml.datatype.Duration;
+
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,8 +17,16 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.FamilyHandler;
+import com.wazapps.familybox.handlers.PhotoHandler;
+import com.wazapps.familybox.handlers.UserHandler;
+import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
 
 public class ShareWithDialogFragment extends DialogFragment implements
 		OnClickListener {
@@ -23,8 +35,25 @@ public class ShareWithDialogFragment extends DialogFragment implements
 	private ListView mFamilyListView;
 	private ImageButton mExit;
 	private Button mAccept;
-	private ArrayList<String> connectedFamilliesList;
 	private ShareWithListAdapter mAdapter;
+	private FamilyShareAlbumCallback shareCallback = null;
+
+	interface FamilyShareAlbumCallback {
+		void setFamilliesToShareWith(ArrayList<String> shareIdList);
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			this.shareCallback = (FamilyShareAlbumCallback) getActivity();
+		}
+
+		catch (ClassCastException e) {
+			Log.e(getTag(), "the activity does not implement "
+					+ "FamilyShareAlbumCallback interface");
+		}
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,9 +65,17 @@ public class ShareWithDialogFragment extends DialogFragment implements
 
 		mFamilyListView = (ListView) root
 				.findViewById(R.id.lv_share_w_family_list);
-		createData();
-		mAdapter = new ShareWithListAdapter(getActivity(),
-				connectedFamilliesList);
+
+		ShareWithListAdapter.QueryFactory<ParseObject> factory = new ShareWithListAdapter.QueryFactory<ParseObject>() {
+			public ParseQuery<ParseObject> create() {
+				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
+						FamilyHandler.FAMILY_CLASS_NAME);
+				query.whereNotEqualTo("objectId", ParseUser.getCurrentUser().get(UserHandler.FAMILY_KEY));
+				return query;
+			}
+		};
+
+		mAdapter = new ShareWithListAdapter(getActivity(), factory);
 		mFamilyListView.setAdapter(mAdapter);
 		mExit = (ImageButton) root.findViewById(R.id.ib_share_w_exit);
 		mExit.setOnClickListener(this);
@@ -47,28 +84,20 @@ public class ShareWithDialogFragment extends DialogFragment implements
 		return root;
 	}
 
-	private void createData() {
-		connectedFamilliesList = new ArrayList<String>();
-		connectedFamilliesList.add("Zohar");
-		connectedFamilliesList.add("Kimhi");
-		connectedFamilliesList.add("Cohen");
-		connectedFamilliesList.add("Zur");
-		connectedFamilliesList.add("Jorden");
-		connectedFamilliesList.add("Hirsh");
-		connectedFamilliesList.add("York");
-		Collections.sort(connectedFamilliesList);
-
-	}
-
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.ib_share_w_exit) {
 			dismiss();
 		} else if (v.getId() == R.id.button_share_w_accept) {
-			// TODO get all the checked family names ids
+			if (!mAdapter.isShareButtonEnabled()) {
+				Toast.makeText(getActivity(), R.string.add_album_err_no_share,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				ArrayList<String> familyIdShareList = (ArrayList<String>) mAdapter
+						.getFamilyIdShareList();
+				shareCallback.setFamilliesToShareWith(familyIdShareList);
+			}
 			dismiss();
-
 		}
-
 	}
 }
