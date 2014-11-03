@@ -4,18 +4,17 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.photos.AddAlbumFragment.AddAlbumScreenCallback;
+import com.wazapps.familybox.photos.ShareWithDialogFragment.FamilyShareAlbumCallback;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment;
 import com.wazapps.familybox.splashAndLogin.BirthdaySignupDialogFragment.DateChooserCallback;
 import com.wazapps.familybox.util.AbstractScreenActivity;
 
 public class AddAlbumScreenActivity extends AbstractScreenActivity implements
-		AddAlbumScreenCallback, DateChooserCallback {
+		AddAlbumScreenCallback, DateChooserCallback, FamilyShareAlbumCallback {
 	private static final String TAG_ALBUM_DATE = "add album date";
 
 	@Override
@@ -46,12 +45,23 @@ public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 
 	@Override
 	public void uploadPhotosToAlbum(String albumName, String albumDate,
-			String albumDesc, ArrayList<String> photoUrls) {
+			String albumDesc, ArrayList<String> photoUrls, ArrayList<String> shareWithList) {
 		Intent photoIntent = new Intent();
 		photoIntent.putExtra(PhotoHandler.ALBUM_NAME, albumName);
 		photoIntent.putExtra(PhotoHandler.ALBUM_DATE, albumDate);
 		photoIntent.putExtra(PhotoHandler.ALBUM_DESCRIPTION, albumDesc);
 		photoIntent.putExtra(PhotoHandler.PHOTO_URLS, photoUrls);
+		photoIntent.putExtra(PhotoHandler.SHARE_WITH, shareWithList);
 		setResult(RESULT_OK, photoIntent);
+	}
+
+	@Override
+	public void setFamilliesToShareWith(ArrayList<String> shareIdList) {
+		AddAlbumFragment addAlbum = (AddAlbumFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.fragment_container);
+		if (addAlbum != null) {
+			addAlbum.setSharedWithList(shareIdList);
+		}
+		
 	}
 }

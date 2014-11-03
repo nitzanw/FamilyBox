@@ -652,12 +652,13 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int add_album_err_no_name_date=0x7f070094;
         public static final int add_album_err_no_name_desc=0x7f070095;
         public static final int add_album_err_no_photos=0x7f070098;
-        public static final int add_album_err_not_uploaded=0x7f070099;
+        public static final int add_album_err_no_share=0x7f070099;
+        public static final int add_album_err_not_uploaded=0x7f07009a;
         public static final int add_album_menu=0x7f070069;
         public static final int add_album_name=0x7f070086;
         public static final int add_album_share=0x7f070088;
         public static final int add_album_share_w_dialog=0x7f07008e;
-        public static final int add_album_success=0x7f07009a;
+        public static final int add_album_success=0x7f07009b;
         public static final int add_album_title=0x7f07008d;
         public static final int add_album_uploading=0x7f07008b;
         public static final int album_date=0x7f07002c;
@@ -702,7 +703,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int empty_network_2_ask_a_family_member=0x7f070032;
         public static final int empty_network_2_enter_name=0x7f070033;
         public static final int empty_network_2_join_existing=0x7f070031;
-        public static final int error_database=0x7f07009d;
+        public static final int error_database=0x7f07009e;
         public static final int events=0x7f07006b;
         public static final int expanded_action_menu=0x7f070067;
         public static final int families_list_empty=0x7f070044;
@@ -725,15 +726,15 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int father=0x7f070025;
         public static final int father_name=0x7f070026;
         public static final int father_query_name=0x7f070028;
-        public static final int free_version_label=0x7f07009c;
+        public static final int free_version_label=0x7f07009d;
         public static final int hello_blank_fragment=0x7f07002a;
         public static final int hello_world=0x7f070007;
-        public static final int id=0x7f07009f;
+        public static final int id=0x7f0700a0;
         public static final int image_description=0x7f07002d;
         public static final int member_query_relation=0x7f070042;
         public static final int member_query_text=0x7f070041;
         public static final int mother_name=0x7f070027;
-        public static final int multi_app_name=0x7f07009b;
+        public static final int multi_app_name=0x7f07009c;
         public static final int my_family_album_empty=0x7f07008f;
         public static final int my_family_album_empty_add_album=0x7f070090;
         public static final int name=0x7f070078;
@@ -750,7 +751,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int personal_welcome_profile_pic=0x7f070037;
         public static final int personal_welcome_title=0x7f070036;
         public static final int photo_albums=0x7f070063;
-        public static final int photo_hint=0x7f0700a1;
+        public static final int photo_hint=0x7f0700a2;
         public static final int photos_tab_favorites=0x7f070062;
         public static final int photos_tab_my_family=0x7f070060;
         public static final int photos_tab_shared_album=0x7f070061;
@@ -769,7 +770,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int profile_status=0x7f07000b;
         public static final int profile_status_title=0x7f07000a;
         public static final int profile_title=0x7f07006d;
-        public static final int requesting_thumbnails=0x7f07009e;
+        public static final int requesting_thumbnails=0x7f07009f;
         public static final int role=0x7f070077;
         public static final int search_family=0x7f07007c;
         public static final int signup_birthday=0x7f070053;
@@ -790,7 +791,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int title_activity_splash=0x7f070001;
         public static final int type=0x7f07007b;
         public static final int user_name=0x7f070009;
-        public static final int version=0x7f0700a0;
+        public static final int version=0x7f0700a1;
     }
     public static final class style {
         /** 
