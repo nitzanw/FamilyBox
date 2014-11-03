@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -56,6 +57,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	
 	private static final String FAMILY_MEMBER_CHILD_TYPE = "child";
 	private static final String FAMILY_MEMBER_PARENT_TYPE = "parent";
+	private static final String FAMILY_MEMBER_SINGLE_TYPE = "single";
 	private static final String FAMILY_MEMBER_ITEM_TYPE = "family member item";
 	private static final String ALBUM_ITEM_TYPE = "album item";
 	public static final String FAMILY_PROFILE_DATA = "family profile data";
@@ -205,14 +207,14 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		mFamilyName = InputHandler.capitalizeName(mFamilyName);
 		mFamilyTitle.setText(mFamilyName + " Family");
 		
-		FamilyHandler.getFamilyById(mFamilyId, true,
+		FamilyHandler.getFamilyById(mFamilyId, mIsUserFamily,
 				new GetCallback<ParseObject>() {
 			FamilyProfileFragment frag;
 			
 			@Override
 			public void done(ParseObject family, ParseException e) {
 				if (e != null) {
-					//TODO: handle error
+					LogUtils.logWarning("ROFL", e.getMessage());
 					return;
 				} 
 				
@@ -314,9 +316,12 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		UserData member = mFamilyMembersData.get(0);
 		Bitmap photo = member.getprofilePhoto();
 		String name = InputHandler.capitalizeName(member.getName());
+		String msg = 
+		(mLoggedUser.getObjectId().equals(member.getUserId()))? 
+				"You are the only member of this family" :
+					name + " is the only member of this family";
 		
-		mSingleMemberName.setText(name + 
-				" is the only member of this family");
+		mSingleMemberName.setText(msg);
 		
 		if (photo != null) {
 			mSingleMemberPhoto.setImageBitmap(photo);
@@ -328,6 +333,9 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		mParentsSpinner.setVisibility(View.GONE);
 		mSingleMember.setVisibility(View.VISIBLE);
 		mSingleMemberPhoto.setOnClickListener(this);
+		mSingleMemberPhoto.setTag(ITEM_TYPE, FAMILY_MEMBER_ITEM_TYPE);
+		mSingleMemberPhoto.setTag(FAMILY_MEMBER_TYPE, FAMILY_MEMBER_SINGLE_TYPE);
+		mSingleMemberPhoto.setTag(ITEM_POS, 0);
 	}
 
 	private void initParentsLevelView() {	
@@ -358,17 +366,20 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 				
 				else if (mParentsListSize == 1) {
 					View v = initParentView(0);
-					ParentViewData data = 
-							new ParentViewData(frag.mParentLayoutCenter, v);
+					ParentViewData data = new ParentViewData(
+							frag.mParentLayoutCenter, v);
+					
 					publishProgress(data);
 				} 
 				
 				else {
 					View parentView1 = initParentView(0);
 					View parentView2 = initParentView(1);
+					
 					ParentViewData data1 = new ParentViewData(
 							frag.mParentLayoutRight, parentView1);
 					publishProgress(data1);
+					
 					ParentViewData data2 = new ParentViewData(
 							frag.mParentLayoutLeft, parentView2);
 					publishProgress(data2);
@@ -430,7 +441,9 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 			mFamilyChildrenTitle.setVisibility(View.GONE);
 			noChildrenCover.setVisibility(View.VISIBLE);
 			return;
-		} else {
+		} 
+		
+		else {
 			mFamilyChildrenTitle.setVisibility(View.VISIBLE);
 			mFamilyChildrenTitle.startAnimation(textJump);
 		}
@@ -506,6 +519,10 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	}
 
 	private UserData getMemberItem(String type, int pos) {
+		if (FAMILY_MEMBER_SINGLE_TYPE.equals(type)) {
+			return mFamilyMembersData.get(pos);
+		}
+		
 		if (FAMILY_MEMBER_PARENT_TYPE.equals(type)) {
 			return mParentsList.get(pos);
 		} 

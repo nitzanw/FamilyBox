@@ -1,5 +1,8 @@
 package com.wazapps.familybox.familyTree;
 
+import com.parse.ParseObject;
+import com.wazapps.familybox.handlers.FamilyHandler;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -22,6 +25,11 @@ public class FamiliesListItem implements Parcelable, Comparable<FamiliesListItem
 	public FamiliesListItem(String familyId, String familyName) {
 		this.familyId = familyId;
 		this.familyName = familyName;
+	}
+	
+	public FamiliesListItem(ParseObject family) {
+		this.familyId = family.getObjectId();
+		this.familyName = family.getString(FamilyHandler.NAME_KEY);
 	}
 	
 	public FamiliesListItem(Parcel data) {
