@@ -54,6 +54,7 @@ import com.wazapps.familybox.photos.PhotoItem_ex;
 import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 import com.wazapps.familybox.profiles.UserData;
+import com.wazapps.familybox.profiles.UserData.DownloadCallback;
 import com.wazapps.familybox.splashAndLogin.ChangePasswordDialogFragment;
 import com.wazapps.familybox.splashAndLogin.LoginActivity;
 import com.wazapps.familybox.util.JSONParser;
@@ -309,20 +310,36 @@ public class MainActivity extends FragmentActivity implements
 				@Override
 				public void done(Exception e) {
 					if (e == null) {
-						Bundle data = new Bundle();
-						data.putBoolean(ProfileFragment.USER_PROFILE, true);
-
-						ProfileFragment profileFrag = new ProfileFragment();
-						profileFrag.setArguments(data);
-						FragmentTransaction ft = getSupportFragmentManager()
-								.beginTransaction();
-						ft.setCustomAnimations(R.anim.fade_in_fast,
-								R.anim.fade_out_fast);
-						ft.replace(R.id.fragment_container, profileFrag,
-								ProfileFragment.PROFILE_FRAG);
-						ft.commit();
-
-					} else {
+						UserData userData = new UserData(currentUser, 
+								UserData.ROLE_UNDEFINED);
+						userData.downloadProfilePicAsync(currentUser, 
+								new DownloadCallback() {
+							UserData userData;
+							
+							@Override
+							public void done(ParseException e) {
+								Bundle data = new Bundle();
+								data.putBoolean(ProfileFragment.USER_PROFILE, false);
+								data.putParcelable(ProfileFragment.MEMBER_ITEM, userData);
+								ProfileFragment profileFrag = new ProfileFragment();
+								profileFrag.setArguments(data);
+								FragmentTransaction ft = getSupportFragmentManager()
+										.beginTransaction();
+								ft.setCustomAnimations(R.anim.fade_in_fast,
+										R.anim.fade_out_fast);
+								ft.replace(R.id.fragment_container, profileFrag,
+										ProfileFragment.PROFILE_FRAG);
+								ft.commit();								
+							}
+							
+							private DownloadCallback init(UserData userData) {
+								this.userData = userData;
+								return this;
+							}
+						}.init(userData));														
+					} 
+					
+					else {
 						LogUtils.logError("MainActivity", e.getMessage());
 
 						Toast.makeText(getApplicationContext(),

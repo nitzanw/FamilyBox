@@ -171,20 +171,19 @@ public class NewsAdapter extends ParseQueryAdapter<NewsItem> {
 									
 									//else - set default image
 									else {
-										holder.profilePic.setImageResource(R.drawable.profile_pic_elipse);
+										holder.profilePic.setImageResource(
+												R.drawable.profile_pic_elipse);
 									}
 									
 									holder.profilePic.setVisibility(View.VISIBLE);
-								}							
-								
+								}															
 								
 								private DownloadCallback init(UserData userData) {
 									this.userData = userData;
 									return this;
 								}
 							}.init(userData));
-				}
-			
+				}			
 			}
 			
 			private GetCallback<ParseUser> init(ViewHolder holder) {
