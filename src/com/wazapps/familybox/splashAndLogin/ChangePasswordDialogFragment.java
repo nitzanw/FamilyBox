@@ -72,11 +72,18 @@ public class ChangePasswordDialogFragment extends DialogFragment implements
 					Toast.makeText(getActivity().getApplicationContext(), 
 							"You must fill all fields", Toast.LENGTH_LONG).show();
 					return;
-				} 
+				}
+				
 				
 				if (!newPwd.equals(confirmPwd)) {
 					Toast.makeText(getActivity().getApplicationContext(), 
-							"Password and Password confirm do not match", Toast.LENGTH_LONG).show();
+							"Password and confirm do not match", Toast.LENGTH_LONG).show();
+					return;
+				}
+				
+				if (currPwd.length() < 4) {
+					Toast.makeText(getActivity().getApplicationContext(), 
+							"Password is too short", Toast.LENGTH_LONG).show();
 					return;
 				}
 				

@@ -2,6 +2,8 @@ package com.wazapps.familybox.familyTree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -96,6 +98,7 @@ public abstract class BasicFamilyListFragment extends Fragment {
 				ParseQuery.getQuery(FamilyHandler.FAMILY_CLASS_NAME);
 		familiesQuery.whereEqualTo(FamilyHandler.NETWORK_KEY, 
 				loggedUser.getString(UserHandler.NETWORK_KEY));		
+		familiesQuery.orderByAscending(FamilyHandler.NAME_KEY);
 		familiesQuery.findInBackground(new FindCallback<ParseObject>() {
 			BasicFamilyListFragment frag;
 			
@@ -108,7 +111,7 @@ public abstract class BasicFamilyListFragment extends Fragment {
 						FamiliesListItem familyData = 
 								new FamiliesListItem(family);
 						familiesListData.add(familyData);
-					}					
+					}
 				} 
 				
 				else {

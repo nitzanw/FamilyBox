@@ -2,6 +2,8 @@ package com.wazapps.familybox.newsfeed;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,6 +31,7 @@ public class NewsAdapter extends ParseQueryAdapter<NewsItem> {
 	private Activity activity;
 	private LayoutInflater inflater;
 	private String currentDate;
+	private HashMap<String, Bitmap> profilePhotos;
 	
 	public static class ViewHolder {
 		  TextView userName;
@@ -47,6 +50,7 @@ public class NewsAdapter extends ParseQueryAdapter<NewsItem> {
 				context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		Date date = Calendar.getInstance().getTime();
 		this.currentDate = InputHandler.formatDate(date); 
+		this.profilePhotos = new HashMap<String, Bitmap>();
 	}
 	
 	@Override
@@ -115,38 +119,62 @@ public class NewsAdapter extends ParseQueryAdapter<NewsItem> {
 					LogUtils.logError("NewsAdapter", e.getMessage());
 					return;
 				}
-			
-				UserData userData = new UserData(user, 
-						UserData.ROLE_UNDEFINED);
 				
-				userData.downloadProfilePicAsync(
-					user, new DownloadCallback() {
-						UserData userData;
-						
-						@Override
-						public void done(ParseException e) {
-							if (e != null) {
-								LogUtils.logError("NewsAdapter", 
-										e.getMessage());
-								return;
-							}
-							
-							if (holder.profilePic.getTag().equals(userData.getUserId())) {			
-								Bitmap picture = userData.getprofilePhoto();
-								if (picture != null) {
-									holder.profilePic.setImageBitmap(picture);										
-								}
+				final String currUserId = user.getObjectId();
+				if (holder.profilePic.getTag().equals(currUserId)) {	
+					//check if profilePicture has already been cached
+					if (profilePhotos.containsKey(currUserId)) {
+						Bitmap picture = profilePhotos.get(currUserId);
+						holder.profilePic.setImageBitmap(picture);
+						holder.profilePic.setVisibility(View.VISIBLE);
+						return;
+					} 			
+					
+					//else - download it from user
+					UserData userData = new UserData(user, 
+							UserData.ROLE_UNDEFINED);
+					
+					userData.downloadProfilePicAsync(
+							user, new DownloadCallback() {
+								UserData userData;
 								
-								holder.profilePic.setVisibility(View.VISIBLE);
-							}							
-						}
-						
-						private DownloadCallback init(UserData userData) {
-							this.userData = userData;
-							return this;
-						}
-					}.init(userData));
-				
+								@Override
+								public void done(ParseException e) {
+									if (e != null) {
+										LogUtils.logError("NewsAdapter", 
+												e.getMessage());
+										return;
+									}
+									
+									//check again if profile picture is cached
+									Bitmap picture = null;
+																	
+									if (profilePhotos.containsKey(currUserId)) {
+										picture = profilePhotos.get(currUserId);
+									} 
+									
+									else {
+										picture = userData.getDownsampledPhoto();	
+										if (picture != null) {
+											profilePhotos.put(userData.getUserId(), picture);
+										}
+									}
+									
+									if (picture != null) {
+										holder.profilePic.setImageBitmap(picture);										
+									}
+									
+									holder.profilePic.setVisibility(View.VISIBLE);
+								}							
+								
+								
+								private DownloadCallback init(UserData userData) {
+									this.userData = userData;
+									return this;
+								}
+							}.init(userData));
+				}
+			
 			}
 			
 			private GetCallback<ParseUser> init(ViewHolder holder) {

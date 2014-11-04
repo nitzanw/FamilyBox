@@ -301,6 +301,20 @@ public class UserData implements Parcelable {
 		return bitmap;
 	}
 	
+	public Bitmap getDownsampledPhoto() {
+		 // First decode with inJustDecodeBounds=true to check dimensions
+		Bitmap bitmap = null;
+		
+		if (this.profilePic != null) {
+			final BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inSampleSize = 6;
+			bitmap = BitmapFactory.decodeByteArray(
+					this.profilePic, 0, this.profilePic.length, options);					
+		}
+		
+		return bitmap;
+	}
+	
 	/**
 	 * Returns the user's data in the format of profileDetails array
 	 * this is used by the ProfileDetailsAdapter in the ProfileFragment
