@@ -310,34 +310,18 @@ public class MainActivity extends FragmentActivity implements
 				@Override
 				public void done(Exception e) {
 					if (e == null) {
-						UserData userData = new UserData(currentUser, 
-								UserData.ROLE_UNDEFINED);
-						userData.downloadProfilePicAsync(currentUser, 
-								new DownloadCallback() {
-							UserData userData;
-							
-							@Override
-							public void done(ParseException e) {
-								Bundle data = new Bundle();
-								data.putBoolean(ProfileFragment.USER_PROFILE, false);
-								data.putBoolean(ProfileFragment.IS_FROM_DRAWER, true);
-								data.putParcelable(ProfileFragment.MEMBER_ITEM, userData);
-								ProfileFragment profileFrag = new ProfileFragment();
-								profileFrag.setArguments(data);
-								FragmentTransaction ft = getSupportFragmentManager()
-										.beginTransaction();
-								ft.setCustomAnimations(R.anim.fade_in_fast,
-										R.anim.fade_out_fast);
-								ft.replace(R.id.fragment_container, profileFrag,
-										ProfileFragment.PROFILE_FRAG);
-								ft.commit();								
-							}
-							
-							private DownloadCallback init(UserData userData) {
-								this.userData = userData;
-								return this;
-							}
-						}.init(userData));														
+						Bundle data = new Bundle();
+						data.putBoolean(ProfileFragment.USER_PROFILE, false);
+						data.putBoolean(ProfileFragment.IS_FROM_DRAWER, true);
+						ProfileFragment profileFrag = new ProfileFragment();
+						profileFrag.setArguments(data);
+						FragmentTransaction ft = getSupportFragmentManager()
+								.beginTransaction();
+						ft.setCustomAnimations(R.anim.fade_in_fast,
+								R.anim.fade_out_fast);
+						ft.replace(R.id.fragment_container, profileFrag,
+								ProfileFragment.PROFILE_FRAG);
+						ft.commit();													
 					} 
 					
 					else {
