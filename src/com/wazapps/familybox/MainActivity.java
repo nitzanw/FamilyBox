@@ -320,6 +320,7 @@ public class MainActivity extends FragmentActivity implements
 							public void done(ParseException e) {
 								Bundle data = new Bundle();
 								data.putBoolean(ProfileFragment.USER_PROFILE, false);
+								data.putBoolean(ProfileFragment.IS_FROM_DRAWER, true);
 								data.putParcelable(ProfileFragment.MEMBER_ITEM, userData);
 								ProfileFragment profileFrag = new ProfileFragment();
 								profileFrag.setArguments(data);

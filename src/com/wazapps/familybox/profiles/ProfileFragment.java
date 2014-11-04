@@ -76,6 +76,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 
 	private static final int ITEM_TYPE = R.string.type;
 	private static final int ITEM_POS = R.string.position;
+	public static final String IS_FROM_DRAWER = "is from drawer";
 
 	private ProfileFamilyListAdapter mFamilyListAdapter;
 	private ProfileDetailsAdapter mProfileDetailsAdapter;
@@ -86,6 +87,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 	protected ArrayList<ParseUser> mFamilyMembers = null;
 	protected ArrayList<UserData> mFamilyMembersData = null;
 	protected boolean mIsUserProfile = true;
+	protected boolean mIsFromDrawer = false;
 	protected ParseUser loggedUser;
 
 	// the fragment's callback functions
@@ -219,6 +221,12 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 				mCurrentUser = (UserData) profileArgs
 						.getParcelable(MEMBER_ITEM);
 			}
+			
+			if (profileArgs.containsKey(IS_FROM_DRAWER)) {
+				mIsFromDrawer = profileArgs.getBoolean(IS_FROM_DRAWER);
+			} else {
+				mIsFromDrawer = false;
+			}
 		}
 
 		else {
@@ -262,6 +270,10 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 		if (mIsUserProfile) {
 			mEditStatusbtn.setOnClickListener(this);
 			mSubmitStatus.setOnClickListener(this);
+		} else if (mIsFromDrawer) {
+			mEditStatusbtn.setOnClickListener(this);
+			mSubmitStatus.setOnClickListener(this);
+			mSpinner.setVisibility(View.VISIBLE);
 		} else {
 			mEditStatusbtn.setVisibility(View.INVISIBLE);
 			mSubmitStatus.setVisibility(View.INVISIBLE);
