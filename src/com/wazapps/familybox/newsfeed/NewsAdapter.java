@@ -95,6 +95,8 @@ public class NewsAdapter extends ParseQueryAdapter<NewsItem> {
 		if (loggedUser != null) {
 			if (loggedUser.getObjectId().equals(userId)) {
 				holder.youTag.setVisibility(View.VISIBLE);
+			} else {
+				holder.youTag.setVisibility(View.INVISIBLE);
 			}
 		}
 		
@@ -109,6 +111,7 @@ public class NewsAdapter extends ParseQueryAdapter<NewsItem> {
 		holder.newsDate.setText(date);
 		holder.newsContent.setText(content);
 		holder.profilePic.setTag(newsUser.getObjectId());
+		//fetch user data
 		newsUser.fetchIfNeededInBackground(
 				new GetCallback<ParseUser>() {
 			ViewHolder holder;
@@ -121,7 +124,8 @@ public class NewsAdapter extends ParseQueryAdapter<NewsItem> {
 				}
 				
 				final String currUserId = user.getObjectId();
-				if (holder.profilePic.getTag().equals(currUserId)) {	
+				if (holder.profilePic.getTag().equals(currUserId)) {
+					
 					//check if profilePicture has already been cached
 					if (profilePhotos.containsKey(currUserId)) {
 						Bitmap picture = profilePhotos.get(currUserId);
@@ -147,12 +151,12 @@ public class NewsAdapter extends ParseQueryAdapter<NewsItem> {
 									}
 									
 									//check again if profile picture is cached
-									Bitmap picture = null;
-																	
+									Bitmap picture = null;															
 									if (profilePhotos.containsKey(currUserId)) {
 										picture = profilePhotos.get(currUserId);
 									} 
 									
+									//if not - get it from user data and put it in cache
 									else {
 										picture = userData.getDownsampledPhoto();	
 										if (picture != null) {
@@ -160,8 +164,14 @@ public class NewsAdapter extends ParseQueryAdapter<NewsItem> {
 										}
 									}
 									
+									//if user has a profile picture - set it
 									if (picture != null) {
 										holder.profilePic.setImageBitmap(picture);										
+									} 
+									
+									//else - set default image
+									else {
+										holder.profilePic.setImageResource(R.drawable.profile_pic_elipse);
 									}
 									
 									holder.profilePic.setVisibility(View.VISIBLE);
