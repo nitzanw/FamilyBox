@@ -295,7 +295,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 
 		// if this is the user's profile -
 		// load its data manually from local datastore
-		if (mIsUserProfile) {
+		if (mIsUserProfile || mIsFromDrawer) {
 			// refetch loggedUser just to be sure
 			loggedUser = ParseUser.getCurrentUser();
 
@@ -352,7 +352,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 						frag.mCurrentUser.getName(),
 						frag.mCurrentUser.getLastName());
 				status = frag.mCurrentUser.getStatus();
-				if (frag.mIsUserProfile) {
+				if (frag.mIsUserProfile || frag.mIsFromDrawer) {
 					frag.mCurrentUser.downloadProfilePicSync(loggedUser);
 				}
 				profilePic = frag.mCurrentUser.getprofilePhoto();
