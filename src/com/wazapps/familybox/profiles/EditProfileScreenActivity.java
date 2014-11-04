@@ -190,6 +190,7 @@ public class EditProfileScreenActivity extends AbstractScreenActivity
 		} 
 		
 		editFrag.turnOnProgress(); //start loading spinner
+		getActionBar().hide();
 		
 		String familyName = mCurrentUser
 				.getString(UserHandler.PREV_LAST_NAME_KEY);
