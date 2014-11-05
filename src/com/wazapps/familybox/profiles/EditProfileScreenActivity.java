@@ -19,6 +19,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.splunk.mint.Mint;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.InputHandler;
@@ -117,6 +118,7 @@ public class EditProfileScreenActivity extends AbstractScreenActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Mint.initAndStartSession(EditProfileScreenActivity.this, "ad50ec84");
 		iniCallbackFunctions();
 		userHandler = new UserHandler();
 		overridePendingTransition(R.anim.enter, R.anim.exit);

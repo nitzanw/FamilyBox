@@ -35,6 +35,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.splunk.mint.Mint;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment.AddFamilyProfileFragmentListener;
 import com.wazapps.familybox.familyTree.BasicFamilyListFragment;
@@ -98,6 +99,7 @@ public class MainActivity extends FragmentActivity implements
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Mint.initAndStartSession(MainActivity.this, "ad50ec84");
 		setContentView(R.layout.drawer_main);
 		initDrawer();
 		selectItem(mPosition);

@@ -34,6 +34,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.splunk.mint.Mint;
 import com.wazapps.familybox.R;
 
 public class MultiImageChooserActivity extends FragmentActivity implements
@@ -82,8 +83,7 @@ public class MultiImageChooserActivity extends FragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// int theme = getIntent().getIntExtra("THEME", R.style.CollageTheme);
-		// setTheme(theme);
+		Mint.initAndStartSession(MultiImageChooserActivity.this, "ad50ec84");
 		setContentView(R.layout.multiselectorgrid);
 		fileNames.clear();
 		photoIdList.clear();

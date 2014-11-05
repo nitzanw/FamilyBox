@@ -5,9 +5,11 @@ import java.util.Arrays;
 import android.os.Bundle;
 import android.os.Parcelable;
 
+import com.splunk.mint.Mint;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.familyTree.FamiliesListItem;
 import com.wazapps.familybox.handlers.FamilyHandler;
+import com.wazapps.familybox.profiles.ProfileScreenActivity;
 import com.wazapps.familybox.util.AbstractScreenActivity;
 import com.wazapps.familybox.util.LogUtils;
 
@@ -16,6 +18,7 @@ public class AlbumGridScreenActivity extends AbstractScreenActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Mint.initAndStartSession(AlbumGridScreenActivity.this, "ad50ec84");
 
 		String family = getIntent().getStringExtra(FamilyHandler.FAMILY_ID_KEY);
 		String familyName = getIntent().getStringExtra(FamilyHandler.NAME_KEY);

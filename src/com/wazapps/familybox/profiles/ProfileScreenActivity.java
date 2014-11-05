@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 
+import com.splunk.mint.Mint;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.photos.PhotoAlbumScreenActivity;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 import com.wazapps.familybox.util.AbstractScreenActivity;
 
@@ -17,6 +19,8 @@ public class ProfileScreenActivity extends AbstractScreenActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+		Mint.initAndStartSession(ProfileScreenActivity.this, "ad50ec84");
+
 		// get the activity arguments
 		Bundle args = getIntent().getBundleExtra(ProfileFragment.PROFILE_DATA);
 		ArrayList<FamilyMemberDetails> arrList = args
@@ -31,7 +35,7 @@ public class ProfileScreenActivity extends AbstractScreenActivity implements
 				.beginTransaction()
 				.add(R.id.fragment_container, profileFrag,
 						ProfileFragment.PROFILE_FRAG).commit();
-		
+
 	}
 
 	@Override
@@ -43,6 +47,7 @@ public class ProfileScreenActivity extends AbstractScreenActivity implements
 		getSupportFragmentManager()
 				.beginTransaction()
 				.add(R.id.fragment_container, profileFrag,
-						ProfileFragment.PROFILE_FRAG).addToBackStack(null).commit();
+						ProfileFragment.PROFILE_FRAG).addToBackStack(null)
+				.commit();
 	}
 }

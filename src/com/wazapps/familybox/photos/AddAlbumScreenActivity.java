@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.splunk.mint.Mint;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.photos.AddAlbumFragment.AddAlbumScreenCallback;
@@ -20,6 +21,7 @@ public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Mint.initAndStartSession(AddAlbumScreenActivity.this, "ad50ec84");
 		getSupportFragmentManager()
 				.beginTransaction()
 				.add(R.id.fragment_container, new AddAlbumFragment(),
@@ -45,7 +47,8 @@ public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 
 	@Override
 	public void uploadPhotosToAlbum(String albumName, String albumDate,
-			String albumDesc, ArrayList<String> photoUrls, ArrayList<String> shareWithList) {
+			String albumDesc, ArrayList<String> photoUrls,
+			ArrayList<String> shareWithList) {
 		Intent photoIntent = new Intent();
 		photoIntent.putExtra(PhotoHandler.ALBUM_NAME, albumName);
 		photoIntent.putExtra(PhotoHandler.ALBUM_DATE, albumDate);
@@ -62,6 +65,6 @@ public class AddAlbumScreenActivity extends AbstractScreenActivity implements
 		if (addAlbum != null) {
 			addAlbum.setSharedWithList(shareIdList);
 		}
-		
+
 	}
 }

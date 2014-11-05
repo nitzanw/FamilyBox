@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.splunk.mint.Mint;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.UserHandler;
@@ -35,6 +36,7 @@ public class SplashActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Mint.initAndStartSession(SplashActivity.this, "ad50ec84");
 		setContentView(R.layout.activity_splash);
 		overridePendingTransition(R.anim.enter, R.anim.exit);
 		initAnimation();

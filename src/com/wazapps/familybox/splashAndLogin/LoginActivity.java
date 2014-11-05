@@ -23,6 +23,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
+import com.splunk.mint.Mint;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.FamilyHandler;
@@ -81,6 +82,7 @@ public class LoginActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Mint.initAndStartSession(LoginActivity.this, "ad50ec84");
 		setContentView(R.layout.activity_login_screen);
 		// Hide the status bar.
 		getActionBar().hide();

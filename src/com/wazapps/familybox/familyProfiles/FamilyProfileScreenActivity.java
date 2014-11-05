@@ -3,32 +3,37 @@ package com.wazapps.familybox.familyProfiles;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
+import com.splunk.mint.Mint;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment.AddFamilyProfileFragmentListener;
+import com.wazapps.familybox.photos.AlbumGridScreenActivity;
 import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.EditProfileFragment.EditProfileCallback;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 import com.wazapps.familybox.util.AbstractScreenActivity;
 
-public class FamilyProfileScreenActivity extends AbstractScreenActivity 
-implements AddFamilyProfileFragmentListener, 
-AddProfileFragmentListener {
+public class FamilyProfileScreenActivity extends AbstractScreenActivity
+		implements AddFamilyProfileFragmentListener, AddProfileFragmentListener {
 	public static String FAMILY_PROFILE_ARGS = "family profile args";
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().setTitle("Family Profile");
+		Mint.initAndStartSession(FamilyProfileScreenActivity.this, "ad50ec84");
+
+		getActionBar().setTitle(getString(R.string.family_profile_title));
 		overridePendingTransition(R.anim.enter, R.anim.exit);
-		
+
 		Bundle args = getIntent().getBundleExtra(FAMILY_PROFILE_ARGS);
 		FamilyProfileFragment familyProfileFrag = new FamilyProfileFragment();
 		familyProfileFrag.setArguments(args);
-		
-		getSupportFragmentManager().beginTransaction()
-		.add(R.id.fragment_container, familyProfileFrag,
-				FamilyProfileFragment.FAMILY_PROFILE_FRAGMENT).commit();
+
+		getSupportFragmentManager()
+				.beginTransaction()
+				.add(R.id.fragment_container, familyProfileFrag,
+						FamilyProfileFragment.FAMILY_PROFILE_FRAGMENT).commit();
 	}
+
 	@Override
 	public void addProfileFragment(Bundle args) {
 		ProfileFragment profileFrag = new ProfileFragment();
@@ -40,7 +45,7 @@ AddProfileFragmentListener {
 				ProfileFragment.PROFILE_FRAG).addToBackStack(null);
 		ft.commit();
 	}
-	
+
 	@Override
 	public void addFamilyProfileFragment(Bundle args) {
 		FamilyProfileFragment familyProfileFrag = new FamilyProfileFragment();

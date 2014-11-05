@@ -71,6 +71,7 @@ public class ShareWithDialogFragment extends DialogFragment implements
 				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
 						FamilyHandler.FAMILY_CLASS_NAME);
 				query.whereNotEqualTo("objectId", ParseUser.getCurrentUser().get(UserHandler.FAMILY_KEY));
+				query.addAscendingOrder(FamilyHandler.NAME_KEY);
 				return query;
 			}
 		};
