@@ -10,10 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.parse.ParseObject;
+import com.parse.ParseUser;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.TabsFragment;
 import com.wazapps.familybox.familyTree.FamiliesListItem;
+import com.wazapps.familybox.handlers.FamilyHandler;
+import com.wazapps.familybox.handlers.UserHandler;
 
 public class PhotoAlbumsTabsFragment extends TabsFragment {
 	private static final String MY_FAMILY = "myFamily";
@@ -38,18 +42,19 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 			return null;
 		}
 
-		Bundle args = makeTempData();
+		Bundle args = new Bundle();
+		args.putString(FamilyHandler.FAMILY_ID_KEY, ParseUser
+				.getCurrentUser().get(UserHandler.FAMILY_KEY).toString());
 		ViewGroup rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_photo_album_store_tabs, null);
 		PhotoAlbumsTabsFragment.tabHost = (FragmentTabHost) rootView
 				.findViewById(android.R.id.tabhost);
-		PhotoAlbumsTabsFragment.tabHost.setup(getActivity(), getChildFragmentManager(),
-				R.id.realtabcontent);
+		PhotoAlbumsTabsFragment.tabHost.setup(getActivity(),
+				getChildFragmentManager(), R.id.realtabcontent);
 
 		// add tabs to the tabs storage
-		TabsFragment.tabHost.addTab(
-				TabsFragment.tabHost.newTabSpec(MY_FAMILY).setIndicator(
-						makeTabIndicator(R.string.photos_tab_my_family)),
+		TabsFragment.tabHost.addTab(TabsFragment.tabHost.newTabSpec(MY_FAMILY)
+				.setIndicator(makeTabIndicator(R.string.photos_tab_my_family)),
 				AlbumGridFragment.class, args);
 
 		TabsFragment.tabHost.addTab(
@@ -61,7 +66,7 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		TabsFragment.tabHost.addTab(
 				tabHost.newTabSpec(FAVORITES).setIndicator(
 						makeTabIndicator(R.string.photos_tab_favorites)),
-						PhotoGridFragment.class, args);
+				PhotoGridFragment.class, args);
 
 		return TabsFragment.tabHost;
 	}
@@ -85,40 +90,10 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		return super.onOptionsItemSelected(item);
 	}
 
-	// TODO: get real data
-	/**
-	 * Get temporary data for testing purposes
-	 * 
-	 * @return
-	 */
-	private Bundle makeTempData() {
-		AlbumItem[] albumList = { null, null, null, null, null, null };
-		String albumName = "Temp Album Name ";
-		PhotoItem[] tempData = { null, null, null, null, null, null, null,
-				null, null, null, null, null, null, null, null, null, null,
-				null };
-
-		for (int i = 0; i < 18; i++) {
-			tempData[i] = new PhotoItem("11.2.201" + i, "www.bla.com",
-					"This is me and my friend Dan " + i);
-		}
-
-		for (int i = 0; i < 6; i++) {
-			albumList[i] = new AlbumItem(String.valueOf(i), tempData, albumName
-					+ i, "December 201" + i);
-		}
-
-		Bundle args = new Bundle();
-		args.putParcelableArray(PhotoGridFragment.ALBUM_ITEM_LIST, albumList);
-		args.putParcelable(PhotoGridFragment.ALBUM_ITEM, albumList[0]);
-		args.putString(FamiliesListItem.FAMILY_NAME, "My");
-		return args;
-	}
-
 	public static void refreshMyFamilyAlbums() {
 		tabHost.setCurrentTab(2);
 		tabHost.setCurrentTab(0);
-		
+
 	}
 
 }

@@ -33,16 +33,12 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment.AddFamilyProfileFragmentListener;
-import com.wazapps.familybox.familyTree.BasicFamilliesListAdapter;
 import com.wazapps.familybox.familyTree.BasicFamilyListFragment;
 import com.wazapps.familybox.familyTree.FamiliesListFragment;
-import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 import com.wazapps.familybox.newsfeed.NewsFeedTabsFragment;
@@ -51,16 +47,16 @@ import com.wazapps.familybox.newsfeed.NewsItemToRemove;
 import com.wazapps.familybox.photos.Album;
 import com.wazapps.familybox.photos.PhotoAlbumsTabsFragment;
 import com.wazapps.familybox.photos.PhotoItem_ex;
+import com.wazapps.familybox.photos.ShareAlbum;
 import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 import com.wazapps.familybox.profiles.UserData;
-import com.wazapps.familybox.profiles.UserData.DownloadCallback;
 import com.wazapps.familybox.splashAndLogin.ChangePasswordDialogFragment;
 import com.wazapps.familybox.splashAndLogin.LoginActivity;
+import com.wazapps.familybox.util.AboutFragment;
 import com.wazapps.familybox.util.JSONParser;
 import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.MenuListAdapter;
-import com.wazapps.familybox.util.AboutFragment;
 
 public class MainActivity extends FragmentActivity implements
 		AddProfileFragmentListener, AddFamilyProfileFragmentListener {
@@ -551,24 +547,13 @@ public class MainActivity extends FragmentActivity implements
 	private void setAlbumShareWithList(final Album album,
 			ArrayList<String> shareWithList) {
 		for (String familyid : shareWithList) {
-			ParseQuery<ParseObject> query = ParseQuery
-					.getQuery(FamilyHandler.FAMILY_CLASS_NAME);
-			query.getInBackground(familyid, new GetCallback<ParseObject>() {
+				
+						ShareAlbum share = new ShareAlbum();
+						share.setAlbumId(album.getObjectId());
+						share.setAlbumOwner(ParseUser.getCurrentUser().get(UserHandler.FAMILY_KEY).toString());
+						share.setSharedWithId(familyid);
+						share.saveEventually();
 
-				@Override
-				public void done(ParseObject object, ParseException e) {
-					if (e == null) {
-						ParseRelation<ParseObject> relation = album
-								.getRelation("shareWithFamily");
-						relation.add(object);
-						album.saveEventually();
-					} else {
-						LogUtils.logError(
-								"main activity - setAlbumShareWithList",
-								"didn't load family");
-					}
-				}
-			});
 		}
 	}
 

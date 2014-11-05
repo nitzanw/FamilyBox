@@ -3,8 +3,8 @@
     android:id="@+id/fl_album_item"
     android:layout_width="170dp"
     android:layout_height="170dp"
-    android:clipToPadding="true"
     android:background="@drawable/stub"
+    android:clipToPadding="true"
     android:scaleType="centerCrop" >
 
     <ImageButton
@@ -19,8 +19,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:gravity="center"
-        android:text="@string/album_title" />
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/tv_album_date"
@@ -29,7 +28,6 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="4dp"
         android:gravity="center"
-        android:text="@string/album_date"
         android:textSize="12dp" />
 
     <LinearLayout

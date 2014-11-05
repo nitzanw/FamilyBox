@@ -14,13 +14,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
-import com.parse.ParseRelation;
-import com.parse.ParseUser;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.util.LogUtils;

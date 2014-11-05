@@ -7,6 +7,7 @@ import com.parse.ParseObject;
 import com.wazapps.familybox.newsfeed.NewsItem;
 import com.wazapps.familybox.photos.Album;
 import com.wazapps.familybox.photos.PhotoItem_ex;
+import com.wazapps.familybox.photos.ShareAlbum;
 
 public class FamilyBoxApplication extends Application {
 	private static final String appId = "hFLXtlIwku3PGYy0ezKYQf67sRCamG1IvNToz22q";
@@ -23,6 +24,7 @@ public class FamilyBoxApplication extends Application {
 		ParseObject.registerSubclass(Album.class);
 		ParseObject.registerSubclass(PhotoItem_ex.class);
 		ParseObject.registerSubclass(NewsItem.class);
+		ParseObject.registerSubclass(ShareAlbum.class);
 		Parse.initialize(this, appId, clientKey);
 	}
 }

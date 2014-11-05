@@ -54,7 +54,9 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 		} else {
 			holder = (ViewHolder) view.getTag();
 		}
-		
+//		ParseRelation<ParseObject> relation = album
+//				.getRelation("shareWithFamily");
+//		relation.getQuery();
 
 		TextView titleAlbum = holder.titleAlbum;
 		titleAlbum.setText(album.getAlbumName());

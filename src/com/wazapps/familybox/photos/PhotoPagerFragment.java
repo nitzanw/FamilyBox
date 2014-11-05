@@ -129,8 +129,14 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 		mImage = (FrameLayout) root.findViewById(R.id.fl_image_layout);
 		mImage.setOnClickListener(this);
 
-		root.findViewById(R.id.ib_right_arrow).setOnClickListener(this);
-		root.findViewById(R.id.ib_left_arrow).setOnClickListener(this);
+		if (photoIdList.size() == 1) {
+			// make the arrows disappear if there is one photo only
+			root.findViewById(R.id.ib_right_arrow).setVisibility(View.GONE);
+			root.findViewById(R.id.ib_left_arrow).setVisibility(View.GONE);
+		} else {
+			root.findViewById(R.id.ib_right_arrow).setOnClickListener(this);
+			root.findViewById(R.id.ib_left_arrow).setOnClickListener(this);
+		}
 		root.findViewById(R.id.iv_share_icon).setOnClickListener(this);
 		if (AlbumGridFragment.ALBUM_GRID_FRAGMENT.equals(mSource)) {
 			root.findViewById(R.id.iv_favorite_icon).setOnClickListener(this);
@@ -198,7 +204,6 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			}
 			mPager.setCurrentItem(currentPosition);
 			mImageCaption.setText(photoCaptionList.get(currentPosition));
-
 
 		} else if (R.id.ib_left_arrow == v.getId()) {
 			if (currentPosition == 0) {

@@ -7,29 +7,28 @@ import android.os.Parcelable;
 
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.familyTree.FamiliesListItem;
+import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.util.AbstractScreenActivity;
+import com.wazapps.familybox.util.LogUtils;
 
-public class AlbumGridScreenActivity extends AbstractScreenActivity{
+public class AlbumGridScreenActivity extends AbstractScreenActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		Bundle args = getIntent().getBundleExtra(PhotoGridFragment.ALBUM_ITEM_LIST);
-		Parcelable[] parcelableArray = args.getParcelableArray(PhotoGridFragment.ALBUM_ITEM_LIST);
-		String familyName = args.getString(FamiliesListItem.FAMILY_NAME);
-		AlbumItem[] albumItems = Arrays.copyOf(parcelableArray, parcelableArray.length, AlbumItem[].class);
-		args.putParcelableArray(PhotoGridFragment.ALBUM_ITEM_LIST, albumItems);
-		args.putString(FamiliesListItem.FAMILY_NAME, familyName);
-		
-		//get the activity arguments (album item) and pass them to the fragment 
+
+		String family = getIntent().getStringExtra(FamilyHandler.FAMILY_ID_KEY);
+		String familyName = getIntent().getStringExtra(FamilyHandler.NAME_KEY);
+		Bundle args = new Bundle();
+		args.putString(FamilyHandler.FAMILY_ID_KEY, family);
+		args.putString(FamilyHandler.NAME_KEY, familyName);
 		AlbumGridFragment albumGridFrag = new AlbumGridFragment();
 		albumGridFrag.setArguments(args);
 		getSupportFragmentManager()
-		.beginTransaction()
-		.add(R.id.fragment_container, albumGridFrag,
-				AlbumGridFragment.ALBUM_GRID_FRAGMENT).commit();	
-		
+				.beginTransaction()
+				.add(R.id.fragment_container, albumGridFrag,
+						AlbumGridFragment.ALBUM_GRID_FRAGMENT).commit();
+
 	}
 
 }

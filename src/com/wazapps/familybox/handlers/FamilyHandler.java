@@ -10,6 +10,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 public class FamilyHandler {
+	public static final String FAMILY_ID_KEY = "objectId";
 	public static final String FAMILY_CLASS_NAME = "Family";
 	public static final String NAME_KEY = "name";
 	public static final String NETWORK_KEY = "network";
