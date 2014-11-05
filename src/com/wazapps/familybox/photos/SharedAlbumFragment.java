@@ -19,6 +19,8 @@ public class SharedAlbumFragment extends BasicFamilyListFragment {
 				AlbumGridScreenActivity.class);
 		familyAlbumsIntent.putExtra(FamilyHandler.FAMILY_ID_KEY,
 				currFamily.getFamilyId());
+		familyAlbumsIntent.putExtra(FamilyHandler.NAME_KEY,
+				currFamily.getFamilyName());
 		getActivity().startActivity(familyAlbumsIntent);
 
 	}
