@@ -9,28 +9,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.parse.ParseUser;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.familyTree.FamiliesListItem;
 import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
-import com.wazapps.familybox.util.LogUtils;
 
 public class AlbumGridFragment extends Fragment implements OnClickListener {
 	public static final String ALBUM_GRID_FRAGMENT = "album grid fragment";
@@ -43,6 +34,29 @@ public class AlbumGridFragment extends Fragment implements OnClickListener {
 	private ProgressBar mProgress;
 	private List<Album> sharedAlbum;
 	private boolean isMyFamily = false;
+	private String familyIdForAlbum;
+	AlbumGridAdapter.QueryFactory<Album> myFamilyFactory = new AlbumGridAdapter.QueryFactory<Album>() {
+
+		public ParseQuery<Album> create() {
+			ParseQuery<Album> query = ParseQuery.getQuery("Album");
+			query.whereEqualTo(PhotoHandler.ALBUM_FAMILY_KEY, familyIdForAlbum);
+
+			query.orderByDescending("createdAt");
+			return query;
+		}
+	};
+
+	AlbumSharedGridAdapter.QueryFactory<ShareAlbum> otherFamilyFactory = new AlbumSharedGridAdapter.QueryFactory<ShareAlbum>() {
+		public ParseQuery<ShareAlbum> create() {
+
+			ParseQuery<ShareAlbum> query = ParseQuery.getQuery("ShareAlbum");
+			query.whereEqualTo("albumOwnerId", familyIdForAlbum);
+			query.whereEqualTo("sharedWithId",
+					ParseUser.getCurrentUser().get(UserHandler.FAMILY_KEY));
+			query.orderByDescending("createdAt");
+			return query;
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,52 +65,29 @@ public class AlbumGridFragment extends Fragment implements OnClickListener {
 			currentUser = ParseUser.getCurrentUser();
 		}
 
+		setUpAdapters();
+	}
+
+	private void setUpAdapters() {
 		Bundle args = getArguments();
 		if (args != null) {
-			final String familyIdForAlbum = args
-					.getString(FamilyHandler.FAMILY_ID_KEY);
+			familyIdForAlbum = args.getString(FamilyHandler.FAMILY_ID_KEY);
 			if (ParseUser.getCurrentUser().get(UserHandler.FAMILY_KEY)
 					.toString().equals(familyIdForAlbum)) {
 				isMyFamily = true;
-
-				// get the family object according to family id
-
-				AlbumGridAdapter.QueryFactory<Album> factory = new AlbumGridAdapter.QueryFactory<Album>() {
-					public ParseQuery<Album> create() {
-						ParseQuery<Album> query = ParseQuery.getQuery("Album");
-						query.whereEqualTo(PhotoHandler.ALBUM_FAMILY_KEY,
-								familyIdForAlbum);
-
-						query.orderByDescending("createdAt");
-						return query;
-					}
-				};
-
-				mMyFamilyAdapter = new AlbumGridAdapter(getActivity(), factory);
+				mMyFamilyAdapter = new AlbumGridAdapter(getActivity(),
+						myFamilyFactory);
 				setMyAdapterQueryLoadListener();
 
 			} else {
 				isMyFamily = false;
 				String familyName = args.getString(FamilyHandler.NAME_KEY);
-
 				getActivity().getActionBar().setTitle(familyName);
-				AlbumSharedGridAdapter.QueryFactory<ShareAlbum> factory = new AlbumSharedGridAdapter.QueryFactory<ShareAlbum>() {
-					public ParseQuery<ShareAlbum> create() {
 
-						ParseQuery<ShareAlbum> query = ParseQuery
-								.getQuery("ShareAlbum");
-						query.whereEqualTo("albumOwnerId", familyIdForAlbum);
-						query.whereEqualTo("sharedWithId", ParseUser
-								.getCurrentUser().get(UserHandler.FAMILY_KEY));
-						query.orderByDescending("createdAt");
-						return query;
-					}
-				};
 				mSharedAdapter = new AlbumSharedGridAdapter(getActivity(),
-						factory);
+						otherFamilyFactory);
 				setShareAdapterQueryLoadListener();
 			}
-
 		}
 	}
 
@@ -151,6 +142,16 @@ public class AlbumGridFragment extends Fragment implements OnClickListener {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (isMyFamily) {
+			mGridview.setAdapter(mMyFamilyAdapter);
+		} else {
+			mGridview.setAdapter(mSharedAdapter);
+		}
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		root = inflater.inflate(R.layout.fragment_my_family, container, false);
@@ -166,11 +167,7 @@ public class AlbumGridFragment extends Fragment implements OnClickListener {
 					.setVisibility(View.INVISIBLE);
 		}
 		mProgress = (ProgressBar) root.findViewById(R.id.pb_myfamily);
-		if (isMyFamily) {
-			mGridview.setAdapter(mMyFamilyAdapter);
-		} else {
-			mGridview.setAdapter(mSharedAdapter);
-		}
+
 		return root;
 	}
 

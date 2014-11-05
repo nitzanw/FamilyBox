@@ -1,9 +1,7 @@
 package com.wazapps.familybox.photos;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
-import javax.xml.datatype.Duration;
+import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -17,26 +15,31 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.parse.ParseUser;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.handlers.FamilyHandler;
-import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.handlers.UserHandler;
-import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
 
 public class ShareWithDialogFragment extends DialogFragment implements
 		OnClickListener {
 	public static final String SHARE_W_DIALOG_FRAG = "share with dialog fragment";
+	public static final String SHARE_W_LIST = "share with list";
 	private View root;
 	private ListView mFamilyListView;
 	private ImageButton mExit;
 	private Button mAccept;
 	private ShareWithListAdapter mAdapter;
 	private FamilyShareAlbumCallback shareCallback = null;
+	private ProgressBar mProgress;
+	private TextView mTextView;
+	private ArrayList<String> shareWithSelectedList;
 
 	interface FamilyShareAlbumCallback {
 		void setFamilliesToShareWith(ArrayList<String> shareIdList);
@@ -56,6 +59,15 @@ public class ShareWithDialogFragment extends DialogFragment implements
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Bundle args = getArguments();
+		if (args != null) {
+			shareWithSelectedList = args.getStringArrayList(SHARE_W_LIST);
+		}
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
@@ -65,18 +77,41 @@ public class ShareWithDialogFragment extends DialogFragment implements
 
 		mFamilyListView = (ListView) root
 				.findViewById(R.id.lv_share_w_family_list);
+		mProgress = (ProgressBar) root.findViewById(android.R.id.progress);
+		mTextView = (TextView) root.findViewById(android.R.id.empty);
 
 		ShareWithListAdapter.QueryFactory<ParseObject> factory = new ShareWithListAdapter.QueryFactory<ParseObject>() {
 			public ParseQuery<ParseObject> create() {
 				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
 						FamilyHandler.FAMILY_CLASS_NAME);
-				query.whereNotEqualTo("objectId", ParseUser.getCurrentUser().get(UserHandler.FAMILY_KEY));
+				query.whereNotEqualTo("objectId", ParseUser.getCurrentUser()
+						.get(UserHandler.FAMILY_KEY));
 				query.addAscendingOrder(FamilyHandler.NAME_KEY);
 				return query;
 			}
 		};
 
-		mAdapter = new ShareWithListAdapter(getActivity(), factory);
+		mAdapter = new ShareWithListAdapter(getActivity(), factory, shareWithSelectedList);
+		mAdapter.addOnQueryLoadListener(new OnQueryLoadListener<ParseObject>() {
+			public void onLoading() {
+				// Trigger "loading" UI
+				mProgress.setVisibility(View.VISIBLE);
+			}
+
+			@Override
+			public void onLoaded(List<ParseObject> objects, Exception e) {
+				if (e == null) {
+					mProgress.setVisibility(View.INVISIBLE);
+					if (objects.isEmpty()) {
+						mTextView.setVisibility(View.VISIBLE);
+					} else {
+
+						mFamilyListView.setVisibility(View.VISIBLE);
+					}
+				}
+			}
+
+		});
 		mFamilyListView.setAdapter(mAdapter);
 		mExit = (ImageButton) root.findViewById(R.id.ib_share_w_exit);
 		mExit.setOnClickListener(this);

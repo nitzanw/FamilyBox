@@ -28,27 +28,26 @@ public class ShareWithListAdapter extends ParseQueryAdapter<ParseObject>
 
 	private static final int FAMILY_ID = R.string.id;
 	private Context context;
-	// private ArrayList<String> familyNames;
 	private LayoutInflater inflater;
-	static private boolean shareEnabled;
 	private HashMap<String, Boolean> checkedMap;
+	private ArrayList<String> shareWithSelectedList;
 
 	public ShareWithListAdapter(Context context,
-			ParseQueryAdapter.QueryFactory<ParseObject> queryFactory) {// TODO
-																		// //
-																		// change
+			ParseQueryAdapter.QueryFactory<ParseObject> queryFactory,
+			ArrayList<String> shareWithSelectedList) {
+
 		super(context, queryFactory);
 		this.context = context;
 
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		checkedMap = new HashMap<String, Boolean>();
+		this.shareWithSelectedList = shareWithSelectedList;
 	}
 
 	@Override
 	public View getItemView(ParseObject familyObj, View view, ViewGroup parent) {
 		FamiliesListItem family = new FamiliesListItem(familyObj);
-
 
 		ViewHolder holder;
 		if (view == null) {
@@ -68,6 +67,10 @@ public class ShareWithListAdapter extends ParseQueryAdapter<ParseObject>
 		CheckBox checkBox = holder.checkBox;
 		checkBox.setTag(FAMILY_ID, family.getFamilyId());
 		checkBox.setOnCheckedChangeListener(this);
+
+		if (shareWithSelectedList.contains(family.getFamilyId())) {
+			checkBox.setChecked(true);
+		}
 
 		return view;
 	}

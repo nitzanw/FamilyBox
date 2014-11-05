@@ -138,6 +138,10 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 			bimm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 		} else if (v.getId() == R.id.tv_add_album_share_with_btn) {
 			ShareWithDialogFragment shareWith = new ShareWithDialogFragment();
+			Bundle args = new Bundle();
+			args.putStringArrayList(ShareWithDialogFragment.SHARE_W_LIST,
+					shareWithList);
+			shareWith.setArguments(args);
 			shareWith.show(getChildFragmentManager(),
 					ShareWithDialogFragment.SHARE_W_DIALOG_FRAG);
 		} else if (v.getId() == R.id.rl_add_photos_btn_empty) {

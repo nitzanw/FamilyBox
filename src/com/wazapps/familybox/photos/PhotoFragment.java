@@ -1,11 +1,9 @@
 package com.wazapps.familybox.photos;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.wazapps.familybox.R;
-import com.wazapps.familybox.splashAndLogin.EmailSignupFragment.SignupScreenCallback;
 import com.wazapps.familybox.util.LogUtils;
 
 public class PhotoFragment extends Fragment {
@@ -28,23 +25,14 @@ public class PhotoFragment extends Fragment {
 	private View root;
 	private ImageView mImage;
 	private String photoItemId;
-	private String caption = "";
-
-
-
-	// @Override
-	// public void onResume() {
-	// super.onResume();
-	// captionCallback.setCaption(caption);
-	// }
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		root = inflater.inflate(R.layout.fragment_image_dialog, container,
 				false);
-		// mImage = (FrameLayout) root.findViewById(R.id.fl_image_layout);
-		// mImage.setOnClickListener(this);
+		
 		mImage = (ImageView) root.findViewById(R.id.iv_actual_image);
 
 		ParseQuery<PhotoItem_ex> query = ParseQuery

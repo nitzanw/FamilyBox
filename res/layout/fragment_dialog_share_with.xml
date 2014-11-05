@@ -40,8 +40,27 @@
             android:layout_width="wrap_content"
             android:layout_height="210dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" >
+            android:layout_marginRight="10dp"
+            android:visibility="invisible" >
         </ListView>
+
+        <TextView
+            android:id="@android:id/empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/button_share_w_accept"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="80dp"
+            android:text="@string/add_album_empty_network"
+            android:visibility="invisible" />
+
+        <ProgressBar
+            android:id="@android:id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/button_share_w_accept"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="80dp" />
 
         <Button
             android:id="@+id/button_share_w_accept"
