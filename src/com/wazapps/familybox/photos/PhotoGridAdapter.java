@@ -19,23 +19,23 @@ import com.parse.ParseUser;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.util.LogUtils;
 
-public class PhotoGridAdapter extends ParseQueryAdapter<PhotoItem_ex> {
+public class PhotoGridAdapter extends ParseQueryAdapter<PhotoItem> {
 
 	LayoutInflater inflater;// FavoriteGridAdapter
 
 	public PhotoGridAdapter(Context context,
-			ParseQueryAdapter.QueryFactory<PhotoItem_ex> queryFactory) {
+			ParseQueryAdapter.QueryFactory<PhotoItem> queryFactory) {
 		super(context, queryFactory);
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	public PhotoGridAdapter(Context context) {
-		super(context, new PhotoGridAdapter.QueryFactory<PhotoItem_ex>() {
-			public ParseQuery<PhotoItem_ex> create() {
+		super(context, new PhotoGridAdapter.QueryFactory<PhotoItem>() {
+			public ParseQuery<PhotoItem> create() {
 
 				ParseUser user = ParseUser.getCurrentUser();
-				ParseRelation<PhotoItem_ex> relation = user
+				ParseRelation<PhotoItem> relation = user
 						.getRelation("favorites");
 				return relation.getQuery();
 			}
@@ -45,7 +45,7 @@ public class PhotoGridAdapter extends ParseQueryAdapter<PhotoItem_ex> {
 	}
 
 	@Override
-	public View getItemView(PhotoItem_ex photoItem, View view, ViewGroup parent) {
+	public View getItemView(PhotoItem photoItem, View view, ViewGroup parent) {
 		ViewHolder holder;
 		if (view == null) {
 			view = inflater.inflate(R.layout.image_item, parent, false);

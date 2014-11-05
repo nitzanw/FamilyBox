@@ -35,17 +35,17 @@ public class PhotoFragment extends Fragment {
 		
 		mImage = (ImageView) root.findViewById(R.id.iv_actual_image);
 
-		ParseQuery<PhotoItem_ex> query = ParseQuery
-				.getQuery(PhotoItem_ex.class);
-		query.getInBackground(photoItemId, new GetCallback<PhotoItem_ex>() {
+		ParseQuery<PhotoItem> query = ParseQuery
+				.getQuery(PhotoItem.class);
+		query.getInBackground(photoItemId, new GetCallback<PhotoItem>() {
 
 			@Override
-			public void done(PhotoItem_ex object, ParseException e) {
+			public void done(PhotoItem object, ParseException e) {
 				if (e == null) {
-					object.fetchIfNeededInBackground(new GetCallback<PhotoItem_ex>() {
+					object.fetchIfNeededInBackground(new GetCallback<PhotoItem>() {
 
 						@Override
-						public void done(PhotoItem_ex object, ParseException e) {
+						public void done(PhotoItem object, ParseException e) {
 							if (e == null) {
 //								caption = object.getCaption();
 //								captionCallback.setCaption(object.getCaption(), object.getObjectId());

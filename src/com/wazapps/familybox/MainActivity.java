@@ -47,7 +47,7 @@ import com.wazapps.familybox.newsfeed.NewsFragment;
 import com.wazapps.familybox.newsfeed.NewsItemToRemove;
 import com.wazapps.familybox.photos.Album;
 import com.wazapps.familybox.photos.PhotoAlbumsTabsFragment;
-import com.wazapps.familybox.photos.PhotoItem_ex;
+import com.wazapps.familybox.photos.PhotoItem;
 import com.wazapps.familybox.photos.ShareAlbum;
 import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
@@ -618,13 +618,13 @@ public class MainActivity extends FragmentActivity implements
 				byte[] fileData = PhotoHandler
 						.createDownsampledPictureData(myBitmap);
 
-				PhotoItem_ex photoItem = new PhotoItem_ex();
+				PhotoItem photoItem = new PhotoItem();
 				photoItem.setCaption("");
 				photoItem.setAlbum(album.getObjectId());
 
 				ParseFile photoFile = new ParseFile(file.getName(), fileData);
 				photoFile.saveInBackground(new SaveCallback() {
-					private PhotoItem_ex photoItem;
+					private PhotoItem photoItem;
 					private Album album;
 					private ParseFile photoFile;
 
@@ -663,7 +663,7 @@ public class MainActivity extends FragmentActivity implements
 
 					private SaveCallback init(FragmentActivity activity,
 							Album album, ParseFile albumPic,
-							PhotoItem_ex photoItem) {
+							PhotoItem photoItem) {
 						this.album = album;
 						this.photoFile = albumPic;
 						this.photoItem = photoItem;

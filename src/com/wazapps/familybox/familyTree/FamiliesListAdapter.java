@@ -8,13 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.parse.ParseUser;
-import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment.AddFamilyProfileFragmentListener;
 import com.wazapps.familybox.familyProfiles.FamilyProfileScreenActivity;
-import com.wazapps.familybox.handlers.UserHandler;
-import com.wazapps.familybox.photos.AlbumItem;
 import com.wazapps.familybox.util.LogUtils;
 
 public class FamiliesListAdapter extends BasicFamilliesListAdapter {

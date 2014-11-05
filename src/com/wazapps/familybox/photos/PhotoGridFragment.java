@@ -98,9 +98,9 @@ public class PhotoGridFragment extends Fragment {
 				albumSize = args.getInt(ALBUM_PHOTO_COUNT);
 				albumId = args.getString(ALBUM_ITEM_ID);
 				// Set up the Parse query to use in the adapter
-				PhotoGridAdapter.QueryFactory<PhotoItem_ex> factory = new PhotoGridAdapter.QueryFactory<PhotoItem_ex>() {
-					public ParseQuery<PhotoItem_ex> create() {
-						ParseQuery<PhotoItem_ex> query = ParseQuery
+				PhotoGridAdapter.QueryFactory<PhotoItem> factory = new PhotoGridAdapter.QueryFactory<PhotoItem>() {
+					public ParseQuery<PhotoItem> create() {
+						ParseQuery<PhotoItem> query = ParseQuery
 								.getQuery("PhotoItem");
 						query.whereEqualTo(PhotoHandler.ALBUM_KEY, albumId);
 
@@ -116,14 +116,14 @@ public class PhotoGridFragment extends Fragment {
 
 			}
 
-			mAdapter.addOnQueryLoadListener(new OnQueryLoadListener<PhotoItem_ex>() {
+			mAdapter.addOnQueryLoadListener(new OnQueryLoadListener<PhotoItem>() {
 				public void onLoading() {
 					// Trigger "loading" UI
 					mProgress.setVisibility(View.VISIBLE);
 				}
 
 				@Override
-				public void onLoaded(List<PhotoItem_ex> objects, Exception e) {
+				public void onLoaded(List<PhotoItem> objects, Exception e) {
 					if (e == null) {
 						mProgress.setVisibility(View.INVISIBLE);
 						mGridview.setVisibility(View.VISIBLE);

@@ -6,7 +6,7 @@ import com.parse.Parse;
 import com.parse.ParseObject;
 import com.wazapps.familybox.newsfeed.NewsItem;
 import com.wazapps.familybox.photos.Album;
-import com.wazapps.familybox.photos.PhotoItem_ex;
+import com.wazapps.familybox.photos.PhotoItem;
 import com.wazapps.familybox.photos.ShareAlbum;
 
 public class FamilyBoxApplication extends Application {
@@ -22,7 +22,7 @@ public class FamilyBoxApplication extends Application {
 		super.onCreate();
 		Parse.enableLocalDatastore(getApplicationContext());
 		ParseObject.registerSubclass(Album.class);
-		ParseObject.registerSubclass(PhotoItem_ex.class);
+		ParseObject.registerSubclass(PhotoItem.class);
 		ParseObject.registerSubclass(NewsItem.class);
 		ParseObject.registerSubclass(ShareAlbum.class);
 		Parse.initialize(this, appId, clientKey);

@@ -215,13 +215,13 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			mImageCaption.setText(photoCaptionList.get(currentPosition));
 
 		} else if (R.id.iv_favorite_icon == v.getId()) {
-			ParseQuery<PhotoItem_ex> query = ParseQuery
-					.getQuery(PhotoItem_ex.class);
+			ParseQuery<PhotoItem> query = ParseQuery
+					.getQuery(PhotoItem.class);
 			query.getInBackground(photoIdList.get(currentPosition),
-					new GetCallback<PhotoItem_ex>() {
+					new GetCallback<PhotoItem>() {
 
 						@Override
-						public void done(PhotoItem_ex object, ParseException e) {
+						public void done(PhotoItem object, ParseException e) {
 							if (e == null) {
 								ParseUser user = ParseUser.getCurrentUser();
 								ParseRelation<ParseObject> relation = user
@@ -254,22 +254,22 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			String text = mImageEditCaption.getText().toString();
 			if (!TextUtils.isEmpty(text)) {
 
-				ParseQuery<PhotoItem_ex> query = ParseQuery
-						.getQuery(PhotoItem_ex.class);
+				ParseQuery<PhotoItem> query = ParseQuery
+						.getQuery(PhotoItem.class);
 				query.getInBackground(photoIdList.get(currentPosition),
-						new GetCallback<PhotoItem_ex>() {
+						new GetCallback<PhotoItem>() {
 
 							private String text;
 
 							@Override
-							public void done(PhotoItem_ex object,
+							public void done(PhotoItem object,
 									ParseException e) {
 								// update the image with the edited caption
 								object.setCaption(text);
 								object.saveEventually();
 							}
 
-							GetCallback<PhotoItem_ex> init(String text) {
+							GetCallback<PhotoItem> init(String text) {
 								this.text = text;
 								return this;
 							}
