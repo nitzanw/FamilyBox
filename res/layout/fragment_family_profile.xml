@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
-    
+    android:animateLayoutChanges="true" >
+
     <LinearLayout
-     android:layout_width="match_parent"
-     android:layout_height="match_parent"
-     android:background="@color/white_cream_ab"
-     android:orientation="vertical" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_cream_ab"
+        android:orientation="vertical" />
 
     <TextView
         android:id="@+id/tv_family_profile_title"
@@ -18,103 +18,102 @@
         android:gravity="center"
         android:text="@string/family_name"
         android:textSize="23sp" />
-        
+
     <RelativeLayout
         android:id="@+id/rl_family_profile_tree"
         android:layout_width="wrap_content"
         android:layout_height="307dp"
-        android:background="@drawable/background_edit_profile" 
         android:layout_below="@id/tv_family_profile_title"
         android:layout_centerHorizontal="true"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:background="@drawable/background_edit_profile" >
 
-    
         <LinearLayout
             android:id="@+id/ll_family_profile_parents"
             android:layout_width="match_parent"
             android:layout_height="310dp"
+            android:animateLayoutChanges="true"
             android:gravity="center"
-            android:orientation="horizontal" 
-            android:animateLayoutChanges="true">
+            android:orientation="horizontal" >
 
             <LinearLayout
                 android:id="@+id/ll_family_profile_parent_left"
                 android:layout_width="65dp"
-                android:layout_marginRight="20dp"
                 android:layout_height="90dp"
                 android:layout_marginBottom="68dp"
+                android:layout_marginRight="20dp"
+                android:animateLayoutChanges="true"
                 android:gravity="center_horizontal"
-                android:orientation="vertical" 
-                android:animateLayoutChanges="true"/>
-            
-             <LinearLayout
+                android:orientation="vertical" />
+
+            <LinearLayout
                 android:id="@+id/ll_family_profile_parent_center"
                 android:layout_width="65dp"
                 android:layout_height="90dp"
                 android:layout_marginBottom="68dp"
+                android:animateLayoutChanges="true"
                 android:gravity="center_horizontal"
-                android:orientation="vertical" 
-                android:visibility="gone"
-                android:animateLayoutChanges="true"/>
+                android:orientation="vertical"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/ll_family_profile_parent_right"
-                android:layout_marginLeft="20dp"
                 android:layout_width="65dp"
                 android:layout_height="90dp"
                 android:layout_marginBottom="68dp"
+                android:layout_marginLeft="20dp"
+                android:animateLayoutChanges="true"
                 android:gravity="center_horizontal"
-                android:orientation="vertical" 
-                android:animateLayoutChanges="true"/>
+                android:orientation="vertical" />
         </LinearLayout>
-        
+
         <TextView
-        android:id="@+id/tv_family_profile_parents"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/ll_family_profile_parents"
-        android:layout_marginBottom="10dp"
-        android:textStyle="bold"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/parents"
-        android:textSize="17sp" />
-        
-		<LinearLayout 
-    	android:id="@+id/ll_family_profile_parents_load_spinner"
-    	android:layout_width="match_parent"
-    	android:layout_height="115dp"
-	    android:background="@color/white_cream_ab"
-	    android:alpha="0.9"
-	    android:gravity="center"
-	    android:orientation="horizontal">
-    
-    		<ProgressBar
-        		android:id="@+id/pb_parents_spinner"
-	        	android:layout_width="wrap_content"
-	       	 	android:layout_height="wrap_content" />
-	    </LinearLayout>
-              
+            android:id="@+id/tv_family_profile_parents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ll_family_profile_parents"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/parents"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/ll_family_profile_parents_load_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="115dp"
+            android:alpha="0.9"
+            android:background="@color/white_cream_ab"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ProgressBar
+                android:id="@+id/pb_parents_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/ll_family_profile_parents"
             android:layout_marginBottom="18dp"
-            android:orientation="vertical" 
-            android:animateLayoutChanges="true">
+            android:animateLayoutChanges="true"
+            android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/tv_family_profile_children"
-                android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="7dp"
                 android:layout_marginLeft="10dp"
-                android:textStyle="bold"
                 android:text="@string/children"
-                android:textSize="17sp" />
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
             <HorizontalScrollView
                 android:id="@+id/hsv_family_profile_children"
@@ -127,54 +126,55 @@
                     android:id="@+id/ll_family_profile_children_holder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:animateLayoutChanges="true" >
+                    android:animateLayoutChanges="true"
+                    android:orientation="horizontal" >
                 </LinearLayout>
             </HorizontalScrollView>
         </LinearLayout>
-        
-        <LinearLayout 
-		        android:id="@+id/ll_family_profile_children_load_spinner"
-		        android:layout_width="match_parent"
-		        android:layout_height="115dp"
-		        android:layout_alignBottom="@id/ll_family_profile_parents"
-		        android:layout_marginBottom="18dp"
-		        android:background="@color/white_cream_ab"
-		        android:alpha="0.9"
-		        android:gravity="center"
-		        android:orientation="horizontal">
-		        
-		        <ProgressBar
-		            android:id="@+id/pb_children_spinner"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content" />
-	    </LinearLayout>
-        
-        <ImageView android:src="@drawable/profile_background"
+
+        <LinearLayout
+            android:id="@+id/ll_family_profile_children_load_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="115dp"
+            android:layout_alignBottom="@id/ll_family_profile_parents"
+            android:layout_marginBottom="18dp"
+            android:alpha="0.9"
+            android:background="@color/white_cream_ab"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ProgressBar
+                android:id="@+id/pb_children_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <ImageView
             android:id="@+id/iv_family_profile_no_children"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/ll_family_profile_parents"
-            android:visibility="gone"/>
-        
+            android:src="@drawable/profile_background"
+            android:visibility="gone" />
     </RelativeLayout>
-    
-    <ImageView android:src="@drawable/profile_background2"
-            android:id="@+id/iv_family_profile_no_parents"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_family_profile_title"
-            android:visibility="gone"/>
-        
+
+    <ImageView
+        android:id="@+id/iv_family_profile_no_parents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_family_profile_title"
+        android:src="@drawable/profile_background2"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/rl_family_profile_albums"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:drawablePadding="8dp"
-        android:drawableTop="@drawable/separator_line"
         android:layout_below="@id/rl_family_profile_tree"
-        android:layout_marginBottom="8dp" >
+        android:layout_marginBottom="8dp"
+        android:drawablePadding="8dp"
+        android:drawableTop="@drawable/separator_line" >
 
         <TextView
             android:id="@+id/tv_family_profile_albums_title"
@@ -198,37 +198,45 @@
                 android:id="@+id/ll_family_profile_album_holder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:animateLayoutChanges="true" >
+                android:animateLayoutChanges="true"
+                android:orientation="horizontal" >
             </LinearLayout>
         </HorizontalScrollView>
+
+        <ProgressBar
+            android:id="@+id/pb_album_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingTop="27dp" />
     </RelativeLayout>
-    
-    <RelativeLayout 
-    android:id="@+id/rl_family_profile_single_member"
-    android:background="@drawable/background_edit_profile"
-    android:layout_below="@id/tv_family_profile_title"
-    android:layout_above="@id/rl_family_profile_albums"
-    android:layout_height="fill_parent"
-    android:layout_width="fill_parent"
-    android:visibility="gone">   
-    
-    <com.wazapps.familybox.util.RoundedImageView
-        android:background="@drawable/profile_elipse"
-        android:id="@+id/riv_family_profile_single_member_pic"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">        
-    </com.wazapps.familybox.util.RoundedImageView>
-        
-    <TextView android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_family_profile_single_member_name"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:textSize="15sp"
-        android:layout_below="@id/riv_family_profile_single_member_pic"/>               
-	</RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_family_profile_single_member"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/rl_family_profile_albums"
+        android:layout_below="@id/tv_family_profile_title"
+        android:background="@drawable/background_edit_profile"
+        android:visibility="gone" >
+
+        <com.wazapps.familybox.util.RoundedImageView
+            android:id="@+id/riv_family_profile_single_member_pic"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/profile_elipse" >
+        </com.wazapps.familybox.util.RoundedImageView>
+
+        <TextView
+            android:id="@+id/tv_family_profile_single_member_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/riv_family_profile_single_member_pic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:textSize="15sp" />
+    </RelativeLayout>
 
 </RelativeLayout>

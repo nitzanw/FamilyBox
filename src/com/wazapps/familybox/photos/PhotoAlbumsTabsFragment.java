@@ -24,6 +24,9 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 	private static final String SHARED_ALBUM = "sharedAlbum";
 	private static final String FAVORITES = "favorites";
 	public static final String PHOTO_ALBUM_TABS_FRAG = "photo album tabs fragment";
+	public static final int MY_FAMILY_POS = 0;
+	public static final int SHARED_ALBUM_POS = 1;
+	public static final int FAVORITES_POS = 2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +46,8 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		}
 
 		Bundle args = new Bundle();
-		args.putString(FamilyHandler.FAMILY_ID_KEY, ParseUser
-				.getCurrentUser().get(UserHandler.FAMILY_KEY).toString());
+		args.putString(FamilyHandler.FAMILY_ID_KEY, ParseUser.getCurrentUser()
+				.get(UserHandler.FAMILY_KEY).toString());
 		ViewGroup rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_photo_album_store_tabs, null);
 		PhotoAlbumsTabsFragment.tabHost = (FragmentTabHost) rootView
@@ -94,6 +97,18 @@ public class PhotoAlbumsTabsFragment extends TabsFragment {
 		tabHost.setCurrentTab(2);
 		tabHost.setCurrentTab(0);
 
+	}
+
+	public int getCurrentTabHostPos() {
+		String currTag = tabHost.getCurrentTabTag();
+		if (MY_FAMILY.equals(currTag)) {
+			return MY_FAMILY_POS;
+		} else if (SHARED_ALBUM.equals(currTag)) {
+			return SHARED_ALBUM_POS;
+		} else if (FAVORITES.equals(currTag)) {
+			return FAVORITES_POS;
+		}
+		return 0;
 	}
 
 }

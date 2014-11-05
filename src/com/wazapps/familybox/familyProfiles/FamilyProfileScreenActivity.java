@@ -31,7 +31,7 @@ public class FamilyProfileScreenActivity extends AbstractScreenActivity
 		getSupportFragmentManager()
 				.beginTransaction()
 				.add(R.id.fragment_container, familyProfileFrag,
-						FamilyProfileFragment.FAMILY_PROFILE_FRAGMENT).commit();
+						FamilyProfileFragment.FAMILY_PROFILE_FRAG).commit();
 	}
 
 	@Override

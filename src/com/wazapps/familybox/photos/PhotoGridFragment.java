@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.handlers.PhotoHandler;
 import com.wazapps.familybox.util.LogUtils;
 
@@ -24,10 +25,10 @@ public class PhotoGridFragment extends Fragment {
 	public static final String PHOTO_ALBUM_SCREEN_FRAG = "photo album screen fragment";
 	public static final String ALBUM_ITEM = "album item";
 	public static final String ALBUM_ITEM_LIST = "album items list";
-	protected static final String ALBUM_ITEM_ID = "album id";
-	protected static final String ALBUM_PHOTO_COUNT = "album photo count";
-	protected static final String ALBUM_SRC = "album source";
-	protected static final String ALBUM_NAME = "album name";
+	public static final String ALBUM_ITEM_ID = "album id";
+	public static final String ALBUM_PHOTO_COUNT = "album photo count";
+	public static final String ALBUM_SRC = "album source";
+	public static final String ALBUM_NAME = "album name";
 	private View root;
 	private GridView mGridview;
 	private PhotoGridAdapter mAdapter;
@@ -89,8 +90,10 @@ public class PhotoGridFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
-			if (AlbumGridFragment.ALBUM_GRID_FRAGMENT.equals(args
-					.getString(ALBUM_SRC))) {
+			mSource = args.getString(ALBUM_SRC);
+			if (AlbumGridFragment.ALBUM_GRID_FRAGMENT.equals(mSource)
+					|| FamilyProfileFragment.FAMILY_PROFILE_FRAG
+							.equals(mSource)) {
 				handleActionbarTitle(args.getString(ALBUM_NAME));
 				albumSize = args.getInt(ALBUM_PHOTO_COUNT);
 				albumId = args.getString(ALBUM_ITEM_ID);
@@ -112,7 +115,7 @@ public class PhotoGridFragment extends Fragment {
 				mAdapter = new PhotoGridAdapter(getActivity());
 
 			}
-			mSource = args.getString(ALBUM_SRC);
+
 			mAdapter.addOnQueryLoadListener(new OnQueryLoadListener<PhotoItem_ex>() {
 				public void onLoading() {
 					// Trigger "loading" UI
@@ -128,7 +131,7 @@ public class PhotoGridFragment extends Fragment {
 				}
 
 			});
-			
+
 		} else {
 			LogUtils.logWarning(getTag(), "these are no valid arguments!");
 		}

@@ -144,7 +144,7 @@ public class MainActivity extends FragmentActivity implements
 					getActionBar().setTitle(R.string.news_feed_title);
 				else if (ProfileFragment.PROFILE_FRAG.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.profile_title);
-				else if (FamilyProfileFragment.FAMILY_PROFILE_FRAGMENT
+				else if (FamilyProfileFragment.FAMILY_PROFILE_FRAG
 						.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.family_profile_title);
 				else if (FamiliesListFragment.FAMILY_TREE_FRAG.equals(frag
@@ -631,6 +631,7 @@ public class MainActivity extends FragmentActivity implements
 					@Override
 					public void done(ParseException e) {
 						if (e == null) {
+							
 							photoItem.setPhotoFile(photoFile);
 							photoItem.saveEventually(new SaveCallback() {
 								private Album album;

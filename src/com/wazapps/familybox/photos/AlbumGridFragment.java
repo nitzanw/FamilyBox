@@ -32,7 +32,6 @@ public class AlbumGridFragment extends Fragment implements OnClickListener {
 	private ParseUser currentUser = null;
 	private LinearLayout mEmptyLayout;
 	private ProgressBar mProgress;
-	private List<Album> sharedAlbum;
 	private boolean isMyFamily = false;
 	private String familyIdForAlbum;
 	AlbumGridAdapter.QueryFactory<Album> myFamilyFactory = new AlbumGridAdapter.QueryFactory<Album>() {
@@ -66,6 +65,7 @@ public class AlbumGridFragment extends Fragment implements OnClickListener {
 		}
 
 		setUpAdapters();
+
 	}
 
 	private void setUpAdapters() {
@@ -145,9 +145,15 @@ public class AlbumGridFragment extends Fragment implements OnClickListener {
 	public void onResume() {
 		super.onResume();
 		if (isMyFamily) {
-			mGridview.setAdapter(mMyFamilyAdapter);
+			if (mMyFamilyAdapter != null) {
+				mProgress.setVisibility(View.INVISIBLE);
+			}
+			// mGridview.setAdapter(mMyFamilyAdapter);
 		} else {
-			mGridview.setAdapter(mSharedAdapter);
+			if (mSharedAdapter != null) {
+				mProgress.setVisibility(View.INVISIBLE);
+			}
+			// mGridview.setAdapter(mSharedAdapter);
 		}
 	}
 
@@ -167,7 +173,17 @@ public class AlbumGridFragment extends Fragment implements OnClickListener {
 					.setVisibility(View.INVISIBLE);
 		}
 		mProgress = (ProgressBar) root.findViewById(R.id.pb_myfamily);
-
+		if (isMyFamily) {
+//			if (mMyFamilyAdapter != null) {
+//				mProgress.setVisibility(View.INVISIBLE);
+//			}
+			mGridview.setAdapter(mMyFamilyAdapter);
+		} else {
+//			if (mSharedAdapter != null) {
+//				mProgress.setVisibility(View.INVISIBLE);
+//			}
+			mGridview.setAdapter(mSharedAdapter);
+		}
 		return root;
 	}
 

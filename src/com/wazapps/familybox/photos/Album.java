@@ -6,12 +6,16 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
+import com.parse.GetDataCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.util.LogUtils;
 
 //a class that hold all photo albums data
 @ParseClassName("Album")
@@ -71,6 +75,14 @@ public class Album extends ParseObject {
 	}
 
 	public void setCoverPhoto(ParseFile albumCover) {
+		// albumCover.getDataInBackground(new GetDataCallback() {
+		//
+		// @Override
+		// public void done(byte[] data, ParseException e) {
+		// // TODO Auto-generated method stub
+		//
+		// }
+		// });
 		put("albumCover", albumCover);
 	}
 
@@ -85,8 +97,18 @@ public class Album extends ParseObject {
 
 	public synchronized void incrementAlbumCounter(ParseFile coverFile) {
 		if (upLoadPhotoCounter == 0) {
+
 			this.setCoverPhoto(coverFile);
-			this.saveEventually();
+			this.saveInBackground(new SaveCallback() {
+
+				@Override
+				public void done(ParseException e) {
+					if (e == null) {
+						LogUtils.logTemp("album class", "cover saved");
+					}
+
+				}
+			});
 		}
 		upLoadPhotoCounter++;
 		// if the number of uploaded photos is equal to the number of photos
@@ -101,13 +123,14 @@ public class Album extends ParseObject {
 						.getSupportFragmentManager().findFragmentById(
 								R.id.fragment_container);
 				if (frag instanceof PhotoAlbumsTabsFragment) {
-					PhotoAlbumsTabsFragment.refreshMyFamilyAlbums();
+					if (((PhotoAlbumsTabsFragment) frag).getCurrentTabHostPos() == PhotoAlbumsTabsFragment.MY_FAMILY_POS) {
+						PhotoAlbumsTabsFragment.refreshMyFamilyAlbums();
+					}
 				}
 			}
 
 			toast.show();
 		}
 	}
-
 
 }
