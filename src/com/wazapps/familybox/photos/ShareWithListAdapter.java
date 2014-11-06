@@ -21,6 +21,7 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.familyTree.FamiliesListItem;
+import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.UserHandler;
 
 public class ShareWithListAdapter extends ParseQueryAdapter<ParseObject>
@@ -63,7 +64,7 @@ public class ShareWithListAdapter extends ParseQueryAdapter<ParseObject>
 		}
 		TextView familyName = holder.familyName;
 
-		familyName.setText(family.getFamilyName());
+		familyName.setText(InputHandler.capitalizeName(family.getFamilyName()));
 		CheckBox checkBox = holder.checkBox;
 		checkBox.setTag(FAMILY_ID, family.getFamilyId());
 		checkBox.setOnCheckedChangeListener(this);

@@ -1,9 +1,23 @@
 package com.wazapps.familybox.photos;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -23,6 +37,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.parse.GetCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -215,8 +230,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			mImageCaption.setText(photoCaptionList.get(currentPosition));
 
 		} else if (R.id.iv_favorite_icon == v.getId()) {
-			ParseQuery<PhotoItem> query = ParseQuery
-					.getQuery(PhotoItem.class);
+			ParseQuery<PhotoItem> query = ParseQuery.getQuery(PhotoItem.class);
 			query.getInBackground(photoIdList.get(currentPosition),
 					new GetCallback<PhotoItem>() {
 
@@ -236,6 +250,54 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 					});
 
 		} else if (R.id.iv_share_icon == v.getId()) {
+			LogUtils.logTemp(getTag(), "share was pressed");
+			ParseQuery<PhotoItem> query = ParseQuery.getQuery(PhotoItem.class);
+			query.getInBackground(photoIdList.get(currentPosition),
+					new GetCallback<PhotoItem>() {
+
+						@Override
+						public void done(PhotoItem object, ParseException e) {
+							if (e == null) {
+
+								object.fetchIfNeededInBackground(new GetCallback<PhotoItem>() {
+
+									@Override
+									public void done(PhotoItem object,
+											ParseException e) {
+										if (null == e) {
+											object.getPhotoFile()
+													.getDataInBackground(
+															new GetDataCallback() {
+
+																@Override
+																public void done(
+																		byte[] data,
+																		ParseException e) {
+																	if (e == null) {
+																		new GetImageTask()
+																				.execute(data);
+																	} else {
+																		LogUtils.logError(
+																				getTag(),
+																				"byte array not retrieved");
+																	}
+
+																}
+															});
+
+										} else {
+											LogUtils.logError(getTag(),
+													"photo item not retrieved");
+										}
+
+									}
+								});
+							} else {
+								LogUtils.logError(getTag(),
+										"photo item not retrieved");
+							}
+						}
+					});
 
 		} else if (R.id.iv_image_edit_caption == v.getId()) {
 			inCaptionEditMode = true;
@@ -262,8 +324,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 							private String text;
 
 							@Override
-							public void done(PhotoItem object,
-									ParseException e) {
+							public void done(PhotoItem object, ParseException e) {
 								// update the image with the edited caption
 								object.setCaption(text);
 								object.saveEventually();
@@ -289,9 +350,59 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 	}
 
 	synchronized public void setCaption(String caption, String photoId) {
-		LogUtils.logTemp(getTag(), "the data in the caption is: " + caption);
 		if (photoIdList.get(currentPosition).equals(photoId)) {
 			mImageCaption.setText(caption);
+		}
+
+	}
+
+	public class GetImageTask extends AsyncTask<byte[], Integer, Uri> {
+
+		@Override
+		protected Uri doInBackground(byte[]... params) {
+			try {
+
+				if (params[0] != null) {
+					Bitmap immutableBpm = BitmapFactory.decodeByteArray(
+							params[0], 0, params[0].length);
+
+					// Save the downloaded icon to the pictures folder on the SD
+					// Card
+					File directory = Environment
+							.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+					directory.mkdirs(); // Make sure the Pictures directory
+										// exists.
+					File destinationFile = new File(directory, "FamilyBox.jpeg");
+					FileOutputStream out = new FileOutputStream(destinationFile);
+					if (immutableBpm != null) {
+						immutableBpm.compress(Bitmap.CompressFormat.JPEG, 90,
+								out);
+						return Uri.fromFile(destinationFile);
+					}
+					out.flush();
+					out.close();
+				}
+				// intent.putExtra(Intent.EXTRA_STREAM, mediaStoreImageUri);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Uri result) {
+			if (result != null) {
+				super.onPostExecute(result);
+				Intent share = new Intent(Intent.ACTION_SEND);
+				share.setType("image/jpeg");
+				share.putExtra(Intent.EXTRA_STREAM, result);
+				startActivity(Intent.createChooser(share, "Share Image"));
+
+			}
 		}
 
 	}
