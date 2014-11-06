@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.parse.GetCallback;
@@ -39,6 +40,7 @@ public class PhotoGridFragment extends Fragment {
 	private String albumId;
 	private int albumSize = -1;
 	private String mSource;
+	private LinearLayout mEmpty;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +49,7 @@ public class PhotoGridFragment extends Fragment {
 				container, false);
 		mGridview = (GridView) root.findViewById(R.id.gv_photo_album);
 		mProgress = (ProgressBar) root.findViewById(R.id.pb_photo_album);
+		mEmpty = (LinearLayout) root.findViewById(android.R.id.empty);
 		mGridview.setAdapter(mAdapter);
 		mGridview.setOnItemClickListener(new OnItemClickListener() {
 
@@ -166,7 +169,11 @@ public class PhotoGridFragment extends Fragment {
 				public void onLoaded(List<PhotoItem> objects, Exception e) {
 					if (e == null) {
 						mProgress.setVisibility(View.INVISIBLE);
-						mGridview.setVisibility(View.VISIBLE);
+						if (objects.isEmpty()) {
+							mEmpty.setVisibility(View.VISIBLE);
+						} else {
+							mGridview.setVisibility(View.VISIBLE);
+						}
 					}
 				}
 

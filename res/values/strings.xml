@@ -37,7 +37,8 @@
     <string name="edit_profile_confirm_password">Confirm password</string>
     <string name="edit_profile_change_member_data">Tap on a family member to change detailes</string>
     <string name="edit_profile">Edit profile</string>
-    <string name="edit_action_menu">edit action menu</string>
+    <string name="edit_action_menu">Edit</string>
+    <string name="add_album_action_menu">Add album</string>
     <string name="father">Father</string>
     <string name="father_name">Arie</string>
     <string name="mother_name">Mati</string>
@@ -104,8 +105,8 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_menu">Menu</string>
-    <string name="expanded_action_menu">expanded action menu</string>
-    <string name="accept_action_menu">accept action menu</string>
+    <string name="expanded_action_menu">Settings</string>
+    <string name="accept_action_menu">Accept changes</string>
     <string name="add_album_menu">add album menu</string>
     <string name="news">News</string>
     <string name="events">Events</string>
@@ -165,5 +166,7 @@
     <string name="id">id</string>
     <string name="version">version:</string>
     <string name="photo_hint">Add your caption here!</string>
+    <string name="empty_photo_grid">No photos here</string>
+    <string name="empty_album_section">No albums yet</string>
 
 </resources>

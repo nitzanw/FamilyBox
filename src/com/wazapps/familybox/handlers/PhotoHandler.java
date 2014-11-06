@@ -48,6 +48,7 @@ public class PhotoHandler {
 		return BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 	}
 
+
 	public static byte[] createDownsampledPictureData(Bitmap bitmap) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);

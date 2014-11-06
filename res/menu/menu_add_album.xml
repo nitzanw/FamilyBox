@@ -6,6 +6,6 @@
         android:icon="@drawable/add_photo_album_button"
         android:orderInCategory="1"
         android:showAsAction="always|collapseActionView"
-        android:title="@string/accept_action_menu"/>
+        android:title="@string/add_album_action_menu"/>
 
 </menu>

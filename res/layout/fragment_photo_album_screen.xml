@@ -4,7 +4,6 @@
     android:layout_height="match_parent" >
 
     <GridView
-        android:visibility="gone"
         android:id="@+id/gv_photo_album"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,7 +16,8 @@
         android:horizontalSpacing="5dp"
         android:numColumns="3"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="5dp" >
+        android:verticalSpacing="5dp"
+        android:visibility="gone" >
     </GridView>
 
     <ProgressBar
@@ -25,5 +25,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
+
+    <LinearLayout
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@color/white_cream_ab"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/tree_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/empty_photo_grid"
+            android:textColor="@color/gray_dialog_text_color"
+            android:textSize="25dp" />
+    </LinearLayout>
 
 </RelativeLayout>

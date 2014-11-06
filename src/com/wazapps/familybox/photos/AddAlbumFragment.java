@@ -60,6 +60,7 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 	private ArrayList<Integer> currentSelectedPhotos;
 	private ArrayList<String> photoUrls;
 	private ArrayList<String> shareWithList = new ArrayList<String>();
+	private LinearLayout mProgress;
 
 	public interface AddAlbumScreenCallback {
 		public void openDateInputDialog();
@@ -115,7 +116,8 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 				.findViewById(R.id.ll_input_section_row_2);
 		mAddPhotosEmpty = (RelativeLayout) rootView
 				.findViewById(R.id.rl_add_photos_btn_empty);
-
+		mProgress = (LinearLayout) rootView
+				.findViewById(R.id.ll_progress_spinner);
 		mAddPhotosEmpty.setOnClickListener(this);
 		mAddPhotoBtn = (TextView) rootView.findViewById(R.id.tv_add_photos_btn);
 		mAddPhotoBtn.setOnClickListener(this);
@@ -162,7 +164,9 @@ public class AddAlbumFragment extends Fragment implements OnClickListener,
 						.toString(), mAlbumDate.getText().toString(),
 						mAlbumDesc.getText().toString(), photoUrls,
 						shareWithList);
-				getActivity().finish();
+
+				mProgress.setVisibility(View.VISIBLE);
+				
 			}
 
 			return true;

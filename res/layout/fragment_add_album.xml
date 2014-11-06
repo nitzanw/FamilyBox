@@ -66,15 +66,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/tv_add_photos_btn"
-            android:layout_marginBottom="19dp"
-           >
+            android:layout_marginBottom="19dp" >
 
             <LinearLayout
-                
-                android:layout_gravity="center_vertical"
                 android:id="@+id/ll_add_album_photos_input_section"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:orientation="vertical" >
 
                 <LinearLayout
@@ -129,8 +127,22 @@
                 android:paddingLeft="11dp"
                 android:text="@string/add_album_add_photos_empty"
                 android:textAlignment="center" />
-
         </RelativeLayout>
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_progress_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/pb_start_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -435,7 +435,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 						publishProgress(v);
 					}
 				} else {
-					cancel(frag.getActivity().isFinishing());
+					cancel(true);
 				}
 				return null;
 			}

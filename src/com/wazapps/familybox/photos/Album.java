@@ -1,7 +1,6 @@
 package com.wazapps.familybox.photos;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.parse.ParseClassName;
@@ -9,9 +8,11 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.UserHandler;
+import com.wazapps.familybox.newsfeed.NewsItem;
 import com.wazapps.familybox.util.LogUtils;
 
 //a class that hold all photo albums data
@@ -119,23 +120,36 @@ public class Album extends ParseObject {
 		if (upLoadPhotoCounter + errorPhotoCounter == photoListSize) {
 			setAlbumPhotoCount(upLoadPhotoCounter);
 			this.saveEventually();
+			new AddAlbumNewsItem().run();
 
 			Toast toast = Toast.makeText(context,
 					context.getString(R.string.add_album_success),
 					Toast.LENGTH_LONG);
 
-			if (context instanceof MainActivity) {
-				Fragment frag = ((MainActivity) context)
-						.getSupportFragmentManager().findFragmentById(
-								R.id.fragment_container);
-				if (frag instanceof PhotoAlbumsTabsFragment) {
-					if (((PhotoAlbumsTabsFragment) frag).getCurrentTabHostPos() == PhotoAlbumsTabsFragment.MY_FAMILY_POS) {
-						PhotoAlbumsTabsFragment.refreshMyFamilyAlbums();
-					}
-				}
+			if (context instanceof AddAlbumScreenActivity) {
+				((AddAlbumScreenActivity) context).finish();
 			}
 
 			toast.show();
+		}
+	}
+
+	class AddAlbumNewsItem extends Thread {
+
+		@Override
+		public void run() {
+			ParseUser user = ParseUser.getCurrentUser();
+			NewsItem addedAlbum = new NewsItem();
+			addedAlbum.setNetworkId(user.getString(UserHandler.NETWORK_KEY));
+			addedAlbum.setContent("Uploaded a new album: '" + getAlbumName()
+					+ "' (" + getAlbumPhotoCount() + " pics) ");
+			addedAlbum.setUser(user);
+			addedAlbum.setUserFirstName(user
+					.getString(UserHandler.FIRST_NAME_KEY));
+			addedAlbum.setUserLastName(user
+					.getString(UserHandler.LAST_NAME_KEY));
+			addedAlbum.saveEventually();
+			super.run();
 		}
 	}
 

@@ -1,14 +1,12 @@
 package com.wazapps.familybox.photos;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import android.content.Context;
 import android.content.Intent;
@@ -68,7 +66,9 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 
 	private ArrayList<String> photoIdList;
 	private ArrayList<String> photoCaptionList;
+	private HashSet<String> favoriteList = new HashSet<String>();
 	private Object mSource;
+	private ImageView mFavorite;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +87,7 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 					photoIdList);
 		} else {
 			LogUtils.logError(getTag(), "the photo id list is empty!!!");
+			getActivity().finish();
 		}
 	}
 
@@ -106,8 +107,14 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 
 			@Override
 			public void onPageScrolled(int position, float arg1, int arg2) {
+
 				currentPosition = position;
 				mImageCaption.setText(photoCaptionList.get(currentPosition));
+				if (favoriteList.contains(photoIdList.get(currentPosition))) {
+					mFavorite.setEnabled(false);
+				} else {
+					mFavorite.setEnabled(true);
+				}
 			}
 
 			@Override
@@ -152,12 +159,14 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			root.findViewById(R.id.ib_right_arrow).setOnClickListener(this);
 			root.findViewById(R.id.ib_left_arrow).setOnClickListener(this);
 		}
+
 		root.findViewById(R.id.iv_share_icon).setOnClickListener(this);
+		mFavorite = (ImageView) root.findViewById(R.id.iv_favorite_icon);
 		if (AlbumGridFragment.ALBUM_GRID_FRAGMENT.equals(mSource)) {
-			root.findViewById(R.id.iv_favorite_icon).setOnClickListener(this);
+			mFavorite.setOnClickListener(this);
 		} else if (PhotoAlbumsTabsFragment.PHOTO_ALBUM_TABS_FRAG
 				.equals(mSource)) {
-			root.findViewById(R.id.iv_favorite_icon).setVisibility(View.GONE);
+			mFavorite.setVisibility(View.GONE);
 		}
 		root.findViewById(R.id.iv_back_icon).setOnClickListener(this);
 
@@ -230,6 +239,8 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 			mImageCaption.setText(photoCaptionList.get(currentPosition));
 
 		} else if (R.id.iv_favorite_icon == v.getId()) {
+			favoriteList.add(photoIdList.get(currentPosition));
+			v.setEnabled(false);
 			ParseQuery<PhotoItem> query = ParseQuery.getQuery(PhotoItem.class);
 			query.getInBackground(photoIdList.get(currentPosition),
 					new GetCallback<PhotoItem>() {
@@ -250,7 +261,6 @@ public class PhotoPagerFragment extends Fragment implements OnClickListener {
 					});
 
 		} else if (R.id.iv_share_icon == v.getId()) {
-			LogUtils.logTemp(getTag(), "share was pressed");
 			ParseQuery<PhotoItem> query = ParseQuery.getQuery(PhotoItem.class);
 			query.getInBackground(photoIdList.get(currentPosition),
 					new GetCallback<PhotoItem>() {

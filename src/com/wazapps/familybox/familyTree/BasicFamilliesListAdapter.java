@@ -12,9 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.util.SectionAdapter;
 
-public class BasicFamilliesListAdapter extends SectionAdapter{
+public class BasicFamilliesListAdapter extends SectionAdapter {
 	protected enum LetterTypes {
 		a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
 	}
@@ -88,7 +89,8 @@ public class BasicFamilliesListAdapter extends SectionAdapter{
 		FamiliesListItem currItem = (FamiliesListItem) getRowItem(section, row);
 		TextView familyName = (TextView) convertView
 				.findViewById(R.id.tv_families_list_item_name);
-		familyName.setText(currItem.getFamilyName());
+		familyName
+				.setText(InputHandler.capitalizeName(currItem.getFamilyName()));
 		return convertView;
 	}
 
@@ -118,8 +120,6 @@ public class BasicFamilliesListAdapter extends SectionAdapter{
 		currHeader.setImageDrawable(currHeaderSrc);
 		return convertView;
 	}
-
-	
 
 	/**
 	 * Loads relevant section drawables into an arraylist for the purpose of
@@ -304,7 +304,7 @@ public class BasicFamilliesListAdapter extends SectionAdapter{
 	}
 
 	public void clearData() {
-		
+
 		this.familiesList = new ArrayList<FamiliesListItem>();
 		this.sectionDrawables.clear();
 		this.sectionLetters.clear();

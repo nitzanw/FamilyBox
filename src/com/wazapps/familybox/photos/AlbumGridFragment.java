@@ -148,12 +148,12 @@ public class AlbumGridFragment extends Fragment implements OnClickListener {
 			if (mMyFamilyAdapter != null) {
 				mProgress.setVisibility(View.INVISIBLE);
 			}
-			// mGridview.setAdapter(mMyFamilyAdapter);
+			 mGridview.setAdapter(mMyFamilyAdapter);
 		} else {
 			if (mSharedAdapter != null) {
 				mProgress.setVisibility(View.INVISIBLE);
 			}
-			// mGridview.setAdapter(mSharedAdapter);
+			 mGridview.setAdapter(mSharedAdapter);
 		}
 	}
 

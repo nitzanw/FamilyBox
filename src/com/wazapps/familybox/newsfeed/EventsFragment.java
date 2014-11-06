@@ -13,7 +13,8 @@ public class EventsFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.fragment_news_feed, container, false);
+		View root = inflater.inflate(R.layout.fragment_event_feed, container,
+				false);
 		return root;
 	}
 }

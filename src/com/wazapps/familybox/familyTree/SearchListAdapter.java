@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.handlers.InputHandler;
 
 public class SearchListAdapter extends BaseAdapter {
 
@@ -49,7 +50,8 @@ public class SearchListAdapter extends BaseAdapter {
 
 			TextView familyName = (TextView) v
 					.findViewById(R.id.tv_search_families_list_item_name);
-			familyName.setText(currentFamily.getFamilyName());
+			familyName.setText(InputHandler.capitalizeName(currentFamily
+					.getFamilyName()));
 
 		}
 

@@ -94,6 +94,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	protected int ALBUM_ITEM = R.string.album_title;
 	private ProgressBar mAlbumProgress;
 	protected FamilyProfileSharedAlbumAdapter mShareAlbumsAdapter;
+	private TextView mEmptyAlbum;
 
 	public interface AddFamilyProfileFragmentListener {
 		public void addFamilyProfileFragment(Bundle args);
@@ -173,6 +174,8 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		mPhotoAlbumsHolder = (LinearLayout) root
 				.findViewById(R.id.ll_family_profile_album_holder);
 		mAlbumProgress = (ProgressBar) root.findViewById(R.id.pb_album_spinner);
+
+		mEmptyAlbum = (TextView) root.findViewById(R.id.tv_empty_album_section);
 
 		mSingleMember = (RelativeLayout) root
 				.findViewById(R.id.rl_family_profile_single_member);
@@ -468,16 +471,24 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		if (mFamilyId.equals(mLoggedUser.getString(UserHandler.FAMILY_KEY))) {
 			userFamilyAlbumSectionInit();
 		} else {
-			ParseQuery<ShareAlbum> query = ParseQuery.getQuery("ShareAlbum");
-			query.whereEqualTo("albumOwnerId", mFamilyId);
-			query.whereEqualTo("sharedWithId",
-					ParseUser.getCurrentUser().get(UserHandler.FAMILY_KEY));
-			query.orderByDescending("createdAt");
-			query.findInBackground(new FindCallback<ShareAlbum>() {
+			otherFamilyAlbumSectionInit();
+		}
+	}
 
-				@Override
-				public void done(List<ShareAlbum> objects, ParseException e) {
-					mAlbumProgress.setVisibility(View.INVISIBLE);
+	private void otherFamilyAlbumSectionInit() {
+		ParseQuery<ShareAlbum> query = ParseQuery.getQuery("ShareAlbum");
+		query.whereEqualTo("albumOwnerId", mFamilyId);
+		query.whereEqualTo("sharedWithId",
+				ParseUser.getCurrentUser().get(UserHandler.FAMILY_KEY));
+		query.orderByDescending("createdAt");
+		query.findInBackground(new FindCallback<ShareAlbum>() {
+
+			@Override
+			public void done(List<ShareAlbum> objects, ParseException e) {
+				mAlbumProgress.setVisibility(View.INVISIBLE);
+				if (objects.isEmpty()) {
+					mEmptyAlbum.setVisibility(View.VISIBLE);
+				} else {
 					mShareAlbumsAdapter = new FamilyProfileSharedAlbumAdapter(
 							getActivity(), objects);
 					for (int i = 0; i < objects.size(); i++) {
@@ -546,6 +557,82 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 								args.putInt(
 										PhotoGridFragment.ALBUM_PHOTO_COUNT,
 										album.getAlbumPhotoCount());
+								args.putString(
+										PhotoGridFragment.ALBUM_ITEM_ID,
+										album.getObjectId());
+								args.putString(PhotoGridFragment.ALBUM_SRC,
+										FAMILY_PROFILE_FRAG);
+								args.putString(
+										PhotoGridFragment.ALBUM_NAME,
+										album.getAlbumName());
+								i.putExtra(PhotoGridFragment.ALBUM_ITEM,
+										args);
+
+								getActivity().startActivity(i);
+
+							}
+						});
+					}
+				}
+			}
+		});
+	}
+
+	private void userFamilyAlbumSectionInit() {
+		ParseQuery<Album> query = ParseQuery.getQuery("Album");
+		query.whereEqualTo(PhotoHandler.ALBUM_FAMILY_KEY, mFamilyId);
+
+		query.orderByDescending("createdAt");
+		query.findInBackground(new FindCallback<Album>() {
+
+			@Override
+			public void done(List<Album> objects, ParseException e) {
+				mAlbumProgress.setVisibility(View.INVISIBLE);
+				if (objects.isEmpty()) {
+					mEmptyAlbum.setVisibility(View.VISIBLE);
+				} else {
+					mAlbumsAdapter = new FamilyProfileAlbumAdapter(
+							getActivity(), objects);
+
+					for (int i = 0; i < objects.size(); i++) {
+						View v = mAlbumsAdapter.getView(i, null,
+								(ViewGroup) getView());
+						ImageButton album = ((ImageButton) v
+								.findViewById(R.id.ib_album_image));
+						objects.get(i).fetchIfNeededInBackground(
+								new GetCallback<Album>() {
+
+									private ImageButton album;
+
+									@Override
+									public void done(Album object,
+											ParseException e) {
+										if (e == null) {
+
+											album.setTag(ALBUM_ITEM, object);
+										}
+									}
+
+									GetCallback<Album> init(ImageButton album) {
+										this.album = album;
+										return this;
+
+									}
+
+								}.init(album));
+
+						mPhotoAlbumsHolder.addView(v);
+						album.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								Intent i = new Intent(getActivity(),
+										PhotoAlbumScreenActivity.class);
+								Bundle args = new Bundle();
+								Album album = (Album) v.getTag(ALBUM_ITEM);
+								args.putInt(
+										PhotoGridFragment.ALBUM_PHOTO_COUNT,
+										album.getAlbumPhotoCount());
 								args.putString(PhotoGridFragment.ALBUM_ITEM_ID,
 										album.getObjectId());
 								args.putString(PhotoGridFragment.ALBUM_SRC,
@@ -560,76 +647,9 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 						});
 					}
 				}
-			});
-		}
-	}
-
-	private void userFamilyAlbumSectionInit() {
-		ParseQuery<Album> query = ParseQuery.getQuery("Album");
-		query.whereEqualTo(PhotoHandler.ALBUM_FAMILY_KEY, mFamilyId);
-
-		query.orderByDescending("createdAt");
-		query.findInBackground(new FindCallback<Album>() {
-
-			@Override
-			public void done(List<Album> objects, ParseException e) {
-				mAlbumProgress.setVisibility(View.INVISIBLE);
-				mAlbumsAdapter = new FamilyProfileAlbumAdapter(getActivity(),
-						objects);
-
-				for (int i = 0; i < objects.size(); i++) {
-					View v = mAlbumsAdapter.getView(i, null,
-							(ViewGroup) getView());
-					ImageButton album = ((ImageButton) v
-							.findViewById(R.id.ib_album_image));
-					objects.get(i).fetchIfNeededInBackground(
-							new GetCallback<Album>() {
-
-								private ImageButton album;
-
-								@Override
-								public void done(Album object, ParseException e) {
-									if (e == null) {
-
-										album.setTag(ALBUM_ITEM, object);
-									}
-								}
-
-								GetCallback<Album> init(ImageButton album) {
-									this.album = album;
-									return this;
-
-								}
-
-							}.init(album));
-
-					mPhotoAlbumsHolder.addView(v);
-					album.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							Intent i = new Intent(getActivity(),
-									PhotoAlbumScreenActivity.class);
-							Bundle args = new Bundle();
-							Album album = (Album) v.getTag(ALBUM_ITEM);
-							args.putInt(PhotoGridFragment.ALBUM_PHOTO_COUNT,
-									album.getAlbumPhotoCount());
-							args.putString(PhotoGridFragment.ALBUM_ITEM_ID,
-									album.getObjectId());
-							args.putString(PhotoGridFragment.ALBUM_SRC,
-									FAMILY_PROFILE_FRAG);
-							args.putString(PhotoGridFragment.ALBUM_NAME,
-									album.getAlbumName());
-							i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
-
-							getActivity().startActivity(i);
-
-						}
-					});
-				}
-
 			}
 		});
+
 	}
 
 	@Override

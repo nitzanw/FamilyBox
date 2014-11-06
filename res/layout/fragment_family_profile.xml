@@ -209,6 +209,16 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:paddingTop="27dp" />
+
+        <TextView
+            android:id="@+id/tv_empty_album_section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingTop="27dp"
+            android:text="@string/empty_album_section"
+            android:textColor="@color/gray_dialog_text_color"
+            android:visibility="invisible" />
     </RelativeLayout>
 
     <RelativeLayout
