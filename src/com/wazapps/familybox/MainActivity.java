@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -144,8 +145,8 @@ public class MainActivity extends FragmentActivity implements
 					getActionBar().setTitle(R.string.news_feed_title);
 				else if (ProfileFragment.PROFILE_FRAG.equals(frag.getTag()))
 					getActionBar().setTitle(R.string.profile_title);
-				else if (FamilyProfileFragment.FAMILY_PROFILE_FRAG
-						.equals(frag.getTag()))
+				else if (FamilyProfileFragment.FAMILY_PROFILE_FRAG.equals(frag
+						.getTag()))
 					getActionBar().setTitle(R.string.family_profile_title);
 				else if (FamiliesListFragment.FAMILY_TREE_FRAG.equals(frag
 						.getTag()))
@@ -319,9 +320,9 @@ public class MainActivity extends FragmentActivity implements
 								R.anim.fade_out_fast);
 						ft.replace(R.id.fragment_container, profileFrag,
 								ProfileFragment.PROFILE_FRAG);
-						ft.commit();													
-					} 
-					
+						ft.commit();
+					}
+
 					else {
 						LogUtils.logError("MainActivity", e.getMessage());
 
@@ -546,15 +547,33 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
+	class SetAlbumShareWithList extends Thread {
+		private Album album;
+		private ArrayList<String> shareWithList;
+
+		public SetAlbumShareWithList(final Album album,
+				ArrayList<String> shareWithList) {
+			this.album = album;
+			this.shareWithList = shareWithList;
+		}
+
+		@Override
+		public void run() {
+			setAlbumShareWithList(album, shareWithList);
+			super.run();
+		}
+	}
+
 	private void setAlbumShareWithList(final Album album,
 			ArrayList<String> shareWithList) {
 		for (String familyid : shareWithList) {
-				
-						ShareAlbum share = new ShareAlbum();
-						share.setAlbumId(album.getObjectId());
-						share.setAlbumOwner(ParseUser.getCurrentUser().get(UserHandler.FAMILY_KEY).toString());
-						share.setSharedWithId(familyid);
-						share.saveEventually();
+
+			ShareAlbum share = new ShareAlbum();
+			share.setAlbumId(album.getObjectId());
+			share.setAlbumOwner(ParseUser.getCurrentUser()
+					.get(UserHandler.FAMILY_KEY).toString());
+			share.setSharedWithId(familyid);
+			share.saveEventually();
 
 		}
 	}
@@ -568,8 +587,7 @@ public class MainActivity extends FragmentActivity implements
 			currentUser = ParseUser.getCurrentUser();
 		}
 
-
-		album.setAlbumPhotoCount(photoUrls.size());
+		
 		album.setFamily((String) currentUser.get(UserHandler.FAMILY_KEY));
 		album.setAlbumName(albumName);
 		album.setAlbumDate(albumDate);
@@ -582,9 +600,8 @@ public class MainActivity extends FragmentActivity implements
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
-					setAlbumShareWithList(album, shareWith);
-					((MainActivity) activity).uploadPhotosToAlbum(album,
-							photoUrls);
+					new SetAlbumShareWithList(album, shareWith).run();
+					new UploadPhotosToAlbum(album, photoUrls).run();
 				} else {
 					Toast toast = Toast.makeText(getApplicationContext(),
 							getString(R.string.add_album_err_not_uploaded)
@@ -603,6 +620,28 @@ public class MainActivity extends FragmentActivity implements
 			}
 
 		}.init(this, album, photoUrls));
+
+	}
+
+	class UploadPhotosToAlbum extends Thread {
+		private Album album;
+		private ArrayList<String> photoUrlList;
+
+		UploadPhotosToAlbum(Album album, ArrayList<String> photoUrlList) {
+			this.album = album;
+			this.photoUrlList = photoUrlList;
+		}
+
+		// @Override
+		// protected Void doInBackground(ArrayList<String>... params) {
+		// uploadPhotosToAlbum(album, params[0]);
+		// return null;
+		// }
+		@Override
+		public void run() {
+			uploadPhotosToAlbum(album, photoUrlList);
+			super.run();
+		}
 
 	}
 
@@ -631,7 +670,7 @@ public class MainActivity extends FragmentActivity implements
 					@Override
 					public void done(ParseException e) {
 						if (e == null) {
-							
+
 							photoItem.setPhotoFile(photoFile);
 							photoItem.saveEventually(new SaveCallback() {
 								private Album album;
@@ -641,7 +680,7 @@ public class MainActivity extends FragmentActivity implements
 								public void done(ParseException e) {
 									// add the cover photo to the album (if the
 									// counter is 0)
-
+									
 									album.incrementAlbumCounter(photoFile);
 								}
 
@@ -655,6 +694,7 @@ public class MainActivity extends FragmentActivity implements
 
 							}.init(album, photoFile));
 						} else {
+							album.incrementAlbumCounterForErrorUplaod();
 							LogUtils.logError(getLocalClassName(),
 									"something went wrong with the album uplaod "
 											+ e.getMessage());
@@ -662,8 +702,7 @@ public class MainActivity extends FragmentActivity implements
 					}
 
 					private SaveCallback init(FragmentActivity activity,
-							Album album, ParseFile albumPic,
-							PhotoItem photoItem) {
+							Album album, ParseFile albumPic, PhotoItem photoItem) {
 						this.album = album;
 						this.photoFile = albumPic;
 						this.photoItem = photoItem;

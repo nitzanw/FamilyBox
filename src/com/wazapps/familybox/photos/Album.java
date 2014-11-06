@@ -1,12 +1,9 @@
 package com.wazapps.familybox.photos;
 
-import java.io.Serializable;
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.parse.GetDataCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -22,8 +19,9 @@ import com.wazapps.familybox.util.LogUtils;
 public class Album extends ParseObject {
 
 	private int photoListSize;
-	private int upLoadPhotoCounter;
+	private int upLoadPhotoCounter = 0;
 	private Context context;
+	private int errorPhotoCounter = 0;
 
 	public Album() {
 	}
@@ -75,14 +73,7 @@ public class Album extends ParseObject {
 	}
 
 	public void setCoverPhoto(ParseFile albumCover) {
-		// albumCover.getDataInBackground(new GetDataCallback() {
-		//
-		// @Override
-		// public void done(byte[] data, ParseException e) {
-		// // TODO Auto-generated method stub
-		//
-		// }
-		// });
+
 		put("albumCover", albumCover);
 	}
 
@@ -95,6 +86,12 @@ public class Album extends ParseObject {
 
 	}
 
+	// we increment the counter even when upload went wrong
+	public synchronized void incrementAlbumCounterForErrorUplaod() {
+		errorPhotoCounter++;
+		checkIfUplaodFinished();
+	}
+
 	public synchronized void incrementAlbumCounter(ParseFile coverFile) {
 		if (upLoadPhotoCounter == 0) {
 
@@ -104,7 +101,7 @@ public class Album extends ParseObject {
 				@Override
 				public void done(ParseException e) {
 					if (e == null) {
-						LogUtils.logTemp("album class", "cover saved");
+						LogUtils.logDebug("album class", "cover saved");
 					}
 
 				}
@@ -113,7 +110,16 @@ public class Album extends ParseObject {
 		upLoadPhotoCounter++;
 		// if the number of uploaded photos is equal to the number of photos
 		// user selected - show a toast
-		if (upLoadPhotoCounter == photoListSize) {
+		checkIfUplaodFinished();
+	}
+
+	synchronized private void checkIfUplaodFinished() {
+		// check if all upload and failed uploads reached the number of wanted
+		// files
+		if (upLoadPhotoCounter + errorPhotoCounter == photoListSize) {
+			setAlbumPhotoCount(upLoadPhotoCounter);
+			this.saveEventually();
+
 			Toast toast = Toast.makeText(context,
 					context.getString(R.string.add_album_success),
 					Toast.LENGTH_LONG);

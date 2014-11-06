@@ -221,7 +221,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 				mCurrentUser = (UserData) profileArgs
 						.getParcelable(MEMBER_ITEM);
 			}
-			
+
 			if (profileArgs.containsKey(IS_FROM_DRAWER)) {
 				mIsFromDrawer = profileArgs.getBoolean(IS_FROM_DRAWER);
 			} else {
@@ -417,22 +417,26 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 
 			@Override
 			protected Void doInBackground(Void... params) {
-				frag.mFamilyListAdapter = new ProfileFamilyListAdapter(
-						frag.getActivity(),
-						frag.mFamilyMembersData
-								.toArray(new UserData[frag.mFamilyMembersData
-										.size()]), frag.mCurrentUser);
+				if (frag.getActivity() != null
+						&& !frag.getActivity().isFinishing()) {
+					frag.mFamilyListAdapter = new ProfileFamilyListAdapter(
+							frag.getActivity(),
+							frag.mFamilyMembersData
+									.toArray(new UserData[frag.mFamilyMembersData
+											.size()]), frag.mCurrentUser);
 
-				for (int i = 0; i < frag.mFamilyListAdapter.getCount(); i++) {
-					View v = frag.mFamilyListAdapter.getView(i, null,
-							(ViewGroup) getView());
-					v.setTag(ITEM_TYPE, MEMBER_ITEM_TYPE);
-					v.setTag(ITEM_POS, i);
-					v.setOnClickListener(frag);
-					v.setOnLongClickListener(frag);
-					publishProgress(v);
+					for (int i = 0; i < frag.mFamilyListAdapter.getCount(); i++) {
+						View v = frag.mFamilyListAdapter.getView(i, null,
+								(ViewGroup) getView());
+						v.setTag(ITEM_TYPE, MEMBER_ITEM_TYPE);
+						v.setTag(ITEM_POS, i);
+						v.setOnClickListener(frag);
+						v.setOnLongClickListener(frag);
+						publishProgress(v);
+					}
+				} else {
+					cancel(frag.getActivity().isFinishing());
 				}
-
 				return null;
 			}
 
@@ -482,25 +486,32 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 					@Override
 					public void done(ParseException e) {
 						if (e == null) {
-							Toast toast = Toast.makeText(activity.getApplicationContext(),
+							Toast toast = Toast.makeText(
+									activity.getApplicationContext(),
 									"Status updated", Toast.LENGTH_SHORT);
 							toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 							toast.show();
-							
+
 							NewsItem statusUpdate = new NewsItem();
-							statusUpdate.setNetworkId(mCurrentUser.getNetworkId());
-							statusUpdate.setContent("Updated status: '" + 
-							loggedUser.getString(UserHandler.STATUS_KEY) + "'");
+							statusUpdate.setNetworkId(mCurrentUser
+									.getNetworkId());
+							statusUpdate.setContent("Updated status: '"
+									+ loggedUser
+											.getString(UserHandler.STATUS_KEY)
+									+ "'");
 							statusUpdate.setUser(loggedUser);
-							statusUpdate.setUserFirstName(mCurrentUser.getName());
-							statusUpdate.setUserLastName(mCurrentUser.getLastName());
+							statusUpdate.setUserFirstName(mCurrentUser
+									.getName());
+							statusUpdate.setUserLastName(mCurrentUser
+									.getLastName());
 							statusUpdate.saveEventually();
 						}
 
 						else {
 							LogUtils.logError("FragmentActivity",
 									e.getMessage());
-							Toast toast = Toast.makeText(activity.getApplicationContext(),
+							Toast toast = Toast.makeText(
+									activity.getApplicationContext(),
 									"Failed to update status",
 									Toast.LENGTH_SHORT);
 
@@ -646,7 +657,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
-		
+
 		editButton = menu.findItem(R.id.action_edit);
 		if (!mIsUserProfile) {
 			editButton.setVisible(false);

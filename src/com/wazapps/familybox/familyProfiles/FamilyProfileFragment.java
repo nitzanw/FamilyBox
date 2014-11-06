@@ -39,6 +39,7 @@ import com.wazapps.familybox.handlers.UserHandler.FamilyMembersFetchCallback;
 import com.wazapps.familybox.photos.Album;
 import com.wazapps.familybox.photos.PhotoAlbumScreenActivity;
 import com.wazapps.familybox.photos.PhotoGridFragment;
+import com.wazapps.familybox.photos.ShareAlbum;
 import com.wazapps.familybox.profiles.ProfileFragment;
 import com.wazapps.familybox.profiles.ProfileFragment.AddProfileFragmentListener;
 import com.wazapps.familybox.profiles.UserData;
@@ -56,7 +57,6 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private static final String FAMILY_MEMBER_PARENT_TYPE = "parent";
 	private static final String FAMILY_MEMBER_SINGLE_TYPE = "single";
 	private static final String FAMILY_MEMBER_ITEM_TYPE = "family member item";
-	private static final String ALBUM_ITEM_TYPE = "album item";
 	public static final String FAMILY_PROFILE_DATA = "family profile data";
 	public static final String FAMILY_PROFILE_FRAG = "family profile fragment";
 	public static final String FAMILY_ID = "family id";
@@ -93,6 +93,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	private Animation textJump;
 	protected int ALBUM_ITEM = R.string.album_title;
 	private ProgressBar mAlbumProgress;
+	protected FamilyProfileSharedAlbumAdapter mShareAlbumsAdapter;
 
 	public interface AddFamilyProfileFragmentListener {
 		public void addFamilyProfileFragment(Bundle args);
@@ -127,9 +128,8 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 		if (args != null) {
 			mIsUserFamily = args.getBoolean(USER_FAMILY);
 
-			if (args.containsKey(FAMILY_ID)) {
-				mFamilyId = args.getString(FAMILY_ID);
-			}
+			mFamilyId = args.getString(FAMILY_ID,
+					mLoggedUser.getString(UserHandler.FAMILY_KEY));
 
 			if (args.containsKey(FAMILY_NAME)) {
 				mFamilyName = args.getString(FAMILY_NAME);
@@ -465,6 +465,106 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 	 * Initialize the albums list view
 	 */
 	private void initAlbumsListView() {
+		if (mFamilyId.equals(mLoggedUser.getString(UserHandler.FAMILY_KEY))) {
+			userFamilyAlbumSectionInit();
+		} else {
+			ParseQuery<ShareAlbum> query = ParseQuery.getQuery("ShareAlbum");
+			query.whereEqualTo("albumOwnerId", mFamilyId);
+			query.whereEqualTo("sharedWithId",
+					ParseUser.getCurrentUser().get(UserHandler.FAMILY_KEY));
+			query.orderByDescending("createdAt");
+			query.findInBackground(new FindCallback<ShareAlbum>() {
+
+				@Override
+				public void done(List<ShareAlbum> objects, ParseException e) {
+					mAlbumProgress.setVisibility(View.INVISIBLE);
+					mShareAlbumsAdapter = new FamilyProfileSharedAlbumAdapter(
+							getActivity(), objects);
+					for (int i = 0; i < objects.size(); i++) {
+						View v = mShareAlbumsAdapter.getView(i, null,
+								(ViewGroup) getView());
+						ImageButton album = ((ImageButton) v
+								.findViewById(R.id.ib_album_image));
+
+						objects.get(i).fetchIfNeededInBackground(
+								new GetCallback<ShareAlbum>() {
+
+									private ImageButton albumButton;
+
+									@Override
+									public void done(ShareAlbum object,
+											ParseException e) {
+										if (e == null) {
+
+											ParseQuery<Album> query = ParseQuery
+													.getQuery("Album");
+											query.getInBackground(
+													object.getAlbumId(),
+													new GetCallback<Album>() {
+
+														@Override
+														public void done(
+																Album album,
+																ParseException e) {
+															album.fetchIfNeededInBackground(new GetCallback<Album>() {
+
+																@Override
+																public void done(
+																		Album object,
+																		ParseException e) {
+																	albumButton
+																			.setTag(ALBUM_ITEM,
+																					object);
+																}
+															});
+
+														}
+
+													});
+
+										}
+									}
+
+									GetCallback<ShareAlbum> init(
+											ImageButton albumButton) {
+										this.albumButton = albumButton;
+										return this;
+
+									}
+
+								}.init(album));
+
+						mPhotoAlbumsHolder.addView(v);
+						album.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								Intent i = new Intent(getActivity(),
+										PhotoAlbumScreenActivity.class);
+								Bundle args = new Bundle();
+								Album album = (Album) v.getTag(ALBUM_ITEM);
+								args.putInt(
+										PhotoGridFragment.ALBUM_PHOTO_COUNT,
+										album.getAlbumPhotoCount());
+								args.putString(PhotoGridFragment.ALBUM_ITEM_ID,
+										album.getObjectId());
+								args.putString(PhotoGridFragment.ALBUM_SRC,
+										FAMILY_PROFILE_FRAG);
+								args.putString(PhotoGridFragment.ALBUM_NAME,
+										album.getAlbumName());
+								i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
+
+								getActivity().startActivity(i);
+
+							}
+						});
+					}
+				}
+			});
+		}
+	}
+
+	private void userFamilyAlbumSectionInit() {
 		ParseQuery<Album> query = ParseQuery.getQuery("Album");
 		query.whereEqualTo(PhotoHandler.ALBUM_FAMILY_KEY, mFamilyId);
 

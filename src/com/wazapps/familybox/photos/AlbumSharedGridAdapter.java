@@ -34,6 +34,7 @@ public class AlbumSharedGridAdapter extends ParseQueryAdapter<ShareAlbum> {
 			ParseQueryAdapter.QueryFactory<ShareAlbum> queryFactory) {
 		super(context, queryFactory);
 		LogUtils.logTemp("AlbumSharedGridAdapter", "ctor");
+		this.context = context;
 		this.inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -41,8 +42,7 @@ public class AlbumSharedGridAdapter extends ParseQueryAdapter<ShareAlbum> {
 	@Override
 	public View getItemView(ShareAlbum sharealbum, View view, ViewGroup parent) {
 		ViewHolder holder;
-		LogUtils.logTemp("getItemView",
-				sharealbum.getAlbumId());
+		LogUtils.logTemp("getItemView", sharealbum.getAlbumId());
 		if (view == null) {
 			view = inflater.inflate(R.layout.album_item, parent, false);
 			holder = new ViewHolder();
@@ -61,42 +61,44 @@ public class AlbumSharedGridAdapter extends ParseQueryAdapter<ShareAlbum> {
 			holder = (ViewHolder) view.getTag();
 		}
 		ParseQuery<Album> query = ParseQuery.getQuery(Album.class);
-		query.getInBackground(sharealbum.getAlbumId(), new GetCallback<Album>() {
-			ViewHolder holder;
+		query.getInBackground(sharealbum.getAlbumId(),
+				new GetCallback<Album>() {
+					ViewHolder holder;
 
-			@Override
-			public void done(Album album, ParseException e) {
-				if (e == null) {
-					album.fetchIfNeededInBackground(new GetCallback<Album>() {
+					@Override
+					public void done(Album album, ParseException e) {
+						if (e == null) {
+							album.fetchIfNeededInBackground(new GetCallback<Album>() {
 
-						@Override
-						public void done(Album album, ParseException e) {
-							LogUtils.logTemp("in done! got album!!",
-									album.getAlbumName());
-							TextView titleAlbum = holder.titleAlbum;
+								@Override
+								public void done(Album album, ParseException e) {
+									LogUtils.logTemp("in done! got album!!",
+											album.getAlbumName());
+									TextView titleAlbum = holder.titleAlbum;
 
-							TextView dateAlbum = holder.dateAlbum;
+									TextView dateAlbum = holder.dateAlbum;
 
-							FrameLayout imageAlbum = holder.imageAlbum;
+									FrameLayout imageAlbum = holder.imageAlbum;
 
-							ImageButton albumFrame = holder.albumFrame;
+									ImageButton albumFrame = holder.albumFrame;
 
-							titleAlbum.setText(album.getAlbumName());
-							dateAlbum.setText(album.getAlbumDate());
-							setCoverPhoto(album.getAlbumCover(), imageAlbum);
-							albumFrame.setTag(ALBUM_ITEM, album);
-							setAlbumFrameClick(albumFrame);
+									titleAlbum.setText(album.getAlbumName());
+									dateAlbum.setText(album.getAlbumDate());
+									setCoverPhoto(album.getAlbumCover(),
+											imageAlbum);
+									albumFrame.setTag(ALBUM_ITEM, album);
+									setAlbumFrameClick(albumFrame);
+								}
+							});
+
 						}
-					});
+					}
 
-				}
-			}
-
-			GetCallback<Album> init(ViewHolder holder) {
-				this.holder = holder;
-				return this;
-			}
-		}.init(holder));
+					GetCallback<Album> init(ViewHolder holder) {
+						this.holder = holder;
+						return this;
+					}
+				}.init(holder));
 
 		return view;
 	}
@@ -107,20 +109,23 @@ public class AlbumSharedGridAdapter extends ParseQueryAdapter<ShareAlbum> {
 
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(context, PhotoAlbumScreenActivity.class);
-				Bundle args = new Bundle();
-				Album album = (Album) v.getTag(ALBUM_ITEM);
-				args.putInt(PhotoGridFragment.ALBUM_PHOTO_COUNT,
-						album.getAlbumPhotoCount());
-				args.putString(PhotoGridFragment.ALBUM_ITEM_ID,
-						album.getObjectId());
-				args.putString(PhotoGridFragment.ALBUM_SRC,
-						AlbumGridFragment.ALBUM_GRID_FRAGMENT);
-				args.putString(PhotoGridFragment.ALBUM_NAME,
-						album.getAlbumName());
-				i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
+				if (context != null) {
+					Intent i = new Intent(context,
+							PhotoAlbumScreenActivity.class);
+					Bundle args = new Bundle();
+					Album album = (Album) v.getTag(ALBUM_ITEM);
+					args.putInt(PhotoGridFragment.ALBUM_PHOTO_COUNT,
+							album.getAlbumPhotoCount());
+					args.putString(PhotoGridFragment.ALBUM_ITEM_ID,
+							album.getObjectId());
+					args.putString(PhotoGridFragment.ALBUM_SRC,
+							AlbumGridFragment.ALBUM_GRID_FRAGMENT);
+					args.putString(PhotoGridFragment.ALBUM_NAME,
+							album.getAlbumName());
+					i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
 
-				context.startActivity(i);
+					context.startActivity(i);
+				}
 			}
 		});
 	}

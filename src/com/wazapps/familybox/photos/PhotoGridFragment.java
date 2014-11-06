@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.wazapps.familybox.R;
@@ -49,35 +52,72 @@ public class PhotoGridFragment extends Fragment {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+					final int position, long id) {
 				// Album album = mAdapter.getItem(position);
 				// openAlbum(album);
+				new AsyncTask<Void, Void, Void>() {
 
-				Intent photoIntent = new Intent(getActivity(),
-						PhotoPagerActivity.class);
-				//
-				// int photoPos = (Integer) v.getTag(PHOTO_POS);
-				Bundle args = new Bundle();
-				args.putInt(PhotoPagerFragment.PHOTO_FIRST_POS, position);
+					private int addedPhoto = 0;
 
-				ArrayList<String> photoItemsIdList = new ArrayList<String>();
-				ArrayList<String> photoItemsCaptionList = new ArrayList<String>();
-				if (albumSize == -1) {
-					albumSize = mAdapter.getCount();
-				}
-				for (int i = 0; i < albumSize; i++) {
-					photoItemsIdList.add(mAdapter.getItem(i).getObjectId());
-					photoItemsCaptionList.add(mAdapter.getItem(i).getCaption());
-				}
+					@Override
+					protected Void doInBackground(Void... params) {
+						Intent photoIntent = new Intent(getActivity(),
+								PhotoPagerActivity.class);
+						//
+						Bundle args = new Bundle();
+						args.putInt(PhotoPagerFragment.PHOTO_FIRST_POS,
+								position);
 
-				args.putStringArrayList(PhotoPagerFragment.PHOTO_ITEM_LIST,
-						photoItemsIdList);
-				args.putStringArrayList(
-						PhotoPagerFragment.PHOTO_ITEM_CAPTION_LIST,
-						photoItemsCaptionList);
-				args.putString(ALBUM_SRC, mSource);
-				photoIntent.putExtra(PhotoPagerActivity.PHOTO_BUNDLE, args);
-				startActivity(photoIntent);
+						ArrayList<String> photoItemsIdList = new ArrayList<String>();
+						ArrayList<String> photoItemsCaptionList = new ArrayList<String>();
+						if (albumSize == -1) {
+							albumSize = mAdapter.getCount();
+						}
+						for (int i = 0; i < albumSize; i++) {
+							PhotoItem item = mAdapter.getItem(i);
+							if (item != null) {
+								item.fetchIfNeededInBackground(new GetCallback<PhotoItem>() {
+
+									private ArrayList<String> photoItemsIdList;
+									private ArrayList<String> photoItemsCaptionList;
+
+									@Override
+									public void done(PhotoItem object,
+											ParseException e) {
+										photoItemsIdList.add(object
+												.getObjectId());
+										photoItemsCaptionList.add(object
+												.getCaption());
+										addedPhoto++;
+
+									}
+
+									GetCallback<PhotoItem> init(
+											ArrayList<String> photoItemsIdList,
+											ArrayList<String> photoItemsCaptionList) {
+										this.photoItemsIdList = photoItemsIdList;
+										this.photoItemsCaptionList = photoItemsCaptionList;
+										return this;
+									}
+								}.init(photoItemsIdList, photoItemsCaptionList));
+							}
+						}
+						while (addedPhoto != albumSize)
+							;
+						args.putStringArrayList(
+								PhotoPagerFragment.PHOTO_ITEM_LIST,
+								photoItemsIdList);
+						args.putStringArrayList(
+								PhotoPagerFragment.PHOTO_ITEM_CAPTION_LIST,
+								photoItemsCaptionList);
+						args.putString(ALBUM_SRC, mSource);
+						photoIntent.putExtra(PhotoPagerActivity.PHOTO_BUNDLE,
+								args);
+						startActivity(photoIntent);
+						return null;
+
+					}
+				}.execute();
 
 			}
 		});
