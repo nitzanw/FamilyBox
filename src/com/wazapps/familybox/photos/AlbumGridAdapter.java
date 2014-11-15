@@ -48,15 +48,16 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 			holder.dateAlbum = (TextView) view.findViewById(R.id.tv_album_date);
 			holder.albumFrame = (ImageButton) view
 					.findViewById(R.id.ib_album_image);
-			holder.albumFrame = (ImageButton) view.findViewById(R.id.ib_album_image);
+			holder.albumFrame = (ImageButton) view
+					.findViewById(R.id.ib_album_image);
 
 			view.setTag(holder);
 		} else {
 			holder = (ViewHolder) view.getTag();
 		}
-//		ParseRelation<ParseObject> relation = album
-//				.getRelation("shareWithFamily");
-//		relation.getQuery();
+		// ParseRelation<ParseObject> relation = album
+		// .getRelation("shareWithFamily");
+		// relation.getQuery();
 
 		TextView titleAlbum = holder.titleAlbum;
 		titleAlbum.setText(album.getAlbumName());
@@ -66,9 +67,9 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 
 		FrameLayout imageAlbum = holder.imageAlbum;
 		setCoverPhoto(album.getAlbumCover(), imageAlbum);
-		
+
 		ImageButton albumFrame = holder.albumFrame;
-		albumFrame.setTag(ALBUM_ITEM,album);
+		albumFrame.setTag(ALBUM_ITEM, album);
 		// Listen for GridView Item Click
 		albumFrame.setOnClickListener(new OnClickListener() {
 
@@ -77,12 +78,16 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 				Intent i = new Intent(context, PhotoAlbumScreenActivity.class);
 				Bundle args = new Bundle();
 				Album album = (Album) v.getTag(ALBUM_ITEM);
-				args.putInt(PhotoGridFragment.ALBUM_PHOTO_COUNT, album.getAlbumPhotoCount());
-				args.putString(PhotoGridFragment.ALBUM_ITEM_ID, album.getObjectId());
-				args.putString(PhotoGridFragment.ALBUM_SRC, AlbumGridFragment.ALBUM_GRID_FRAGMENT);
-				args.putString(PhotoGridFragment.ALBUM_NAME, album.getAlbumName());
+				args.putInt(PhotoGridFragment.ALBUM_PHOTO_COUNT,
+						album.getAlbumPhotoCount());
+				args.putString(PhotoGridFragment.ALBUM_ITEM_ID,
+						album.getObjectId());
+				args.putString(PhotoGridFragment.ALBUM_SRC,
+						AlbumGridFragment.ALBUM_GRID_FRAGMENT);
+				args.putString(PhotoGridFragment.ALBUM_NAME,
+						album.getAlbumName());
 				i.putExtra(PhotoGridFragment.ALBUM_ITEM, args);
-				
+
 				context.startActivity(i);
 			}
 		});
@@ -98,17 +103,18 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 
 				@Override
 				public void done(byte[] data, ParseException e) {
-					// set the cover photo
-					Bitmap bitmap = null;
-					bitmap = BitmapFactory
-							.decodeByteArray(data, 0, data.length);
-					BitmapDrawable drawable = new BitmapDrawable(bitmap);
-					imageAlbum.setBackground(drawable);
-					// make the progress disappear
-					LinearLayout progress = (LinearLayout) imageAlbum
-							.findViewById(R.id.ll_pb_album_cover);
-					progress.setVisibility(View.INVISIBLE);
-
+					if (data != null) {
+						// set the cover photo
+						Bitmap bitmap = null;
+						bitmap = BitmapFactory.decodeByteArray(data, 0,
+								data.length);
+						BitmapDrawable drawable = new BitmapDrawable(bitmap);
+						imageAlbum.setBackground(drawable);
+						// make the progress disappear
+						LinearLayout progress = (LinearLayout) imageAlbum
+								.findViewById(R.id.ll_pb_album_cover);
+						progress.setVisibility(View.INVISIBLE);
+					}
 				}
 
 				GetDataCallback init(FrameLayout imageAlbum) {
@@ -131,7 +137,6 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 		TextView dateAlbum;
 		ImageButton albumFrame;
 
-		
 	}
 }
 
