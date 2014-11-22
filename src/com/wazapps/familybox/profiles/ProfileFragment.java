@@ -279,12 +279,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 			mSubmitStatus.setVisibility(View.INVISIBLE);
 			mSpinner.setVisibility(View.VISIBLE);
 		}
-
-		// Clear the listView's top highlight scrolling effect
-		int glowDrawableId = root.getResources().getIdentifier(
-				"overscroll_glow", "drawable", "android");
-		Drawable androidGlow = root.getResources().getDrawable(glowDrawableId);
-		androidGlow.setColorFilter(R.color.orange_fb, Mode.CLEAR);
+		
 		initAnimations();
 		return root;
 	}
