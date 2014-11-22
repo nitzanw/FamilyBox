@@ -22,6 +22,7 @@ import com.parse.ParseQuery;
 import com.wazapps.familybox.R;
 import com.wazapps.familybox.photos.Album;
 import com.wazapps.familybox.photos.ShareAlbum;
+import com.wazapps.familybox.util.LogUtils;
 
 public class FamilyProfileSharedAlbumAdapter extends BaseAdapter {
 	private FragmentActivity activity;
@@ -70,32 +71,71 @@ public class FamilyProfileSharedAlbumAdapter extends BaseAdapter {
 
 					@Override
 					public void done(ShareAlbum object, ParseException e) {
-						if (e == null) {
-							
-							
-							ParseQuery<Album> query = ParseQuery.getQuery("Album");
-							query.getInBackground(object.getAlbumId(), new GetCallback<Album>() {
-								
-								@Override
-								public void done(Album album, ParseException e) {
-									album.fetchIfNeededInBackground(new GetCallback<Album>() {
+						if (e == null && activity != null) {
+
+							ParseQuery<Album> query = ParseQuery
+									.getQuery("Album");
+							query.getInBackground(object.getAlbumId(),
+									new GetCallback<Album>() {
 
 										@Override
-										public void done(Album object,
+										public void done(Album album,
 												ParseException e) {
-											ImageButton image = (ImageButton) v
-													.findViewById(R.id.ib_album_image);
-											setCoverPhoto(object.getAlbumCover(), image);
-											((TextView) v.findViewById(R.id.tv_album_title))
-													.setText(object.getAlbumName());
-											((TextView) v.findViewById(R.id.tv_album_date))
-													.setText(object.getAlbumDate());
+											if (e == null && activity != null) {
+												album.fetchIfNeededInBackground(new GetCallback<Album>() {
+
+													@Override
+													public void done(
+															Album object,
+															ParseException e) {
+														if (e == null
+																&& activity != null) {
+															ImageButton image = (ImageButton) v
+																	.findViewById(R.id.ib_album_image);
+															setCoverPhoto(
+																	object.getAlbumCover(),
+																	image);
+															((TextView) v
+																	.findViewById(R.id.tv_album_title))
+																	.setText(object
+																			.getAlbumName());
+															((TextView) v
+																	.findViewById(R.id.tv_album_date))
+																	.setText(object
+																			.getAlbumDate());
+														} else if (e != null) {
+															LogUtils.logError(
+																	getClass()
+																			.getName(),
+																	e.getMessage());
+														} else {
+															LogUtils.logError(
+																	getClass()
+																			.getName(),
+																	"activity died");
+														}
+													}
+												});
+											} else if (e != null) {
+												LogUtils.logError(getClass()
+														.getName(), e
+														.getMessage());
+											} else {
+												LogUtils.logError(getClass()
+														.getName(),
+														"activity died");
+											}
+
 										}
 									});
-									
-								}
-							});
-							
+
+						} else if (e != null) {
+							LogUtils.logError(getClass().getName(),
+									"got an error from parse");
+						} else {
+							LogUtils.logError(getClass().getName(),
+									"the activity died");
+
 						}
 					}
 				});
