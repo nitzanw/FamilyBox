@@ -22,7 +22,7 @@
     <RelativeLayout
         android:id="@+id/rl_family_profile_tree"
         android:layout_width="wrap_content"
-        android:layout_height="307dp"
+        android:layout_height="287dp"
         android:layout_below="@id/tv_family_profile_title"
         android:layout_centerHorizontal="true"
         android:animateLayoutChanges="true"
@@ -31,7 +31,7 @@
         <LinearLayout
             android:id="@+id/ll_family_profile_parents"
             android:layout_width="match_parent"
-            android:layout_height="310dp"
+            android:layout_height="290dp"
             android:animateLayoutChanges="true"
             android:gravity="center"
             android:orientation="horizontal" >
@@ -181,27 +181,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
+            android:layout_alignParentTop="true"
             android:paddingLeft="10dp"
             android:text="@string/photo_albums"
             android:textSize="19sp" />
-
-        <HorizontalScrollView
-            android:id="@+id/hsv_family_profile_albums"
-            android:layout_width="wrap_content"
-            android:layout_height="155dp"
-            android:layout_below="@id/tv_family_profile_albums_title"
-            android:background="@drawable/albums_area_background"
-            android:overScrollMode="never"
-            android:scrollbars="horizontal" >
-
-            <LinearLayout
-                android:id="@+id/ll_family_profile_album_holder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:orientation="horizontal" >
-            </LinearLayout>
-        </HorizontalScrollView>
 
         <ProgressBar
             android:id="@+id/pb_album_spinner"
@@ -219,6 +202,27 @@
             android:text="@string/empty_album_section"
             android:textColor="@color/gray_dialog_text_color"
             android:visibility="invisible" />
+
+        <HorizontalScrollView
+            android:id="@+id/hsv_family_profile_albums"
+            android:layout_width="match_parent"
+            android:layout_height="155dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/pb_album_spinner"
+            android:background="@drawable/albums_area_background"
+            android:overScrollMode="never"
+            android:scrollbars="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/ll_family_profile_album_holder"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </HorizontalScrollView>
+
     </RelativeLayout>
 
     <RelativeLayout

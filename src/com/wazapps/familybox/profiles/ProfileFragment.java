@@ -32,6 +32,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -96,7 +97,8 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 	// the fragment's views
 	private View root;
 	private LinearLayout mFamilyListHolder;
-	private RelativeLayout mSpinner, emptyText;
+	private ProgressBar mSpinner;
+	private TextView emptyText;
 	private HorizontalScrollView membersList;
 	private ListView mProfileDetailsList;
 	private TextView mUserName;
@@ -253,16 +255,16 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 		mUserStatusEdit = (EditText) root.findViewById(R.id.et_profile_status);
 		mEditStatusbtn = (ImageButton) root.findViewById(R.id.ib_edit_status);
 		mSubmitStatus = (ImageButton) root.findViewById(R.id.ib_submit_status);
-		mSpinner = (RelativeLayout) root
-				.findViewById(R.id.rl_family_members_list_spinner);
+		mSpinner = (ProgressBar) root
+				.findViewById(R.id.pb_family_members_list_spinner);
 		mPrevFamilybutton = (ImageButton) root
 				.findViewById(R.id.ib_prev_family);
 		mCurrFamilybutton = (ImageButton) root
 				.findViewById(R.id.ib_curr_family);
 		mPrevFamilybutton.setOnClickListener(this);
 		mCurrFamilybutton.setOnClickListener(this);
-		emptyText = (RelativeLayout) root
-				.findViewById(R.id.rl_family_members_list_empty);
+		emptyText = (TextView) root
+				.findViewById(R.id.tv_family_members_list_empty);
 		familyTitle = (TextView) root.findViewById(R.id.tv_close_family_title);
 		membersList = (HorizontalScrollView) root
 				.findViewById(R.id.hsv_family_members_list);
@@ -324,12 +326,9 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 				// if an error happened - inflate error text onscreen
 				else {
 					LogUtils.logError("ProfileFragment", e.getMessage());
-					RelativeLayout errorTextLayout = (RelativeLayout) getActivity()
-							.findViewById(R.id.rl_family_members_list_empty);
-					TextView errorText = (TextView) errorTextLayout
-							.findViewById(R.id.tv_family_members_list_empty);
-					errorText.setText("Error in loading family members");
-					errorTextLayout.setVisibility(View.VISIBLE);
+
+					emptyText.setText("Error in loading family members");
+					emptyText.setVisibility(View.VISIBLE);
 				}
 			}
 		});
