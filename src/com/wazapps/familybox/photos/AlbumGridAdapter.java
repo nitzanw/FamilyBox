@@ -104,16 +104,23 @@ public class AlbumGridAdapter extends ParseQueryAdapter<Album> {
 				@Override
 				public void done(byte[] data, ParseException e) {
 					if (data != null) {
-						// set the cover photo
-						Bitmap bitmap = null;
-						bitmap = BitmapFactory.decodeByteArray(data, 0,
-								data.length);
-						BitmapDrawable drawable = new BitmapDrawable(bitmap);
-						imageAlbum.setBackground(drawable);
-						// make the progress disappear
-						LinearLayout progress = (LinearLayout) imageAlbum
-								.findViewById(R.id.ll_pb_album_cover);
-						progress.setVisibility(View.INVISIBLE);
+
+						
+						
+						BitmapFactory.Options options=new BitmapFactory.Options();// Create object of bitmapfactory's option method for further option use
+		                options.inPurgeable = true; // inPurgeable is used to free up memory while required
+		                Bitmap image1 = BitmapFactory.decodeByteArray(data,0, data.length,options);//Decode image, "data" is the object of image file
+		                Bitmap image2 = Bitmap.createScaledBitmap(image1, 170 , 170 , true);// convert decoded bitmap into well scalled Bitmap format.
+
+		                BitmapDrawable drawable = new BitmapDrawable(image2);
+		                imageAlbum.setBackground(drawable);
+		                // make the progress disappear
+		                LinearLayout progress = (LinearLayout) imageAlbum
+		                		.findViewById(R.id.ll_pb_album_cover);
+		                progress.setVisibility(View.INVISIBLE);
+		             
+						
+						
 					}
 				}
 

@@ -72,12 +72,14 @@ public class PhotoGridAdapter extends ParseQueryAdapter<PhotoItem> {
 				@Override
 				public void done(byte[] data, ParseException e) {
 					if (e == null) {
-						Bitmap bitmap = null;
-						bitmap = BitmapFactory.decodeByteArray(data, 0,
-								data.length);
 
-						image.setImageBitmap(bitmap);
+						BitmapFactory.Options options=new BitmapFactory.Options();// Create object of bitmapfactory's option method for further option use
+		                options.inPurgeable = true; // inPurgeable is used to free up memory while required
+		                Bitmap image1 = BitmapFactory.decodeByteArray(data,0, data.length,options);//Decode image, "data" is the object of image file
+		                Bitmap image2 = Bitmap.createScaledBitmap(image1, 100 , 100 , true);// convert decoded bitmap into well scalled Bitmap format.
 
+		                image.setImageBitmap(image2);
+	
 					} else {
 						LogUtils.logError(getClass().getName(), e.getMessage());
 					}
