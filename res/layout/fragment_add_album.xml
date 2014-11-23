@@ -55,7 +55,7 @@
         android:textAlignment="gravity" />
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_add_album_share_with_btn"
         android:layout_marginTop="13dp"
@@ -111,10 +111,9 @@
 
         <RelativeLayout
             android:id="@+id/rl_add_photos_btn_empty"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
             android:layout_marginTop="82dp"
             android:background="@drawable/new_album_screen_add_button_empty_screen" >
 

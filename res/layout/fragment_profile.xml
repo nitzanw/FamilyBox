@@ -2,102 +2,102 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"  >
+    android:orientation="vertical" >
 
-   <RelativeLayout
+    <RelativeLayout
         android:id="@+id/ll_profile_upper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/background_light" >
-        
-       <RelativeLayout 
-           android:layout_width="match_parent"
-           android:layout_height="156dp">
-           
-           <ImageView android:id="@+id/iv_profile_picture_background"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/profile_background"/>
-           
-           <ImageView 
-               android:id="@+id/iv_profile_image_effect"
-               android:layout_height="match_parent"
-               android:layout_width="160dp"
-               android:layout_marginLeft="-10dp"
-               />
-           
-           <com.wazapps.familybox.util.RoundedImageView
+            android:layout_height="156dp" >
+
+            <ImageView
+                android:id="@+id/iv_profile_picture_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/profile_background" />
+
+            <ImageView
+                android:id="@+id/iv_profile_image_effect"
+                android:layout_width="160dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="-10dp" />
+
+            <com.wazapps.familybox.util.RoundedImageView
                 android:id="@+id/riv_profile_image"
                 android:layout_width="114dp"
                 android:layout_height="114dp"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/my_profile_pic_elipse_lines"
                 android:cropToPadding="true"
-                android:layout_centerVertical="true"
                 android:scaleType="centerCrop" />
-           
-			<TextView
-				android:id="@+id/tv_profile_username"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="50dp"
-				android:layout_marginLeft="20dp"
-				android:textStyle="bold"
-				android:layout_toRightOf="@id/riv_profile_image"
-				android:textSize="23sp"/>
-			
-				<ImageButton
-                    android:id="@+id/ib_submit_status"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_alignBottom="@id/tv_profile_username"
-                    android:layout_toRightOf="@id/tv_profile_username"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/action_bar_edit_profile_accept_button"
+
+            <TextView
+                android:id="@+id/tv_profile_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_toRightOf="@id/riv_profile_image"
+                android:textSize="23sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/ib_submit_status"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignBottom="@id/tv_profile_username"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@id/tv_profile_username"
+                android:background="@android:color/transparent"
+                android:src="@drawable/action_bar_edit_profile_accept_button"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/ib_edit_status"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignBottom="@id/tv_profile_username"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@id/tv_profile_username"
+                android:background="@android:color/transparent"
+                android:src="@drawable/edit_button_gray_profile_status_update" />
+
+            <FrameLayout
+                android:layout_width="175dp"
+                android:layout_height="33dp"
+                android:layout_alignLeft="@id/tv_profile_username"
+                android:layout_below="@id/tv_profile_username"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="-14dp" >
+
+                <EditText
+                    android:id="@+id/et_profile_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="2dp"
+                    android:maxLength="37"
+                    android:maxLines="1"
+                    android:textSize="14sp"
                     android:visibility="invisible" />
 
-                <ImageButton
-                    android:id="@+id/ib_edit_status"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_alignBottom="@id/tv_profile_username"
-                    android:layout_toRightOf="@id/tv_profile_username"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/edit_button_gray_profile_status_update" />
-    
-                <FrameLayout
-	                android:layout_width="175dp"
-	                android:layout_height="33dp"
-	                android:layout_marginBottom="10dp"
-	                android:layout_marginLeft="-14dp"
-	                android:layout_alignLeft="@id/tv_profile_username"
-	                android:layout_below="@id/tv_profile_username">
-
-	                <EditText
-	                    android:id="@+id/et_profile_status"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:lineSpacingExtra="2dp"
-	                    android:maxLength="37"
-	                    android:maxLines="1"
-	                    android:textSize="14sp"
-	                    android:visibility="invisible" />
-
-	                <TextView
-	                    android:id="@+id/tv_profile_status"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:lineSpacingExtra="2dp"
-	                    android:layout_marginTop="4dp"
-	                    android:layout_marginLeft="12dp"
-	                    android:maxLines="1"
-	                    android:maxLength="37">
-                	</TextView>
-            	</FrameLayout>
-       </RelativeLayout>
-   </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_profile_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="4dp"
+                    android:lineSpacingExtra="2dp"
+                    android:maxLength="37"
+                    android:maxLines="1" >
+                </TextView>
+            </FrameLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -110,108 +110,105 @@
             android:id="@+id/profile_details"
             android:layout_width="fill_parent"
             android:layout_height="215dp"
-            android:clickable="false"
             android:background="@drawable/seperator"
+            android:clickable="false"
             android:divider="@null"
             android:dividerHeight="0dp" >
         </ListView>
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/rl_family_members_list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
-            android:background="@android:color/background_light"
-            android:orientation="vertical">
-            <RelativeLayout 
+            android:background="@android:color/background_light" >
+
+            <RelativeLayout
+                android:id="@+id/rl_family_members_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/profile_sections_background"
-                android:animateLayoutChanges="true">
+                android:layout_alignParentTop="true"
+                android:animateLayoutChanges="true"
+                android:background="@drawable/profile_sections_background" >
 
-            <TextView
-                android:id="@+id/tv_close_family_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:textColor="@color/grey_subtitle"
-                android:gravity="center_vertical"
-                android:text="@string/profile_close_family_title"
-                android:textSize="20sp" />
-                        	              
-            <ImageButton android:src="@drawable/arrow_icon_right"
-                android:id="@+id/ib_prev_family"
-                android:visibility="invisible"
-                android:background="@android:color/transparent"
-                android:layout_toRightOf="@id/tv_close_family_title"               
-                android:layout_width="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="60dp"              
-                android:layout_height="25dp"/>
-            
-            <ImageButton android:src="@drawable/arrow_icon_left"
-                android:id="@+id/ib_curr_family"
-                android:visibility="invisible"
-                android:background="@android:color/transparent"
-                android:layout_toLeftOf="@id/tv_close_family_title"
-                android:layout_width="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_alignParentLeft="true"   
-                android:layout_marginRight="60dp"           
-                android:layout_height="25dp"/>
-                      
-            </RelativeLayout>
-            
-            <RelativeLayout 
-                android:id="@+id/rl_family_members_list_spinner"
-	            android:layout_width="fill_parent"
-	            android:layout_height="135dp"
-	            android:background="@android:color/background_light"
-	            android:visibility="gone">
-	                
-                <ProgressBar
-           		 android:id="@+id/pb_family_members_list_spinner"
-            	 android:layout_width="wrap_content"
-            	 android:layout_height="wrap_content"
-            	 android:layout_centerHorizontal="true"
-            	 android:layout_centerVertical="true" />
-	        </RelativeLayout>
-            
-            <RelativeLayout 
-                android:id="@+id/rl_family_members_list_empty"
-	            android:layout_width="fill_parent"
-	            android:layout_height="135dp"
-	            android:background="@android:color/background_light"
-	            android:visibility="gone">
-	                <TextView 
-	                    android:id="@+id/tv_family_members_list_empty"
-	                    android:text="@string/profile_family_members_empty"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:textColor="@color/grey_light"
-	                    android:textSize="18sp"
-	                    android:layout_centerHorizontal="true"
-	                    android:layout_centerVertical="true"/>                
-            </RelativeLayout>
-            
-            <HorizontalScrollView
-                android:id="@+id/hsv_family_members_list"
-                android:layout_width="fill_parent"
-                android:layout_height="135dp"
-                android:background="@android:color/background_light"
-                android:overScrollMode="never"
-                android:scrollbars="none" >
-
-                <LinearLayout
-                    android:id="@+id/ll_family_members_list_holder"
+                <TextView
+                    android:id="@+id/tv_close_family_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:orientation="horizontal"
-                    android:animateLayoutChanges="true" >
-                </LinearLayout>
-            </HorizontalScrollView>
-        </LinearLayout>
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/profile_close_family_title"
+                    android:textColor="@color/grey_subtitle"
+                    android:textSize="20sp" />
+
+                <ImageButton
+                    android:id="@+id/ib_prev_family"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_toRightOf="@id/tv_close_family_title"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/arrow_icon_right"
+                    android:visibility="invisible" />
+
+                <ImageButton
+                    android:id="@+id/ib_curr_family"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="60dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_toLeftOf="@id/tv_close_family_title"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/arrow_icon_left"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/rl_family_members_title" >
+
+                <ProgressBar
+                    android:id="@+id/pb_family_members_list_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_family_members_list_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/profile_family_members_empty"
+                    android:textColor="@color/grey_light"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+
+                <HorizontalScrollView
+                    android:id="@+id/hsv_family_members_list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:overScrollMode="never"
+                    android:scrollbars="none" >
+
+                    <LinearLayout
+                        android:id="@+id/ll_family_members_list_holder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginBottom="5dp"
+                        android:animateLayoutChanges="true"
+                        android:orientation="horizontal" >
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </RelativeLayout>
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

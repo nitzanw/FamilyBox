@@ -7,7 +7,7 @@
     <ImageView android:id="@+id/iv_family_query_profile_effect"
         android:layout_width="match_parent"
         android:layout_height="162dp"
-        android:layout_centerHorizontal="true"/>"
+        android:layout_centerHorizontal="true"/>
     
     <com.wazapps.familybox.util.RoundedImageView
         android:id="@+id/riv_query_profile_picture"
