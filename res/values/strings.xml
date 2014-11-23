@@ -80,6 +80,7 @@
     <string name="email_login_title">Log in</string>
     <string name="email_login_address">Email Address</string>
     <string name="email_login_pw">Password</string>
+    <string name="email_invite_title">Invite Family Member</string>
     <string name="signup_upload_image">Add a \nprofile picture</string>
     <string name="signup_firstname">First name</string>
     <string name="signup_lastname">Last name</string>
@@ -168,5 +169,6 @@
     <string name="photo_hint">Add your caption here!</string>
     <string name="empty_photo_grid">No photos here</string>
     <string name="empty_album_section">No albums yet</string>
+    <string name="expand_network_title">Expand network</string>
 
 </resources>

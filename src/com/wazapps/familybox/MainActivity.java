@@ -1,11 +1,5 @@
 package com.wazapps.familybox;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -30,6 +24,9 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.splunk.mint.Mint;
+import com.wazapps.familybox.expandNetwork.EmailInviteDialogFragment;
+import com.wazapps.familybox.expandNetwork.ExpandNetworkFragment;
+import com.wazapps.familybox.expandNetwork.ExpandNetworkFragment.InviteCallback;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment.AddFamilyProfileFragmentListener;
 import com.wazapps.familybox.familyTree.BasicFamilyListFragment;
@@ -50,7 +47,8 @@ import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.MenuListAdapter;
 
 public class MainActivity extends FragmentActivity implements
-		AddProfileFragmentListener, AddFamilyProfileFragmentListener {
+		AddProfileFragmentListener, AddFamilyProfileFragmentListener,
+		InviteCallback {
 
 	public static abstract class MainActivityCallback {
 		public abstract void done(Exception e);
@@ -140,6 +138,8 @@ public class MainActivity extends FragmentActivity implements
 				else if (FamiliesListFragment.FAMILY_TREE_FRAG.equals(frag
 						.getTag()))
 					getActionBar().setTitle(R.string.family_tree_title);
+				else if (ExpandNetworkFragment.EXPAND_NETWORK_FRAG.equals(frag.getTag()))
+					getActionBar().setTitle(R.string.expand_network_title);
 
 				// creates call to onPrepareOptionsMenu()
 				invalidateOptionsMenu();
@@ -411,9 +411,6 @@ public class MainActivity extends FragmentActivity implements
 					.beginTransaction();
 			ft4.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 			NewsFeedTabsFragment newsTabs = new NewsFeedTabsFragment();
-			Bundle args = new Bundle();
-			updateNewsPosts(args);
-			newsTabs.setArguments(args);
 			// a better way
 
 			ft4.replace(R.id.fragment_container, newsTabs,
@@ -427,49 +424,13 @@ public class MainActivity extends FragmentActivity implements
 			FragmentTransaction ft5 = getSupportFragmentManager()
 					.beginTransaction();
 			ft5.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
-			this.mDrawerLayout.closeDrawer(this.mDrawerList);
+			ft5.replace(R.id.fragment_container, new ExpandNetworkFragment(),
+					ExpandNetworkFragment.EXPAND_NETWORK_FRAG);
 			ft5.commit();
+			this.mDrawerLayout.closeDrawer(this.mDrawerList);
 
 			break;
 		}
-	}
-
-	private void updateNewsPosts(Bundle args) {
-		String jsonStr = null;
-		JSONObject jsonObj = null;
-		JSONArray jsonArr = null;
-
-		jsonStr = JSONParser.loadJSONFromAsset(this, "familyBox.json");
-		if (jsonStr == null)
-			return;
-
-		ArrayList<NewsItemToRemove> newsPosts = new ArrayList<NewsItemToRemove>();
-		try {
-			jsonObj = new JSONObject(jsonStr);
-			jsonArr = jsonObj.getJSONArray("news_posts");
-			for (int i = 0; i < jsonArr.length(); i++) {
-				JSONObject post = jsonArr.getJSONObject(i);
-
-				String userid = post.getString("user_id");
-				long postid = post.getLong("post_id");
-				String actionType = post.getString("action_type");
-				ArrayList<String> extraInfo = new ArrayList<String>();
-				JSONArray extraItems = post.getJSONArray("extra_info");
-				for (int j = 0; j < extraItems.length(); j++) {
-					extraInfo.add(extraItems.getString(j));
-				}
-
-				NewsItemToRemove postItem = new NewsItemToRemove(userid,
-						postid, actionType, extraInfo);
-				newsPosts.add(postItem);
-			}
-			args.putParcelableArrayList(NewsFragment.NEWS_ITEM_LIST, newsPosts);
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return;
-		}
-
 	}
 
 	@Override
@@ -533,5 +494,17 @@ public class MainActivity extends FragmentActivity implements
 		logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
 		startActivity(logoutIntent);
 		finish();
+	}
+
+	@Override
+	public void launchEmailInviteDialog() {
+		EmailInviteDialogFragment emailInvite = new EmailInviteDialogFragment();
+		
+	}
+
+	@Override
+	public void emailInvite(String email) {
+		// TODO Auto-generated method stub
+		
 	}
 }
