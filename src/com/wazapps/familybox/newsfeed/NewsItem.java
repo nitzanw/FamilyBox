@@ -15,13 +15,11 @@ public class NewsItem extends ParseObject{
 	private static final String USER_FIRST_NAME = "userFirstName";
 	private static final String USER_LAST_NAME = "userLastName";
 	
-	
 	public String getContent() {
 		return getString(NEWS_CONTENT);
 	}
 	
-	
-	public String networkId() {
+	public String getNetworkId() {
 		return getString(NETWORK_ID);
 	}
 	

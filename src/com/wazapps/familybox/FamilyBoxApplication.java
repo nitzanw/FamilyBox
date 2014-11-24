@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.wazapps.familybox.expandNetwork.EmailInvite;
 import com.wazapps.familybox.newsfeed.NewsItem;
 import com.wazapps.familybox.photos.Album;
 import com.wazapps.familybox.photos.PhotoItem;
@@ -25,6 +26,7 @@ public class FamilyBoxApplication extends Application {
 		ParseObject.registerSubclass(PhotoItem.class);
 		ParseObject.registerSubclass(NewsItem.class);
 		ParseObject.registerSubclass(ShareAlbum.class);
+		ParseObject.registerSubclass(EmailInvite.class);
 		Parse.initialize(this, appId, clientKey);
 	}
 }

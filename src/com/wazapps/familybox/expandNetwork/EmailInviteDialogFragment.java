@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,10 +23,12 @@ implements OnClickListener {
 	private View root;
 	private InviteCallback inviteHandler = null;
 	private EditText emailAddress;
+	private ImageButton exitButton, sendButton;
 	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		
 		try {
 			inviteHandler = (InviteCallback) getActivity();
 		} catch (ClassCastException e) {
@@ -37,11 +40,19 @@ implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		root = inflater.inflate(R.layout.fragment_expand_network, 
+		root = inflater.inflate(R.layout.fragment_dialog_email_invite, 
 				container, false);
+		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		
 		emailAddress = (EditText) 
 				root.findViewById(R.id.email_invite_adress_input);
+		exitButton = (ImageButton)
+				root.findViewById(R.id.email_invite_exit);
+		sendButton = (ImageButton)
+				root.findViewById(R.id.email_invite_send_button);
+		
+		exitButton.setOnClickListener(this);
+		sendButton.setOnClickListener(this);
 		
 		return root;
 	}
@@ -53,7 +64,7 @@ implements OnClickListener {
 			dismiss();			
 			break;
 			
-		case R.id.email_invite_log_button:
+		case R.id.email_invite_send_button:
 			handleEmailInvite();
 			break;
 
@@ -63,7 +74,7 @@ implements OnClickListener {
 	}
 	
 	private void handleEmailInvite() {
-		String email = emailAddress.getText().toString().trim();
+		String email = emailAddress.getText().toString().trim().toLowerCase();
 		if (email.isEmpty()) {
 			Toast toast = Toast.makeText(getActivity().getApplicationContext(), 
 					"Please write an email address", Toast.LENGTH_LONG);

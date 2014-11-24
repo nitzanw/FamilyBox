@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +24,9 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.splunk.mint.Mint;
+import com.wazapps.familybox.expandNetwork.EmailInvite;
 import com.wazapps.familybox.expandNetwork.EmailInviteDialogFragment;
 import com.wazapps.familybox.expandNetwork.ExpandNetworkFragment;
 import com.wazapps.familybox.expandNetwork.ExpandNetworkFragment.InviteCallback;
@@ -69,6 +72,7 @@ public class MainActivity extends FragmentActivity implements
 
 	public static final String LOG_OUT_ACTION = "logout";
 	private static final String DRAWER_POSITION = "drawerPos";
+	private static final String TAG_EMAIL_INVITE = "emailInvite";
 
 	// Declare Variable
 	protected DrawerLayout mDrawerLayout;
@@ -499,12 +503,39 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void launchEmailInviteDialog() {
 		EmailInviteDialogFragment emailInvite = new EmailInviteDialogFragment();
+		emailInvite.show(getSupportFragmentManager(), TAG_EMAIL_INVITE);
 		
 	}
 
 	@Override
 	public void emailInvite(String email) {
-		// TODO Auto-generated method stub
-		
+		ParseUser currUser = ParseUser.getCurrentUser();
+		if (currUser != null) {
+			String networkId = 
+					currUser.getString(UserHandler.NETWORK_KEY);
+			String userId = currUser.getObjectId();
+			
+			EmailInvite invite = new EmailInvite();
+			invite.setEmailAddress(email);
+			invite.setNetworkId(networkId);
+			invite.setInviterId(userId);
+			invite.saveInBackground(new SaveCallback() {
+				
+				@Override
+				public void done(ParseException e) {
+					if (e == null) {
+						Toast toast = Toast.makeText(getApplicationContext(), 
+								"invitation sent", Toast.LENGTH_LONG);
+						toast.setGravity(Gravity.CENTER, 0, 0);
+						toast.show();
+					} else {
+						Toast toast = Toast.makeText(getApplicationContext(), 
+								"error sending invitation", Toast.LENGTH_LONG);
+						toast.setGravity(Gravity.CENTER, 0, 0);
+						toast.show();
+					}
+				}
+			});
+		}		
 	}
 }

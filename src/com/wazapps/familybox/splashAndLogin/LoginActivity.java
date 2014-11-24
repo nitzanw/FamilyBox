@@ -26,6 +26,7 @@ import com.parse.SignUpCallback;
 import com.splunk.mint.Mint;
 import com.wazapps.familybox.MainActivity;
 import com.wazapps.familybox.R;
+import com.wazapps.familybox.expandNetwork.EmailInvite;
 import com.wazapps.familybox.handlers.FamilyHandler;
 import com.wazapps.familybox.handlers.InputHandler;
 import com.wazapps.familybox.handlers.PhotoHandler;
@@ -508,10 +509,10 @@ public class LoginActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void signUp(String firstName, String lastName, String email,
-			String birthday, String gender, String password,
-			String passwordConfirm, byte[] profilePictureData,
-			String profilePictureName) {
+	public void signUp(final String firstName, final String lastName, final String email,
+			final String birthday, final String gender, final String password,
+			final String passwordConfirm, final byte[] profilePictureData,
+			final String profilePictureName) {
 
 		final EmailSignupFragment signUpFrag = (EmailSignupFragment) getSupportFragmentManager()
 				.findFragmentByTag(TAG_SGINUP_FRAG);
@@ -527,11 +528,73 @@ public class LoginActivity extends FragmentActivity implements
 		} else if (signUpFrag != null) {
 			signUpFrag.turnOnProgress();
 		}
+		
+		//Check if user was invited to any family network
+		ParseQuery<EmailInvite> inviteQuery = EmailInvite.getQuery();
+		inviteQuery.whereEqualTo(EmailInvite.EMAIL_ADDR, email);
+		inviteQuery.findInBackground(new FindCallback<EmailInvite>() {
+			private LoginActivity activity;
+			
+			@Override
+			public void done(List<EmailInvite> invites, ParseException e) {
+				//if an error has happened during query evaluation
+				if (e != null) {
+					activity.handleUserCreationError(e, false);
+					signUpFrag.turnOffProgress();
+					return;
+				} 
+				
+				//if query is evaluated successfully
+				
+				//if user was not invited or mistakenly invited
+				//to more then one family network (should be impossible)
+				//then create a new family network for the user
+				if (invites.size() != 1) {
+					ParseObject newNetwork = new ParseObject("FamilyNetwork");
+					newNetwork.saveInBackground(new SaveCallback() {
+						private ParseObject familyNetwork;
+						
+						@Override
+						public void done(ParseException e) {
+							if (e != null) {
+								activity.handleUserCreationError(e, false);
+								signUpFrag.turnOffProgress();
+								return;
+							}
+							
+							String networkId = familyNetwork.getObjectId();
+							activity.currentUser = new ParseUser();
+							userHandler.createNewUser(activity.currentUser, 
+									firstName, lastName, email, gender, 
+									password, birthday, profilePictureData,
+									profilePictureName, networkId, userCreationCallback);		
+						}
+						
+						private SaveCallback init(ParseObject familyNetwork) {
+							this.familyNetwork = familyNetwork;
+							return this;
+						}
+					}.init(newNetwork));
+					
+				} 
+				
+				//if user was invited to some family network - add him
+				else {
+					EmailInvite networkInvite = invites.get(0);
+					String networkId = networkInvite.getNetworkId();
+					activity.currentUser = new ParseUser();
+					userHandler.createNewUser(currentUser, firstName, lastName, email,
+							gender, password, birthday, profilePictureData,
+							profilePictureName, networkId, userCreationCallback);					
+				}
+			}
+			
+			private FindCallback<EmailInvite> init(LoginActivity activity) {
+				this.activity = activity;
+				return this;
+			}
+		}.init(this));
 
-		currentUser = new ParseUser();
-		userHandler.createNewUser(currentUser, firstName, lastName, email,
-				gender, password, birthday, profilePictureData,
-				profilePictureName, userCreationCallback);
 	}
 
 	@Override
