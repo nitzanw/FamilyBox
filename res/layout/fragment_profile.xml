@@ -198,7 +198,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_below="@+id/rl_family_members_title"
-                android:layout_centerVertical="true"
                 android:animateLayoutChanges="true"
                 android:overScrollMode="never"
                 android:scrollbars="none" >

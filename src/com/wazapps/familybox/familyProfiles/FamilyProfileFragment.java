@@ -486,7 +486,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 			@Override
 			public void done(List<ShareAlbum> objects, ParseException e) {
 				mAlbumProgress.setVisibility(View.INVISIBLE);
-				if (objects.isEmpty()) {
+				if (objects == null || objects.isEmpty()) {
 					mEmptyAlbum.setVisibility(View.VISIBLE);
 				} else {
 					mShareAlbumsAdapter = new FamilyProfileSharedAlbumAdapter(
@@ -588,7 +588,7 @@ public class FamilyProfileFragment extends Fragment implements OnClickListener {
 			@Override
 			public void done(List<Album> objects, ParseException e) {
 				mAlbumProgress.setVisibility(View.INVISIBLE);
-				if (objects.isEmpty()) {
+				if (objects == null ||objects.isEmpty()) {
 					mEmptyAlbum.setVisibility(View.VISIBLE);
 				} else {
 					mAlbumsAdapter = new FamilyProfileAlbumAdapter(

@@ -1,10 +1,6 @@
 package com.wazapps.familybox;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -16,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,11 +22,18 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.splunk.mint.Mint;
+import com.wazapps.familybox.expandNetwork.EmailInvite;
+import com.wazapps.familybox.expandNetwork.EmailInviteDialogFragment;
+import com.wazapps.familybox.expandNetwork.ExpandNetworkFragment;
+import com.wazapps.familybox.expandNetwork.ExpandNetworkFragment.InviteCallback;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment;
 import com.wazapps.familybox.familyProfiles.FamilyProfileFragment.AddFamilyProfileFragmentListener;
 import com.wazapps.familybox.familyTree.BasicFamilyListFragment;
@@ -50,7 +54,8 @@ import com.wazapps.familybox.util.LogUtils;
 import com.wazapps.familybox.util.MenuListAdapter;
 
 public class MainActivity extends FragmentActivity implements
-		AddProfileFragmentListener, AddFamilyProfileFragmentListener {
+		AddProfileFragmentListener, AddFamilyProfileFragmentListener,
+		InviteCallback {
 
 	public static abstract class MainActivityCallback {
 		public abstract void done(Exception e);
@@ -71,6 +76,7 @@ public class MainActivity extends FragmentActivity implements
 
 	public static final String LOG_OUT_ACTION = "logout";
 	private static final String DRAWER_POSITION = "drawerPos";
+	private static final String TAG_EMAIL_INVITE = "emailInvite";
 
 	// Declare Variable
 	protected DrawerLayout mDrawerLayout;
@@ -140,6 +146,8 @@ public class MainActivity extends FragmentActivity implements
 				else if (FamiliesListFragment.FAMILY_TREE_FRAG.equals(frag
 						.getTag()))
 					getActionBar().setTitle(R.string.family_tree_title);
+				else if (ExpandNetworkFragment.EXPAND_NETWORK_FRAG.equals(frag.getTag()))
+					getActionBar().setTitle(R.string.expand_network_title);
 
 				// creates call to onPrepareOptionsMenu()
 				invalidateOptionsMenu();
@@ -411,9 +419,6 @@ public class MainActivity extends FragmentActivity implements
 					.beginTransaction();
 			ft4.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
 			NewsFeedTabsFragment newsTabs = new NewsFeedTabsFragment();
-			Bundle args = new Bundle();
-			updateNewsPosts(args);
-			newsTabs.setArguments(args);
 			// a better way
 
 			ft4.replace(R.id.fragment_container, newsTabs,
@@ -427,49 +432,13 @@ public class MainActivity extends FragmentActivity implements
 			FragmentTransaction ft5 = getSupportFragmentManager()
 					.beginTransaction();
 			ft5.setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast);
-			this.mDrawerLayout.closeDrawer(this.mDrawerList);
+			ft5.replace(R.id.fragment_container, new ExpandNetworkFragment(),
+					ExpandNetworkFragment.EXPAND_NETWORK_FRAG);
 			ft5.commit();
+			this.mDrawerLayout.closeDrawer(this.mDrawerList);
 
 			break;
 		}
-	}
-
-	private void updateNewsPosts(Bundle args) {
-		String jsonStr = null;
-		JSONObject jsonObj = null;
-		JSONArray jsonArr = null;
-
-		jsonStr = JSONParser.loadJSONFromAsset(this, "familyBox.json");
-		if (jsonStr == null)
-			return;
-
-		ArrayList<NewsItemToRemove> newsPosts = new ArrayList<NewsItemToRemove>();
-		try {
-			jsonObj = new JSONObject(jsonStr);
-			jsonArr = jsonObj.getJSONArray("news_posts");
-			for (int i = 0; i < jsonArr.length(); i++) {
-				JSONObject post = jsonArr.getJSONObject(i);
-
-				String userid = post.getString("user_id");
-				long postid = post.getLong("post_id");
-				String actionType = post.getString("action_type");
-				ArrayList<String> extraInfo = new ArrayList<String>();
-				JSONArray extraItems = post.getJSONArray("extra_info");
-				for (int j = 0; j < extraItems.length(); j++) {
-					extraInfo.add(extraItems.getString(j));
-				}
-
-				NewsItemToRemove postItem = new NewsItemToRemove(userid,
-						postid, actionType, extraInfo);
-				newsPosts.add(postItem);
-			}
-			args.putParcelableArrayList(NewsFragment.NEWS_ITEM_LIST, newsPosts);
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return;
-		}
-
 	}
 
 	@Override
@@ -533,5 +502,78 @@ public class MainActivity extends FragmentActivity implements
 		logoutIntent.putExtra(LOG_OUT_ACTION, LOG_OUT_ACTION);
 		startActivity(logoutIntent);
 		finish();
+	}
+
+	@Override
+	public void launchEmailInviteDialog() {
+		EmailInviteDialogFragment emailInvite = new EmailInviteDialogFragment();
+		emailInvite.show(getSupportFragmentManager(), TAG_EMAIL_INVITE);
+		
+	}
+
+	@Override
+	public void emailInvite(final String email) {
+		ParseUser currUser = ParseUser.getCurrentUser();
+		if (currUser != null) {
+			final String networkId = 
+					currUser.getString(UserHandler.NETWORK_KEY);
+			final String userId = currUser.getObjectId();
+			
+			//TODO: maybe scan for users with the invited email and do not
+			//allow user to invite already existing users
+			
+			ParseQuery<EmailInvite> prevInvites = EmailInvite.getQuery();
+			prevInvites.whereEqualTo(EmailInvite.EMAIL_ADDR, email);
+			prevInvites.findInBackground(new FindCallback<EmailInvite>() {
+				MainActivity activity;
+				
+				@Override
+				public void done(List<EmailInvite> invites, ParseException e) {
+					if (e != null) {
+						Toast toast = Toast.makeText(
+								activity.getApplicationContext(), 
+								"Error sending invitation", Toast.LENGTH_LONG);
+						toast.setGravity(Gravity.CENTER, 0, 0);
+						toast.show();
+						return;
+					}
+					
+					if (invites.size() > 0) {
+						for (EmailInvite invite : invites) {
+							invite.deleteInBackground();
+						}						
+					}
+					
+					EmailInvite invite = new EmailInvite();
+					invite.setEmailAddress(email);
+					invite.setNetworkId(networkId);
+					invite.setInviterId(userId);
+					invite.saveInBackground(new SaveCallback() {
+						
+						@Override
+						public void done(ParseException e) {
+							if (e == null) {
+								Toast toast = Toast.makeText(getApplicationContext(), 
+										"Invitation sent", Toast.LENGTH_LONG);
+								toast.setGravity(Gravity.CENTER, 0, 0);
+								toast.show();
+							} 
+							
+							else {
+								Toast toast = Toast.makeText(getApplicationContext(), 
+										"Error sending invitation", Toast.LENGTH_LONG);
+								toast.setGravity(Gravity.CENTER, 0, 0);
+								toast.show();
+							}
+						}											
+					});					
+				}
+				
+				private FindCallback<EmailInvite> init(MainActivity activity) {
+					this.activity = activity;
+					return this;
+				}
+			}.init(this));
+		}		
 	}
 }

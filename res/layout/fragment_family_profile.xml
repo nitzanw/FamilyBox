@@ -173,6 +173,7 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@id/rl_family_profile_tree"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/albums_area_background"
         android:drawablePadding="8dp"
         android:drawableTop="@drawable/separator_line" >
 
@@ -180,8 +181,10 @@
             android:id="@+id/tv_family_profile_albums_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dp"
+             android:paddingBottom="20dp"
+            android:background="@android:color/background_light"
             android:paddingLeft="10dp"
             android:text="@string/photo_albums"
             android:textSize="19sp" />
@@ -206,23 +209,23 @@
         <HorizontalScrollView
             android:id="@+id/hsv_family_profile_albums"
             android:layout_width="match_parent"
-            android:layout_height="155dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignTop="@+id/pb_album_spinner"
-            android:background="@drawable/albums_area_background"
+            android:layout_centerVertical="true"
             android:overScrollMode="never"
             android:scrollbars="horizontal" >
 
             <LinearLayout
                 android:id="@+id/ll_family_profile_album_holder"
                 android:layout_width="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+               
                 android:animateLayoutChanges="true"
                 android:orientation="horizontal" >
             </LinearLayout>
         </HorizontalScrollView>
-
     </RelativeLayout>
 
     <RelativeLayout

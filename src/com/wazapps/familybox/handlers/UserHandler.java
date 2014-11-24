@@ -208,7 +208,7 @@ public class UserHandler {
 	public void createNewUser(ParseUser user, String firstName, 
 			String lastName, String email, String gender, 
 			String password, String birthday, byte[] profilePictureData, 
-			String profilePictureName, SignUpCallback callbackFunc) {
+			String profilePictureName, String networkId, SignUpCallback callbackFunc) {
 		
 		user.setUsername("fb_" + email);
 		user.setPassword(password);
@@ -222,7 +222,7 @@ public class UserHandler {
 		user.put(PREV_LAST_NAME_KEY, "");
 		user.put(NICKNAME_KEY, "");
 		user.put(PHONE_NUMBER_KEY, "");
-		user.put(NETWORK_KEY, "1"); //TODO: replace with real network object ID
+		user.put(NETWORK_KEY, networkId); //TODO: replace with real network object ID
 		user.put(QUOTES_KEY, "");
 		user.put(PREV_FAMILY_KEY, "");
 		user.put(STATUS_KEY, "Just joined Familybox :)");
