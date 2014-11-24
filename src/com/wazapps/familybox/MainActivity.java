@@ -1,5 +1,7 @@
 package com.wazapps.familybox;
 
+import java.util.List;
+
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -20,9 +22,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.splunk.mint.Mint;
@@ -508,34 +512,68 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void emailInvite(String email) {
+	public void emailInvite(final String email) {
 		ParseUser currUser = ParseUser.getCurrentUser();
 		if (currUser != null) {
-			String networkId = 
+			final String networkId = 
 					currUser.getString(UserHandler.NETWORK_KEY);
-			String userId = currUser.getObjectId();
+			final String userId = currUser.getObjectId();
 			
-			EmailInvite invite = new EmailInvite();
-			invite.setEmailAddress(email);
-			invite.setNetworkId(networkId);
-			invite.setInviterId(userId);
-			invite.saveInBackground(new SaveCallback() {
+			//TODO: maybe scan for users with the invited email and do not
+			//allow user to invite already existing users
+			
+			ParseQuery<EmailInvite> prevInvites = EmailInvite.getQuery();
+			prevInvites.whereEqualTo(EmailInvite.EMAIL_ADDR, email);
+			prevInvites.findInBackground(new FindCallback<EmailInvite>() {
+				MainActivity activity;
 				
 				@Override
-				public void done(ParseException e) {
-					if (e == null) {
-						Toast toast = Toast.makeText(getApplicationContext(), 
-								"invitation sent", Toast.LENGTH_LONG);
+				public void done(List<EmailInvite> invites, ParseException e) {
+					if (e != null) {
+						Toast toast = Toast.makeText(
+								activity.getApplicationContext(), 
+								"Error sending invitation", Toast.LENGTH_LONG);
 						toast.setGravity(Gravity.CENTER, 0, 0);
 						toast.show();
-					} else {
-						Toast toast = Toast.makeText(getApplicationContext(), 
-								"error sending invitation", Toast.LENGTH_LONG);
-						toast.setGravity(Gravity.CENTER, 0, 0);
-						toast.show();
+						return;
 					}
+					
+					if (invites.size() > 0) {
+						for (EmailInvite invite : invites) {
+							invite.deleteInBackground();
+						}						
+					}
+					
+					EmailInvite invite = new EmailInvite();
+					invite.setEmailAddress(email);
+					invite.setNetworkId(networkId);
+					invite.setInviterId(userId);
+					invite.saveInBackground(new SaveCallback() {
+						
+						@Override
+						public void done(ParseException e) {
+							if (e == null) {
+								Toast toast = Toast.makeText(getApplicationContext(), 
+										"Invitation sent", Toast.LENGTH_LONG);
+								toast.setGravity(Gravity.CENTER, 0, 0);
+								toast.show();
+							} 
+							
+							else {
+								Toast toast = Toast.makeText(getApplicationContext(), 
+										"Error sending invitation", Toast.LENGTH_LONG);
+								toast.setGravity(Gravity.CENTER, 0, 0);
+								toast.show();
+							}
+						}											
+					});					
 				}
-			});
+				
+				private FindCallback<EmailInvite> init(MainActivity activity) {
+					this.activity = activity;
+					return this;
+				}
+			}.init(this));
 		}		
 	}
 }
