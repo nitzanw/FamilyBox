@@ -97,6 +97,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 	// the fragment's views
 	private View root;
 	private LinearLayout mFamilyListHolder;
+	private RelativeLayout mEmpty;
 	private ProgressBar mSpinner;
 	private TextView emptyText;
 	private HorizontalScrollView membersList;
@@ -255,6 +256,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 		mUserStatusEdit = (EditText) root.findViewById(R.id.et_profile_status);
 		mEditStatusbtn = (ImageButton) root.findViewById(R.id.ib_edit_status);
 		mSubmitStatus = (ImageButton) root.findViewById(R.id.ib_submit_status);
+		mEmpty = (RelativeLayout)root.findViewById(R.id.rl_empty_loading);
 		mSpinner = (ProgressBar) root
 				.findViewById(R.id.pb_family_members_list_spinner);
 		mPrevFamilybutton = (ImageButton) root
@@ -435,6 +437,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 			}
 
 			protected void onProgressUpdate(View... v) {
+				mFamilyListHolder.setVisibility(View.VISIBLE);
 				frag.mFamilyListHolder.addView(v[0]);
 			};
 
@@ -527,6 +530,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 
 		case R.id.ib_prev_family:
 			mSpinner.setVisibility(View.VISIBLE);
+			mFamilyListHolder.setVisibility(View.INVISIBLE);
 			emptyText.setVisibility(View.GONE);
 			mPrevFamilybutton.setVisibility(View.INVISIBLE);
 			familyTitle.startAnimation(statusJump);
@@ -564,7 +568,7 @@ public class ProfileFragment extends Fragment implements OnClickListener,
 			if (!mIsUserProfile) {
 				mSpinner.setVisibility(View.VISIBLE);
 			}
-
+			mFamilyListHolder.setVisibility(View.INVISIBLE);
 			emptyText.setVisibility(View.GONE);
 			mCurrFamilybutton.setVisibility(View.INVISIBLE);
 			familyTitle.startAnimation(statusJump);

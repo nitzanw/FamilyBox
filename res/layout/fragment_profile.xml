@@ -167,10 +167,12 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="match_parent"
+                android:id="@+id/rl_empty_loading"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@+id/rl_family_members_title" >
+                android:layout_below="@+id/rl_family_members_title"
+                android:layout_centerInParent="true"
+                android:animateLayoutChanges="true" >
 
                 <ProgressBar
                     android:id="@+id/pb_family_members_list_spinner"
@@ -188,26 +190,29 @@
                     android:textColor="@color/grey_light"
                     android:textSize="18sp"
                     android:visibility="gone" />
-
-                <HorizontalScrollView
-                    android:id="@+id/hsv_family_members_list"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:overScrollMode="never"
-                    android:scrollbars="none" >
-
-                    <LinearLayout
-                        android:id="@+id/ll_family_members_list_holder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginBottom="5dp"
-                        android:animateLayoutChanges="true"
-                        android:orientation="horizontal" >
-                    </LinearLayout>
-                </HorizontalScrollView>
             </RelativeLayout>
+
+            <HorizontalScrollView
+                android:id="@+id/hsv_family_members_list"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/rl_family_members_title"
+                android:layout_centerVertical="true"
+                android:animateLayoutChanges="true"
+                android:overScrollMode="never"
+                android:scrollbars="none" >
+
+                <LinearLayout
+                    android:id="@+id/ll_family_members_list_holder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="5dp"
+                    android:animateLayoutChanges="true"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </HorizontalScrollView>
         </RelativeLayout>
     </LinearLayout>
 
