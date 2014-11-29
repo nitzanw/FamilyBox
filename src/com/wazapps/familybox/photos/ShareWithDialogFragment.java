@@ -79,13 +79,22 @@ public class ShareWithDialogFragment extends DialogFragment implements
 				.findViewById(R.id.lv_share_w_family_list);
 		mProgress = (ProgressBar) root.findViewById(android.R.id.progress);
 		mTextView = (TextView) root.findViewById(android.R.id.empty);
+		
 
 		ShareWithListAdapter.QueryFactory<ParseObject> factory = new ShareWithListAdapter.QueryFactory<ParseObject>() {
 			public ParseQuery<ParseObject> create() {
+				ParseUser user = ParseUser.getCurrentUser();
+				String networkId = "1";
+				if (user != null) {
+					networkId = user.getString(UserHandler.NETWORK_KEY);
+				}
+				
+				
 				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
 						FamilyHandler.FAMILY_CLASS_NAME);
 				query.whereNotEqualTo("objectId", ParseUser.getCurrentUser()
 						.get(UserHandler.FAMILY_KEY));
+				query.whereEqualTo(FamilyHandler.NETWORK_KEY, networkId);
 				query.addAscendingOrder(FamilyHandler.NAME_KEY);
 				return query;
 			}
